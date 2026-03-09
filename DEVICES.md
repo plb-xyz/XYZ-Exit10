@@ -4,7 +4,7 @@
 - **Watchout**  
 - **GrandMA**  
 - **Q-Sys Core**  
-- **Novastar H15 LED**  
+- **Novastar H15 LED Controller**  
 - **Relay Panels**  
 
 ## External Devices
