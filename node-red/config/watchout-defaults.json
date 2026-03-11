@@ -1,0 +1,16 @@
+{
+  "host": "localhost",
+  "port": 3019,
+  "storageFile": "/data/watchout/timeline-mapping.json",
+  "pollIntervalMs": 5000,
+  "sseReconnectDelayMs": 5000,
+  "requestTimeoutMs": 10000,
+  "notes": [
+    "host        : IP or hostname of the Watchout 7 presentation server",
+    "port        : Watchout 7 HTTP API port (default 3019)",
+    "storageFile : Path where the timeline mapping JSON is persisted",
+    "pollIntervalMs      : How often to poll /v0/state when SSE is disconnected",
+    "sseReconnectDelayMs : Delay before attempting to reconnect SSE after failure",
+    "requestTimeoutMs    : HTTP request timeout in milliseconds"
+  ]
+}
