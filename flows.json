@@ -1,0 +1,1268 @@
+[
+    {
+        "id": "19fbd7cf3882c4ad",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f34314dbb36334ec",
+        "type": "ui-base",
+        "name": "My Dashboard",
+        "path": "/dashboard",
+        "appIcon": "",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "headerContent": "page",
+        "navigationStyle": "default",
+        "titleBarStyle": "default",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": 1,
+        "showDisconnectNotification": true,
+        "allowInstall": false
+    },
+    {
+        "id": "6f21f95d494aa53c",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094CE",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "8dd9d92e5b5cc9e6",
+        "type": "ui-page",
+        "name": "Page 1",
+        "ui": "f34314dbb36334ec",
+        "path": "/page1",
+        "icon": "home",
+        "layout": "grid",
+        "theme": "6f21f95d494aa53c",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": 0,
+                "cols": 3
+            },
+            {
+                "name": "Tablet",
+                "px": 576,
+                "cols": 6
+            },
+            {
+                "name": "Small Desktop",
+                "px": 768,
+                "cols": 9
+            },
+            {
+                "name": "Desktop",
+                "px": 1024,
+                "cols": 12
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": true,
+        "disabled": "false"
+    },
+    {
+        "id": "a0d8d40dc0b16ddc",
+        "type": "ui-group",
+        "name": "Testing",
+        "page": "8dd9d92e5b5cc9e6",
+        "width": 6,
+        "height": 1,
+        "order": 4,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "7d35aca5106c96d2",
+        "type": "ui-spacer",
+        "group": "a0d8d40dc0b16ddc",
+        "name": "spacer",
+        "tooltip": "",
+        "order": 6,
+        "width": 1,
+        "height": 1,
+        "className": ""
+    },
+    {
+        "id": "b364dfa1b47d6351",
+        "type": "ui-spacer",
+        "group": "a0d8d40dc0b16ddc",
+        "name": "spacer",
+        "tooltip": "",
+        "order": 7,
+        "width": 1,
+        "height": 1,
+        "className": ""
+    },
+    {
+        "id": "9e63c498e3178e6f",
+        "type": "ui-link",
+        "name": "Link 1",
+        "ui": "f34314dbb36334ec",
+        "path": "/nothing",
+        "icon": "home",
+        "order": 3,
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "5176b798f54b89e5",
+        "type": "ui-group",
+        "name": "Group Zones",
+        "page": "8dd9d92e5b5cc9e6",
+        "width": 6,
+        "height": 1,
+        "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "1b92347f910b4250",
+        "type": "ui-link",
+        "name": "Link 2",
+        "ui": "f34314dbb36334ec",
+        "path": "/you",
+        "icon": "home",
+        "order": 2,
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "da1aff12794b5db8",
+        "type": "ui-group",
+        "name": "Direct Buttons",
+        "page": "8dd9d92e5b5cc9e6",
+        "width": 6,
+        "height": 1,
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "fbb25d9fdfc45a2e",
+        "type": "ui-group",
+        "name": "OSC Out",
+        "page": "8dd9d92e5b5cc9e6",
+        "width": 6,
+        "height": 1,
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "a9e4285e36ef776f",
+        "type": "ui-theme",
+        "name": "Yellow Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#9f00f5",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "9d013935d2e3f2be",
+        "type": "ui-theme",
+        "name": "Purple Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#9f00f5",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "ma3_osc_receiver",
+        "type": "udp in",
+        "z": "19fbd7cf3882c4ad",
+        "name": "OSC In p8001",
+        "iface": "",
+        "port": "8001",
+        "ipv": "udp4",
+        "multicast": "false",
+        "group": "",
+        "datatype": "buffer",
+        "x": 130,
+        "y": 100,
+        "wires": [
+            [
+                "osc_decode"
+            ]
+        ]
+    },
+    {
+        "id": "osc_decode",
+        "type": "osc",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Decode OSC",
+        "path": "",
+        "metadata": true,
+        "x": 330,
+        "y": 100,
+        "wires": [
+            [
+                "a9103b8bd1668d6f"
+            ]
+        ]
+    },
+    {
+        "id": "osc_router",
+        "type": "switch",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Route by Address",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nnull"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 550,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "debug_fader",
+        "type": "debug",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Fader Output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "debug_key",
+        "type": "debug",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Key Output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 770,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "debug_cmd",
+        "type": "debug",
+        "z": "19fbd7cf3882c4ad",
+        "name": "CMD Output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 770,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "abd041bff0955fb2",
+        "type": "ui-button",
+        "z": "19fbd7cf3882c4ad",
+        "group": "a0d8d40dc0b16ddc",
+        "name": "",
+        "label": "button",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 130,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "aaec16e82deab8d8",
+        "type": "ui-button-group",
+        "z": "19fbd7cf3882c4ad",
+        "name": "",
+        "group": "a0d8d40dc0b16ddc",
+        "order": 5,
+        "width": 6,
+        "height": 1,
+        "label": "button group",
+        "className": "",
+        "rounded": true,
+        "useThemeColors": true,
+        "passthru": false,
+        "options": [
+            {
+                "label": "yo",
+                "icon": "",
+                "value": "option_0",
+                "valueType": "str",
+                "color": "#009933"
+            },
+            {
+                "label": "yeah",
+                "icon": "",
+                "value": "option_1",
+                "valueType": "str",
+                "color": "#999999"
+            },
+            {
+                "label": "and",
+                "icon": "",
+                "value": "option_2",
+                "valueType": "str",
+                "color": "#ff6666"
+            },
+            {
+                "label": "what",
+                "icon": "",
+                "value": "option_3",
+                "valueType": "str",
+                "color": "#009999"
+            }
+        ],
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 290,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7957f612965dc40e",
+        "type": "ui-dropdown",
+        "z": "19fbd7cf3882c4ad",
+        "group": "5176b798f54b89e5",
+        "name": "",
+        "label": "Select Content:",
+        "tooltip": "",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "multiple": false,
+        "chips": false,
+        "clearable": false,
+        "options": [
+            {
+                "label": "show1",
+                "value": "show1",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "show2",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "Ambiance1",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "className": "",
+        "typeIsComboBox": true,
+        "msgTrigger": "onChange",
+        "x": 140,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e1c749a7ab3174a4",
+        "type": "ui-slider",
+        "z": "19fbd7cf3882c4ad",
+        "group": "a0d8d40dc0b16ddc",
+        "name": "",
+        "label": "slider",
+        "tooltip": "",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "outs": "all",
+        "topic": "topic",
+        "topicType": "msg",
+        "thumbLabel": "true",
+        "showTicks": "always",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "className": "",
+        "iconPrepend": "",
+        "iconAppend": "",
+        "color": "",
+        "colorTrack": "",
+        "colorThumb": "",
+        "showTextField": false,
+        "x": 130,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "91c470650daf0a59",
+        "type": "ui-switch",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Atrium 2",
+        "label": "Atrium 2",
+        "group": "5176b798f54b89e5",
+        "order": 4,
+        "width": "1",
+        "height": "1",
+        "passthru": false,
+        "decouple": false,
+        "topic": "atrium2",
+        "topicType": "str",
+        "style": "",
+        "className": "",
+        "layout": "row-left",
+        "clickableArea": "switch",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 500,
+        "y": 580,
+        "wires": [
+            [
+                "d6beb04373ede17a"
+            ]
+        ]
+    },
+    {
+        "id": "c17e459f49532f0a",
+        "type": "ui-switch",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Atrium 3",
+        "label": "Atrium 3",
+        "group": "5176b798f54b89e5",
+        "order": 5,
+        "width": "1",
+        "height": "1",
+        "passthru": false,
+        "decouple": false,
+        "topic": "atrium3",
+        "topicType": "str",
+        "style": "",
+        "className": "",
+        "layout": "row-left",
+        "clickableArea": "switch",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 500,
+        "y": 620,
+        "wires": [
+            [
+                "d6beb04373ede17a"
+            ]
+        ]
+    },
+    {
+        "id": "1e2d1326c09d32c2",
+        "type": "ui-radio-group",
+        "z": "19fbd7cf3882c4ad",
+        "group": "a0d8d40dc0b16ddc",
+        "name": "",
+        "label": "Select Option:",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "columns": 1,
+        "passthru": false,
+        "options": [
+            {
+                "label": "",
+                "value": "23",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "43",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "className": "",
+        "x": 300,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1c2eed29583d5845",
+        "type": "ui-switch",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Atrium 1",
+        "label": "Atrium 1",
+        "group": "5176b798f54b89e5",
+        "order": 3,
+        "width": "1",
+        "height": "1",
+        "passthru": false,
+        "decouple": false,
+        "topic": "atrium1",
+        "topicType": "str",
+        "style": "",
+        "className": "",
+        "layout": "row-left",
+        "clickableArea": "switch",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 500,
+        "y": 540,
+        "wires": [
+            [
+                "d6beb04373ede17a",
+                "b67850082a42953b"
+            ]
+        ]
+    },
+    {
+        "id": "f9ee4e381fb57347",
+        "type": "ui-switch",
+        "z": "19fbd7cf3882c4ad",
+        "name": "All Atriums",
+        "label": "All Atriums",
+        "group": "5176b798f54b89e5",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "passthru": false,
+        "decouple": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "className": "",
+        "layout": "row-left",
+        "clickableArea": "switch",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 130,
+        "y": 580,
+        "wires": [
+            [
+                "46bcfecf67235d0b",
+                "82b04cc89922f807"
+            ]
+        ]
+    },
+    {
+        "id": "404ab17db164e013",
+        "type": "ui-text",
+        "z": "19fbd7cf3882c4ad",
+        "group": "a0d8d40dc0b16ddc",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Incoming OSC messages",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 450,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "b73208e817114238",
+        "type": "debug",
+        "z": "19fbd7cf3882c4ad",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 400,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "a9103b8bd1668d6f",
+        "type": "change",
+        "z": "19fbd7cf3882c4ad",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.value",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 160,
+        "y": 200,
+        "wires": [
+            [
+                "404ab17db164e013",
+                "b73208e817114238"
+            ]
+        ]
+    },
+    {
+        "id": "0e56c5eee42c1798",
+        "type": "ui-button",
+        "z": "19fbd7cf3882c4ad",
+        "group": "5176b798f54b89e5",
+        "name": "Go",
+        "label": "Go",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 130,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "30d25eaa52392ffd",
+        "type": "ui-button",
+        "z": "19fbd7cf3882c4ad",
+        "group": "da1aff12794b5db8",
+        "name": "Show 1",
+        "label": "Show 1",
+        "order": 2,
+        "width": "2",
+        "height": "2",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 140,
+        "y": 820,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "463a6aec86248f58",
+        "type": "comment",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Direct Buttons",
+        "info": "",
+        "x": 150,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "a67bcde63aa763c2",
+        "type": "ui-text",
+        "z": "19fbd7cf3882c4ad",
+        "group": "da1aff12794b5db8",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "Direct Controls",
+        "label": "Direct Controls",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 160,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "2e424b2a134d7a77",
+        "type": "ui-button",
+        "z": "19fbd7cf3882c4ad",
+        "group": "da1aff12794b5db8",
+        "name": "Show 2",
+        "label": "Show 2",
+        "order": 3,
+        "width": "2",
+        "height": "2",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 280,
+        "y": 820,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c791d744d621acf9",
+        "type": "ui-button",
+        "z": "19fbd7cf3882c4ad",
+        "group": "da1aff12794b5db8",
+        "name": "Show 3",
+        "label": "Show 3",
+        "order": 4,
+        "width": "2",
+        "height": "2",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 420,
+        "y": 820,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e21a825cd1bdee8a",
+        "type": "comment",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Specific Control",
+        "info": "",
+        "x": 140,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "d9d64d57ab75a9f2",
+        "type": "comment",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Testing",
+        "info": "",
+        "x": 130,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "ef9885992d74b203",
+        "type": "ui-text-input",
+        "z": "19fbd7cf3882c4ad",
+        "group": "fbb25d9fdfc45a2e",
+        "name": "Osc message",
+        "label": "OSC Messsage",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "topic": "topic",
+        "topicType": "msg",
+        "mode": "text",
+        "tooltip": "",
+        "delay": "0",
+        "passthru": true,
+        "sendOnDelay": false,
+        "sendOnBlur": false,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": false,
+        "sendOnClear": false,
+        "icon": "",
+        "iconPosition": "left",
+        "iconInnerPosition": "inside",
+        "x": 160,
+        "y": 1060,
+        "wires": [
+            [
+                "b564d65ab1be896e"
+            ]
+        ]
+    },
+    {
+        "id": "0d9db2284f2bff29",
+        "type": "ui-button-group",
+        "z": "19fbd7cf3882c4ad",
+        "name": "OSC Port choice",
+        "group": "fbb25d9fdfc45a2e",
+        "order": 1,
+        "width": 6,
+        "height": 1,
+        "label": "Destination",
+        "className": "",
+        "rounded": true,
+        "useThemeColors": true,
+        "passthru": true,
+        "options": [
+            {
+                "label": "QLab",
+                "icon": "",
+                "value": "53000",
+                "valueType": "num",
+                "color": "#009933"
+            },
+            {
+                "label": "GrandMa",
+                "icon": "",
+                "value": "8000",
+                "valueType": "num",
+                "color": "#999999"
+            }
+        ],
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 130,
+        "y": 1140,
+        "wires": [
+            [
+                "2c13c807c664eac3"
+            ]
+        ]
+    },
+    {
+        "id": "557570a035650704",
+        "type": "osc",
+        "z": "19fbd7cf3882c4ad",
+        "name": "",
+        "path": "",
+        "metadata": false,
+        "x": 450,
+        "y": 1100,
+        "wires": [
+            [
+                "7d8570d211d2f5e4",
+                "93238ced297b7a99"
+            ]
+        ]
+    },
+    {
+        "id": "03625a79e8807adc",
+        "type": "inject",
+        "z": "19fbd7cf3882c4ad",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "/cue/1/start",
+        "payloadType": "str",
+        "x": 150,
+        "y": 1100,
+        "wires": [
+            [
+                "b564d65ab1be896e"
+            ]
+        ]
+    },
+    {
+        "id": "71bb1df31241f8e7",
+        "type": "inject",
+        "z": "19fbd7cf3882c4ad",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "/cue/1/start",
+        "x": 150,
+        "y": 1320,
+        "wires": [
+            [
+                "eee292bfd74fad2f"
+            ]
+        ]
+    },
+    {
+        "id": "eee292bfd74fad2f",
+        "type": "osc",
+        "z": "19fbd7cf3882c4ad",
+        "name": "",
+        "path": "",
+        "metadata": false,
+        "x": 330,
+        "y": 1320,
+        "wires": [
+            [
+                "dce7dd7dbe94f72b"
+            ]
+        ]
+    },
+    {
+        "id": "dce7dd7dbe94f72b",
+        "type": "udp out",
+        "z": "19fbd7cf3882c4ad",
+        "name": "",
+        "addr": "host.docker.internal",
+        "iface": "",
+        "port": "53000",
+        "ipv": "udp4",
+        "outport": "53000",
+        "base64": false,
+        "multicast": "false",
+        "x": 550,
+        "y": 1320,
+        "wires": []
+    },
+    {
+        "id": "2c13c807c664eac3",
+        "type": "change",
+        "z": "19fbd7cf3882c4ad",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "oscPort",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 320,
+        "y": 1140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b564d65ab1be896e",
+        "type": "function",
+        "z": "19fbd7cf3882c4ad",
+        "name": "function 2",
+        "func": "let inputStr = msg.payload.trim();\nlet spaceIndex = inputStr.indexOf(\" \");\n\nif (spaceIndex !== -1) {\n    // A space was found! Split into Address and Argument\n    msg.topic = inputStr.substring(0, spaceIndex); // Gets \"/cmd\"\n    \n    let argStr = inputStr.substring(spaceIndex + 1).trim(); // Gets '\"Off Timecode 2\"'\n    \n    // Remove literal quotes if you typed them, the OSC node doesn't need them\n    if (argStr.startsWith('\"') && argStr.endsWith('\"')) {\n        argStr = argStr.slice(1, -1);\n    }\n    \n    msg.payload = argStr; // Set the argument\n} else {\n    // No spaces found (like \"/cue/1/start\"). The whole thing is the address.\n    msg.topic = inputStr;\n    msg.payload = \"\";\n}\n\n// Grab the port we saved from the button group (default to 53000)\nmsg.port = flow.get(\"oscPort\") || 53000; \n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 1100,
+        "wires": [
+            [
+                "557570a035650704"
+            ]
+        ]
+    },
+    {
+        "id": "7d8570d211d2f5e4",
+        "type": "udp out",
+        "z": "19fbd7cf3882c4ad",
+        "name": "",
+        "addr": "host.docker.internal",
+        "iface": "",
+        "port": "",
+        "ipv": "udp4",
+        "outport": "",
+        "base64": false,
+        "multicast": "false",
+        "x": 650,
+        "y": 1100,
+        "wires": []
+    },
+    {
+        "id": "93238ced297b7a99",
+        "type": "debug",
+        "z": "19fbd7cf3882c4ad",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 600,
+        "y": 1060,
+        "wires": []
+    },
+    {
+        "id": "2d2254fa590379b5",
+        "type": "comment",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Osc Outputter!",
+        "info": "",
+        "x": 160,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "46bcfecf67235d0b",
+        "type": "function",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Switch function",
+        "func": "// 1. Get the true/false state from the \"All\" switch\nlet state = msg.payload;\n\n// 2. Save this state to the flow context so the individual logic knows about it\nflow.set('atrium1', state);\nflow.set('atrium2', state);\nflow.set('atrium3', state);\n\n// 3. Send the payload to all 3 outputs to update the individual UI switches\nreturn [\n    { payload: state }, // Goes to Atrium 1\n    { payload: state }, // Goes to Atrium 2\n    { payload: state }  // Goes to Atrium 3\n];",
+        "outputs": 3,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 580,
+        "wires": [
+            [
+                "1c2eed29583d5845"
+            ],
+            [
+                "91c470650daf0a59"
+            ],
+            [
+                "c17e459f49532f0a"
+            ]
+        ]
+    },
+    {
+        "id": "d6beb04373ede17a",
+        "type": "function",
+        "z": "19fbd7cf3882c4ad",
+        "name": "3 switches logic",
+        "func": "// 1. msg.topic tells us which switch triggered this (atrium1, atrium2, or atrium3)\n// Update that specific atrium's state in the flow context\nflow.set(msg.topic, msg.payload);\n\n// 2. Read the current state of all 3 atriums\nlet a1 = flow.get('atrium1') || false;\nlet a2 = flow.get('atrium2') || false;\nlet a3 = flow.get('atrium3') || false;\n\n// 3. Check if ALL of them are true\nlet allChecked = (a1 && a2 && a3);\n\n// 4. Send this result to the \"All Atriums\" switch to update its UI\nreturn { payload: allChecked };",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 580,
+        "wires": [
+            [
+                "f9ee4e381fb57347"
+            ]
+        ]
+    },
+    {
+        "id": "82b04cc89922f807",
+        "type": "debug",
+        "z": "19fbd7cf3882c4ad",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 310,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "b67850082a42953b",
+        "type": "debug",
+        "z": "19fbd7cf3882c4ad",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 500,
+        "wires": []
+    }
+]
