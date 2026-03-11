@@ -1,0 +1,262 @@
+[
+  {
+    "id": "wo-tab",
+    "type": "tab",
+    "label": "Watchout Integration",
+    "disabled": false,
+    "info": "Watchout 7 HTTP integration – timeline discovery, control, SSE monitoring and status polling.\nv0.1 – Show Controller Architecture / Watchout Layer."
+  },
+
+  {
+    "id": "wo-comment-overview",
+    "type": "comment",
+    "z": "wo-tab",
+    "name": "Watchout 7 HTTP Integration  (v0.1)",
+    "info": "## Overview\nThis tab wires together the Watchout integration layer.\n\n### Startup sequence\n1. Load `watchout.json` config → global context (`watchoutConfig`)\n2. Inject on deploy runs the init function node, which:\n   - Discovers all timelines → `global.watchoutTimelines`\n   - Fetches initial state → `global.watchoutState`\n   - Opens SSE connection for real-time updates\n   - Starts a polling fallback timer\n\n### Control\nInject a message into the **Timeline Control** function node:\n```\n{ command: 'start'|'stop'|'pause', contentId: 'show1' }\n// OR by raw id:\n{ command: 'start', timelineId: '1' }\n```\n\n### Set variable/input\nInject a message into the **Set Input** function node:\n```\n{ key: 'myVar', value: 42 }\n```",
+    "x": 180,
+    "y": 40
+  },
+
+  {
+    "id": "wo-inject-config",
+    "type": "inject",
+    "z": "wo-tab",
+    "name": "Load config on deploy",
+    "props": [{ "p": "payload" }],
+    "repeat": "",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 0,
+    "payload": "",
+    "payloadType": "date",
+    "x": 180,
+    "y": 120,
+    "wires": [["wo-fn-load-config"]]
+  },
+
+  {
+    "id": "wo-fn-load-config",
+    "type": "function",
+    "z": "wo-tab",
+    "name": "Load watchout.json config",
+    "func": "// Load configuration from watchout.json and store in global context.\n// Adjust the path to match your Node-RED working directory.\nconst fs = require('fs');\nconst path = require('path');\n\nconst configPath = path.join(__dirname, '..', 'config', 'watchout.json');\nlet config;\ntry {\n    config = JSON.parse(fs.readFileSync(configPath, 'utf8'));\n} catch (e) {\n    node.warn('Could not load watchout.json, using defaults: ' + e.message);\n    config = {};\n}\n\nglobal.set('watchoutConfig', config);\nnode.log('Watchout config loaded: ' + JSON.stringify(config));\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 440,
+    "y": 120,
+    "wires": [["wo-fn-init"]]
+  },
+
+  {
+    "id": "wo-fn-init",
+    "type": "function",
+    "z": "wo-tab",
+    "name": "Init Watchout client",
+    "func": "// Instantiate the WatchoutClient and store it in global context.\n// Uses createWatchoutClient registered in settings.js functionGlobalContext.\nconst createWatchoutClient = global.get('createWatchoutClient');\nif (!createWatchoutClient) {\n    node.error('createWatchoutClient not found in global context. ' +\n        'Add it to functionGlobalContext in settings.js');\n    return null;\n}\n\n// Destroy any previous instance (e.g. on re-deploy)\nconst prev = global.get('watchout');\nif (prev && typeof prev.destroy === 'function') {\n    prev.destroy();\n}\n\nconst wo = createWatchoutClient(global, node);\nglobal.set('watchout', wo);\n\nwo.init()\n    .then(() => node.log('Watchout client ready'))\n    .catch((err) => node.error('Watchout init error: ' + err.message));\n\nreturn null;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "// Clean up SSE connection and polling timer on re-deploy or shutdown.\nconst wo = global.get('watchout');\nif (wo && typeof wo.destroy === 'function') {\n    wo.destroy();\n}",
+    "libs": [],
+    "x": 700,
+    "y": 120,
+    "wires": [["wo-debug-init"]]
+  },
+
+  {
+    "id": "wo-debug-init",
+    "type": "debug",
+    "z": "wo-tab",
+    "name": "Init output",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 930,
+    "y": 120
+  },
+
+  {
+    "id": "wo-comment-control",
+    "type": "comment",
+    "z": "wo-tab",
+    "name": "── Timeline Control ──────────────────",
+    "info": "",
+    "x": 230,
+    "y": 220
+  },
+
+  {
+    "id": "wo-inject-control-example",
+    "type": "inject",
+    "z": "wo-tab",
+    "name": "Example: start show1",
+    "props": [
+      { "p": "payload" },
+      { "p": "topic", "vt": "str", "v": "watchout/control" }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "{\"command\":\"start\",\"contentId\":\"show1\"}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 280,
+    "wires": [["wo-fn-control"]]
+  },
+
+  {
+    "id": "wo-fn-control",
+    "type": "function",
+    "z": "wo-tab",
+    "name": "Timeline Control",
+    "func": "// Expected input:\n//   msg.payload = { command: 'start'|'stop'|'pause', contentId: 'show1' }\n//   OR\n//   msg.payload = { command: 'start', timelineId: '1' }\n\nconst wo = global.get('watchout');\nif (!wo) {\n    node.error('Watchout client not initialised');\n    return null;\n}\n\nconst { command, contentId, timelineId, params } = msg.payload || {};\n\nif (!command) {\n    node.error('Missing command in msg.payload');\n    return null;\n}\n\nlet action;\nif (contentId) {\n    const methodMap = {\n        start: wo.startByContent,\n        stop:  wo.stopByContent,\n        pause: wo.pauseByContent,\n    };\n    const method = methodMap[command];\n    if (!method) {\n        node.error('Unknown command: ' + command);\n        return null;\n    }\n    action = method(contentId);\n} else if (timelineId) {\n    action = wo.controlTimeline(timelineId, command, params);\n} else {\n    node.error('Provide either contentId or timelineId in msg.payload');\n    return null;\n}\n\naction\n    .then((result) => {\n        node.send({ topic: 'watchout/control/result', payload: result });\n    })\n    .catch((err) => {\n        node.error('Timeline control error: ' + err.message);\n        node.send({ topic: 'watchout/control/error', payload: { error: err.message } });\n    });\n\nreturn null;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 440,
+    "y": 280,
+    "wires": [["wo-debug-control"]]
+  },
+
+  {
+    "id": "wo-debug-control",
+    "type": "debug",
+    "z": "wo-tab",
+    "name": "Control result",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 680,
+    "y": 280
+  },
+
+  {
+    "id": "wo-comment-input",
+    "type": "comment",
+    "z": "wo-tab",
+    "name": "── Set Input / Variable ──────────────",
+    "info": "",
+    "x": 230,
+    "y": 360
+  },
+
+  {
+    "id": "wo-inject-input-example",
+    "type": "inject",
+    "z": "wo-tab",
+    "name": "Example: set input",
+    "props": [
+      { "p": "payload" },
+      { "p": "topic", "vt": "str", "v": "watchout/input" }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "payload": "{\"key\":\"myVar\",\"value\":42}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 420,
+    "wires": [["wo-fn-set-input"]]
+  },
+
+  {
+    "id": "wo-fn-set-input",
+    "type": "function",
+    "z": "wo-tab",
+    "name": "Set Input",
+    "func": "// Expected input:\n//   msg.payload = { key: 'variableName', value: <any> }\n\nconst wo = global.get('watchout');\nif (!wo) {\n    node.error('Watchout client not initialised');\n    return null;\n}\n\nconst { key, value } = msg.payload || {};\n\nif (!key) {\n    node.error('Missing key in msg.payload');\n    return null;\n}\n\nif (value === undefined) {\n    node.error('Missing value in msg.payload');\n    return null;\n}\n\nwo.setInput(key, value)\n    .then((result) => {\n        node.send({ topic: 'watchout/input/result', payload: result });\n    })\n    .catch((err) => {\n        node.error('setInput error: ' + err.message);\n        node.send({ topic: 'watchout/input/error', payload: { error: err.message } });\n    });\n\nreturn null;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 440,
+    "y": 420,
+    "wires": [["wo-debug-input"]]
+  },
+
+  {
+    "id": "wo-debug-input",
+    "type": "debug",
+    "z": "wo-tab",
+    "name": "Input result",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 680,
+    "y": 420
+  },
+
+  {
+    "id": "wo-comment-state",
+    "type": "comment",
+    "z": "wo-tab",
+    "name": "── Real-time State (SSE + polling) ───",
+    "info": "",
+    "x": 240,
+    "y": 500
+  },
+
+  {
+    "id": "wo-fn-state-out",
+    "type": "function",
+    "z": "wo-tab",
+    "name": "State change handler",
+    "func": "// Receives messages emitted by the WatchoutClient on state change.\n// msg.topic = 'watchout/state'  → full /v0/state snapshot\n// msg.topic = 'watchout/sse/*' → raw SSE event\n// msg.topic = 'watchout/timelines' → updated timeline mapping\n\n// You can fan out to other parts of the flow here.\n// Example: update a dashboard status widget, drive the show controller, etc.\n\nif (msg.topic === 'watchout/timelines') {\n    node.log('Timeline mapping updated: ' + JSON.stringify(msg.payload));\n} else if (msg.topic === 'watchout/state') {\n    const running = (msg.payload.timelines || [])\n        .filter(t => t.running)\n        .map(t => t.id);\n    node.log('Running timeline IDs: ' + (running.join(', ') || '(none)'));\n}\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 460,
+    "y": 560,
+    "wires": [["wo-debug-state"]]
+  },
+
+  {
+    "id": "wo-debug-state",
+    "type": "debug",
+    "z": "wo-tab",
+    "name": "State output",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 700,
+    "y": 560
+  },
+
+  {
+    "id": "wo-comment-settings",
+    "type": "comment",
+    "z": "wo-tab",
+    "name": "── settings.js configuration note ───",
+    "info": "Add the following to `functionGlobalContext` in Node-RED's **settings.js**\nso that all function nodes can access the Watchout client factory:\n\n```js\nfunctionGlobalContext: {\n  createWatchoutClient: require('./functions/watchout')\n}\n```\n\nAlso ensure `watchout.json` is configured with the correct Watchout host/port\nbefore deploying.",
+    "x": 240,
+    "y": 640
+  }
+]
