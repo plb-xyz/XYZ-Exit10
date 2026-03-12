@@ -30,11 +30,15 @@ const dgram = require('dgram');
 
 // ─── Defaults ─────────────────────────────────────────────────────────────────
 
-/** Both MA targets receive every command. */
-const DEFAULT_TARGETS = [
-    { host: '10.154.10.103', port: 8000 }, // Primary RPU
-    { host: '10.154.10.104', port: 8000 }, // Backup
-];
+/**
+ * Both MA targets receive every command.
+ * @deprecated — Targets are now configured in the UDP Out nodes of the
+ * Node-RED flow (Option 1 architecture).  Pass explicit targets to the
+ * MaOsc constructor; this default is intentionally left empty so any
+ * caller that omits targets gets an obvious "nothing sent" result rather
+ * than silently sending to a hardcoded production address.
+ */
+const DEFAULT_TARGETS = [];
 
 /** Canonical zone IDs → MA executor numbers. */
 const DEFAULT_ZONE_EXECUTOR = {
