@@ -126,17 +126,6 @@
         "className": ""
     },
     {
-        "id": "9e63c498e3178e6f",
-        "type": "ui-link",
-        "name": "Link 1",
-        "ui": "f34314dbb36334ec",
-        "path": "/nothing",
-        "icon": "home",
-        "order": 3,
-        "visible": "true",
-        "disabled": "false"
-    },
-    {
         "id": "5176b798f54b89e5",
         "type": "ui-group",
         "name": "Group Zones",
@@ -149,17 +138,6 @@
         "visible": "true",
         "disabled": "false",
         "groupType": "default"
-    },
-    {
-        "id": "1b92347f910b4250",
-        "type": "ui-link",
-        "name": "Link 2",
-        "ui": "f34314dbb36334ec",
-        "path": "/you",
-        "icon": "home",
-        "order": 2,
-        "visible": "true",
-        "disabled": "false"
     },
     {
         "id": "da1aff12794b5db8",
@@ -1363,6 +1341,26 @@
         "x": 660,
         "y": 500,
         "wires": []
+    },
+    {
+        "id": "0ab3ea59ee1611f6",
+        "type": "http request",
+        "z": "19fbd7cf3882c4ad",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": false,
+        "url": "",
+        "persist": false,
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 330,
+        "y": 1480,
+        "wires": [
+            []
+        ]
     },
     {
         "id": "cd9a6261ae15ae21",

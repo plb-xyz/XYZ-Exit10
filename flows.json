@@ -250,7 +250,7 @@
                 "cols": "12"
             }
         ],
-        "order": 4,
+        "order": 2,
         "className": "",
         "visible": true,
         "disabled": false
@@ -1341,6 +1341,80 @@
         "x": 660,
         "y": 500,
         "wires": []
+    },
+    {
+        "id": "0ab3ea59ee1611f6",
+        "type": "http request",
+        "z": "19fbd7cf3882c4ad",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": false,
+        "url": "",
+        "persist": false,
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 330,
+        "y": 1480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "af6910d3ba16e17b",
+        "type": "ui-gauge",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Is it hot?",
+        "group": "a0d8d40dc0b16ddc",
+        "order": 0,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "gauge",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "units",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "4",
+                "color": "#ffc800",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "7",
+                "color": "#ea5353",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": 10,
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 320,
+        "y": 1420,
+        "wires": [
+            []
+        ]
     },
     {
         "id": "cd9a6261ae15ae21",
