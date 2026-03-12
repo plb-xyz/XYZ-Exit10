@@ -1,0 +1,517 @@
+[
+  {
+    "id": "ma-tab",
+    "type": "tab",
+    "label": "MA Integration v0.1",
+    "disabled": false,
+    "info": "grandMA3 OSC integration test flow — owner gate, executor cue, and sequence cue controls."
+  },
+  {
+    "id": "ma-ui-tab",
+    "type": "ui_tab",
+    "name": "MA Control",
+    "icon": "dashboard",
+    "order": 2
+  },
+  {
+    "id": "ma-owner-grp",
+    "type": "ui_group",
+    "name": "Owner Control",
+    "tab": "ma-ui-tab",
+    "order": 1,
+    "disp": true,
+    "width": 12
+  },
+  {
+    "id": "ma-exec-grp",
+    "type": "ui_group",
+    "name": "Executor Cue",
+    "tab": "ma-ui-tab",
+    "order": 2,
+    "disp": true,
+    "width": 12
+  },
+  {
+    "id": "ma-seq-grp",
+    "type": "ui_group",
+    "name": "Sequence Cue",
+    "tab": "ma-ui-tab",
+    "order": 3,
+    "disp": true,
+    "width": 12
+  },
+  {
+    "id": "ma-init-inj",
+    "type": "inject",
+    "z": "ma-tab",
+    "name": "Init MA config on deploy",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 0.1,
+    "payload": "{\"targets\": [{\"host\": \"10.154.10.103\", \"port\": 8000, \"label\": \"Primary RPU\"}, {\"host\": \"10.154.10.104\", \"port\": 8000, \"label\": \"Backup\"}], \"zoneExecutor\": {\"a1\": \"1.101\", \"a2\": \"1.102\", \"a3\": \"1.103\", \"ls\": \"1.104\"}}",
+    "payloadType": "json",
+    "topic": "",
+    "x": 160,
+    "y": 60,
+    "wires": [
+      [
+        "ma-init-fn"
+      ]
+    ]
+  },
+  {
+    "id": "ma-init-fn",
+    "type": "function",
+    "z": "ma-tab",
+    "name": "Store MA config + OSC helper",
+    "func": "'use strict';\nflow.set('ma_config', msg.payload);\n// ─── Shared OSC broadcast helper (stored once; retrieved by command nodes) ────\nvar dgram = require('dgram');\nfunction oscString(str) {\n    var len = Buffer.byteLength(str, 'utf8') + 1;\n    var padded = Math.ceil(len / 4) * 4;\n    var buf = Buffer.alloc(padded, 0);\n    buf.write(str, 0, 'utf8');\n    return buf;\n}\nfunction encodeOscCmd(v) {\n    return Buffer.concat([oscString('/cmd'), oscString(',s'), oscString(v)]);\n}\nfunction maOscBroadcast(cmdString, targets) {\n    return new Promise(function(resolve, reject) {\n        var buf = encodeOscCmd(cmdString);\n        var socket = dgram.createSocket('udp4');\n        if (socket.unref) socket.unref();\n        var sent = [], errors = [];\n        var remaining = targets.length;\n        socket.on('error', function(sockErr) {\n            try { socket.close(); } catch (e) {}\n            reject(sockErr);\n        });\n        if (remaining === 0) {\n            try { socket.close(); } catch (e) {}\n            resolve({ cmdString: cmdString, sent: sent, errors: errors });\n            return;\n        }\n        var finish = function() {\n            try {\n                socket.close(function() {\n                    if (errors.length === targets.length) reject(new Error(errors.join('; ')));\n                    else resolve({ cmdString: cmdString, sent: sent, errors: errors });\n                });\n            } catch (e) {\n                if (errors.length === targets.length) reject(new Error(errors.join('; ')));\n                else resolve({ cmdString: cmdString, sent: sent, errors: errors });\n            }\n        };\n        targets.forEach(function(t) {\n            socket.send(buf, 0, buf.length, t.port, t.host, function(err) {\n                if (err) errors.push(t.host + ':' + t.port + ' - ' + err.message);\n                else sent.push(t.host + ':' + t.port);\n                if (--remaining === 0) finish();\n            });\n        });\n    });\n}\nflow.set('ma_broadcast', maOscBroadcast);\nreturn null;",
+    "outputs": 0,
+    "x": 440,
+    "y": 60,
+    "wires": []
+  },
+  {
+    "id": "ma-btn-nodered",
+    "type": "ui_button",
+    "z": "ma-tab",
+    "name": "Set owner: nodered",
+    "group": "ma-owner-grp",
+    "order": 1,
+    "width": 4,
+    "height": 1,
+    "label": "Own: nodered",
+    "tooltip": "Claim MA owner as 'nodered' — blocks commands without this owner",
+    "color": "",
+    "bgcolor": "#1565c0",
+    "icon": "",
+    "payload": "nodered",
+    "payloadType": "str",
+    "topic": "ma/setOwner",
+    "topicType": "str",
+    "x": 150,
+    "y": 160,
+    "wires": [
+      [
+        "ma-set-owner-fn"
+      ]
+    ]
+  },
+  {
+    "id": "ma-btn-watchout",
+    "type": "ui_button",
+    "z": "ma-tab",
+    "name": "Set owner: watchout",
+    "group": "ma-owner-grp",
+    "order": 2,
+    "width": 4,
+    "height": 1,
+    "label": "Own: watchout",
+    "tooltip": "Claim MA owner as 'watchout' — blocks commands without this owner",
+    "color": "",
+    "bgcolor": "#e65100",
+    "icon": "",
+    "payload": "watchout",
+    "payloadType": "str",
+    "topic": "ma/setOwner",
+    "topicType": "str",
+    "x": 150,
+    "y": 240,
+    "wires": [
+      [
+        "ma-set-owner-fn"
+      ]
+    ]
+  },
+  {
+    "id": "ma-btn-clear",
+    "type": "ui_button",
+    "z": "ma-tab",
+    "name": "Clear owner",
+    "group": "ma-owner-grp",
+    "order": 3,
+    "width": 4,
+    "height": 1,
+    "label": "Clear owner",
+    "tooltip": "Release MA owner gate — any caller can send commands",
+    "color": "",
+    "bgcolor": "#616161",
+    "icon": "",
+    "payload": "",
+    "payloadType": "str",
+    "topic": "ma/setOwner",
+    "topicType": "str",
+    "x": 140,
+    "y": 320,
+    "wires": [
+      [
+        "ma-set-owner-fn"
+      ]
+    ]
+  },
+  {
+    "id": "ma-set-owner-fn",
+    "type": "function",
+    "z": "ma-tab",
+    "name": "Set ma.owner",
+    "func": "'use strict';\nvar owner = msg.payload === '' ? null : msg.payload;\nvar setBy = 'ui';\nflow.set('ma_owner', owner);\nvar label = owner === null ? '(unclaimed)' : owner;\nnode.send({ payload: { action: 'setOwner', owner: owner, setBy: setBy, label: label }, topic: 'ma/owner' });\nreturn null;",
+    "outputs": 1,
+    "x": 390,
+    "y": 240,
+    "wires": [
+      [
+        "ma-owner-dbg"
+      ]
+    ]
+  },
+  {
+    "id": "ma-owner-dbg",
+    "type": "debug",
+    "z": "ma-tab",
+    "name": "Owner status",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": true,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "payload.label",
+    "statusType": "auto",
+    "x": 620,
+    "y": 240,
+    "wires": []
+  },
+  {
+    "id": "ma-zone-dd",
+    "type": "ui_dropdown",
+    "z": "ma-tab",
+    "name": "Zone selector",
+    "label": "Zone",
+    "tooltip": "Select MA zone (executor mapping: a1->1.101, a2->1.102, a3->1.103, ls->1.104)",
+    "place": "Select zone",
+    "group": "ma-exec-grp",
+    "order": 1,
+    "width": 4,
+    "height": 1,
+    "passthru": true,
+    "multiple": false,
+    "options": [
+      {
+        "label": "a1  (Executor 1.101)",
+        "value": "a1"
+      },
+      {
+        "label": "a2  (Executor 1.102)",
+        "value": "a2"
+      },
+      {
+        "label": "a3  (Executor 1.103)",
+        "value": "a3"
+      },
+      {
+        "label": "ls  (Executor 1.104)",
+        "value": "ls"
+      },
+      {
+        "label": "All (1.101 - 1.104)",
+        "value": "all"
+      }
+    ],
+    "payload": "",
+    "topic": "ma/zone",
+    "topicType": "str",
+    "x": 150,
+    "y": 440,
+    "wires": [
+      [
+        "ma-store-zone-fn"
+      ]
+    ]
+  },
+  {
+    "id": "ma-store-zone-fn",
+    "type": "function",
+    "z": "ma-tab",
+    "name": "Store zone",
+    "func": "flow.set('ma_zone', msg.payload);\nreturn null;",
+    "outputs": 0,
+    "x": 380,
+    "y": 440,
+    "wires": []
+  },
+  {
+    "id": "ma-exec-cue-num",
+    "type": "ui_numeric",
+    "z": "ma-tab",
+    "name": "Executor cue number",
+    "label": "Cue #",
+    "tooltip": "Executor cue number to jump to",
+    "group": "ma-exec-grp",
+    "order": 2,
+    "width": 4,
+    "height": 1,
+    "wrap": false,
+    "passthru": true,
+    "topic": "ma/execCue",
+    "topicType": "str",
+    "format": "{{value}}",
+    "min": 1,
+    "max": 9999,
+    "step": 1,
+    "x": 170,
+    "y": 520,
+    "wires": [
+      [
+        "ma-store-exec-cue-fn"
+      ]
+    ]
+  },
+  {
+    "id": "ma-store-exec-cue-fn",
+    "type": "function",
+    "z": "ma-tab",
+    "name": "Store exec cue",
+    "func": "flow.set('ma_exec_cue', msg.payload);\nreturn null;",
+    "outputs": 0,
+    "x": 400,
+    "y": 520,
+    "wires": []
+  },
+  {
+    "id": "ma-exec-cue-btn",
+    "type": "ui_button",
+    "z": "ma-tab",
+    "name": "Go Executor Cue",
+    "group": "ma-exec-grp",
+    "order": 3,
+    "width": 4,
+    "height": 1,
+    "label": "▶ Go Executor Cue",
+    "tooltip": "Send: Go+ Executor <zone> Cue <cue#>",
+    "color": "",
+    "bgcolor": "#2e7d32",
+    "icon": "",
+    "payload": "go",
+    "payloadType": "str",
+    "topic": "ma/goExecutorCue",
+    "topicType": "str",
+    "x": 150,
+    "y": 600,
+    "wires": [
+      [
+        "ma-exec-cue-fn"
+      ]
+    ]
+  },
+  {
+    "id": "ma-exec-cue-fn",
+    "type": "function",
+    "z": "ma-tab",
+    "name": "goExecutorCue",
+    "func": "'use strict';\nvar cfg = flow.get('ma_config') || {};\nvar TARGETS = cfg.targets || [\n    { host: '10.154.10.103', port: 8000 },\n    { host: '10.154.10.104', port: 8000 }\n];\nvar broadcast = flow.get('ma_broadcast');\nif (!broadcast) {\n    node.error('[MA] Broadcast helper not initialised - redeploy the flow');\n    return null;\n}\nvar ZONE_EXECUTOR = cfg.zoneExecutor || {\n    a1: '1.101', a2: '1.102', a3: '1.103', ls: '1.104'\n};\nvar currentOwner = flow.get('ma_owner') || null;\nif (currentOwner !== null) {\n    node.warn('[MA] goExecutorCue blocked - owner: ' + currentOwner);\n    node.send([null, { payload: { success: false, blocked: true, command: 'goExecutorCue', owner: currentOwner }, topic: 'ma/blocked' }]);\n    return null;\n}\nfunction resolveExecutor(zone) {\n    return ZONE_EXECUTOR[zone] !== undefined ? ZONE_EXECUTOR[zone] : String(zone);\n}\nvar zone = flow.get('ma_zone') || 'a1';\nvar cue  = flow.get('ma_exec_cue') || 1;\nvar zones = zone === 'all' ? ['a1', 'a2', 'a3', 'ls'] : [zone];\nasync function execute() {\n    var results = [];\n    for (var i = 0; i < zones.length; i++) {\n        var z = zones[i];\n        var cmdString = 'Go+ Executor ' + resolveExecutor(z) + ' Cue ' + cue;\n        var result = await broadcast(cmdString, TARGETS);\n        results.push({ zone: z, success: result.errors.length === 0, cmdString: result.cmdString, sent: result.sent, errors: result.errors });\n    }\n    return results;\n}\nexecute()\n    .then(function(results) {\n        var allSent = results.every(function(r) { return r.errors.length === 0; });\n        node.send([{ payload: { success: allSent, command: 'goExecutorCue', zone: zone, cue: cue, results: results }, topic: 'ma/goExecutorCue' }, null]);\n    })\n    .catch(function(err) { node.send([{ payload: { success: false, command: 'goExecutorCue', error: err.message }, topic: 'ma/goExecutorCue' }, null]); });\nreturn null;",
+    "outputs": 2,
+    "x": 390,
+    "y": 600,
+    "wires": [
+      [
+        "ma-exec-sent-dbg"
+      ],
+      [
+        "ma-exec-blkd-dbg"
+      ]
+    ]
+  },
+  {
+    "id": "ma-exec-sent-dbg",
+    "type": "debug",
+    "z": "ma-tab",
+    "name": "Executor -> Sent",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": true,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 630,
+    "y": 560,
+    "wires": []
+  },
+  {
+    "id": "ma-exec-blkd-dbg",
+    "type": "debug",
+    "z": "ma-tab",
+    "name": "Executor -> Blocked",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": true,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 640,
+    "y": 640,
+    "wires": []
+  },
+  {
+    "id": "ma-seq-id-num",
+    "type": "ui_numeric",
+    "z": "ma-tab",
+    "name": "Sequence ID",
+    "label": "Sequence #",
+    "tooltip": "MA sequence ID",
+    "group": "ma-seq-grp",
+    "order": 1,
+    "width": 4,
+    "height": 1,
+    "wrap": false,
+    "passthru": true,
+    "topic": "ma/seqId",
+    "topicType": "str",
+    "format": "{{value}}",
+    "min": 1,
+    "max": 9999,
+    "step": 1,
+    "x": 150,
+    "y": 760,
+    "wires": [
+      [
+        "ma-store-seq-id-fn"
+      ]
+    ]
+  },
+  {
+    "id": "ma-store-seq-id-fn",
+    "type": "function",
+    "z": "ma-tab",
+    "name": "Store seq id",
+    "func": "flow.set('ma_seq_id', msg.payload);\nreturn null;",
+    "outputs": 0,
+    "x": 380,
+    "y": 760,
+    "wires": []
+  },
+  {
+    "id": "ma-seq-cue-num",
+    "type": "ui_numeric",
+    "z": "ma-tab",
+    "name": "Sequence cue number",
+    "label": "Cue #",
+    "tooltip": "Sequence cue number to jump to",
+    "group": "ma-seq-grp",
+    "order": 2,
+    "width": 4,
+    "height": 1,
+    "wrap": false,
+    "passthru": true,
+    "topic": "ma/seqCue",
+    "topicType": "str",
+    "format": "{{value}}",
+    "min": 1,
+    "max": 9999,
+    "step": 1,
+    "x": 160,
+    "y": 840,
+    "wires": [
+      [
+        "ma-store-seq-cue-fn"
+      ]
+    ]
+  },
+  {
+    "id": "ma-store-seq-cue-fn",
+    "type": "function",
+    "z": "ma-tab",
+    "name": "Store seq cue",
+    "func": "flow.set('ma_seq_cue', msg.payload);\nreturn null;",
+    "outputs": 0,
+    "x": 390,
+    "y": 840,
+    "wires": []
+  },
+  {
+    "id": "ma-seq-cue-btn",
+    "type": "ui_button",
+    "z": "ma-tab",
+    "name": "Go Sequence Cue",
+    "group": "ma-seq-grp",
+    "order": 3,
+    "width": 4,
+    "height": 1,
+    "label": "▶ Go Sequence Cue",
+    "tooltip": "Send: Go+ Sequence <id> Cue <cue#>",
+    "color": "",
+    "bgcolor": "#1565c0",
+    "icon": "",
+    "payload": "go",
+    "payloadType": "str",
+    "topic": "ma/goSequenceCue",
+    "topicType": "str",
+    "x": 150,
+    "y": 920,
+    "wires": [
+      [
+        "ma-seq-cue-fn"
+      ]
+    ]
+  },
+  {
+    "id": "ma-seq-cue-fn",
+    "type": "function",
+    "z": "ma-tab",
+    "name": "goSequenceCue",
+    "func": "'use strict';\nvar cfg = flow.get('ma_config') || {};\nvar TARGETS = cfg.targets || [\n    { host: '10.154.10.103', port: 8000 },\n    { host: '10.154.10.104', port: 8000 }\n];\nvar broadcast = flow.get('ma_broadcast');\nif (!broadcast) {\n    node.error('[MA] Broadcast helper not initialised - redeploy the flow');\n    return null;\n}\nvar currentOwner = flow.get('ma_owner') || null;\nif (currentOwner !== null) {\n    node.warn('[MA] goSequenceCue blocked - owner: ' + currentOwner);\n    node.send([null, { payload: { success: false, blocked: true, command: 'goSequenceCue', owner: currentOwner }, topic: 'ma/blocked' }]);\n    return null;\n}\nvar seq = flow.get('ma_seq_id') || 1;\nvar cue = flow.get('ma_seq_cue') || 1;\nvar cmdString = 'Go+ Sequence ' + seq + ' Cue ' + cue;\nbroadcast(cmdString, TARGETS)\n    .then(function(result) { node.send([{ payload: { success: result.errors.length === 0, command: 'goSequenceCue', seq: seq, cue: cue, cmdString: result.cmdString, sent: result.sent, errors: result.errors }, topic: 'ma/goSequenceCue' }, null]); })\n    .catch(function(err)   { node.send([{ payload: { success: false, command: 'goSequenceCue', error: err.message }, topic: 'ma/goSequenceCue' }, null]); });\nreturn null;",
+    "outputs": 2,
+    "x": 390,
+    "y": 920,
+    "wires": [
+      [
+        "ma-seq-sent-dbg"
+      ],
+      [
+        "ma-seq-blkd-dbg"
+      ]
+    ]
+  },
+  {
+    "id": "ma-seq-sent-dbg",
+    "type": "debug",
+    "z": "ma-tab",
+    "name": "Sequence -> Sent",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": true,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 620,
+    "y": 880,
+    "wires": []
+  },
+  {
+    "id": "ma-seq-blkd-dbg",
+    "type": "debug",
+    "z": "ma-tab",
+    "name": "Sequence -> Blocked",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": true,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 630,
+    "y": 960,
+    "wires": []
+  }
+]
