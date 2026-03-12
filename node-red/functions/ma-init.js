@@ -11,7 +11,7 @@
  * ─── Global context set ────────────────────────────────────────────────────
  *
  *   global.ma_config      — full parsed ma-config.json object
- *   global.ma_owner       — set to "nodered" on first run; preserved on redeploy
+ *   global.ma_owner       — set to null on first run (open gate); preserved on redeploy
  *   global.ma_owner_setBy — "ma-init" on first run; preserved on redeploy
  *   global.ma_zones       — { a1:false, a2:false, a3:false, ls:false } (first run only)
  *   global.ma_exec_cue    — 1 (first run only)
@@ -34,11 +34,44 @@
 var fs   = require('fs');
 var path = require('path');
 
-var configPath = path.join(RED.settings.userDir, 'node-red', 'config', 'ma-config.json');
-// Path assumes this is a Node-RED Project where userDir is the project root
-// (the directory that contains package.json and flows.json at its top level).
-// Adjust the relative path below if your Node-RED installation stores the
-// project files elsewhere relative to userDir.
+var userDir = (typeof RED !== 'undefined' && RED.settings && RED.settings.userDir)
+    ? RED.settings.userDir : process.cwd();
+
+// Resolve config path robustly for Node-RED Projects in Docker.
+// Tries, in order:
+//   1) <userDir>/projects/<name>/node-red/config/ma-config.json  (Node-RED Project)
+//   2) <userDir>/node-red/config/ma-config.json
+//   3) <userDir>/config/ma-config.json
+function findConfigPath(dir) {
+    var tried = [];
+    try {
+        var projDir = path.join(dir, 'projects');
+        var projects = fs.readdirSync(projDir);
+        for (var i = 0; i < projects.length; i++) {
+            var p = path.join(projDir, projects[i], 'node-red', 'config', 'ma-config.json');
+            tried.push(p);
+            if (fs.existsSync(p)) return { path: p, tried: tried };
+        }
+    } catch (e) {
+        if (e.code !== 'ENOENT' && e.code !== 'ENOTDIR') {
+            node.warn('[MA Init] projects dir scan: ' + e.message);
+        }
+    }
+    var p2 = path.join(dir, 'node-red', 'config', 'ma-config.json');
+    tried.push(p2);
+    if (fs.existsSync(p2)) return { path: p2, tried: tried };
+    var p3 = path.join(dir, 'config', 'ma-config.json');
+    tried.push(p3);
+    if (fs.existsSync(p3)) return { path: p3, tried: tried };
+    return { path: null, tried: tried };
+}
+
+var found = findConfigPath(userDir);
+if (!found.path) {
+    node.error('[MA Init] ma-config.json not found. Tried: ' + found.tried.join(', '));
+    return { topic: 'ma/init/error', payload: { error: 'ma-config.json not found', attempted: found.tried } };
+}
+var configPath = found.path;
 
 var config;
 try {
@@ -51,8 +84,9 @@ try {
 global.set('ma_config', config);
 
 // Only set owner on first run; preserve explicit changes across redeploys.
+// null = open gate (both nodered and watchout actions allowed).
 if (global.get('ma_owner') === undefined) {
-    global.set('ma_owner', 'nodered');
+    global.set('ma_owner', null);
     global.set('ma_owner_setBy', 'ma-init');
 }
 
