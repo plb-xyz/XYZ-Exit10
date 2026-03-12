@@ -1,6 +1,20 @@
 /**
+ * @deprecated v0.1 — Use ma-control.js instead.
+ *
+ * This script (ma-cmd.js) sends UDP directly from JavaScript and reads
+ * targets from flow context.  It has been superseded by ma-control.js
+ * (Option 1 architecture) where:
+ *   - JS outputs plain msg.topic="/cmd" / msg.payload="<MA command>" messages,
+ *   - an OSC encoder Function node encodes the binary frame, and
+ *   - two UDP Out nodes in the flow own the target IPs / ports.
+ *
+ * See: node-red/functions/ma-control.js
+ *      node-red/functions/ma-init.js
+ *      node-red/flows/ma-integration.json
+ *
+ * ─────────────────────────────────────────────────────────────────────────
  * grandMA3 OSC Command — Node-RED Function Node
- * v0.1
+ * v0.1 (legacy)
  *
  * Accepts a message, validates the ma.owner gate, builds the MA command
  * string, and broadcasts it as an OSC /cmd,s,<string> UDP datagram to both
@@ -44,10 +58,10 @@ const dgram = require('dgram');
 
 const cfg = flow.get('ma_config') || {};
 
-const TARGETS = cfg.targets || [
-    { host: '10.154.10.103', port: 8000 }, // Primary RPU
-    { host: '10.154.10.104', port: 8000 }, // Backup
-];
+const TARGETS = cfg.targets || [];
+// NOTE: No hardcoded IP fallback. Targets must be provided in flow context
+// 'ma_config.targets'.  In the new Option 1 architecture (ma-control.js)
+// UDP targets live entirely in the UDP Out nodes — this file is deprecated.
 
 const ZONE_EXECUTOR = cfg.zoneExecutor || {
     a1: '1.101',
