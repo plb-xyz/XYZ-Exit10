@@ -15,6 +15,13 @@
         "info": "Watchout 7 HTTP API integration with manual timeline discovery."
     },
     {
+        "id": "dd0acf3166879641",
+        "type": "tab",
+        "label": "MA Integration v0.1",
+        "disabled": false,
+        "info": "grandMA3 OSC integration test flow — FlowFuse Dashboard 2.0. Owner gate, multi-zone executor cue (a1/a2/a3/ls with All-zones sync), and sequence cue controls."
+    },
+    {
         "id": "f34314dbb36334ec",
         "type": "ui-base",
         "name": "My Dashboard",
@@ -250,7 +257,7 @@
                 "cols": "12"
             }
         ],
-        "order": 4,
+        "order": 2,
         "className": "",
         "visible": true,
         "disabled": false
@@ -296,6 +303,89 @@
         "visible": "true",
         "disabled": "false",
         "groupType": "default"
+    },
+    {
+        "id": "6fb6884660696dec",
+        "type": "ui-page",
+        "name": "MA Integration v0.1",
+        "ui": "f34314dbb36334ec",
+        "path": "/ma",
+        "icon": "mdi:led-strip",
+        "layout": "notebook",
+        "theme": "a9e4285e36ef776f",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "c14f87bdc7a0a531",
+        "type": "ui-group",
+        "name": "Owner Control",
+        "page": "6fb6884660696dec",
+        "width": 6,
+        "height": 1,
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "1cf41733f398bb5c",
+        "type": "ui-group",
+        "name": "Zone Selection",
+        "page": "6fb6884660696dec",
+        "width": 6,
+        "height": 1,
+        "order": 2,
+        "showTitle": true,
+        "className": ""
+    },
+    {
+        "id": "24780cf9c3dfe5c2",
+        "type": "ui-group",
+        "name": "Executor Cue",
+        "page": "6fb6884660696dec",
+        "width": 6,
+        "height": 1,
+        "order": 3,
+        "showTitle": true,
+        "className": ""
+    },
+    {
+        "id": "4b98da42cd6cfcad",
+        "type": "ui-group",
+        "name": "Sequence Cue",
+        "page": "6fb6884660696dec",
+        "width": 6,
+        "height": 1,
+        "order": 4,
+        "showTitle": true,
+        "className": ""
     },
     {
         "id": "ma3_osc_receiver",
@@ -1363,6 +1453,60 @@
         ]
     },
     {
+        "id": "af6910d3ba16e17b",
+        "type": "ui-gauge",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Is it hot?",
+        "group": "a0d8d40dc0b16ddc",
+        "order": 0,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "gauge",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "units",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "4",
+                "color": "#ffc800",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "7",
+                "color": "#ea5353",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": 10,
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 320,
+        "y": 1420,
+        "wires": [
+            []
+        ]
+    },
+    {
         "id": "cd9a6261ae15ae21",
         "type": "inject",
         "z": "4427b69f42325844",
@@ -1758,5 +1902,635 @@
         "wires": [
             []
         ]
+    },
+    {
+        "id": "3f3e1f66e472da6f",
+        "type": "inject",
+        "z": "dd0acf3166879641",
+        "name": "Init MA config on deploy",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"targets\":[{\"host\":\"10.154.10.103\",\"port\":8000,\"label\":\"Primary RPU\"},{\"host\":\"10.154.10.104\",\"port\":8000,\"label\":\"Backup\"}],\"zoneExecutor\":{\"a1\":\"1.101\",\"a2\":\"1.102\",\"a3\":\"1.103\",\"ls\":\"1.104\"}}",
+        "payloadType": "json",
+        "x": 160,
+        "y": 60,
+        "wires": [
+            [
+                "94e5b27944195540"
+            ]
+        ]
+    },
+    {
+        "id": "94e5b27944195540",
+        "type": "function",
+        "z": "dd0acf3166879641",
+        "name": "Store MA config + OSC helper",
+        "func": "'use strict';\nflow.set('ma_config', msg.payload);\n// Only initialise runtime state on first deploy; preserve values across redeploys\nif (flow.get('ma_owner') === undefined) flow.set('ma_owner', null);\nif (!flow.get('ma_zones')) flow.set('ma_zones', { a1: false, a2: false, a3: false, ls: false });\nif (flow.get('ma_exec_cue') === undefined) flow.set('ma_exec_cue', 1);\nif (flow.get('ma_seq_id') === undefined) flow.set('ma_seq_id', 1);\nif (flow.get('ma_seq_cue') === undefined) flow.set('ma_seq_cue', 1);\nvar dgram = require('dgram');\nfunction oscString(str) {\n    var len = Buffer.byteLength(str, 'utf8') + 1;\n    var padded = Math.ceil(len / 4) * 4;\n    var buf = Buffer.alloc(padded, 0);\n    buf.write(str, 0, 'utf8');\n    return buf;\n}\nfunction encodeOscCmd(v) {\n    return Buffer.concat([oscString('/cmd'), oscString(',s'), oscString(v)]);\n}\nfunction maOscBroadcast(cmdString, targets) {\n    return new Promise(function(resolve, reject) {\n        var buf = encodeOscCmd(cmdString);\n        var socket = dgram.createSocket('udp4');\n        if (socket.unref) socket.unref();\n        var sent = [], errors = [];\n        var remaining = targets.length;\n        socket.on('error', function(sockErr) {\n            try { socket.close(); } catch(e){}\n            reject(sockErr);\n        });\n        if (remaining === 0) {\n            try { socket.close(); } catch(e){}\n            resolve({ cmdString: cmdString, sent: sent, errors: errors });\n            return;\n        }\n        var finish = function() {\n            try {\n                socket.close(function() {\n                    if (errors.length === targets.length) reject(new Error(errors.join('; ')));\n                    else resolve({ cmdString: cmdString, sent: sent, errors: errors });\n                });\n            } catch(e) {\n                if (errors.length === targets.length) reject(new Error(errors.join('; ')));\n                else resolve({ cmdString: cmdString, sent: sent, errors: errors });\n            }\n        };\n        targets.forEach(function(t) {\n            socket.send(buf, 0, buf.length, t.port, t.host, function(err) {\n                if (err) errors.push(t.host + ':' + t.port + ' - ' + err.message);\n                else sent.push(t.host + ':' + t.port);\n                if (--remaining === 0) finish();\n            });\n        });\n    });\n}\nflow.set('ma_broadcast', maOscBroadcast);\nreturn null;",
+        "outputs": 0,
+        "x": 440,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "a57d62f2975c5468",
+        "type": "ui-button",
+        "z": "dd0acf3166879641",
+        "group": "c14f87bdc7a0a531",
+        "name": "Set owner: nodered",
+        "label": "Own: nodered",
+        "order": 1,
+        "width": "3",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "Claim MA owner as 'nodered' — UI commands execute; watchout commands blocked",
+        "color": "",
+        "bgcolor": "#1565c0",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "nodered",
+        "payloadType": "str",
+        "topic": "ma/setOwner",
+        "topicType": "str",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 160,
+        "y": 160,
+        "wires": [
+            [
+                "1c8e3d914a79a84f"
+            ]
+        ]
+    },
+    {
+        "id": "c0f0f284cf7ab078",
+        "type": "ui-button",
+        "z": "dd0acf3166879641",
+        "group": "c14f87bdc7a0a531",
+        "name": "Set owner: watchout",
+        "label": "Own: watchout",
+        "order": 2,
+        "width": "3",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "Claim MA owner as 'watchout' — UI commands are blocked until cleared",
+        "color": "",
+        "bgcolor": "#e65100",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "watchout",
+        "payloadType": "str",
+        "topic": "ma/setOwner",
+        "topicType": "str",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 160,
+        "y": 240,
+        "wires": [
+            [
+                "1c8e3d914a79a84f"
+            ]
+        ]
+    },
+    {
+        "id": "960315e4a39b8134",
+        "type": "ui-button",
+        "z": "dd0acf3166879641",
+        "group": "c14f87bdc7a0a531",
+        "name": "Clear owner",
+        "label": "Clear owner",
+        "order": 3,
+        "width": "3",
+        "height": "1",
+        "tooltip": "Release MA owner gate — any caller can send commands",
+        "color": "",
+        "bgcolor": "#616161",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "ma/setOwner",
+        "topicType": "str",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "enablePointerup": false,
+        "x": 150,
+        "y": 320,
+        "wires": [
+            [
+                "1c8e3d914a79a84f"
+            ]
+        ]
+    },
+    {
+        "id": "1c8e3d914a79a84f",
+        "type": "function",
+        "z": "dd0acf3166879641",
+        "name": "Set ma.owner",
+        "func": "'use strict';\nvar owner = msg.payload === '' ? null : msg.payload;\nflow.set('ma_owner', owner);\nmsg.payload = { action: 'setOwner', owner: owner, setBy: 'ui' };\nmsg.topic = 'ma/owner';\nreturn msg;",
+        "outputs": 1,
+        "x": 420,
+        "y": 240,
+        "wires": [
+            [
+                "9bcc3c4b6bd003ae"
+            ]
+        ]
+    },
+    {
+        "id": "9bcc3c4b6bd003ae",
+        "type": "debug",
+        "z": "dd0acf3166879641",
+        "name": "Owner status",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload.owner",
+        "statusType": "auto",
+        "x": 640,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "7d5043c995ff4202",
+        "type": "ui-switch",
+        "z": "dd0acf3166879641",
+        "name": "All zones",
+        "label": "All zones",
+        "group": "1cf41733f398bb5c",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "passthru": false,
+        "topic": "zone/all",
+        "topicType": "str",
+        "className": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "offcolor": "",
+        "x": 150,
+        "y": 460,
+        "wires": [
+            [
+                "26bad0685bd328c0"
+            ]
+        ]
+    },
+    {
+        "id": "198e4d738d421649",
+        "type": "ui-switch",
+        "z": "dd0acf3166879641",
+        "name": "Zone a1",
+        "label": "a1  (Exec 1.101)",
+        "group": "1cf41733f398bb5c",
+        "order": 2,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "topic": "zone/a1",
+        "topicType": "str",
+        "className": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "offcolor": "",
+        "x": 150,
+        "y": 540,
+        "wires": [
+            [
+                "26bad0685bd328c0"
+            ]
+        ]
+    },
+    {
+        "id": "7e2d2d3c25a26e3e",
+        "type": "ui-switch",
+        "z": "dd0acf3166879641",
+        "name": "Zone a2",
+        "label": "a2  (Exec 1.102)",
+        "group": "1cf41733f398bb5c",
+        "order": 3,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "topic": "zone/a2",
+        "topicType": "str",
+        "className": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "offcolor": "",
+        "x": 150,
+        "y": 620,
+        "wires": [
+            [
+                "26bad0685bd328c0"
+            ]
+        ]
+    },
+    {
+        "id": "2e40de88538bb2d0",
+        "type": "ui-switch",
+        "z": "dd0acf3166879641",
+        "name": "Zone a3",
+        "label": "a3  (Exec 1.103)",
+        "group": "1cf41733f398bb5c",
+        "order": 4,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "topic": "zone/a3",
+        "topicType": "str",
+        "className": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "offcolor": "",
+        "x": 150,
+        "y": 700,
+        "wires": [
+            [
+                "26bad0685bd328c0"
+            ]
+        ]
+    },
+    {
+        "id": "09d969e5a65690cf",
+        "type": "ui-switch",
+        "z": "dd0acf3166879641",
+        "name": "Zone ls",
+        "label": "ls   (Exec 1.104)",
+        "group": "1cf41733f398bb5c",
+        "order": 5,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "topic": "zone/ls",
+        "topicType": "str",
+        "className": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "offcolor": "",
+        "x": 150,
+        "y": 780,
+        "wires": [
+            [
+                "26bad0685bd328c0"
+            ]
+        ]
+    },
+    {
+        "id": "26bad0685bd328c0",
+        "type": "function",
+        "z": "dd0acf3166879641",
+        "name": "Zone Sync",
+        "func": "'use strict';\n// Outputs: [sw-all, sw-a1, sw-a2, sw-a3, sw-ls]\n// passthru:false on each switch prevents incoming state msgs from re-firing\n// output, so updating switches here never creates feedback loops.\nvar topic = msg.topic;\nvar val = !!msg.payload;\nvar zones = flow.get('ma_zones') || { a1: false, a2: false, a3: false, ls: false };\nif (topic === 'zone/all') {\n    zones.a1 = val;\n    zones.a2 = val;\n    zones.a3 = val;\n    zones.ls = val;\n} else {\n    var zone = topic.split('/')[1];\n    if (zone && Object.prototype.hasOwnProperty.call(zones, zone)) {\n        zones[zone] = val;\n    }\n}\nflow.set('ma_zones', zones);\nvar allOn = zones.a1 && zones.a2 && zones.a3 && zones.ls;\nreturn [\n    [{ payload: allOn,    topic: 'zone/all' }],\n    [{ payload: zones.a1, topic: 'zone/a1'  }],\n    [{ payload: zones.a2, topic: 'zone/a2'  }],\n    [{ payload: zones.a3, topic: 'zone/a3'  }],\n    [{ payload: zones.ls, topic: 'zone/ls'  }]\n];",
+        "outputs": 5,
+        "x": 430,
+        "y": 620,
+        "wires": [
+            [
+                "7d5043c995ff4202"
+            ],
+            [
+                "198e4d738d421649"
+            ],
+            [
+                "7e2d2d3c25a26e3e"
+            ],
+            [
+                "2e40de88538bb2d0"
+            ],
+            [
+                "09d969e5a65690cf"
+            ]
+        ]
+    },
+    {
+        "id": "e4b0dc1d0d671cf5",
+        "type": "ui-number-input",
+        "z": "dd0acf3166879641",
+        "group": "24780cf9c3dfe5c2",
+        "name": "Executor cue number",
+        "label": "Cue #",
+        "order": 1,
+        "width": "3",
+        "height": "1",
+        "topic": "ma/cue",
+        "topicType": "str",
+        "min": 1,
+        "max": 9999,
+        "step": 1,
+        "tooltip": "Executor cue number to jump to",
+        "passthru": true,
+        "className": "",
+        "x": 170,
+        "y": 900,
+        "wires": [
+            [
+                "a577038999d5d1d3"
+            ]
+        ]
+    },
+    {
+        "id": "a577038999d5d1d3",
+        "type": "function",
+        "z": "dd0acf3166879641",
+        "name": "Store exec cue",
+        "func": "flow.set('ma_exec_cue', msg.payload);\nreturn null;",
+        "outputs": 0,
+        "x": 420,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "4c1df7d49d4c0893",
+        "type": "ui-button",
+        "z": "dd0acf3166879641",
+        "group": "24780cf9c3dfe5c2",
+        "name": "Go Executor Cue",
+        "label": "▶ Go Executor Cue",
+        "order": 2,
+        "width": "3",
+        "height": "1",
+        "tooltip": "Send: Go+ Executor <zone> Cue <cue#> for each selected zone",
+        "color": "",
+        "bgcolor": "#2e7d32",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "go",
+        "payloadType": "str",
+        "topic": "ma/goExecutorCue",
+        "topicType": "str",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "enablePointerup": false,
+        "x": 160,
+        "y": 980,
+        "wires": [
+            [
+                "493ef764f7327d87"
+            ]
+        ]
+    },
+    {
+        "id": "493ef764f7327d87",
+        "type": "function",
+        "z": "dd0acf3166879641",
+        "name": "goExecutorCue",
+        "func": "'use strict';\nvar cfg = flow.get('ma_config') || {};\nvar TARGETS = cfg.targets || [\n    { host: '10.154.10.103', port: 8000 },\n    { host: '10.154.10.104', port: 8000 }\n];\nvar broadcast = flow.get('ma_broadcast');\nif (!broadcast) {\n    node.error('[MA] Broadcast helper not initialised — redeploy the flow');\n    return null;\n}\nvar ZONE_EXECUTOR = cfg.zoneExecutor || {\n    a1: '1.101', a2: '1.102', a3: '1.103', ls: '1.104'\n};\n// UI commands are blocked only when a non-nodered owner holds the gate\nvar currentOwner = flow.get('ma_owner') || null;\nif (currentOwner !== null && currentOwner !== 'nodered') {\n    node.warn('[MA] goExecutorCue blocked — current owner: ' + currentOwner);\n    node.send([null, { payload: { success: false, blocked: true, action: 'goExecutorCue', owner: currentOwner }, topic: 'ma/blocked' }]);\n    return null;\n}\nfunction resolveExecutor(zone) {\n    return ZONE_EXECUTOR[zone] !== undefined ? ZONE_EXECUTOR[zone] : String(zone);\n}\nvar zones = flow.get('ma_zones') || { a1: false, a2: false, a3: false, ls: false };\nvar selectedZones = ['a1', 'a2', 'a3', 'ls'].filter(function(z) { return zones[z]; });\nif (selectedZones.length === 0) {\n    node.warn('[MA] goExecutorCue — no zones selected');\n    return null;\n}\nvar cue = flow.get('ma_exec_cue') || 1;\nasync function execute() {\n    var results = [];\n    for (var i = 0; i < selectedZones.length; i++) {\n        var z = selectedZones[i];\n        var cmdString = 'Go+ Executor ' + resolveExecutor(z) + ' Cue ' + cue;\n        var result = await broadcast(cmdString, TARGETS);\n        results.push({ zone: z, success: result.errors.length === 0, cmdString: result.cmdString, sent: result.sent, errors: result.errors });\n    }\n    return results;\n}\nexecute()\n    .then(function(results) {\n        var allSent = results.every(function(r) { return r.errors.length === 0; });\n        node.send([{ payload: { action: 'goExecutorCue', zones: selectedZones, cue: cue, success: allSent, results: results }, topic: 'ma/goExecutorCue' }, null]);\n    })\n    .catch(function(err) {\n        node.send([{ payload: { action: 'goExecutorCue', zones: selectedZones, cue: cue, success: false, error: err.message }, topic: 'ma/goExecutorCue' }, null]);\n    });\nreturn null;",
+        "outputs": 2,
+        "x": 420,
+        "y": 980,
+        "wires": [
+            [
+                "ff907c24fc555424"
+            ],
+            [
+                "c5c94c3b1c55ba8a"
+            ]
+        ]
+    },
+    {
+        "id": "ff907c24fc555424",
+        "type": "debug",
+        "z": "dd0acf3166879641",
+        "name": "Executor -> Sent",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "c5c94c3b1c55ba8a",
+        "type": "debug",
+        "z": "dd0acf3166879641",
+        "name": "Executor -> Blocked",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 670,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "2032aefe50039cdf",
+        "type": "ui-number-input",
+        "z": "dd0acf3166879641",
+        "group": "4b98da42cd6cfcad",
+        "name": "Sequence ID",
+        "label": "Sequence #",
+        "order": 1,
+        "width": "3",
+        "height": "1",
+        "topic": "ma/seqId",
+        "topicType": "str",
+        "min": 1,
+        "max": 9999,
+        "step": 1,
+        "tooltip": "MA sequence ID",
+        "passthru": true,
+        "className": "",
+        "x": 160,
+        "y": 1120,
+        "wires": [
+            [
+                "a73e77db513f2a17"
+            ]
+        ]
+    },
+    {
+        "id": "a73e77db513f2a17",
+        "type": "function",
+        "z": "dd0acf3166879641",
+        "name": "Store seq id",
+        "func": "flow.set('ma_seq_id', msg.payload);\nreturn null;",
+        "outputs": 0,
+        "x": 420,
+        "y": 1120,
+        "wires": []
+    },
+    {
+        "id": "b1a27d201a0065f0",
+        "type": "ui-number-input",
+        "z": "dd0acf3166879641",
+        "group": "4b98da42cd6cfcad",
+        "name": "Sequence cue number",
+        "label": "Cue #",
+        "order": 2,
+        "width": "3",
+        "height": "1",
+        "topic": "ma/seqCue",
+        "topicType": "str",
+        "min": 1,
+        "max": 9999,
+        "step": 1,
+        "tooltip": "Sequence cue number to jump to",
+        "passthru": true,
+        "className": "",
+        "x": 170,
+        "y": 1200,
+        "wires": [
+            [
+                "42d8b54070631f16"
+            ]
+        ]
+    },
+    {
+        "id": "42d8b54070631f16",
+        "type": "function",
+        "z": "dd0acf3166879641",
+        "name": "Store seq cue",
+        "func": "flow.set('ma_seq_cue', msg.payload);\nreturn null;",
+        "outputs": 0,
+        "x": 430,
+        "y": 1200,
+        "wires": []
+    },
+    {
+        "id": "8803e0585b220216",
+        "type": "ui-button",
+        "z": "dd0acf3166879641",
+        "group": "4b98da42cd6cfcad",
+        "name": "Go Sequence Cue",
+        "label": "▶ Go Sequence Cue",
+        "order": 3,
+        "width": "3",
+        "height": "1",
+        "tooltip": "Send: Go+ Sequence <id> Cue <cue#>",
+        "color": "",
+        "bgcolor": "#1565c0",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "go",
+        "payloadType": "str",
+        "topic": "ma/goSequenceCue",
+        "topicType": "str",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "enablePointerup": false,
+        "x": 160,
+        "y": 1280,
+        "wires": [
+            [
+                "ce8c137c300d169f"
+            ]
+        ]
+    },
+    {
+        "id": "ce8c137c300d169f",
+        "type": "function",
+        "z": "dd0acf3166879641",
+        "name": "goSequenceCue",
+        "func": "'use strict';\nvar cfg = flow.get('ma_config') || {};\nvar TARGETS = cfg.targets || [\n    { host: '10.154.10.103', port: 8000 },\n    { host: '10.154.10.104', port: 8000 }\n];\nvar broadcast = flow.get('ma_broadcast');\nif (!broadcast) {\n    node.error('[MA] Broadcast helper not initialised — redeploy the flow');\n    return null;\n}\nvar currentOwner = flow.get('ma_owner') || null;\nif (currentOwner !== null && currentOwner !== 'nodered') {\n    node.warn('[MA] goSequenceCue blocked — current owner: ' + currentOwner);\n    node.send([null, { payload: { success: false, blocked: true, action: 'goSequenceCue', owner: currentOwner }, topic: 'ma/blocked' }]);\n    return null;\n}\nvar seq = flow.get('ma_seq_id') || 1;\nvar cue = flow.get('ma_seq_cue') || 1;\nvar cmdString = 'Go+ Sequence ' + seq + ' Cue ' + cue;\nbroadcast(cmdString, TARGETS)\n    .then(function(result) {\n        node.send([{ payload: { action: 'goSequenceCue', seq: seq, cue: cue, success: result.errors.length === 0, cmdString: result.cmdString, sent: result.sent, errors: result.errors }, topic: 'ma/goSequenceCue' }, null]);\n    })\n    .catch(function(err) {\n        node.send([{ payload: { action: 'goSequenceCue', seq: seq, cue: cue, success: false, error: err.message }, topic: 'ma/goSequenceCue' }, null]);\n    });\nreturn null;",
+        "outputs": 2,
+        "x": 420,
+        "y": 1280,
+        "wires": [
+            [
+                "074e736593f23be5"
+            ],
+            [
+                "89a73602699f837a"
+            ]
+        ]
+    },
+    {
+        "id": "074e736593f23be5",
+        "type": "debug",
+        "z": "dd0acf3166879641",
+        "name": "Sequence -> Sent",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 1240,
+        "wires": []
+    },
+    {
+        "id": "89a73602699f837a",
+        "type": "debug",
+        "z": "dd0acf3166879641",
+        "name": "Sequence -> Blocked",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 670,
+        "y": 1320,
+        "wires": []
     }
 ]
