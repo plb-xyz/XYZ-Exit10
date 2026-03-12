@@ -1,0 +1,17 @@
+{
+  "targets": [
+    { "host": "10.154.10.103", "port": 8000, "label": "Primary RPU" },
+    { "host": "10.154.10.104", "port": 8000, "label": "Backup" }
+  ],
+  "zoneExecutor": {
+    "a1": "1.101",
+    "a2": "1.102",
+    "a3": "1.103",
+    "ls": "1.104"
+  },
+  "notes": [
+    "targets      : grandMA3 OSC UDP endpoints — every command is sent to ALL targets",
+    "zoneExecutor : maps canonical zone IDs (a1/a2/a3/ls) to MA executor numbers",
+    "owner gate   : set flow context 'ma_owner' to a string to restrict commands to that caller"
+  ]
+}
