@@ -5074,6 +5074,7 @@
         "id": "wo2-sse-node",
         "type": "sse-client",
         "z": "wo2-tab",
+        "d": true,
         "name": "SSE /v1/sse",
         "url": "http://host.docker.internal:3019/v1/sse",
         "events": [],
