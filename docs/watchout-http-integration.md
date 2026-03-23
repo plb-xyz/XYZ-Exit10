@@ -12,6 +12,11 @@ persistence:
 
 **Default port:** `3019`
 
+> **Note (v0.2):** SSE monitoring uses the **`node-red-contrib-sse-client`**
+> contrib node (see [§ Required Node-RED nodes](#4-required-node-red-nodes)).
+> No `require()` calls exist anywhere in the flow — all HTTP I/O goes through
+> built-in **HTTP Request** nodes and the SSE client contrib node.
+
 ---
 
 ## Features
@@ -37,14 +42,17 @@ node-red/
 │   ├── watchout-v2.json          ← Self-contained Node-RED flow (importable) ← USE THIS
 │   └── watchout-integration.json ← Previous flow (v0.1, kept for reference)
 ├── config/
-│   ├── watchout-config.json      ← Config template (copy to /data/watchout/)
-│   └── watchout-defaults.json    ← Legacy defaults reference
+│   └── watchout-config.json      ← Config template (copy to /config/ in Docker)
 └── data/
-    └── timeline-mapping.json     ← Runtime-generated; persisted mapping
+    └── .gitkeep                  ← Runtime-generated mapping goes here (or /data/)
 ```
 
 > **v0.2 change:** No files under `node-red/modules/` or `node-red/functions/`
 > are required.  All logic is self-contained inside Node-RED nodes.
+>
+> In Docker the recommended mounts are:
+> - host `node-red/config` → container `/config` (config file)
+> - host `node-red/data`   → container `/data`   (mapping file)
 
 ---
 
@@ -58,48 +66,67 @@ In Node-RED, go to **Menu → Import → Clipboard** and paste the contents of
 ### 2. Set the config file path
 
 The startup inject node fires once on deploy with a default path of
-`/data/watchout/watchout-config.json`.  Edit the inject node payload if you
+`/config/watchout-config.json`.  Edit the inject node payload if you
 want to store the config elsewhere.
 
 ### 3. Create / edit the config file
 
-Copy `node-red/config/watchout-config.json` to
-`/data/watchout/watchout-config.json` (or wherever you pointed the inject) and
-edit it:
+Copy `node-red/config/watchout-config.json` to `/config/watchout-config.json`
+(or wherever you pointed the inject) and edit it:
 
 ```json
 {
   "host": "192.168.1.10",
   "port": 3019,
-  "mappingFile": "/data/watchout/timeline-mapping.json"
+  "mappingFile": "/data/timeline-mapping.json"
 }
 ```
 
 If the file does not exist the flow will create it with defaults on first deploy.
 
+> **Docker users:** `/config` and `/data` are paths **inside the container**.
+> Add bind-mounts (or named volumes) to your `docker run` / Compose file so
+> these directories are persisted on the host:
+>
+> ```yaml
+> volumes:
+>   - ./node-red/config:/config   # holds watchout-config.json
+>   - ./node-red/data:/data       # holds timeline-mapping.json
+> ```
+
 ### 4. Required Node-RED nodes
 
-The flow uses only **built-in Node-RED nodes** plus the Node-RED Dashboard
-(`@flowfuse/node-red-dashboard`):
+The flow requires one **contrib** node in addition to the built-in Node-RED
+nodes and the Dashboard:
 
 | Package | Nodes used |
 |---------|-----------|
-| `node-red` (built-in) | inject, function, switch, http in, http response, file in, file out, catch, debug |
+| `node-red` (built-in) | inject, function, switch, http in, http request, http response, file in, file out, catch, debug |
 | `@flowfuse/node-red-dashboard` (Dashboard 2.0) | ui-page, ui-group, ui-button, ui-template |
+| `node-red-contrib-sse-client` (**required**) | sse-client |
 
-Install the dashboard if not already present:
+Install both packages if not already present:
 
 ```bash
 cd ~/.node-red
-npm install @flowfuse/node-red-dashboard
+npm install @flowfuse/node-red-dashboard node-red-contrib-sse-client
 ```
+
+Restart Node-RED after installing.
+
+> **SSE URL note:** The `SSE /v0/events` node has a default URL of
+> `http://localhost:3019/v0/events`.  On startup the **Configure SSE URL**
+> function node reads `flow.watchout_config` and sends `msg.url` to the SSE
+> client node so it connects to the correct Watchout host automatically.  If
+> you change the Watchout host/port after deploying, re-deploy or manually
+> trigger the **Start SSE monitor** inject node.
 
 ### 5. Deploy
 
 Click **Deploy**.  On startup the flow will:
-1. Read `watchout-config.json` (create with defaults if missing)
-2. Read `timeline-mapping.json` (start with empty mapping if missing)
-3. Connect to the Watchout SSE event stream
+1. Read `/config/watchout-config.json` (create with defaults if missing)
+2. Read `/data/timeline-mapping.json` (start with empty mapping if missing)
+3. Connect to the Watchout SSE event stream via `node-red-contrib-sse-client`
 
 ---
 
@@ -204,14 +231,17 @@ Send a `POST` request to `/watchout/control` with a JSON body:
 
 ## Real-time Monitoring
 
-The flow connects to Watchout's SSE event stream at `/v0/events` on startup.
+The flow connects to Watchout's SSE event stream at `/v0/events` on startup
+using the **`node-red-contrib-sse-client`** contrib node.
 
 - While connected: state-change events are displayed in the **Live State** UI
   tile.
-- If SSE drops: the flow automatically reconnects after 5 s.  Meanwhile, a
-  separate 5-second poll inject falls back to `GET /v0/state` to keep state
-  current.  The **Live State** tile shows ` Polling (SSE offline)` when in
-  fallback mode.
+- If the SSE stream drops: the contrib node auto-reconnects (configured with
+  `restart: true`).  Meanwhile, a separate 5-second poll inject falls back to
+  `GET /v0/state` (via a built-in **HTTP Request** node) to keep state current.
+  The **Live State** tile shows `⚠ Polling (SSE offline)` when in fallback mode.
+- SSE connection errors are caught by a **catch** node wired to the SSE client
+  and surfaced in the **SSE Status** dashboard tile.
 
 ---
 
@@ -237,8 +267,8 @@ v0.1 stored the timeline mapping at a path configured inside the inject node
 To migrate an existing mapping file:
 
 1. Open the new `watchout-v2.json` flow.
-2. Edit the startup inject node payload to point to your old config path, e.g.
-   `/data/watchout/watchout-config.json`.
+2. Edit the startup inject node payload to point to your config, e.g.
+   `/config/watchout-config.json`.
 3. In the config JSON, set `mappingFile` to the path of your existing mapping
    file.  The flow will read it on next deploy.
 
@@ -253,7 +283,8 @@ accepted.
 - **v0.1** *(previous)* — Logic in external JS modules (`watchout-http.js`,
   `watchout-integration.js`, `functions/*.js`)
 - **v0.2** *(this version)* — All logic self-contained in Node-RED nodes;
-  Node-RED Read/Write file nodes for persistence; SSE monitoring with
-  auto-reconnect and polling fallback
+  Node-RED HTTP Request nodes for all Watchout API calls; SSE monitoring via
+  `node-red-contrib-sse-client`; Node-RED Read/Write file nodes for persistence;
+  default paths `/config/watchout-config.json` and `/data/timeline-mapping.json`
 - **v0.3** *(future)* — ISAAC integration (Events & Playables → Show
   Controller decision tree)
