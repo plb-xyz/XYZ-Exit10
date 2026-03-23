@@ -1592,7 +1592,7 @@
         "className": "",
         "icon": "",
         "iconPosition": "left",
-        "payload": "yooo",
+        "payload": "Show1",
         "payloadType": "str",
         "topic": "topic",
         "topicType": "msg",
@@ -1611,7 +1611,8 @@
         "wires": [
             [
                 "8b9aee18b610f4ad",
-                "d2339c4649d7dc3c"
+                "8bf4437e10a6bc7f",
+                "ea13f009b91065c7"
             ]
         ]
     },
@@ -1766,6 +1767,125 @@
         "pointerupPayloadType": "str",
         "x": 140,
         "y": 860,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fe7a6403efe9d533",
+        "type": "link out",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Show1",
+        "mode": "link",
+        "links": [
+            "1962c3ac9d0da7c8"
+        ],
+        "x": 675,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "8bf4437e10a6bc7f",
+        "type": "debug",
+        "z": "19fbd7cf3882c4ad",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 340,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "491898993236472c",
+        "type": "change",
+        "z": "19fbd7cf3882c4ad",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "method",
+                "pt": "msg",
+                "to": "POST",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "v0/play/1",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 520,
+        "y": 700,
+        "wires": [
+            [
+                "fe7a6403efe9d533",
+                "8bf4437e10a6bc7f"
+            ]
+        ]
+    },
+    {
+        "id": "ea13f009b91065c7",
+        "type": "switch",
+        "z": "19fbd7cf3882c4ad",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Show1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Show2",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Show3",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 330,
+        "y": 700,
+        "wires": [
+            [
+                "491898993236472c"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "4ef930b6b5f4d981",
+        "type": "function",
+        "z": "19fbd7cf3882c4ad",
+        "name": "function 1",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 660,
         "wires": [
             []
         ]
@@ -3046,7 +3166,7 @@
         "once": true,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "{\"host\": \"localhost\", \"port\": 3019, \"storageFile\": \"/data/watchout/timeline-mapping.json\"}",
+        "payload": "{\"host\": \"host.docker.internal\", \"port\": 3019, \"storageFile\": \"/data/watchout/timeline-mapping.json\"}",
         "payloadType": "json",
         "x": 140,
         "y": 80,
@@ -3074,7 +3194,7 @@
         "name": "Discover timelines",
         "func": "/**\n * Watchout Timeline Discovery — Node-RED Function Node\n *\n * Trigger this node by wiring an \"inject\" or dashboard ui_button node to it.\n * It fetches timelines from Watchout, compares them to the stored mapping,\n * stores the pending diff in flow context, and outputs a message suitable\n * for displaying the diff in a UI template node.\n *\n * Flow context variables used:\n *   flow.get('watchout_config')   — { host, port, storageFile }\n *   flow.get('watchout_mapping')  — { [contentId]: timelineId }\n *   flow.get('watchout_pending')  — pending new mapping (awaiting confirmation)\n *\n * Output msg.payload:\n *   {\n *     status:     'diff_ready' | 'no_changes' | 'error',\n *     hasChanges: boolean,\n *     diff:       { added: [], removed: [], unchanged: [], changed: [] },\n *     newMapping: { [contentId]: timelineId },\n *     diffLines:  string[],   // human-readable lines for display\n *     error:      string      // only on status === 'error'\n *   }\n */\n\n'use strict';\n\nconst http = require('http');\n\n// ─── Config ────────────────────────────────────────────────────────────────\n\nconst cfg = flow.get('watchout_config') || {};\nconst host = cfg.host || 'localhost';\nconst port = cfg.port || 3019;\nconst REQUEST_TIMEOUT_MS = 10000;\n\n// ─── Helpers ───────────────────────────────────────────────────────────────\n\nfunction httpGet(path) {\n    return new Promise((resolve, reject) => {\n        const options = {\n            hostname: host,\n            port: port,\n            path: path,\n            method: 'GET',\n            headers: { 'Content-Type': 'application/json' },\n        };\n        const req = http.request(options, (res) => {\n            let data = '';\n            res.on('data', (chunk) => { data += chunk; });\n            res.on('end', () => {\n                try {\n                    resolve({ statusCode: res.statusCode, body: JSON.parse(data) });\n                } catch (e) {\n                    resolve({ statusCode: res.statusCode, body: data });\n                }\n            });\n            res.on('error', reject);\n        });\n        req.on('error', reject);\n        req.setTimeout(REQUEST_TIMEOUT_MS, () => req.destroy(new Error('Request timed out')));\n        req.end();\n    });\n}\n\nfunction parseTimelineName(name) {\n    if (!name || name.startsWith('_')) return null;\n    return name.trim().toLowerCase().replace(/\\s+/g, '_').replace(/[^a-z0-9_]/g, '');\n}\n\nfunction compareMapping(oldMap, newMap) {\n    const oldKeys = Object.keys(oldMap);\n    const newKeys = Object.keys(newMap);\n    return {\n        removed:   oldKeys.filter(k => !(k in newMap)),\n        added:     newKeys.filter(k => !(k in oldMap)),\n        unchanged: oldKeys.filter(k => (k in newMap) && oldMap[k] === newMap[k]),\n        changed:   oldKeys.filter(k => (k in newMap) && oldMap[k] !== newMap[k]),\n    };\n}\n\nfunction formatDiff(diff) {\n    const lines = [];\n    diff.removed.forEach(n   => lines.push(`❌ Removed  : Timeline '${n}' no longer exists`));\n    diff.added.forEach(n     => lines.push(`✨ Added    : New timeline '${n}' discovered`));\n    diff.changed.forEach(n   => lines.push(`🔄 Changed  : Timeline '${n}' ID has changed`));\n    diff.unchanged.forEach(n => lines.push(`✓  Unchanged: '${n}'`));\n    return lines;\n}\n\n// ─── Main ──────────────────────────────────────────────────────────────────\n\nasync function discover() {\n    let result;\n    try {\n        result = await httpGet('/v0/timelines');\n    } catch (err) {\n        return { status: 'error', error: `Connection failed: ${err.message}` };\n    }\n\n    if (result.statusCode !== 200) {\n        return { status: 'error', error: `Watchout returned HTTP ${result.statusCode}` };\n    }\n\n    const timelines = Array.isArray(result.body) ? result.body : [];\n\n    // Build new mapping\n    const newMapping = {};\n    timelines.forEach(tl => {\n        const contentId = parseTimelineName(tl.name);\n        if (contentId) {\n            newMapping[contentId] = String(tl.id);\n        }\n    });\n\n    // Compare with stored mapping\n    const storedMapping = flow.get('watchout_mapping') || {};\n    const diff = compareMapping(storedMapping, newMapping);\n    const hasChanges = diff.added.length > 0 || diff.removed.length > 0 || diff.changed.length > 0;\n\n    // Store pending mapping (not saved until confirmed)\n    flow.set('watchout_pending', newMapping);\n\n    return {\n        status:     hasChanges ? 'diff_ready' : 'no_changes',\n        hasChanges,\n        diff,\n        newMapping,\n        diffLines:  formatDiff(diff),\n    };\n}\n\n// Execute and pass result downstream\ndiscover().then(payload => {\n    node.send({ payload, topic: 'watchout/discovery' });\n}).catch(err => {\n    node.send({ payload: { status: 'error', error: err.message }, topic: 'watchout/discovery' });\n});\n\nreturn null; // async — result sent in promise callback\n",
         "outputs": 1,
-        "x": 380,
+        "x": 370,
         "y": 160,
         "wires": [
             [
@@ -3192,6 +3312,7 @@
         "id": "056fc50754f16ab8",
         "type": "inject",
         "z": "4427b69f42325844",
+        "d": true,
         "name": "Poll state (5 s)",
         "props": [
             {
@@ -3424,6 +3545,483 @@
         "className": "",
         "x": 620,
         "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0f0e1d9147fd0a52",
+        "type": "http request",
+        "z": "4427b69f42325844",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://host.docker.internal:3019/v0/state",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 550,
+        "y": 700,
+        "wires": [
+            [
+                "25b16ed9a6a61254"
+            ]
+        ]
+    },
+    {
+        "id": "dcf9235fa722d331",
+        "type": "inject",
+        "z": "4427b69f42325844",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 340,
+        "y": 700,
+        "wires": [
+            [
+                "0f0e1d9147fd0a52",
+                "1f124628f2dacf95"
+            ]
+        ]
+    },
+    {
+        "id": "25b16ed9a6a61254",
+        "type": "debug",
+        "z": "4427b69f42325844",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "1f124628f2dacf95",
+        "type": "http request",
+        "z": "4427b69f42325844",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://host.docker.internal:3019/v0/play/2",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 550,
+        "y": 740,
+        "wires": [
+            [
+                "25b16ed9a6a61254"
+            ]
+        ]
+    },
+    {
+        "id": "0979cea3988209be",
+        "type": "inject",
+        "z": "4427b69f42325844",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 340,
+        "y": 800,
+        "wires": [
+            [
+                "40b13d2f22965063"
+            ]
+        ]
+    },
+    {
+        "id": "40b13d2f22965063",
+        "type": "http request",
+        "z": "4427b69f42325844",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://host.docker.internal:3019/v1/sse",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 550,
+        "y": 800,
+        "wires": [
+            [
+                "25b16ed9a6a61254"
+            ]
+        ]
+    },
+    {
+        "id": "8417d5858586e845",
+        "type": "inject",
+        "z": "4427b69f42325844",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 340,
+        "y": 860,
+        "wires": [
+            [
+                "ab661dd2f52ce072"
+            ]
+        ]
+    },
+    {
+        "id": "ab661dd2f52ce072",
+        "type": "http request",
+        "z": "4427b69f42325844",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://host.docker.internal:3019/v0/timelines",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 550,
+        "y": 860,
+        "wires": [
+            [
+                "25b16ed9a6a61254"
+            ]
+        ]
+    },
+    {
+        "id": "67d8972010009125",
+        "type": "http request",
+        "z": "4427b69f42325844",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://host.docker.internal:3019/{{{topic}}}",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 550,
+        "y": 1040,
+        "wires": [
+            [
+                "90e94aa4a467747c",
+                "b1f027da3ca2ce46",
+                "4f7fc0d6fe6768a1"
+            ]
+        ]
+    },
+    {
+        "id": "9a5c4307d07b3346",
+        "type": "inject",
+        "z": "4427b69f42325844",
+        "name": "",
+        "props": [
+            {
+                "p": "method",
+                "v": "GET",
+                "vt": "str"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "v0/timelines",
+        "x": 350,
+        "y": 1000,
+        "wires": [
+            [
+                "67d8972010009125"
+            ]
+        ]
+    },
+    {
+        "id": "90e94aa4a467747c",
+        "type": "debug",
+        "z": "4427b69f42325844",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "e35d8ae5a4661a03",
+        "type": "inject",
+        "z": "4427b69f42325844",
+        "name": "",
+        "props": [
+            {
+                "p": "method",
+                "v": "GET",
+                "vt": "str"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "v0/state",
+        "x": 340,
+        "y": 1040,
+        "wires": [
+            [
+                "67d8972010009125"
+            ]
+        ]
+    },
+    {
+        "id": "d87b48746227f5c2",
+        "type": "inject",
+        "z": "4427b69f42325844",
+        "name": "",
+        "props": [
+            {
+                "p": "method",
+                "v": "POST",
+                "vt": "str"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "v0/play/2",
+        "x": 340,
+        "y": 1080,
+        "wires": [
+            [
+                "67d8972010009125"
+            ]
+        ]
+    },
+    {
+        "id": "1962c3ac9d0da7c8",
+        "type": "link in",
+        "z": "4427b69f42325844",
+        "name": "To WO HTTP Request",
+        "links": [
+            "fe7a6403efe9d533"
+        ],
+        "x": 385,
+        "y": 1140,
+        "wires": [
+            [
+                "67d8972010009125"
+            ]
+        ]
+    },
+    {
+        "id": "aeda62a37bec44b7",
+        "type": "change",
+        "z": "4427b69f42325844",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "wo_timelines",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 870,
+        "y": 920,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b1f027da3ca2ce46",
+        "type": "switch",
+        "z": "4427b69f42325844",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "Main Timeline",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "clockTime",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 670,
+        "y": 940,
+        "wires": [
+            [
+                "aeda62a37bec44b7"
+            ],
+            [
+                "be79e0848fdfe95e"
+            ]
+        ]
+    },
+    {
+        "id": "be79e0848fdfe95e",
+        "type": "change",
+        "z": "4427b69f42325844",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "wo_state",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 850,
+        "y": 960,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4f7fc0d6fe6768a1",
+        "type": "file",
+        "z": "4427b69f42325844",
+        "name": "",
+        "filename": "/data/wo.json",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 730,
+        "y": 1000,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "922831f9300c30d1",
+        "type": "file in",
+        "z": "4427b69f42325844",
+        "name": "",
+        "filename": "",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 560,
+        "y": 1120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c9837cfd139fa01c",
+        "type": "watch",
+        "z": "4427b69f42325844",
+        "name": "",
+        "files": "",
+        "recursive": "",
+        "x": 550,
+        "y": 1160,
         "wires": [
             []
         ]
