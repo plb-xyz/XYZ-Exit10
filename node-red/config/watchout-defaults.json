@@ -1,5 +1,5 @@
 {
-  "host": "localhost",
+  "host": "host.docker.internal",
   "port": 3019,
   "storageFile": "/data/watchout/timeline-mapping.json",
   "pollIntervalMs": 5000,

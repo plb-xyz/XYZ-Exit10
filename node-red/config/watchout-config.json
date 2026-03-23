@@ -1,8 +1,8 @@
 {
   "_comment": "Watchout 7 HTTP Integration — Node-RED configuration",
-  "host": "localhost",
+  "host": "host.docker.internal",
   "port": 3019,
-  "mappingFile": "/data/watchout/timeline-mapping.json",
+  "mappingFile": "/data/timeline-mapping.json",
   "_notes": [
     "host        : IP or hostname of the Watchout 7 presentation server",
     "port        : Watchout 7 HTTP API port (default 3019)",
