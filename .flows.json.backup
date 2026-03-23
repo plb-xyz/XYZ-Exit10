@@ -38,7 +38,7 @@
         "info": "grandMA3 OSC integration test flow — FlowFuse Dashboard 2.0. Owner gate, multi-zone executor cue (a1/a2/a3/ls with All-zones sync), and sequence cue controls."
     },
     {
-        "id": "8d6156bfd7e6065f",
+        "id": "wo2-tab",
         "type": "tab",
         "label": "Watchout v2",
         "disabled": false,
@@ -164,48 +164,6 @@
         "className": "",
         "visible": "true",
         "disabled": "false"
-    },
-    {
-        "id": "f4d4b5c1c3b0a1ae",
-        "type": "ui-group",
-        "name": "Timeline Discovery",
-        "page": "9ada0fbe8e910d7e",
-        "width": 6,
-        "height": 1,
-        "order": 1,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
-        "id": "ef07ffba08e94be9",
-        "type": "ui-group",
-        "name": "Mapping Status",
-        "page": "9ada0fbe8e910d7e",
-        "width": 6,
-        "height": 1,
-        "order": 2,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
-        "id": "dfba414e3e61e11b",
-        "type": "ui-group",
-        "name": "Live State",
-        "page": "9ada0fbe8e910d7e",
-        "width": 6,
-        "height": 1,
-        "order": 3,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false",
-        "groupType": "default"
     },
     {
         "id": "ma-d2-page",
@@ -627,8 +585,8 @@
         ],
         "order": 6,
         "className": "",
-        "visible": "true",
-        "disabled": "false"
+        "visible": true,
+        "disabled": false
     },
     {
         "id": "20eba16b1f4b5a48",
@@ -4380,9 +4338,9 @@
         ]
     },
     {
-        "id": "260198f75bc27a22",
+        "id": "wo2-startup-inj",
         "type": "inject",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Startup (once)",
         "props": [
             {
@@ -4394,22 +4352,22 @@
         "once": true,
         "onceDelay": 0.3,
         "topic": "",
-        "payload": "/config/watchout-config.json",
+        "payload": "/data/projects/XYZ-Exit10/node-red/config/watchout-config.json",
         "payloadType": "str",
         "x": 130,
         "y": 60,
         "wires": [
             [
-                "a23ee0df9f66c817"
+                "wo2-set-cfgpath-fn"
             ]
         ]
     },
     {
-        "id": "a23ee0df9f66c817",
+        "id": "wo2-set-cfgpath-fn",
         "type": "function",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Set config path",
-        "func": "// Set path to watchout-config.json (edit this path if needed)\nmsg.filename = msg.payload || '/config/watchout-config.json';\nreturn msg;",
+        "func": "// Set path to watchout-config.json (edit this path if needed)\nmsg.filename = msg.payload || '/data/projects/XYZ-Exit10/node-red/config/watchout-config.json';\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -4420,114 +4378,114 @@
         "y": 60,
         "wires": [
             [
-                "60deab19f2ebecb0",
-                "4416cca49f118859"
+                "wo2-config-file-in"
             ]
         ]
     },
     {
-        "id": "60deab19f2ebecb0",
+        "id": "wo2-config-file-in",
         "type": "file in",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Read watchout-config.json",
-        "filename": "payload",
+        "filename": "filename",
         "filenameType": "msg",
         "format": "utf8",
         "chunk": false,
         "sendError": true,
         "encoding": "none",
         "allProps": false,
-        "x": 540,
+        "x": 510,
         "y": 60,
         "wires": [
             [
-                "96f25d0a9a0d4d0c",
-                "d5bdcdd2918cdcb0"
+                "wo2-parse-config-fn"
             ]
         ]
     },
     {
-        "id": "96f25d0a9a0d4d0c",
+        "id": "wo2-parse-config-fn",
         "type": "function",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Parse config",
-        "func": "// Parse watchout-config.json\nlet cfg = {};\ntry {\n    cfg = JSON.parse(msg.payload);\n} catch(e) {\n    node.warn('[Watchout] watchout-config.json parse error, using defaults: ' + e.message);\n}\ncfg.host        = cfg.host        || 'localhost';\ncfg.port        = cfg.port        || 3019;\ncfg.mappingFile = cfg.mappingFile || '/data/timeline-mapping.json';\nflow.set('watchout_config', cfg);\nnode.status({ fill: 'green', shape: 'dot', text: 'Config: ' + cfg.host + ':' + cfg.port });\n// Feed filename forward to read mapping file\nmsg.filename = cfg.mappingFile;\nreturn msg;",
+        "func": "// Parse watchout-config.json\nlet cfg = {};\ntry {\n    cfg = JSON.parse(msg.payload);\n} catch(e) {\n    node.warn('[Watchout] watchout-config.json parse error, using defaults: ' + e.message);\n}\ncfg.host        = cfg.host        || 'localhost';\ncfg.port        = cfg.port        || 3019;\ncfg.mappingFile = cfg.mappingFile || '/projects/XYZ-Exit10/node-red/data/timeline-mapping.json';\nflow.set('watchout_config', cfg);\nnode.status({ fill: 'green', shape: 'dot', text: 'Config: ' + cfg.host + ':' + cfg.port });\n// Feed filename forward to read mapping file\nmsg.filename = cfg.mappingFile;\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 760,
+        "x": 730,
         "y": 60,
         "wires": [
             [
-                "e703899a048fbcad"
+                "wo2-mapping-file-in"
             ]
         ]
     },
     {
-        "id": "b5574ce842c31778",
+        "id": "wo2-cfg-catch",
         "type": "catch",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Config file missing",
         "scope": [
-            "60deab19f2ebecb0"
+            "wo2-config-file-in"
         ],
         "uncaught": false,
-        "x": 480,
+        "x": 410,
         "y": 160,
         "wires": [
             [
-                "82433bac09a308bd"
+                "wo2-default-cfg-fn"
             ]
         ]
     },
     {
-        "id": "82433bac09a308bd",
+        "id": "wo2-default-cfg-fn",
         "type": "function",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Create default config",
-        "func": "// Config file missing — create defaults\nconst defaultCfg = {\n    host: 'localhost',\n    port: 3019,\n    mappingFile: '/data/watchout/timeline-mapping.json'\n};\nflow.set('watchout_config', defaultCfg);\nnode.warn('[Watchout] watchout-config.json not found — writing defaults');\nmsg.filename = '/data/watchout/watchout-config.json';\nmsg.payload  = JSON.stringify(defaultCfg, null, 2);\nreturn msg;",
+        "func": "// Config file missing — create defaults\nconst defaultCfg = {\n    host: 'localhost',\n    port: 3019,\n    mappingFile: '/projects/XYZ-Exit10/node-red/data/timeline-mapping.json'\n};\nflow.set('watchout_config', defaultCfg);\nnode.warn('[Watchout] watchout-config.json not found — writing defaults');\nmsg.filename = '/config/watchout-config.json';\nmsg.payload  = JSON.stringify(defaultCfg, null, 2);\nreturn msg;",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 700,
+        "x": 680,
         "y": 160,
         "wires": [
             [
-                "7faa5326e83cad3f"
+                "wo2-write-cfg-file"
             ]
         ]
     },
     {
-        "id": "7faa5326e83cad3f",
+        "id": "wo2-write-cfg-file",
         "type": "file",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Write watchout-config.json",
-        "filename": "",
+        "filename": "filename",
         "filenameType": "msg",
         "appendNewline": false,
         "createDir": true,
         "overwriteFile": "true",
         "encoding": "utf8",
-        "x": 950,
+        "x": 940,
         "y": 160,
         "wires": [
             [
-                "fa294a191b1c3de0"
+                "wo2-after-write-cfg-fn"
             ]
         ]
     },
     {
-        "id": "fa294a191b1c3de0",
+        "id": "wo2-after-write-cfg-fn",
         "type": "function",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Set mapping path",
-        "func": "// After writing default config, continue to mapping read\nconst cfg = flow.get('watchout_config') || {};\nmsg.filename = cfg.mappingFile || '/data/watchout/timeline-mapping.json';\nreturn msg;",
+        "func": "// After writing default config, continue to mapping read\nconst cfg = flow.get('watchout_config') || {};\nmsg.filename = cfg.mappingFile || '/projects/XYZ-Exit10/node-red/data/timeline-mapping.json';\nreturn msg;",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -4536,34 +4494,34 @@
         "y": 160,
         "wires": [
             [
-                "e703899a048fbcad"
+                "wo2-mapping-file-in"
             ]
         ]
     },
     {
-        "id": "e703899a048fbcad",
+        "id": "wo2-mapping-file-in",
         "type": "file in",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Read timeline-mapping.json",
-        "filename": "payload",
+        "filename": "filename",
         "filenameType": "msg",
         "format": "utf8",
         "chunk": false,
         "sendError": true,
         "encoding": "none",
         "allProps": false,
-        "x": 980,
+        "x": 960,
         "y": 60,
         "wires": [
             [
-                "23257f5bb731d4ff"
+                "wo2-parse-mapping-fn"
             ]
         ]
     },
     {
-        "id": "23257f5bb731d4ff",
+        "id": "wo2-parse-mapping-fn",
         "type": "function",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Parse mapping",
         "func": "// Parse timeline-mapping.json\nlet mapping = {};\ntry {\n    const raw = JSON.parse(msg.payload);\n    mapping = raw.mapping || raw || {};\n} catch(e) {\n    node.warn('[Watchout] timeline-mapping.json parse error, starting empty: ' + e.message);\n}\nflow.set('watchout_mapping', mapping);\nflow.set('watchout_pending', null);\nconst count = Object.keys(mapping).length;\nnode.status({ fill: 'green', shape: 'dot', text: 'Mapping loaded: ' + count + ' timelines' });\nreturn null;",
         "outputs": 1,
@@ -4571,36 +4529,37 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1210,
+        "x": 1180,
         "y": 60,
         "wires": [
             []
         ]
     },
     {
-        "id": "bdf03eb9e9302aeb",
+        "id": "wo2-map-catch",
         "type": "catch",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Mapping file missing",
         "scope": [
-            "e703899a048fbcad"
+            "wo2-mapping-file-in"
         ],
         "uncaught": false,
         "x": 950,
         "y": 260,
         "wires": [
             [
-                "dccd1801642f7401"
+                "wo2-default-map-fn"
             ]
         ]
     },
     {
-        "id": "dccd1801642f7401",
+        "id": "wo2-default-map-fn",
         "type": "function",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Empty mapping",
         "func": "// Mapping file missing — start with empty mapping\nflow.set('watchout_mapping', {});\nflow.set('watchout_pending', null);\nnode.warn('[Watchout] timeline-mapping.json not found — starting with empty mapping');\nreturn null;",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -4612,9 +4571,9 @@
         ]
     },
     {
-        "id": "be58e5282552586d",
+        "id": "wo2-discover-btn",
         "type": "ui-button",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "group": "20eba16b1f4b5a48",
         "name": "Re-discover Timelines",
         "label": "Re-discover Timelines",
@@ -4644,16 +4603,16 @@
         "y": 380,
         "wires": [
             [
-                "68b820a05a0de027"
+                "wo2-discover-fn"
             ]
         ]
     },
     {
-        "id": "68b820a05a0de027",
+        "id": "wo2-discover-fn",
         "type": "function",
-        "z": "8d6156bfd7e6065f",
-        "name": "Discover timelines",
-        "func": "// ─── Watchout Timeline Discovery ───────────────────────────────────\n// Fetch timelines from Watchout, compare to stored mapping,\n// store pending diff in flow context, output diff for UI display.\n\n'use strict';\n\nconst http = require('http');\n\nconst cfg  = flow.get('watchout_config') || {};\nconst host = cfg.host || 'localhost';\nconst port = cfg.port || 3019;\nconst REQUEST_TIMEOUT_MS = 10000;\n\n// ── Helpers ─────────────────────────────────────────────────────────\n\nfunction httpGet(path) {\n    return new Promise((resolve, reject) => {\n        const req = http.request(\n            { hostname: host, port, path, method: 'GET',\n              headers: { 'Content-Type': 'application/json' } },\n            (res) => {\n                let data = '';\n                res.on('data', c => { data += c; });\n                res.on('end', () => {\n                    try { resolve({ statusCode: res.statusCode, body: JSON.parse(data) }); }\n                    catch(e) { resolve({ statusCode: res.statusCode, body: data }); }\n                });\n                res.on('error', reject);\n            }\n        );\n        req.on('error', reject);\n        req.setTimeout(REQUEST_TIMEOUT_MS, () => req.destroy(new Error('Request timed out')));\n        req.end();\n    });\n}\n\nfunction parseTimelineName(name) {\n    if (!name || name.startsWith('_')) return null;\n    return name.trim().toLowerCase().replace(/\\s+/g, '_').replace(/[^a-z0-9_]/g, '');\n}\n\nfunction compareMapping(oldMap, newMap) {\n    const oldKeys = Object.keys(oldMap);\n    const newKeys = Object.keys(newMap);\n    return {\n        removed:   oldKeys.filter(k => !(k in newMap)),\n        added:     newKeys.filter(k => !(k in oldMap)),\n        unchanged: oldKeys.filter(k => (k in newMap) && oldMap[k] === newMap[k]),\n        changed:   oldKeys.filter(k => (k in newMap) && oldMap[k] !== newMap[k]),\n    };\n}\n\nfunction formatDiff(diff) {\n    const lines = [];\n    diff.removed.forEach(n   => lines.push('REMOVED  : Timeline \\'' + n + '\\' no longer exists'));\n    diff.added.forEach(n     => lines.push('ADDED    : New timeline \\'' + n + '\\' discovered'));\n    diff.changed.forEach(n   => lines.push('CHANGED  : Timeline \\'' + n + '\\' ID has changed'));\n    diff.unchanged.forEach(n => lines.push('OK       : \\'' + n + '\\''));\n    return lines;\n}\n\n// ── Main ─────────────────────────────────────────────────────────────\n\nasync function discover() {\n    let result;\n    try {\n        result = await httpGet('/v0/timelines');\n    } catch(err) {\n        return { status: 'error', error: 'Connection failed: ' + err.message };\n    }\n\n    if (result.statusCode !== 200) {\n        return { status: 'error', error: 'Watchout returned HTTP ' + result.statusCode };\n    }\n\n    const timelines = Array.isArray(result.body) ? result.body : [];\n\n    const newMapping = {};\n    timelines.forEach(tl => {\n        const contentId = parseTimelineName(tl.name);\n        if (contentId) newMapping[contentId] = String(tl.id);\n    });\n\n    const storedMapping = flow.get('watchout_mapping') || {};\n    const diff     = compareMapping(storedMapping, newMapping);\n    const hasChanges = diff.added.length > 0 || diff.removed.length > 0 || diff.changed.length > 0;\n\n    flow.set('watchout_pending', newMapping);\n\n    return {\n        status:     hasChanges ? 'diff_ready' : 'no_changes',\n        hasChanges,\n        diff,\n        newMapping,\n        diffLines:  formatDiff(diff),\n    };\n}\n\ndiscover().then(payload => {\n    node.send({ payload, topic: 'watchout/discovery' });\n}).catch(err => {\n    node.send({ payload: { status: 'error', error: err.message }, topic: 'watchout/discovery' });\n});\n\nreturn null;",
+        "z": "wo2-tab",
+        "name": "Prepare timelines request",
+        "func": "// Build the HTTP GET request for /v0/timelines\nconst cfg  = flow.get('watchout_config') || {};\nconst host = cfg.host || 'localhost';\nconst port = cfg.port || 3019;\nmsg.method  = 'GET';\nmsg.url     = 'http://' + host + ':' + port + '/v0/timelines';\nmsg.headers = { 'Content-Type': 'application/json' };\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -4663,40 +4622,39 @@
         "y": 380,
         "wires": [
             [
-                "b951a96450401d68",
-                "8f7b18eef3c18b2d"
+                "wo2-discover-http"
             ]
         ]
     },
     {
-        "id": "b951a96450401d68",
+        "id": "wo2-diff-template",
         "type": "ui-template",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "group": "20eba16b1f4b5a48",
         "page": "",
         "ui": "",
         "name": "Diff UI",
-        "order": 3,
+        "order": 2,
         "width": "0",
         "height": "0",
-        "format": "<template>\n  <div style=\"padding:4px\">\n    <p v-if=\"!msg\" style=\"color:#aaa\">Waiting for discovery result...</p>\n    <div v-else-if=\"msg.payload.status === 'error'\" style=\"color:#f44336\">\n      <strong>Discovery error</strong><br>{{ msg.payload.error }}\n    </div>\n    <div v-else-if=\"msg.payload.status === 'no_changes'\" style=\"color:#4caf50\">\n      <strong>No changes detected</strong>\n      <p>{{ msg.payload.diffLines ? msg.payload.diffLines.length : 0 }} timelines found - mapping is up to date.</p>\n      <pre style=\"background:#1b1b2e;color:#e0e0e0;padding:8px;border-radius:4px;font-size:0.85em;max-height:180px;overflow-y:auto\">{{ msg.payload.diffLines ? msg.payload.diffLines.join('\\n') : '' }}</pre>\n    </div>\n    <div v-else-if=\"msg.payload.status === 'diff_ready'\">\n      <strong>Changes detected - review before saving</strong>\n      <pre style=\"background:#1b1b2e;color:#e0e0e0;padding:8px;border-radius:4px;font-size:0.85em;max-height:200px;overflow-y:auto\">{{ msg.payload.diffLines ? msg.payload.diffLines.join('\\n') : '' }}</pre>\n      <div style=\"margin-top:10px\">\n        <v-btn color=\"primary\" class=\"mr-2\" @click=\"send({payload:{action:'confirm'}})\">Confirm &amp; Save</v-btn>\n        <v-btn color=\"warning\" @click=\"send({payload:{action:'cancel'}})\">Cancel</v-btn>\n      </div>\n    </div>\n  </div>\n</template>\n<script>\n  export default {\n    methods: {\n      send (msg) {\n        this.$socket.emit('msg-input:' + this.id, msg)\n      }\n    }\n  }\n</script>",
+        "format": "<template>\n  <div style=\"padding:8px; min-height:220px;\">\n    <p v-if=\"!msg\" style=\"color:#aaa\">Waiting for discovery result...</p>\n\n    <div v-else-if=\"msg.payload.status === 'error'\" style=\"color:#f44336\">\n      <strong>Discovery error</strong><br>{{ msg.payload.error }}\n    </div>\n\n    <div v-else-if=\"msg.payload.status === 'discovered' || msg.payload.status === 'diff_ready'\">\n      <strong>\n        {{ (msg.payload.diff && (msg.payload.diff.added?.length || msg.payload.diff.removed?.length || msg.payload.diff.changed?.length))\n            ? 'Changes detected - review before saving'\n            : 'Discovery result' }}\n      </strong>\n\n      <p style=\"margin:6px 0; color:#aaa;\">\n        {{ msg.payload.count ?? 0 }} timelines discovered\n      </p>\n\n      <pre style=\"background:#1b1b2e;color:#e0e0e0;padding:8px;border-radius:4px;font-size:0.85em;max-height:200px;overflow-y:auto\">\n{{ (msg.payload.diffLines && msg.payload.diffLines.length) ? msg.payload.diffLines.join('\\n') : 'No diff lines' }}\n      </pre>\n    </div>\n\n    <div v-else-if=\"msg.payload.status === 'no_changes'\" style=\"color:#4caf50\">\n      <strong>No changes detected</strong>\n      <pre style=\"background:#1b1b2e;color:#e0e0e0;padding:8px;border-radius:4px;font-size:0.85em;max-height:180px;overflow-y:auto\">\n{{ msg.payload.diffLines ? msg.payload.diffLines.join('\\n') : '' }}\n      </pre>\n    </div>\n\n    <div v-else style=\"color:#aaa\">\n      Unknown status: {{ msg.payload.status }}\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {}\n</script>",
         "storeOutMessages": true,
         "passthru": true,
         "resendOnRefresh": false,
         "templateScope": "local",
         "className": "",
-        "x": 570,
+        "x": 590,
         "y": 380,
         "wires": [
             [
-                "f4114e7aa6634817"
+                "wo2-action-switch"
             ]
         ]
     },
     {
-        "id": "f4114e7aa6634817",
+        "id": "wo2-action-switch",
         "type": "switch",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Confirm or Cancel?",
         "property": "payload.action",
         "propertyType": "msg",
@@ -4719,20 +4677,21 @@
         "y": 460,
         "wires": [
             [
-                "e1c384026d6325ba"
+                "wo2-confirm-prepare-fn"
             ],
             [
-                "adee1c0a4642a60e"
+                "wo2-cancel-fn"
             ]
         ]
     },
     {
-        "id": "e1c384026d6325ba",
+        "id": "wo2-confirm-prepare-fn",
         "type": "function",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Prepare mapping write",
-        "func": "// Prepare mapping JSON for file write\nconst pending = flow.get('watchout_pending');\nif (!pending) {\n    node.send({ payload: { status: 'nothing_pending' }, topic: 'watchout/confirm' });\n    return null;\n}\n\n// Update flow context immediately\nflow.set('watchout_mapping', pending);\nflow.set('watchout_pending', null);\n\n// Prepare file write\nconst cfg = flow.get('watchout_config') || {};\nmsg.filename = cfg.mappingFile || '/data/watchout/timeline-mapping.json';\nmsg.payload  = JSON.stringify({ mapping: pending, lastSaved: new Date().toISOString() }, null, 2);\nmsg._pendingMapping = pending;\nmsg._savedAt = new Date().toISOString();\nreturn msg;",
+        "func": "// Prepare mapping JSON for file write\nconst pending = flow.get('watchout_pending');\nif (!pending) {\n    node.send({ payload: { status: 'nothing_pending' }, topic: 'watchout/confirm' });\n    return null;\n}\n\n// Update flow context immediately\nflow.set('watchout_mapping', pending);\nflow.set('watchout_pending', null);\n\n// Prepare file write\nconst cfg = flow.get('watchout_config') || {};\nmsg.filename = cfg.mappingFile || '/data/projects/XYZ-Exit10/node-red/data/timeline-mapping.json';\nmsg.payload  = JSON.stringify({ mapping: pending, lastSaved: new Date().toISOString() }, null, 2);\nmsg._pendingMapping = pending;\nmsg._savedAt = new Date().toISOString();\nreturn msg;",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -4741,16 +4700,16 @@
         "y": 440,
         "wires": [
             [
-                "ef346e38177c92d0"
+                "wo2-write-mapping-file"
             ]
         ]
     },
     {
-        "id": "ef346e38177c92d0",
+        "id": "wo2-write-mapping-file",
         "type": "file",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Write timeline-mapping.json",
-        "filename": "",
+        "filename": "filename",
         "filenameType": "msg",
         "appendNewline": false,
         "createDir": true,
@@ -4760,14 +4719,14 @@
         "y": 440,
         "wires": [
             [
-                "3ea0b377791a419f"
+                "wo2-confirm-done-fn"
             ]
         ]
     },
     {
-        "id": "3ea0b377791a419f",
+        "id": "wo2-confirm-done-fn",
         "type": "function",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Confirm done",
         "func": "// Confirm & Save completed\nconst mapping = msg._pendingMapping || flow.get('watchout_mapping') || {};\nnode.status({ fill: 'green', shape: 'dot', text: 'Saved: ' + Object.keys(mapping).length + ' timelines' });\nnode.send({\n    payload: {\n        status:  'saved',\n        mapping: mapping,\n        savedAt: msg._savedAt || new Date().toISOString()\n    },\n    topic: 'watchout/confirm'\n});\nreturn null;",
         "outputs": 1,
@@ -4779,14 +4738,14 @@
         "y": 440,
         "wires": [
             [
-                "c0005abb58133f3d"
+                "wo2-status-template"
             ]
         ]
     },
     {
-        "id": "adee1c0a4642a60e",
+        "id": "wo2-cancel-fn",
         "type": "function",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Cancel discovery",
         "func": "// Cancel pending discovery\nflow.set('watchout_pending', null);\nnode.send({ payload: { status: 'cancelled' }, topic: 'watchout/cancel' });\nreturn null;",
         "outputs": 1,
@@ -4798,22 +4757,22 @@
         "y": 520,
         "wires": [
             [
-                "c0005abb58133f3d"
+                "wo2-status-template"
             ]
         ]
     },
     {
-        "id": "c0005abb58133f3d",
+        "id": "wo2-status-template",
         "type": "ui-template",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "group": "20eba16b1f4b5a48",
         "page": "",
         "ui": "",
         "name": "Mapping Status",
-        "order": 2,
+        "order": 5,
         "width": "0",
         "height": "0",
-        "format": "<template>\n  <div style=\"padding:4px\">\n    <p v-if=\"!msg\" style=\"color:#aaa\">No mapping operation yet.</p>\n    <div v-else-if=\"msg.payload.status === 'saved'\" style=\"color:#4caf50\">\n      <strong>Mapping saved</strong>\n      <p style=\"font-size:0.85em;color:#aaa\">{{ msg.payload.savedAt }}</p>\n      <p><strong>{{ Object.keys(msg.payload.mapping || {}).length }} timelines active:</strong></p>\n      <div v-for=\"(tid, cid) in (msg.payload.mapping || {})\" :key=\"cid\"\n           style=\"font-family:monospace;font-size:0.85em\">\n        <span style=\"color:#80cbc4\">{{ cid }}</span>\n        <span style=\"color:#aaa\"> -&gt; id </span>\n        <span style=\"color:#fff176\">{{ tid }}</span>\n      </div>\n    </div>\n    <div v-else-if=\"msg.payload.status === 'cancelled'\" style=\"color:#ff9800\">\n      Discovery cancelled - mapping unchanged.\n    </div>\n    <div v-else-if=\"msg.payload.status === 'nothing_pending'\" style=\"color:#aaa\">\n      Nothing pending - run discovery first.\n    </div>\n    <div v-else-if=\"msg.payload.status === 'error'\" style=\"color:#f44336\">\n      Save failed: {{ msg.payload.error }}\n    </div>\n  </div>\n</template>",
+        "format": "<template>\n  <div style=\"padding:4px\">\n    <p v-if=\"!msg\" style=\"color:#aaa\">No mapping operation yet.</p>\n    <div v-else-if=\"msg.payload.status === 'saved'\" style=\"color:#4caf50\">\n      <strong>Mapping saved</strong>\n      <p style=\"font-size:0.85em;color:#aaa\">{{ msg.payload.savedAt }}</p>\n      <p><strong>{{ Object.keys(msg.payload.mapping || {}).length }} timelines active:</strong></p>\n      <div v-for=\"(tid, cid) in (msg.payload.mapping || {})\" :key=\"cid\"\n           style=\"font-family:monospace;font-size:0.85em\">\n        <span style=\"color:#80cbc4\">{{ cid }}</span>\n        <span style=\"color:#aaa\"> -&gt; id </span>\n        <span style=\"color:#1e3a8a\">{{ tid }}</span>\n      </div>\n    </div>\n    <div v-else-if=\"msg.payload.status === 'cancelled'\" style=\"color:#ff9800\">\n      Discovery cancelled - mapping unchanged.\n    </div>\n    <div v-else-if=\"msg.payload.status === 'nothing_pending'\" style=\"color:#aaa\">\n      Nothing pending - run discovery first.\n    </div>\n    <div v-else-if=\"msg.payload.status === 'error'\" style=\"color:#f44336\">\n      Save failed: {{ msg.payload.error }}\n    </div>\n  </div>\n</template>",
         "storeOutMessages": true,
         "passthru": true,
         "resendOnRefresh": false,
@@ -4826,56 +4785,59 @@
         ]
     },
     {
-        "id": "7c4a884ed7396ab5",
+        "id": "wo2-control-in",
         "type": "http in",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "POST /watchout/control",
         "url": "/watchout/control",
         "method": "post",
         "upload": false,
         "swaggerDoc": "",
-        "x": 130,
-        "y": 620,
+        "x": 140,
+        "y": 660,
         "wires": [
             [
-                "272e817da3e3e274"
+                "wo2-control-fn"
             ]
         ]
     },
     {
-        "id": "272e817da3e3e274",
+        "id": "wo2-control-fn",
         "type": "function",
-        "z": "8d6156bfd7e6065f",
-        "name": "Execute timeline control",
-        "func": "// ─── Watchout Timeline Control ─────────────────────────────────────\n// Input msg.payload: { command, contentId, varName, varValue }\n\n'use strict';\n\nconst http = require('http');\n\nconst cfg  = flow.get('watchout_config') || {};\nconst host = cfg.host || 'localhost';\nconst port = cfg.port || 3019;\nconst REQUEST_TIMEOUT_MS = 10000;\n\nfunction httpRequest(method, urlPath, body) {\n    return new Promise((resolve, reject) => {\n        const opts = { hostname: host, port, path: urlPath, method,\n                       headers: { 'Content-Type': 'application/json' } };\n        const req = http.request(opts, (res) => {\n            let data = '';\n            res.on('data', c => { data += c; });\n            res.on('end', () => {\n                try { resolve({ statusCode: res.statusCode, body: JSON.parse(data) }); }\n                catch(e) { resolve({ statusCode: res.statusCode, body: data }); }\n            });\n            res.on('error', reject);\n        });\n        req.on('error', reject);\n        req.setTimeout(REQUEST_TIMEOUT_MS, () => req.destroy(new Error('Request timed out')));\n        if (body !== undefined) req.write(JSON.stringify(body));\n        req.end();\n    });\n}\n\nfunction resolveTimelineId(contentId) {\n    const mapping = flow.get('watchout_mapping') || {};\n    return (contentId in mapping) ? mapping[contentId] : String(contentId);\n}\n\nconst input   = msg.payload || {};\nconst command = input.command;\n\nasync function execute() {\n    let timelineId;\n    switch (command) {\n        case 'start': {\n            timelineId = resolveTimelineId(input.contentId);\n            const r = await httpRequest('POST', '/v0/timelines/' + timelineId + '/play');\n            return { success: r.statusCode < 300, command, timelineId, statusCode: r.statusCode, body: r.body };\n        }\n        case 'stop': {\n            timelineId = resolveTimelineId(input.contentId);\n            const r = await httpRequest('POST', '/v0/timelines/' + timelineId + '/stop');\n            return { success: r.statusCode < 300, command, timelineId, statusCode: r.statusCode, body: r.body };\n        }\n        case 'pause': {\n            timelineId = resolveTimelineId(input.contentId);\n            const r = await httpRequest('POST', '/v0/timelines/' + timelineId + '/pause');\n            return { success: r.statusCode < 300, command, timelineId, statusCode: r.statusCode, body: r.body };\n        }\n        case 'setVar': {\n            const r = await httpRequest('PUT', '/v0/vars/' + encodeURIComponent(input.varName), { value: input.varValue });\n            return { success: r.statusCode < 300, command, statusCode: r.statusCode, body: r.body };\n        }\n        case 'getState': {\n            const r = await httpRequest('GET', '/v0/state');\n            return { success: r.statusCode < 300, command, statusCode: r.statusCode, body: r.body };\n        }\n        default:\n            throw new Error('Unknown command: \\'' + command + '\\'');\n    }\n}\n\nexecute().then(payload => {\n    node.send({ payload, topic: 'watchout/' + command });\n}).catch(err => {\n    node.send({ payload: { success: false, command, error: err.message }, topic: 'watchout/' + command });\n});\n\nreturn null;",
-        "outputs": 1,
+        "z": "wo2-tab",
+        "name": "Prepare control request",
+        "func": "// Validate input and build HTTP request for timeline control.\n// Output 1: valid command  → HTTP Request node\n// Output 2: unknown command → HTTP Response (error)\n\nconst cfg     = flow.get('watchout_config') || {};\nconst host    = cfg.host || 'localhost';\nconst port    = cfg.port || 3019;\nconst baseUrl = 'http://' + host + ':' + port;\n\nconst input   = msg.payload || {};\nconst command = input.command;\nconst mapping = flow.get('watchout_mapping') || {};\n\nfunction resolveTimelineId(contentId) {\n    return (contentId in mapping) ? mapping[contentId] : String(contentId);\n}\n\nmsg._command = command;\nmsg.headers  = { 'Content-Type': 'application/json' };\n\nswitch (command) {\n    case 'start':\n    case 'stop':\n    case 'pause': {\n        const timelineId   = resolveTimelineId(input.contentId);\n        msg._timelineId    = timelineId;\n        msg.method         = 'POST';\n        const action       = (command === 'start') ? 'play' : command;\n        msg.url            = baseUrl + '/v0/timelines/' + timelineId + '/' + action;\n        msg.payload        = null;\n        return [msg, null];\n    }\n    case 'setVar': {\n        msg.method  = 'PUT';\n        msg.url     = baseUrl + '/v0/vars/' + encodeURIComponent(input.varName);\n        msg.payload = { value: input.varValue };\n        return [msg, null];\n    }\n    case 'getState': {\n        msg.method  = 'GET';\n        msg.url     = baseUrl + '/v0/state';\n        msg.payload = null;\n        return [msg, null];\n    }\n    default: {\n        msg.statusCode = 400;\n        msg.payload    = JSON.stringify({ success: false, error: 'Unknown command: ' + command });\n        return [null, msg];\n    }\n}",
+        "outputs": 2,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 370,
-        "y": 620,
+        "x": 380,
+        "y": 660,
         "wires": [
             [
-                "3c90e94408be83ed"
+                "wo2-control-http"
+            ],
+            [
+                "wo2-control-resp"
             ]
         ]
     },
     {
-        "id": "3c90e94408be83ed",
+        "id": "wo2-control-resp",
         "type": "http response",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "HTTP Response",
         "statusCode": "",
         "headers": {},
-        "x": 570,
-        "y": 620,
+        "x": 1080,
+        "y": 680,
         "wires": []
     },
     {
-        "id": "3f8772ed9d225442",
+        "id": "wo2-sse-inj",
         "type": "inject",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Start SSE monitor",
         "props": [
             {
@@ -4889,41 +4851,36 @@
         "topic": "start_sse",
         "payload": "start",
         "payloadType": "str",
-        "x": 130,
-        "y": 720,
+        "x": 160,
+        "y": 780,
         "wires": [
             [
-                "ec9c317bb4d16f8c"
+                "wo2-sse-fn"
             ]
         ]
     },
     {
-        "id": "ec9c317bb4d16f8c",
+        "id": "wo2-sse-fn",
         "type": "function",
-        "z": "8d6156bfd7e6065f",
-        "name": "SSE Monitor",
-        "func": "// ─── Watchout SSE Monitor ──────────────────────────────────────────\n// Connects to /v0/events SSE stream. Sends state events on output 1.\n// Sends status (connected/disconnected/error) on output 2.\n// Automatically reconnects on failure (5 s delay).\n// Falls back to polling via the separate poll inject node.\n\n'use strict';\n\nconst http = require('http');\n\nconst cfg  = flow.get('watchout_config') || {};\nconst host = cfg.host || 'localhost';\nconst port = cfg.port || 3019;\nconst SSE_RECONNECT_DELAY_MS = 5000;\n\n// Prevent duplicate connections\nif (context.get('sseConnected') === true) {\n    return null;\n}\n\nfunction connect() {\n    if (context.get('sseConnected') === true) return;\n\n    const req = http.request(\n        { hostname: host, port, path: '/v0/events', method: 'GET',\n          headers: { 'Accept': 'text/event-stream', 'Cache-Control': 'no-cache' } },\n        (res) => {\n            if (res.statusCode !== 200) {\n                res.destroy();\n                context.set('sseConnected', false);\n                flow.set('watchout_sse_status', 'error');\n                node.send([null, { payload: { status: 'sse_error', message: 'SSE endpoint returned HTTP ' + res.statusCode } }]);\n                setTimeout(connect, SSE_RECONNECT_DELAY_MS);\n                return;\n            }\n\n            context.set('sseConnected', true);\n            flow.set('watchout_sse_status', 'connected');\n            node.send([null, { payload: { status: 'sse_connected' } }]);\n\n            let buffer = '';\n\n            res.on('data', (chunk) => {\n                buffer += chunk.toString();\n                const parts = buffer.split('\\n\\n');\n                buffer = parts.pop();\n                for (const block of parts) {\n                    const event = {};\n                    for (const line of block.split('\\n')) {\n                        if (line.startsWith('event:')) {\n                            event.type = line.slice(6).trim();\n                        } else if (line.startsWith('data:')) {\n                            const raw = line.slice(5).trim();\n                            try { event.data = JSON.parse(raw); }\n                            catch(e) { event.data = raw; }\n                        }\n                    }\n                    if (event.type || event.data !== undefined) {\n                        flow.set('watchout_state', event.data || event);\n                        node.send([{ payload: event, topic: 'watchout/state' }, null]);\n                    }\n                }\n            });\n\n            res.on('end', () => {\n                context.set('sseConnected', false);\n                context.set('sseRequest', null);\n                flow.set('watchout_sse_status', 'disconnected');\n                node.send([null, { payload: { status: 'sse_disconnected' } }]);\n                setTimeout(connect, SSE_RECONNECT_DELAY_MS);\n            });\n\n            res.on('error', (err) => {\n                context.set('sseConnected', false);\n                context.set('sseRequest', null);\n                flow.set('watchout_sse_status', 'error');\n                node.send([null, { payload: { status: 'sse_error', message: err.message } }]);\n                setTimeout(connect, SSE_RECONNECT_DELAY_MS);\n            });\n        }\n    );\n\n    req.on('error', (err) => {\n        context.set('sseConnected', false);\n        context.set('sseRequest', null);\n        flow.set('watchout_sse_status', 'error');\n        node.send([null, { payload: { status: 'sse_error', message: err.message } }]);\n        setTimeout(connect, SSE_RECONNECT_DELAY_MS);\n    });\n\n    req.end();\n    context.set('sseRequest', req);\n}\n\n// Cleanup on redeploy\nnode.on('close', function() {\n    const r = context.get('sseRequest');\n    if (r) { try { r.destroy(); } catch(e) {} }\n    context.set('sseConnected', false);\n    context.set('sseRequest', null);\n    flow.set('watchout_sse_status', 'disconnected');\n});\n\nconnect();\nreturn null;",
-        "outputs": 2,
+        "z": "wo2-tab",
+        "name": "Configure SSE URL",
+        "func": "// Build the SSE endpoint URL from flow config and trigger the SSE client\nconst cfg  = flow.get('watchout_config') || {};\nconst host = cfg.host || 'host.docker.internal';\nconst port = cfg.port || 3019;\nmsg.url     = 'http://' + host + ':' + port + '/v1/sse';\nmsg.headers = { 'Accept': 'text/event-stream', 'Cache-Control': 'no-cache' };\nflow.set('watchout_sse_status', 'connecting');\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 330,
-        "y": 720,
+        "x": 360,
+        "y": 780,
         "wires": [
-            [
-                "13ee56bc986aec60"
-            ],
-            [
-                "7c4c785fa8940264"
-            ]
+            []
         ]
     },
     {
-        "id": "3f3b2ad8d8a607e5",
+        "id": "wo2-poll-inj",
         "type": "inject",
-        "z": "8d6156bfd7e6065f",
-        "d": true,
+        "z": "wo2-tab",
         "name": "Poll state (5 s)",
         "props": [
             {
@@ -4933,41 +4890,40 @@
         "repeat": "5",
         "crontab": "",
         "once": false,
-        "onceDelay": "",
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 130,
-        "y": 800,
+        "x": 160,
+        "y": 940,
         "wires": [
             [
-                "857cbfe0b90f0411"
+                "wo2-poll-fn"
             ]
         ]
     },
     {
-        "id": "857cbfe0b90f0411",
+        "id": "wo2-poll-fn",
         "type": "function",
-        "z": "8d6156bfd7e6065f",
-        "name": "Poll Watchout state",
-        "func": "// ─── Watchout Poll Fallback ────────────────────────────────────────\n// Runs every 5 s. Only polls if SSE is disconnected.\n\n'use strict';\n\nconst http = require('http');\n\n// Skip if SSE is working\nif (flow.get('watchout_sse_status') === 'connected') {\n    return null;\n}\n\nconst cfg  = flow.get('watchout_config') || {};\nconst host = cfg.host || 'localhost';\nconst port = cfg.port || 3019;\n\nconst req = http.request(\n    { hostname: host, port, path: '/v0/state', method: 'GET',\n      headers: { 'Content-Type': 'application/json' } },\n    (res) => {\n        let data = '';\n        res.on('data', c => { data += c; });\n        res.on('end', () => {\n            try {\n                const state = JSON.parse(data);\n                flow.set('watchout_state', state);\n                node.send({ payload: { type: 'poll', data: state }, topic: 'watchout/state' });\n            } catch(e) {\n                node.warn('[Watchout Poll] Invalid JSON from /v0/state');\n            }\n        });\n        res.on('error', err => { node.warn('[Watchout Poll] ' + err.message); });\n    }\n);\nreq.on('error', err => { node.warn('[Watchout Poll] ' + err.message); });\nreq.setTimeout(10000, () => req.destroy(new Error('timeout')));\nreq.end();\nreturn null;",
+        "z": "wo2-tab",
+        "name": "Poll gate",
+        "func": "// Only poll Watchout state when SSE is not connected (fallback mode)\nif (flow.get('watchout_sse_status') === 'connected') {\n    return null;\n}\n\nconst cfg  = flow.get('watchout_config') || {};\nconst host = cfg.host || 'localhost';\nconst port = cfg.port || 3019;\nmsg.method  = 'GET';\nmsg.url     = 'http://' + host + ':' + port + '/v0/state';\nmsg.headers = { 'Content-Type': 'application/json' };\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 330,
-        "y": 800,
+        "x": 360,
+        "y": 940,
         "wires": [
             [
-                "13ee56bc986aec60"
+                "wo2-poll-http"
             ]
         ]
     },
     {
-        "id": "13ee56bc986aec60",
+        "id": "wo2-state-template",
         "type": "ui-template",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "group": "e79267107587d426",
         "page": "",
         "ui": "",
@@ -4981,16 +4937,16 @@
         "resendOnRefresh": false,
         "templateScope": "local",
         "className": "",
-        "x": 570,
-        "y": 760,
+        "x": 1070,
+        "y": 890,
         "wires": [
             []
         ]
     },
     {
-        "id": "7c4c785fa8940264",
+        "id": "wo2-sse-status-template",
         "type": "ui-template",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "group": "e79267107587d426",
         "page": "",
         "ui": "",
@@ -5004,18 +4960,18 @@
         "resendOnRefresh": false,
         "templateScope": "local",
         "className": "",
-        "x": 570,
-        "y": 720,
+        "x": 1070,
+        "y": 780,
         "wires": [
             []
         ]
     },
     {
-        "id": "8f7b18eef3c18b2d",
+        "id": "wo2-debug-disc",
         "type": "debug",
-        "z": "8d6156bfd7e6065f",
+        "z": "wo2-tab",
         "name": "Discovery debug",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -5023,40 +4979,297 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 550,
-        "y": 300,
+        "x": 1050,
+        "y": 320,
         "wires": []
     },
     {
-        "id": "4416cca49f118859",
-        "type": "debug",
-        "z": "8d6156bfd7e6065f",
-        "name": "debug 9",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 480,
-        "y": 100,
-        "wires": []
+        "id": "wo2-discover-http",
+        "type": "http request",
+        "z": "wo2-tab",
+        "name": "GET /v0/timelines",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 510,
+        "y": 320,
+        "wires": [
+            [
+                "wo2-discover-parse-fn"
+            ]
+        ]
     },
     {
-        "id": "d5bdcdd2918cdcb0",
-        "type": "debug",
-        "z": "8d6156bfd7e6065f",
-        "name": "debug 10",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 760,
-        "y": 120,
-        "wires": []
+        "id": "wo2-discover-parse-fn",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "Parse timelines response",
+        "func": "// Parse GET /v0/timelines response and build diff\n\nif (msg.statusCode !== 200) {\n    msg.payload = { status: 'error', error: 'Watchout returned HTTP ' + (msg.statusCode || 'unknown') };\n    return msg;\n}\n\nfunction parseTimelineName(name) {\n    if (!name || name.startsWith('_')) return null;\n    return name.trim().toLowerCase().replace(/\\s+/g, '_').replace(/[^a-z0-9_]/g, '');\n}\n\nfunction compareMapping(oldMap, newMap) {\n    const oldKeys = Object.keys(oldMap);\n    const newKeys = Object.keys(newMap);\n    return {\n        removed:   oldKeys.filter(k => !(k in newMap)),\n        added:     newKeys.filter(k => !(k in oldMap)),\n        unchanged: oldKeys.filter(k => (k in newMap) && oldMap[k] === newMap[k]),\n        changed:   oldKeys.filter(k => (k in newMap) && oldMap[k] !== newMap[k]),\n    };\n}\n\nfunction formatDiff(diff) {\n    const lines = [];\n    diff.removed.forEach(n   => lines.push(\"REMOVED  : Timeline '\" + n + \"' no longer exists\"));\n    diff.added.forEach(n     => lines.push(\"ADDED    : New timeline '\" + n + \"' discovered\"));\n    diff.changed.forEach(n   => lines.push(\"CHANGED  : Timeline '\" + n + \"' ID has changed\"));\n    diff.unchanged.forEach(n   => lines.push(\"OK       : '\" + n + \"'\"));\n    return lines;\n}\n\nconst timelines = Array.isArray(msg.payload) ? msg.payload : [];\n\nconst newMapping = {};\ntimelines.forEach(tl => {\n    const contentId = parseTimelineName(tl.name);\n    if (contentId) newMapping[contentId] = String(tl.id);\n});\n\nconst storedMapping = flow.get('watchout_mapping') || {};\nconst diff     = compareMapping(storedMapping, newMapping);\nconst diffLines = formatDiff(diff);\n\nflow.set('watchout_pending', newMapping);\n\nconst count = Object.keys(newMapping).length;\nnode.status({ fill: 'green', shape: 'dot', text: 'Discovered: ' + count + ' timelines' });\n\nmsg.payload = { status: 'discovered', count, diffLines, newMapping, diff };\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 320,
+        "wires": [
+            [
+                "wo2-diff-template",
+                "wo2-debug-disc"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-control-http",
+        "type": "http request",
+        "z": "wo2-tab",
+        "name": "Watchout API call",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 630,
+        "y": 660,
+        "wires": [
+            [
+                "wo2-control-format-fn"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-control-format-fn",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "Format control response",
+        "func": "// Normalize the Watchout API response into a uniform JSON object\nconst command    = msg._command;\nconst timelineId = msg._timelineId;\nconst statusCode = msg.statusCode || 200;\n\nmsg.payload    = JSON.stringify({\n    success:    statusCode < 300,\n    command:    command,\n    timelineId: timelineId,\n    statusCode: statusCode,\n    body:       msg.payload\n});\nmsg.statusCode = 200;\nmsg.headers    = { 'Content-Type': 'application/json' };\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 860,
+        "y": 640,
+        "wires": [
+            [
+                "wo2-control-resp"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-sse-node",
+        "type": "sse-client",
+        "z": "wo2-tab",
+        "name": "SSE /v1/sse",
+        "url": "http://host.docker.internal:3019/v1/sse",
+        "events": [],
+        "headers": {
+            "Accept": "text/event-stream"
+        },
+        "proxy": "",
+        "restart": false,
+        "rejectUnauthorized": true,
+        "withCredentials": false,
+        "timeout": "",
+        "x": 580,
+        "y": 780,
+        "wires": [
+            [
+                "wo2-sse-event-fn"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-sse-event-fn",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "Process SSE event",
+        "func": "// Process an incoming SSE event from the Watchout SSE client node.\n// msg.payload = event data (auto-parsed JSON if possible)\n// msg.event   = event type string\n\nconst wasConnected = flow.get('watchout_sse_status') === 'connected';\n\nconst event = {\n    type: msg.event || 'message',\n    data: msg.payload\n};\n\nflow.set('watchout_state',      event.data || event);\nflow.set('watchout_sse_status', 'connected');\n\n// Output 1: state event for Live State UI\nconst stateMsg  = { payload: event, topic: 'watchout/state' };\n\n// Output 2: SSE status update (only send once on initial connect)\nconst statusMsg = wasConnected ? null\n    : { payload: { status: 'sse_connected' } };\n\nnode.send([stateMsg, statusMsg]);\nreturn null;",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 780,
+        "wires": [
+            [
+                "wo2-state-template"
+            ],
+            [
+                "wo2-sse-status-template"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-sse-catch",
+        "type": "catch",
+        "z": "wo2-tab",
+        "name": "SSE error",
+        "scope": [
+            "wo2-sse-node"
+        ],
+        "uncaught": false,
+        "x": 590,
+        "y": 840,
+        "wires": [
+            [
+                "wo2-sse-error-fn"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-sse-error-fn",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "SSE error handler",
+        "func": "// Handle SSE connection errors / disconnects\nflow.set('watchout_sse_status', 'error');\nconst errMsg = (msg.error && msg.error.message) ? msg.error.message : String(msg.error || 'SSE error');\nnode.send({ payload: { status: 'sse_error', message: errMsg } });\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 840,
+        "wires": [
+            [
+                "wo2-sse-status-template"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-poll-http",
+        "type": "http request",
+        "z": "wo2-tab",
+        "name": "GET /v0/state",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 590,
+        "y": 940,
+        "wires": [
+            [
+                "wo2-poll-parse-fn"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-poll-parse-fn",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "Parse poll response",
+        "func": "// Handle the GET /v0/state poll response\nconst statusCode = msg.statusCode || 200;\nif (statusCode !== 200) {\n    node.warn('[Watchout Poll] HTTP ' + statusCode);\n    return null;\n}\n\nconst state = msg.payload;\nflow.set('watchout_state', state);\n\nnode.send({ payload: { type: 'poll', data: state }, topic: 'watchout/state' });\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 940,
+        "wires": [
+            [
+                "wo2-state-template"
+            ]
+        ]
+    },
+    {
+        "id": "ea5687e7fe6f95be",
+        "type": "ui-button",
+        "z": "wo2-tab",
+        "group": "20eba16b1f4b5a48",
+        "name": "Confirm & Save",
+        "label": "Confirm & Save",
+        "order": 3,
+        "width": "2",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "{\"action\":\"confirm\"}",
+        "payloadType": "json",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 300,
+        "y": 440,
+        "wires": [
+            [
+                "wo2-action-switch"
+            ]
+        ]
+    },
+    {
+        "id": "b8e7e6bbe7d88389",
+        "type": "ui-button",
+        "z": "wo2-tab",
+        "group": "20eba16b1f4b5a48",
+        "name": "Cancel",
+        "label": "Cancel",
+        "order": 4,
+        "width": "2",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "{\"action\":\"cancel\"}",
+        "payloadType": "json",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 280,
+        "y": 480,
+        "wires": [
+            [
+                "wo2-action-switch"
+            ]
+        ]
     }
 ]
