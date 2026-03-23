@@ -1,4 +1,16 @@
-# Watchout 7 HTTP Integration
+# Watchout 7 HTTP Integration — Module Reference (v0.1, superseded)
+
+> **WARNING: Superseded by v0.2**
+>
+> The `watchout-integration.js` module-based approach described here has been
+> superseded by a fully self-contained Node-RED flow.  For new deployments use
+> `node-red/flows/watchout-v2.json` as described in
+> [watchout-http-integration.md](watchout-http-integration.md).
+>
+> This file is kept as a reference for the module API and for operators
+> migrating existing deployments.
+
+---
 
 ## Overview
 
