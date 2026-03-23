@@ -28,7 +28,8 @@ persistence:
 | Diff UI | Displays the diff to the operator with **[ Confirm & Save]** and **[ Cancel]** buttons |
 | Persistent Storage | Mapping is stored in both Node-RED flow context **and** the file system via Node-RED Read/Write file nodes (survives restarts) |
 | Timeline Control | `start` / `stop` / `pause` timelines and `setVar` via the stored mapping |
-| Real-time Monitoring | SSE listener on `/v0/events` for live state change events |
+| Real-time Monitoring | SSE listener on Watchout Event Streams — `/v2/sse` recommended (optimised diffs/countdowns); `/v1/sse` for full state on each update; `/v0/sse` legacy |
+| NDJSON streaming | Alternative to SSE: `/v2/ndjson` stream consumed via a built-in **HTTP Request** node |
 | Status Polling | Fallback polling via `GET /v0/state` every 5 s when SSE is disconnected |
 | Error Handling | Graceful failures with human-readable error messages |
 
@@ -114,19 +115,83 @@ npm install @flowfuse/node-red-dashboard node-red-contrib-sse-client
 
 Restart Node-RED after installing.
 
-> **SSE URL note:** The `SSE /v0/events` node has a default URL of
-> `http://localhost:3019/v0/events`.  On startup the **Configure SSE URL**
-> function node reads `flow.watchout_config` and sends `msg.url` to the SSE
-> client node so it connects to the correct Watchout host automatically.  If
-> you change the Watchout host/port after deploying, re-deploy or manually
-> trigger the **Start SSE monitor** inject node.
+> **SSE URL:** Open the **SSE client** node in Node-RED and type the URL
+> directly into the node's **URL** field.  `node-red-contrib-sse-client` does
+> **not** allow `msg.url` (or any other `msg.*` property) to override the URL
+> configured inside the node — the node will log a warning and ignore the
+> message property.  Remove any "Configure SSE URL" function node that attempts
+> to set `msg.url` before the SSE client.
+>
+> **Recommended URL** (Watchout Event Streams, optimised diffs/countdowns):
+> ```
+> http://host.docker.internal:3019/v2/sse
+> ```
+>
+> Use `/v1/sse` if you need the full state object on every update, or `/v0/sse`
+> for the legacy stream.  Add the HTTP header `Accept: text/event-stream` in
+> the node's **Headers** section.
+>
+> If you change the Watchout host/port, edit the SSE node URL directly and
+> re-deploy.
 
-### 5. Deploy
+### 5. Docker networking — reaching Watchout from inside a container
+
+When Watchout runs on the **same Windows machine** as Docker Desktop, Node-RED
+(running inside a container) cannot reach Watchout via `localhost` — that
+resolves to the container itself, not the host.  Use the special Docker
+hostname instead:
+
+| Scenario | Hostname to use |
+|----------|----------------|
+| Watchout on Windows Docker-host (Docker Desktop) | `host.docker.internal` |
+| Watchout on a separate PC on your LAN | The PC's IP address, e.g. `192.168.1.10` |
+
+**Example URLs (port 3019 default):**
+
+```
+# SSE — recommended (optimised diffs)
+http://host.docker.internal:3019/v2/sse
+
+# SSE — full state on each update
+http://host.docker.internal:3019/v1/sse
+
+# NDJSON stream (alternative to SSE, plain HTTP Request node)
+http://host.docker.internal:3019/v2/ndjson
+
+# Timeline list / control / state polling
+http://host.docker.internal:3019/v0/timelines
+http://host.docker.internal:3019/v0/state
+```
+
+You can verify the host is reachable from inside the Node-RED container before
+deploying:
+
+```bash
+docker exec -it <nodered-container> sh
+# install curl if needed (Alpine):
+apk add --no-cache curl
+# test the SSE stream — should stay connected and print events:
+curl -N http://host.docker.internal:3019/v2/sse
+```
+
+If the container cannot reach `host.docker.internal`, add
+`--add-host host.docker.internal:host-gateway` to your `docker run` command or
+the equivalent `extra_hosts` entry in your Compose file:
+
+```yaml
+services:
+  nodered:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+```
+
+### 6. Deploy
 
 Click **Deploy**.  On startup the flow will:
 1. Read `/config/watchout-config.json` (create with defaults if missing)
 2. Read `/data/timeline-mapping.json` (start with empty mapping if missing)
-3. Connect to the Watchout SSE event stream via `node-red-contrib-sse-client`
+3. Connect to the Watchout SSE event stream (`/v2/sse`) via `node-red-contrib-sse-client`
+   (URL must be configured in the SSE node itself — see § Required Node-RED nodes above)
 
 ---
 
@@ -231,8 +296,21 @@ Send a `POST` request to `/watchout/control` with a JSON body:
 
 ## Real-time Monitoring
 
-The flow connects to Watchout's SSE event stream at `/v0/events` on startup
-using the **`node-red-contrib-sse-client`** contrib node.
+The flow connects to Watchout's SSE Event Streams endpoint on startup using the
+**`node-red-contrib-sse-client`** contrib node.
+
+### Choosing an endpoint
+
+| Endpoint | Stream content | When to use |
+|----------|---------------|-------------|
+| `/v2/sse` | Optimised diffs + countdown timers | **Recommended default** |
+| `/v1/sse` | Full state object on every update | When you need the complete state on each event |
+| `/v0/sse` | Legacy/basic stream | Older Watchout 7 builds only |
+| `/v2/ndjson` | Same as `/v2/sse` but as newline-delimited JSON | Alternative if SSE client misbehaves; use a built-in **HTTP Request** node |
+
+Configure the URL **directly in the SSE node** (e.g.
+`http://host.docker.internal:3019/v2/sse`).  The `node-red-contrib-sse-client`
+node does not support overriding the URL via `msg.*` properties at runtime.
 
 - While connected: state-change events are displayed in the **Live State** UI
   tile.
@@ -254,8 +332,11 @@ using the **`node-red-contrib-sse-client`** contrib node.
 | `POST` | `/v0/timelines/{id}/stop` | Stop a timeline |
 | `POST` | `/v0/timelines/{id}/pause` | Pause a timeline |
 | `PUT` | `/v0/vars/{name}` | Set a variable |
-| `GET` | `/v0/state` | Get current system state |
-| `GET` | `/v0/events` | SSE stream of state changes |
+| `GET` | `/v0/state` | Get current system state (polling) |
+| `GET` | `/v0/sse` | SSE stream — legacy/basic |
+| `GET` | `/v1/sse` | SSE stream — full state on each update |
+| `GET` | `/v2/sse` | SSE stream — optimised diffs/countdowns (**recommended**) |
+| `GET` | `/v2/ndjson` | NDJSON stream — same content as `/v2/sse` |
 
 ---
 

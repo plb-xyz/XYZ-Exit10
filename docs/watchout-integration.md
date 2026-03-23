@@ -31,7 +31,7 @@ Node-RED startup
     ▼
 WatchoutIntegration.initialize()
     ├─ GET /v0/timelines      → builds timeline mapping → stores in global context
-    ├─ GET /v0/state/changes  → SSE listener (real-time state updates)
+    ├─ GET /v0/sse            → SSE listener (real-time state updates; use /v1/sse or /v2/sse for richer streams — see watchout-http-integration.md)
     └─ setInterval poll       → GET /v0/state every 5 s (fallback if SSE drops)
 
 Show Controller (v0.2, future)
@@ -219,6 +219,8 @@ the mapping.
 | `POST` | `/v0/input/{key}?value={v}` | Set a single input/variable |
 | `POST` | `/v0/inputs` | Set multiple inputs at once |
 | `GET` | `/v0/state` | Poll current state (fallback) |
-| `GET` | `/v0/state/changes` | SSE stream for real-time changes |
+| `GET` | `/v0/sse` | SSE stream — legacy/basic |
+| `GET` | `/v1/sse` | SSE stream — full state on each update |
+| `GET` | `/v2/sse` | SSE stream — optimised diffs/countdowns |
 
 Default port: **3019**
