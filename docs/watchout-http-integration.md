@@ -12,10 +12,12 @@ persistence:
 
 **Default port:** `3019`
 
-> **Note (v0.2):** SSE monitoring uses the **`node-red-contrib-sse-client`**
-> contrib node (see [§ Required Node-RED nodes](#4-required-node-red-nodes)).
+> **Note (v0.2):** Real-time monitoring uses the **NDJSON stream** at
+> `GET /v1/ndjson` via the built-in **HTTP Request** node — no contrib node
+> required.  SSE endpoints (`/v0/sse`, `/v1/sse`, `/v2/sse`) remain available
+> as an alternative but the `node-red-contrib-sse-client` package is **optional**.
 > No `require()` calls exist anywhere in the flow — all HTTP I/O goes through
-> built-in **HTTP Request** nodes and the SSE client contrib node.
+> built-in **HTTP Request** nodes.
 
 ---
 
@@ -28,8 +30,9 @@ persistence:
 | Diff UI | Displays the diff to the operator with **[ Confirm & Save]** and **[ Cancel]** buttons |
 | Persistent Storage | Mapping is stored in both Node-RED flow context **and** the file system via Node-RED Read/Write file nodes (survives restarts) |
 | Timeline Control | `start` / `stop` / `pause` timelines and `setVar` via the stored mapping |
-| Real-time Monitoring | SSE listener on `/v0/events` for live state change events |
-| Status Polling | Fallback polling via `GET /v0/state` every 5 s when SSE is disconnected |
+| Real-time Monitoring | NDJSON stream via `GET /v1/ndjson` (preferred) — parsed with built-in nodes; no contrib required |
+| SSE Alternative | SSE endpoints `/v0/sse` (legacy), `/v1/sse` (full), `/v2/sse` (diff) available if needed |
+| Status Polling | Fallback polling via `GET /v0/state` every 5 s when the stream is disconnected |
 | Error Handling | Graceful failures with human-readable error messages |
 
 ---
@@ -96,37 +99,69 @@ If the file does not exist the flow will create it with defaults on first deploy
 
 ### 4. Required Node-RED nodes
 
-The flow requires one **contrib** node in addition to the built-in Node-RED
-nodes and the Dashboard:
+The flow requires only the built-in Node-RED nodes and the Dashboard:
 
 | Package | Nodes used |
 |---------|-----------|
 | `node-red` (built-in) | inject, function, switch, http in, http request, http response, file in, file out, catch, debug |
 | `@flowfuse/node-red-dashboard` (Dashboard 2.0) | ui-page, ui-group, ui-button, ui-template |
-| `node-red-contrib-sse-client` (**required**) | sse-client |
 
-Install both packages if not already present:
+Install the Dashboard package if not already present:
 
 ```bash
 cd ~/.node-red
-npm install @flowfuse/node-red-dashboard node-red-contrib-sse-client
+npm install @flowfuse/node-red-dashboard
 ```
 
 Restart Node-RED after installing.
 
-> **SSE URL note:** The `SSE /v0/events` node has a default URL of
-> `http://localhost:3019/v0/events`.  On startup the **Configure SSE URL**
-> function node reads `flow.watchout_config` and sends `msg.url` to the SSE
-> client node so it connects to the correct Watchout host automatically.  If
-> you change the Watchout host/port after deploying, re-deploy or manually
-> trigger the **Start SSE monitor** inject node.
+> **Optional — SSE client:** If you prefer SSE over NDJSON, you may install
+> `node-red-contrib-sse-client`.  However, note that this contrib node does
+> **not** allow overriding its configured URL via `msg.url` or similar message
+> properties — the URL must be set directly in the node's configuration panel.
+> Some versions also enforce a connection timeout that can cause repeated
+> disconnects when the Watchout stream is quiet.  For these reasons **NDJSON
+> via built-in HTTP Request is the recommended approach**.
+
+> **Docker on Windows — URL note:** Node-RED running inside a Docker container
+> on Windows cannot reach `localhost` on the host.  Use
+> `http://host.docker.internal:3019/...` instead (Docker Desktop for Windows
+> resolves this hostname to the host machine automatically).  See
+> [§ Docker on Windows Networking](#docker-on-windows-networking) below.
 
 ### 5. Deploy
 
 Click **Deploy**.  On startup the flow will:
 1. Read `/config/watchout-config.json` (create with defaults if missing)
 2. Read `/data/timeline-mapping.json` (start with empty mapping if missing)
-3. Connect to the Watchout SSE event stream via `node-red-contrib-sse-client`
+3. Begin streaming NDJSON events from Watchout via `GET /v1/ndjson`
+
+---
+
+## Docker on Windows Networking
+
+When Node-RED runs inside a Docker container on a **Windows host** where
+Watchout is also running, `localhost` inside the container refers to the
+container itself — not the Windows host.
+
+| Context | URL to use |
+|---------|-----------|
+| `curl` / browser on the Windows host | `http://localhost:3019/...` |
+| Node-RED HTTP Request node (inside container) | `http://host.docker.internal:3019/...` |
+
+`host.docker.internal` is automatically resolved to the Windows host by Docker
+Desktop.  Use this hostname in all Node-RED node URL fields, including the
+NDJSON stream URL and any REST calls.
+
+**Example config (`watchout-config.json`) for Docker on Windows:**
+
+```json
+{
+  "host": "host.docker.internal",
+  "port": 3019,
+  "mappingFile": "/data/timeline-mapping.json"
+}
+```
 
 ---
 
@@ -231,17 +266,76 @@ Send a `POST` request to `/watchout/control` with a JSON body:
 
 ## Real-time Monitoring
 
-The flow connects to Watchout's SSE event stream at `/v0/events` on startup
-using the **`node-red-contrib-sse-client`** contrib node.
+### Preferred: NDJSON stream (`GET /v1/ndjson`)
 
-- While connected: state-change events are displayed in the **Live State** UI
-  tile.
-- If the SSE stream drops: the contrib node auto-reconnects (configured with
-  `restart: true`).  Meanwhile, a separate 5-second poll inject falls back to
-  `GET /v0/state` (via a built-in **HTTP Request** node) to keep state current.
-  The **Live State** tile shows `⚠ Polling (SSE offline)` when in fallback mode.
-- SSE connection errors are caught by a **catch** node wired to the SSE client
-  and surfaced in the **SSE Status** dashboard tile.
+The flow connects to Watchout's NDJSON event stream at `/v1/ndjson` using a
+built-in **HTTP Request** node.  Each line of the response is a complete JSON
+object with the fields `kind` and `value`, for example:
+
+```json
+{"kind":"playbackState","value":{"clockTime":12345,"timelines":[...],"freeRunningRenders":[]}}
+```
+
+**Node-RED wiring for NDJSON:**
+
+1. **Inject** node (fires on deploy / manual trigger)  
+   → sets `msg.url = "http://host.docker.internal:3019/v1/ndjson"` and
+   `msg.method = "GET"` then passes to the HTTP Request node.
+
+2. **HTTP Request** node  
+   - Method: `GET`  
+   - Return: **a UTF-8 string** (do *not* parse as JSON — the response is
+     multiple JSON objects, one per line)
+
+3. **Function** node: **"Split NDJSON"**  
+   Keeps a partial-line buffer in `context`, splits on `\n`, parses each
+   complete line, and emits one message per event:
+
+   ```javascript
+   let buf = context.get('buf') || '';
+   buf += msg.payload;
+   const lines = buf.split('\n');
+   const incompleteLine = lines.pop(); // last item may be incomplete — keep for next chunk
+   context.set('buf', incompleteLine);
+   const msgs = [];
+   for (const line of lines) {
+       const trimmed = line.trim();
+       if (!trimmed) continue;
+       try { msgs.push({ payload: JSON.parse(trimmed) }); }
+       catch (e) { node.debug('NDJSON parse error: ' + e.message + ' | line: ' + trimmed); }
+   }
+   return [msgs];
+   ```
+
+4. **Switch** node: route on `msg.payload.kind`  
+   - `playbackState` → update `flow.watchout_state` and refresh the **Live State** UI tile  
+   - Other kinds (e.g. `inputs`, `showRevision`) → store or ignore as needed
+
+`playbackState` messages contain the equivalent of the REST `GET /v0/state`
+response (`clockTime`, `timelines`, `freeRunningRenders`, etc.).
+
+While NDJSON is streaming:
+- The **Stream Status** tile shows `✓ Streaming (NDJSON)`.
+- If no message is received for > 10 s a trigger node flips the status to
+  `⚠ Offline — reconnecting`.
+- A fallback 5-second poll on `GET /v0/state` keeps state current in case the
+  NDJSON connection drops.
+
+### Alternative: SSE endpoints
+
+Watchout 7 also exposes SSE (Server-Sent Events) endpoints.  These are useful
+if you prefer a true event-source protocol, but the `node-red-contrib-sse-client`
+node has known limitations (see § Required Node-RED nodes above).
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /v0/sse` | Legacy SSE — basic state updates |
+| `GET /v1/sse` | Full SSE — complete state on each update |
+| `GET /v2/sse` | Diff SSE — optimized; sends only changes / countdown ticks |
+
+> **Validation note:** `/v1/sse` and `/v2/sse` have been confirmed working via
+> `curl http://localhost:3019/v1/sse` on Windows.  `/v2/ndjson` returns 404 in
+> some Watchout builds; use `/v1/ndjson` instead.
 
 ---
 
@@ -254,8 +348,16 @@ using the **`node-red-contrib-sse-client`** contrib node.
 | `POST` | `/v0/timelines/{id}/stop` | Stop a timeline |
 | `POST` | `/v0/timelines/{id}/pause` | Pause a timeline |
 | `PUT` | `/v0/vars/{name}` | Set a variable |
-| `GET` | `/v0/state` | Get current system state |
-| `GET` | `/v0/events` | SSE stream of state changes |
+| `GET` | `/v0/state` | Get current system state (REST poll) |
+| `GET` | `/v0/sse` | SSE stream — legacy/basic state updates |
+| `GET` | `/v1/sse` | SSE stream — full state on each update |
+| `GET` | `/v2/sse` | SSE stream — diff / countdown ticks (optimized) |
+| `GET` | `/v1/ndjson` | **NDJSON stream — preferred** (each line is `{"kind":…,"value":…}`) |
+| `GET` | `/v2/ndjson` | NDJSON stream — diff variant (may return 404 depending on Watchout build) |
+
+> **Endpoint validation:** `curl http://localhost:3019/v1/ndjson` and
+> `curl http://localhost:3019/v1/sse` both confirmed working on Windows.
+> `/v2/ndjson` returns **404** in some builds — use `/v1/ndjson` instead.
 
 ---
 
@@ -283,8 +385,9 @@ accepted.
 - **v0.1** *(previous)* — Logic in external JS modules (`watchout-http.js`,
   `watchout-integration.js`, `functions/*.js`)
 - **v0.2** *(this version)* — All logic self-contained in Node-RED nodes;
-  Node-RED HTTP Request nodes for all Watchout API calls; SSE monitoring via
-  `node-red-contrib-sse-client`; Node-RED Read/Write file nodes for persistence;
+  Node-RED HTTP Request nodes for all Watchout API calls; **NDJSON streaming**
+  via `GET /v1/ndjson` for real-time monitoring (no contrib node required);
+  Node-RED Read/Write file nodes for persistence;
   default paths `/config/watchout-config.json` and `/data/timeline-mapping.json`
 - **v0.3** *(future)* — ISAAC integration (Events & Playables → Show
   Controller decision tree)

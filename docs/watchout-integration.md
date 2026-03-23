@@ -31,12 +31,27 @@ Node-RED startup
     ▼
 WatchoutIntegration.initialize()
     ├─ GET /v0/timelines      → builds timeline mapping → stores in global context
-    ├─ GET /v0/state/changes  → SSE listener (real-time state updates)
+    ├─ GET /v0/state/changes  → SSE listener (legacy; see note below)
     └─ setInterval poll       → GET /v0/state every 5 s (fallback if SSE drops)
 
 Show Controller (v0.2, future)
     └─ calls wo.startTimeline() / stopTimeline() / setInput()
 ```
+
+> **Note on event stream endpoints (v0.1 vs v0.2):** The v0.1 module used
+> `GET /v0/state/changes` for SSE.  In current Watchout 7 builds the validated
+> event-stream endpoints are:
+>
+> | Endpoint | Type | Notes |
+> |----------|------|-------|
+> | `GET /v0/sse` | SSE | Legacy/basic |
+> | `GET /v1/sse` | SSE | Full state on each update |
+> | `GET /v2/sse` | SSE | Diff / countdown ticks |
+> | `GET /v1/ndjson` | NDJSON | **Preferred** — each line is `{"kind":…,"value":…}` |
+> | `GET /v2/ndjson` | NDJSON | Diff variant (may return 404 in some builds) |
+>
+> For new deployments use `watchout-v2.json` with the NDJSON approach described
+> in [watchout-http-integration.md](watchout-http-integration.md).
 
 ---
 
@@ -219,6 +234,10 @@ the mapping.
 | `POST` | `/v0/input/{key}?value={v}` | Set a single input/variable |
 | `POST` | `/v0/inputs` | Set multiple inputs at once |
 | `GET` | `/v0/state` | Poll current state (fallback) |
-| `GET` | `/v0/state/changes` | SSE stream for real-time changes |
+| `GET` | `/v0/state/changes` | SSE stream (v0.1 — **legacy**, see note in Architecture section) |
 
 Default port: **3019**
+
+> **v0.2+ event stream endpoints:** See
+> [watchout-http-integration.md § Watchout 7 HTTP API Reference](watchout-http-integration.md#watchout-7-http-api-reference)
+> for the current validated endpoints (`/v1/ndjson`, `/v1/sse`, `/v2/sse`, etc.).
