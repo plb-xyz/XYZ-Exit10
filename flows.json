@@ -5071,30 +5071,6 @@
         ]
     },
     {
-        "id": "wo2-sse-node",
-        "type": "sse-client",
-        "z": "wo2-tab",
-        "d": true,
-        "name": "SSE /v1/sse",
-        "url": "http://host.docker.internal:3019/v1/sse",
-        "events": [],
-        "headers": {
-            "Accept": "text/event-stream"
-        },
-        "proxy": "",
-        "restart": false,
-        "rejectUnauthorized": true,
-        "withCredentials": false,
-        "timeout": "",
-        "x": 580,
-        "y": 780,
-        "wires": [
-            [
-                "wo2-sse-event-fn"
-            ]
-        ]
-    },
-    {
         "id": "wo2-sse-event-fn",
         "type": "function",
         "z": "wo2-tab",
