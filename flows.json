@@ -46,6 +46,39 @@
         "out": []
     },
     {
+        "id": "69abad96dfa79716",
+        "type": "subflow",
+        "name": "WO Control",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 50,
+                "y": 30,
+                "wires": [
+                    {
+                        "id": "wo2-control-fn"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1300,
+                "y": 40,
+                "wires": [
+                    {
+                        "id": "wo2-control-format-fn",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
         "id": "dbd2c45c3962d1cd",
         "type": "group",
         "z": "wo2-tab",
@@ -59,19 +92,14 @@
             "color": "#a4a4a4"
         },
         "nodes": [
-            "wo2-control-in",
-            "wo2-control-fn",
             "wo2-control-resp",
-            "wo2-control-http",
-            "wo2-control-format-fn",
             "0b90fd227eb5a4aa",
-            "9fc262ddc940c877",
-            "21cb285e4540823b"
+            "4a615a5c12ed480f"
         ],
         "x": 34,
-        "y": 499,
-        "w": 1192,
-        "h": 222
+        "y": 639,
+        "w": 1212,
+        "h": 142
     },
     {
         "id": "adc1e6a87a00ee98",
@@ -917,6 +945,99 @@
         "x": 390,
         "y": 100,
         "wires": []
+    },
+    {
+        "id": "wo2-control-in",
+        "type": "http in",
+        "z": "69abad96dfa79716",
+        "name": "POST /watchout/control",
+        "url": "/watchout/control",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 250,
+        "y": 240,
+        "wires": [
+            [
+                "wo2-control-fn"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-control-fn",
+        "type": "function",
+        "z": "69abad96dfa79716",
+        "name": "Prepare control request",
+        "func": "// Validate input and build HTTP request for timeline control.\n// Output 1: valid command  → HTTP Request node\n// Output 2: unknown command → HTTP Response (error)\n\nconst cfg     = flow.get('watchout_config') || {};\nconst host    = cfg.host || 'localhost';\nconst port    = cfg.port || 3019;\nconst baseUrl = 'http://' + host + ':' + port;\n\nconst input   = msg.payload || {};\nconst command = input.command;\nconst mapping = flow.get('watchout_mapping') || {};\n\nfunction resolveTimelineId(contentId) {\n    return (contentId in mapping) ? mapping[contentId] : String(contentId);\n}\n\nmsg._command = command;\nmsg.headers  = { 'Content-Type': 'application/json' };\n\nswitch (command) {\n    case 'start':\n    case 'stop':\n    case 'pause': {\n        const timelineId   = resolveTimelineId(input.contentId);\n        msg._timelineId    = timelineId;\n        msg.method         = 'POST';\n        const action       = (command === 'start') ? 'play' : command;\n        msg.url            = baseUrl + '/v0/timelines/' + timelineId + '/' + action;\n        msg.payload        = null;\n        return [msg, null];\n    }\n    case 'setVar': {\n        msg.method  = 'PUT';\n        msg.url     = baseUrl + '/v0/vars/' + encodeURIComponent(input.varName);\n        msg.payload = { value: input.varValue };\n        return [msg, null];\n    }\n    case 'getState': {\n        msg.method  = 'GET';\n        msg.url     = baseUrl + '/v0/state';\n        msg.payload = null;\n        return [msg, null];\n    }\n    default: {\n        msg.statusCode = 400;\n        msg.payload    = JSON.stringify({ success: false, error: 'Unknown command: ' + command });\n        return [null, msg];\n    }\n}",
+        "outputs": 2,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 160,
+        "wires": [
+            [
+                "wo2-control-http"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "wo2-control-http",
+        "type": "http request",
+        "z": "69abad96dfa79716",
+        "name": "Watchout API call",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 790,
+        "y": 140,
+        "wires": [
+            [
+                "wo2-control-format-fn"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-control-format-fn",
+        "type": "function",
+        "z": "69abad96dfa79716",
+        "name": "Format control response",
+        "func": "// Normalize the Watchout API response into a uniform JSON object\nconst command    = msg._command;\nconst timelineId = msg._timelineId;\nconst statusCode = msg.statusCode || 200;\n\nmsg.payload    = JSON.stringify({\n    success:    statusCode < 300,\n    command:    command,\n    timelineId: timelineId,\n    statusCode: statusCode,\n    body:       msg.payload\n});\nmsg.statusCode = 200;\nmsg.headers    = { 'Content-Type': 'application/json' };\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9fc262ddc940c877",
+        "type": "link in",
+        "z": "69abad96dfa79716",
+        "name": "Send To WO",
+        "links": [],
+        "x": 345,
+        "y": 100,
+        "wires": [
+            [
+                "wo2-control-fn"
+            ]
+        ]
     },
     {
         "id": "ma3_osc_receiver",
@@ -5322,48 +5443,6 @@
         ]
     },
     {
-        "id": "wo2-control-in",
-        "type": "http in",
-        "z": "wo2-tab",
-        "g": "dbd2c45c3962d1cd",
-        "name": "POST /watchout/control",
-        "url": "/watchout/control",
-        "method": "post",
-        "upload": false,
-        "swaggerDoc": "",
-        "x": 180,
-        "y": 660,
-        "wires": [
-            [
-                "wo2-control-fn"
-            ]
-        ]
-    },
-    {
-        "id": "wo2-control-fn",
-        "type": "function",
-        "z": "wo2-tab",
-        "g": "dbd2c45c3962d1cd",
-        "name": "Prepare control request",
-        "func": "// Validate input and build HTTP request for timeline control.\n// Output 1: valid command  → HTTP Request node\n// Output 2: unknown command → HTTP Response (error)\n\nconst cfg     = flow.get('watchout_config') || {};\nconst host    = cfg.host || 'localhost';\nconst port    = cfg.port || 3019;\nconst baseUrl = 'http://' + host + ':' + port;\n\nconst input   = msg.payload || {};\nconst command = input.command;\nconst mapping = flow.get('watchout_mapping') || {};\n\nfunction resolveTimelineId(contentId) {\n    return (contentId in mapping) ? mapping[contentId] : String(contentId);\n}\n\nmsg._command = command;\nmsg.headers  = { 'Content-Type': 'application/json' };\n\nswitch (command) {\n    case 'start':\n    case 'stop':\n    case 'pause': {\n        const timelineId   = resolveTimelineId(input.contentId);\n        msg._timelineId    = timelineId;\n        msg.method         = 'POST';\n        const action       = (command === 'start') ? 'play' : command;\n        msg.url            = baseUrl + '/v0/timelines/' + timelineId + '/' + action;\n        msg.payload        = null;\n        return [msg, null];\n    }\n    case 'setVar': {\n        msg.method  = 'PUT';\n        msg.url     = baseUrl + '/v0/vars/' + encodeURIComponent(input.varName);\n        msg.payload = { value: input.varValue };\n        return [msg, null];\n    }\n    case 'getState': {\n        msg.method  = 'GET';\n        msg.url     = baseUrl + '/v0/state';\n        msg.payload = null;\n        return [msg, null];\n    }\n    default: {\n        msg.statusCode = 400;\n        msg.payload    = JSON.stringify({ success: false, error: 'Unknown command: ' + command });\n        return [null, msg];\n    }\n}",
-        "outputs": 2,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 430,
-        "y": 660,
-        "wires": [
-            [
-                "wo2-control-http"
-            ],
-            [
-                "wo2-control-resp"
-            ]
-        ]
-    },
-    {
         "id": "wo2-control-resp",
         "type": "http response",
         "z": "wo2-tab",
@@ -5371,8 +5450,8 @@
         "name": "HTTP Response",
         "statusCode": "",
         "headers": {},
-        "x": 1120,
-        "y": 680,
+        "x": 1140,
+        "y": 720,
         "wires": []
     },
     {
@@ -5392,8 +5471,8 @@
         "topic": "start_sse",
         "payload": "start",
         "payloadType": "str",
-        "x": 160,
-        "y": 780,
+        "x": 170,
+        "y": 1080,
         "wires": [
             [
                 "wo2-sse-fn"
@@ -5412,8 +5491,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 360,
-        "y": 780,
+        "x": 370,
+        "y": 1080,
         "wires": [
             []
         ]
@@ -5434,8 +5513,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 160,
-        "y": 940,
+        "x": 170,
+        "y": 1240,
         "wires": [
             [
                 "wo2-poll-fn"
@@ -5453,8 +5532,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 360,
-        "y": 940,
+        "x": 370,
+        "y": 1240,
         "wires": [
             [
                 "wo2-poll-http"
@@ -5478,8 +5557,8 @@
         "resendOnRefresh": false,
         "templateScope": "local",
         "className": "",
-        "x": 1070,
-        "y": 890,
+        "x": 1080,
+        "y": 1190,
         "wires": [
             []
         ]
@@ -5501,8 +5580,8 @@
         "resendOnRefresh": false,
         "templateScope": "local",
         "className": "",
-        "x": 1070,
-        "y": 780,
+        "x": 1080,
+        "y": 1080,
         "wires": [
             []
         ]
@@ -5569,51 +5648,6 @@
         ]
     },
     {
-        "id": "wo2-control-http",
-        "type": "http request",
-        "z": "wo2-tab",
-        "g": "dbd2c45c3962d1cd",
-        "name": "Watchout API call",
-        "method": "use",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 670,
-        "y": 640,
-        "wires": [
-            [
-                "wo2-control-format-fn"
-            ]
-        ]
-    },
-    {
-        "id": "wo2-control-format-fn",
-        "type": "function",
-        "z": "wo2-tab",
-        "g": "dbd2c45c3962d1cd",
-        "name": "Format control response",
-        "func": "// Normalize the Watchout API response into a uniform JSON object\nconst command    = msg._command;\nconst timelineId = msg._timelineId;\nconst statusCode = msg.statusCode || 200;\n\nmsg.payload    = JSON.stringify({\n    success:    statusCode < 300,\n    command:    command,\n    timelineId: timelineId,\n    statusCode: statusCode,\n    body:       msg.payload\n});\nmsg.statusCode = 200;\nmsg.headers    = { 'Content-Type': 'application/json' };\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 900,
-        "y": 640,
-        "wires": [
-            [
-                "wo2-control-resp"
-            ]
-        ]
-    },
-    {
         "id": "wo2-sse-event-fn",
         "type": "function",
         "z": "wo2-tab",
@@ -5624,8 +5658,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 820,
-        "y": 780,
+        "x": 830,
+        "y": 1080,
         "wires": [
             [
                 "wo2-state-template"
@@ -5644,8 +5678,8 @@
             "wo2-sse-node"
         ],
         "uncaught": false,
-        "x": 590,
-        "y": 840,
+        "x": 600,
+        "y": 1140,
         "wires": [
             [
                 "wo2-sse-error-fn"
@@ -5663,8 +5697,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 820,
-        "y": 840,
+        "x": 830,
+        "y": 1140,
         "wires": [
             [
                 "wo2-sse-status-template"
@@ -5687,8 +5721,8 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 590,
-        "y": 940,
+        "x": 600,
+        "y": 1240,
         "wires": [
             [
                 "wo2-poll-parse-fn"
@@ -5706,8 +5740,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 820,
-        "y": 940,
+        "x": 830,
+        "y": 1240,
         "wires": [
             [
                 "wo2-state-template"
@@ -5800,7 +5834,7 @@
         "name": "Sent Commands to WO",
         "info": "",
         "x": 160,
-        "y": 540,
+        "y": 680,
         "wires": []
     },
     {
@@ -5820,7 +5854,7 @@
         "senderr": false,
         "headers": [],
         "x": 390,
-        "y": 1120,
+        "y": 1440,
         "wires": [
             [
                 "25b16ed9a6a61254"
@@ -5849,7 +5883,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 180,
-        "y": 1120,
+        "y": 1440,
         "wires": [
             [
                 "0f0e1d9147fd0a52",
@@ -5871,7 +5905,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 560,
-        "y": 1120,
+        "y": 1440,
         "wires": []
     },
     {
@@ -5891,7 +5925,7 @@
         "senderr": false,
         "headers": [],
         "x": 390,
-        "y": 1160,
+        "y": 1480,
         "wires": [
             [
                 "25b16ed9a6a61254"
@@ -5920,7 +5954,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 180,
-        "y": 1220,
+        "y": 1540,
         "wires": [
             [
                 "40b13d2f22965063"
@@ -5944,7 +5978,7 @@
         "senderr": false,
         "headers": [],
         "x": 390,
-        "y": 1220,
+        "y": 1540,
         "wires": [
             [
                 "25b16ed9a6a61254"
@@ -5973,7 +6007,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 180,
-        "y": 1280,
+        "y": 1600,
         "wires": [
             [
                 "ab661dd2f52ce072"
@@ -5997,7 +6031,7 @@
         "senderr": false,
         "headers": [],
         "x": 390,
-        "y": 1280,
+        "y": 1600,
         "wires": [
             [
                 "25b16ed9a6a61254"
@@ -6021,7 +6055,7 @@
         "senderr": false,
         "headers": [],
         "x": 390,
-        "y": 1460,
+        "y": 1780,
         "wires": [
             [
                 "90e94aa4a467747c",
@@ -6052,7 +6086,7 @@
         "onceDelay": 0.1,
         "topic": "v0/timelines",
         "x": 190,
-        "y": 1420,
+        "y": 1740,
         "wires": [
             [
                 "67d8972010009125"
@@ -6072,7 +6106,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 560,
-        "y": 1460,
+        "y": 1780,
         "wires": []
     },
     {
@@ -6097,7 +6131,7 @@
         "onceDelay": 0.1,
         "topic": "v0/state",
         "x": 180,
-        "y": 1460,
+        "y": 1780,
         "wires": [
             [
                 "67d8972010009125"
@@ -6126,7 +6160,7 @@
         "onceDelay": 0.1,
         "topic": "v0/play/2",
         "x": 180,
-        "y": 1500,
+        "y": 1820,
         "wires": [
             [
                 "67d8972010009125"
@@ -6142,7 +6176,7 @@
             "fe7a6403efe9d533"
         ],
         "x": 225,
-        "y": 1560,
+        "y": 1880,
         "wires": [
             [
                 "67d8972010009125"
@@ -6169,7 +6203,7 @@
         "to": "",
         "reg": false,
         "x": 710,
-        "y": 1340,
+        "y": 1660,
         "wires": [
             []
         ]
@@ -6197,7 +6231,7 @@
         "repair": false,
         "outputs": 2,
         "x": 510,
-        "y": 1360,
+        "y": 1680,
         "wires": [
             [
                 "aeda62a37bec44b7"
@@ -6227,7 +6261,7 @@
         "to": "",
         "reg": false,
         "x": 690,
-        "y": 1380,
+        "y": 1700,
         "wires": [
             []
         ]
@@ -6244,7 +6278,7 @@
         "overwriteFile": "true",
         "encoding": "none",
         "x": 570,
-        "y": 1420,
+        "y": 1740,
         "wires": [
             []
         ]
@@ -6262,7 +6296,7 @@
         "encoding": "none",
         "allProps": false,
         "x": 400,
-        "y": 1540,
+        "y": 1860,
         "wires": [
             []
         ]
@@ -6308,8 +6342,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 1280,
-        "y": 800,
+        "x": 1290,
+        "y": 1100,
         "wires": [
             [
                 "896224c4eaee7e43"
@@ -6330,44 +6364,15 @@
         "wires": []
     },
     {
-        "id": "9fc262ddc940c877",
-        "type": "link in",
-        "z": "wo2-tab",
-        "g": "dbd2c45c3962d1cd",
-        "name": "Send To WO",
-        "links": [],
-        "x": 275,
-        "y": 620,
-        "wires": [
-            [
-                "wo2-control-fn"
-            ]
-        ]
-    },
-    {
-        "id": "21cb285e4540823b",
-        "type": "inject",
+        "id": "4a615a5c12ed480f",
+        "type": "subflow:69abad96dfa79716",
         "z": "wo2-tab",
         "g": "dbd2c45c3962d1cd",
         "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "{\"payload\":{\"command\":\"start\",\"contentId\":\"show1\"}}",
-        "payloadType": "json",
-        "x": 250,
-        "y": 580,
+        "x": 600,
+        "y": 740,
         "wires": [
-            [
-                "wo2-control-fn"
-            ]
+            []
         ]
     }
 ]
