@@ -28,11 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`node-red/flows/initialization-flow.js`** — Example Node-RED function-node snippets
   showing how to initialize, control timelines, and set inputs
 
-- **`docs/watchout-integration.md`** — Setup guide with:
-  - Configuration options
-  - Node-RED wiring instructions
-  - Full API reference
-  - Timeline mapping explanation
+- **`docs/watchout-integration.md`** *(deleted — superseded)* — v0.1 setup guide;
+  replaced by [`docs/watchout-http-integration.md`](docs/watchout-http-integration.md)
 
 ### Architecture Notes
 

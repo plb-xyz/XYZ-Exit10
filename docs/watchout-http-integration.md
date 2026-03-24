@@ -29,7 +29,7 @@ persistence:
 | Change Detection | Compares old vs new mapping — shows removed REMOVED, added ADDED, changed CHANGED, and unchanged OK timelines |
 | Diff UI | Displays the diff to the operator with **[ Confirm & Save]** and **[ Cancel]** buttons |
 | Persistent Storage | Mapping is stored in both Node-RED flow context **and** the file system via Node-RED Read/Write file nodes (survives restarts) |
-| Timeline Control | `start` / `stop` / `pause` timelines and `setVar` via the stored mapping |
+| Timeline Control | `start` / `stop` / `pause` timelines and `setInput` / `setInputs` via the stored mapping |
 | Real-time Monitoring | NDJSON stream via `GET /v1/ndjson` (preferred) — parsed with built-in nodes; no contrib required |
 | SSE Alternative | SSE endpoints `/v0/sse` (legacy), `/v1/sse` (full), `/v2/sse` (diff) available if needed |
 | Status Polling | Fallback polling via `GET /v0/state` every 5 s when the stream is disconnected |
@@ -212,32 +212,45 @@ Watchout timeline names are converted to **content IDs** using these rules:
 
 ## Timeline Control API
 
-Send a `POST` request to `/watchout/control` with a JSON body:
+Send a `POST` request to `/watchout/control` with a JSON body.  The
+**Prepare control request** function node maps these commands to the correct
+Watchout REST endpoints (see [§ Watchout 7 HTTP API Reference](#watchout-7-http-api-reference)):
 
 ### Start a timeline
 ```json
 { "command": "start", "contentId": "show1" }
 ```
+→ `POST /v0/play/{id}`
 
 ### Stop a timeline
 ```json
 { "command": "stop", "contentId": "show1" }
 ```
+→ `POST /v0/stop/{id}`
 
 ### Pause a timeline
 ```json
 { "command": "pause", "contentId": "show1" }
 ```
+→ `POST /v0/pause/{id}`
 
-### Set a Watchout variable
+### Set a single Watchout input
 ```json
-{ "command": "setVar", "varName": "brightness", "varValue": 0.8 }
+{ "command": "setInput", "key": "brightness", "value": 0.8 }
 ```
+→ `POST /v0/input/{key}?value={v}`
+
+### Set multiple Watchout inputs
+```json
+{ "command": "setInputs", "inputs": [{ "key": "brightness", "value": 0.8 }, { "key": "volume", "value": 50 }] }
+```
+→ `POST /v0/inputs` with JSON array body `[{key, value, duration?}]`
 
 ### Get current state
 ```json
 { "command": "getState" }
 ```
+→ `GET /v0/state`
 
 **Response:**
 ```json
@@ -344,20 +357,26 @@ node has known limitations (see § Required Node-RED nodes above).
 | Method | Path | Description |
 |--------|------|-------------|
 | `GET` | `/v0/timelines` | List all timelines |
-| `POST` | `/v0/timelines/{id}/play` | Start a timeline |
-| `POST` | `/v0/timelines/{id}/stop` | Stop a timeline |
-| `POST` | `/v0/timelines/{id}/pause` | Pause a timeline |
-| `PUT` | `/v0/vars/{name}` | Set a variable |
+| `POST` | `/v0/play` | Play all timelines |
+| `POST` | `/v0/play/{id}` | Start / resume a timeline by ID |
+| `POST` | `/v0/pause/{id}` | Pause a timeline by ID |
+| `POST` | `/v0/stop/{id}` | Stop a timeline by ID |
+| `GET` | `/v0/inputs` | List all inputs and their current values |
+| `POST` | `/v0/inputs` | Set multiple inputs — body: `[{key, value, duration?}]` |
+| `POST` | `/v0/input/{key}?value={v}` | Set a single input by key |
 | `GET` | `/v0/state` | Get current system state (REST poll) |
 | `GET` | `/v0/sse` | SSE stream — legacy/basic state updates |
 | `GET` | `/v1/sse` | SSE stream — full state on each update |
 | `GET` | `/v2/sse` | SSE stream — diff / countdown ticks (optimized) |
 | `GET` | `/v1/ndjson` | **NDJSON stream — preferred** (each line is `{"kind":…,"value":…}`) |
-| `GET` | `/v2/ndjson` | NDJSON stream — diff variant (may return 404 depending on Watchout build) |
+| `GET` | `/v2/ndjson` | NDJSON stream — diff variant (Watchout manual; may return 404 depending on build) |
 
 > **Endpoint validation:** `curl http://localhost:3019/v1/ndjson` and
 > `curl http://localhost:3019/v1/sse` both confirmed working on Windows.
-> `/v2/ndjson` returns **404** in some builds — use `/v1/ndjson` instead.
+> `/v2/ndjson` is documented in the Watchout manual but returns **404** in some
+> builds — use `/v1/ndjson` instead.  Timeline control endpoints (`/v0/play/{id}`,
+> `/v0/pause/{id}`, `/v0/stop/{id}`) confirmed via `curl -X POST
+> http://localhost:3019/v0/play/0`.
 
 ---
 
