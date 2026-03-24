@@ -24,13 +24,6 @@
         "env": []
     },
     {
-        "id": "4427b69f42325844",
-        "type": "tab",
-        "label": "Watchout Integration v0.1",
-        "disabled": false,
-        "info": "Watchout 7 HTTP API integration with manual timeline discovery."
-    },
-    {
         "id": "ma-tab",
         "type": "tab",
         "label": "MA Integration v0.1",
@@ -40,7 +33,7 @@
     {
         "id": "wo2-tab",
         "type": "tab",
-        "label": "Watchout v2",
+        "label": "Watchout",
         "disabled": false,
         "info": ""
     },
@@ -51,6 +44,32 @@
         "info": "",
         "in": [],
         "out": []
+    },
+    {
+        "id": "dbd2c45c3962d1cd",
+        "type": "group",
+        "z": "wo2-tab",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "wo2-control-in",
+            "wo2-control-fn",
+            "wo2-control-resp",
+            "wo2-control-http",
+            "wo2-control-format-fn",
+            "0b90fd227eb5a4aa"
+        ],
+        "x": 44,
+        "y": 579,
+        "w": 1182,
+        "h": 142
     },
     {
         "id": "f34314dbb36334ec",
@@ -128,42 +147,6 @@
             "groupBorderRadius": "4px",
             "widgetGap": "12px"
         }
-    },
-    {
-        "id": "9ada0fbe8e910d7e",
-        "type": "ui-page",
-        "name": "Watchout",
-        "ui": "f34314dbb36334ec",
-        "path": "/watchout",
-        "icon": "mdi-video-box",
-        "layout": "grid",
-        "theme": "6f21f95d494aa53c",
-        "breakpoints": [
-            {
-                "name": "Default",
-                "px": "0",
-                "cols": "3"
-            },
-            {
-                "name": "Tablet",
-                "px": "576",
-                "cols": "6"
-            },
-            {
-                "name": "Small Desktop",
-                "px": "768",
-                "cols": "9"
-            },
-            {
-                "name": "Desktop",
-                "px": "1024",
-                "cols": "12"
-            }
-        ],
-        "order": 5,
-        "className": "",
-        "visible": "true",
-        "disabled": "false"
     },
     {
         "id": "ma-d2-page",
@@ -291,7 +274,7 @@
         "page": "73c2ce73a1d6ef7e",
         "width": "6",
         "height": "2",
-        "order": 2,
+        "order": 5,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -319,7 +302,7 @@
         "page": "73c2ce73a1d6ef7e",
         "width": 6,
         "height": 1,
-        "order": 3,
+        "order": 6,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -333,7 +316,7 @@
         "page": "73c2ce73a1d6ef7e",
         "width": 6,
         "height": 1,
-        "order": 4,
+        "order": 7,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -465,27 +448,13 @@
         ],
         "order": 1,
         "className": "",
-        "visible": true,
-        "disabled": false
+        "visible": "true",
+        "disabled": "false"
     },
     {
         "id": "5176b798f54b89e5",
         "type": "ui-group",
         "name": "Content",
-        "page": "8dd9d92e5b5cc9e6",
-        "width": 6,
-        "height": 1,
-        "order": 4,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
-        "id": "fbb25d9fdfc45a2e",
-        "type": "ui-group",
-        "name": "OSC",
         "page": "8dd9d92e5b5cc9e6",
         "width": 6,
         "height": 1,
@@ -511,28 +480,14 @@
         "groupType": "default"
     },
     {
-        "id": "4863f41be8c6af42",
-        "type": "ui-group",
-        "name": "Playing",
-        "page": "8dd9d92e5b5cc9e6",
-        "width": 6,
-        "height": 1,
-        "order": 1,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
         "id": "5ecf38be0d49e017",
         "type": "ui-group",
         "name": "Playing Details",
         "page": "8dd9d92e5b5cc9e6",
         "width": 6,
         "height": 1,
-        "order": 2,
-        "showTitle": true,
+        "order": 3,
+        "showTitle": false,
         "className": "",
         "visible": "true",
         "disabled": "false",
@@ -541,11 +496,11 @@
     {
         "id": "8ad5a7c72deac7fb",
         "type": "ui-group",
-        "name": "Direct Commands",
+        "name": "Shows",
         "page": "8dd9d92e5b5cc9e6",
         "width": 6,
         "height": 1,
-        "order": 3,
+        "order": 4,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -555,10 +510,10 @@
     {
         "id": "e155175a9ba21767",
         "type": "ui-page",
-        "name": "Watchout v2",
+        "name": "Watchout",
         "ui": "f34314dbb36334ec",
         "path": "/page7",
-        "icon": "home",
+        "icon": "mdi-video-box",
         "layout": "grid",
         "theme": "9d013935d2e3f2be",
         "breakpoints": [
@@ -583,10 +538,10 @@
                 "cols": "12"
             }
         ],
-        "order": 6,
+        "order": 5,
         "className": "",
-        "visible": true,
-        "disabled": false
+        "visible": "true",
+        "disabled": "false"
     },
     {
         "id": "20eba16b1f4b5a48",
@@ -610,6 +565,123 @@
         "width": 6,
         "height": 1,
         "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "651c01193c414502",
+        "type": "ui-page",
+        "name": "Tests",
+        "ui": "f34314dbb36334ec",
+        "path": "/page8",
+        "icon": "mdi-test-tube",
+        "layout": "notebook",
+        "theme": "a9e4285e36ef776f",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 6,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "23200f99e87865d6",
+        "type": "ui-group",
+        "name": "Audio - Sources",
+        "page": "73c2ce73a1d6ef7e",
+        "width": 6,
+        "height": 1,
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ab71585fe7e4cdb3",
+        "type": "ui-group",
+        "name": "Live Mixer",
+        "page": "73c2ce73a1d6ef7e",
+        "width": 6,
+        "height": 1,
+        "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "67ff5910906be82b",
+        "type": "ui-group",
+        "name": "Live Microphones",
+        "page": "73c2ce73a1d6ef7e",
+        "width": 6,
+        "height": 1,
+        "order": 4,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "f3854705b8e737f2",
+        "type": "ui-spacer",
+        "group": "ab71585fe7e4cdb3",
+        "name": "spacer",
+        "tooltip": "",
+        "order": 4,
+        "width": "6",
+        "height": 1,
+        "className": ""
+    },
+    {
+        "id": "fbb25d9fdfc45a2e",
+        "type": "ui-group",
+        "name": "OSC",
+        "page": "651c01193c414502",
+        "width": 6,
+        "height": 1,
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "26c96904b4efbb4b",
+        "type": "ui-group",
+        "name": "Status",
+        "page": "8dd9d92e5b5cc9e6",
+        "width": 6,
+        "height": 1,
+        "order": 1,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -951,16 +1023,6 @@
         "clearable": false,
         "options": [
             {
-                "label": "show1",
-                "value": "show1",
-                "type": "str"
-            },
-            {
-                "label": "",
-                "value": "show2",
-                "type": "str"
-            },
-            {
                 "label": "",
                 "value": "Ambiance1",
                 "type": "str"
@@ -974,6 +1036,21 @@
                 "label": "",
                 "value": "Ambiance3",
                 "type": "str"
+            },
+            {
+                "label": "",
+                "value": "Special Full Screen 1",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "Special Overlay 1",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "Special Overlay 2",
+                "type": "str"
             }
         ],
         "payload": "",
@@ -983,7 +1060,7 @@
         "typeIsComboBox": true,
         "msgTrigger": "onChange",
         "x": 160,
-        "y": 980,
+        "y": 1380,
         "wires": [
             []
         ]
@@ -1088,7 +1165,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 130,
-        "y": 1060,
+        "y": 1460,
         "wires": [
             []
         ]
@@ -1100,7 +1177,7 @@
         "name": "Direct Buttons",
         "info": "",
         "x": 140,
-        "y": 700,
+        "y": 1060,
         "wires": []
     },
     {
@@ -1110,7 +1187,7 @@
         "name": "Video Content",
         "info": "",
         "x": 150,
-        "y": 940,
+        "y": 1340,
         "wires": []
     },
     {
@@ -1149,7 +1226,7 @@
         "iconPosition": "left",
         "iconInnerPosition": "inside",
         "x": 160,
-        "y": 1160,
+        "y": 1620,
         "wires": [
             [
                 "b564d65ab1be896e"
@@ -1189,7 +1266,7 @@
         "topic": "topic",
         "topicType": "msg",
         "x": 130,
-        "y": 1240,
+        "y": 1700,
         "wires": [
             [
                 "2c13c807c664eac3"
@@ -1204,7 +1281,7 @@
         "path": "",
         "metadata": false,
         "x": 450,
-        "y": 1200,
+        "y": 1660,
         "wires": [
             [
                 "7d8570d211d2f5e4",
@@ -1230,7 +1307,7 @@
         "payload": "/cue/1/start",
         "payloadType": "str",
         "x": 150,
-        "y": 1200,
+        "y": 1660,
         "wires": [
             [
                 "b564d65ab1be896e"
@@ -1254,7 +1331,7 @@
         "onceDelay": 0.1,
         "topic": "/cue/1/start",
         "x": 150,
-        "y": 1320,
+        "y": 1780,
         "wires": [
             [
                 "eee292bfd74fad2f"
@@ -1269,7 +1346,7 @@
         "path": "",
         "metadata": false,
         "x": 330,
-        "y": 1320,
+        "y": 1780,
         "wires": [
             [
                 "dce7dd7dbe94f72b"
@@ -1289,7 +1366,7 @@
         "base64": false,
         "multicast": "false",
         "x": 550,
-        "y": 1320,
+        "y": 1780,
         "wires": []
     },
     {
@@ -1312,7 +1389,7 @@
         "to": "",
         "reg": false,
         "x": 320,
-        "y": 1240,
+        "y": 1700,
         "wires": [
             []
         ]
@@ -1330,7 +1407,7 @@
         "finalize": "",
         "libs": [],
         "x": 300,
-        "y": 1200,
+        "y": 1660,
         "wires": [
             [
                 "557570a035650704"
@@ -1350,7 +1427,7 @@
         "base64": false,
         "multicast": "false",
         "x": 650,
-        "y": 1200,
+        "y": 1660,
         "wires": []
     },
     {
@@ -1367,7 +1444,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 600,
-        "y": 1160,
+        "y": 1620,
         "wires": []
     },
     {
@@ -1377,30 +1454,8 @@
         "name": "Osc Outputter!",
         "info": "",
         "x": 160,
-        "y": 1120,
+        "y": 1580,
         "wires": []
-    },
-    {
-        "id": "0ab3ea59ee1611f6",
-        "type": "http request",
-        "z": "19fbd7cf3882c4ad",
-        "name": "",
-        "method": "GET",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 330,
-        "y": 1480,
-        "wires": [
-            []
-        ]
     },
     {
         "id": "0e9d8e3e23b6e557",
@@ -1408,7 +1463,7 @@
         "z": "19fbd7cf3882c4ad",
         "name": "",
         "x": 360,
-        "y": 980,
+        "y": 1380,
         "wires": []
     },
     {
@@ -1458,126 +1513,20 @@
         "topic": "topic",
         "topicType": "msg",
         "x": 150,
-        "y": 1020,
+        "y": 1420,
         "wires": [
             []
         ]
-    },
-    {
-        "id": "b6b121d650f4a7e1",
-        "type": "comment",
-        "z": "19fbd7cf3882c4ad",
-        "name": "Playing 1",
-        "info": "",
-        "x": 140,
-        "y": 320,
-        "wires": []
-    },
-    {
-        "id": "2daab7503299d678",
-        "type": "ui-text",
-        "z": "19fbd7cf3882c4ad",
-        "group": "4863f41be8c6af42",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "name": "",
-        "label": "Atrium 1:",
-        "format": "{{msg.payload}}",
-        "layout": "row-left",
-        "style": false,
-        "font": "",
-        "fontSize": 16,
-        "color": "#717171",
-        "wrapText": false,
-        "className": "",
-        "value": "Ambience 2",
-        "valueType": "str",
-        "x": 140,
-        "y": 360,
-        "wires": []
-    },
-    {
-        "id": "28f4e78eedb5d8bb",
-        "type": "ui-text",
-        "z": "19fbd7cf3882c4ad",
-        "group": "4863f41be8c6af42",
-        "order": 3,
-        "width": 0,
-        "height": 0,
-        "name": "",
-        "label": "Atrium 2:",
-        "format": "{{msg.payload}}",
-        "layout": "row-left",
-        "style": false,
-        "font": "",
-        "fontSize": 16,
-        "color": "#717171",
-        "wrapText": false,
-        "className": "",
-        "value": "Ambience 2",
-        "valueType": "str",
-        "x": 140,
-        "y": 400,
-        "wires": []
-    },
-    {
-        "id": "7b596c2fe3a41cb4",
-        "type": "ui-text",
-        "z": "19fbd7cf3882c4ad",
-        "group": "4863f41be8c6af42",
-        "order": 2,
-        "width": 0,
-        "height": 0,
-        "name": "",
-        "label": "Atrium 3:",
-        "format": "{{msg.payload}}",
-        "layout": "row-left",
-        "style": false,
-        "font": "",
-        "fontSize": 16,
-        "color": "#717171",
-        "wrapText": false,
-        "className": "",
-        "value": "Show 1",
-        "valueType": "str",
-        "x": 140,
-        "y": 440,
-        "wires": []
     },
     {
         "id": "80960ee867ec11c5",
         "type": "comment",
         "z": "19fbd7cf3882c4ad",
-        "name": "Playing 1",
+        "name": "Playing",
         "info": "",
-        "x": 140,
-        "y": 520,
+        "x": 130,
+        "y": 680,
         "wires": []
-    },
-    {
-        "id": "5cc3af05ed1020bd",
-        "type": "ui-template",
-        "z": "19fbd7cf3882c4ad",
-        "group": "5ecf38be0d49e017",
-        "page": "",
-        "ui": "",
-        "name": "",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "head": "",
-        "format": "<head>\n<style>\ntable {\n  font-family: arial, sans-serif;\n  border-collapse: collapse;\n  width: 100%;\n}\n\ntd, th {\n  border: 1px solid #dddddd;\n  text-align: left;\n  padding: 8px;\n}\n\ntr:nth-child(even) {\n  background-color: #dddddd;\n}\n</style>\n</head>\n<body>\n\n<table>\n  <tr>\n    <th style=\"width:20%\"></th>\n    <th style=\"width:20%\">Atrium 1</th>\n    <th style=\"width:20%\">Atrium 2</th>\n    <th style=\"width:20%\">Atrium 3</th>\n    <th style=\"width:20%\">Landscape</th>\n  </tr>\n  <tr>\n    <th>Video</th>\n    <td>Ambiance 1</td>\n    <td>Ambiance 2</td>\n    <td>Show 1</td>\n    <td>Ambiance 1</td>\n  </tr>\n  <tr>\n    <th>Lighting</th>\n    <td>Ambiance 1</td>\n    <td>Ambiance 2</td>\n    <td>Show 1</td>\n    <td>Ambiance 1</td>\n  </tr>\n  <tr>\n    <th>Audio</th>\n    <td>BG Music</td>\n    <td>BG Music</td>\n    <td>Show 1</td>\n    <td>BG Music</td>\n  </tr>\n</table>\n\n</body>",
-        "storeOutMessages": true,
-        "passthru": true,
-        "resendOnRefresh": true,
-        "templateScope": "local",
-        "className": "",
-        "x": 140,
-        "y": 560,
-        "wires": [
-            []
-        ]
     },
     {
         "id": "8b9aee18b610f4ad",
@@ -1599,7 +1548,7 @@
         "templateScope": "local",
         "className": "",
         "x": 310,
-        "y": 740,
+        "y": 1100,
         "wires": [
             []
         ]
@@ -1636,7 +1585,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 140,
-        "y": 740,
+        "y": 1100,
         "wires": [
             [
                 "8b9aee18b610f4ad",
@@ -1677,7 +1626,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 140,
-        "y": 780,
+        "y": 1140,
         "wires": [
             [
                 "d2339c4649d7dc3c"
@@ -1703,7 +1652,7 @@
         "className": "",
         "name": "",
         "x": 340,
-        "y": 780,
+        "y": 1140,
         "wires": [
             [
                 "41a75805e7d72d9e"
@@ -1723,7 +1672,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 520,
-        "y": 780,
+        "y": 1140,
         "wires": []
     },
     {
@@ -1758,7 +1707,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 140,
-        "y": 820,
+        "y": 1180,
         "wires": [
             []
         ]
@@ -1795,7 +1744,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 140,
-        "y": 860,
+        "y": 1220,
         "wires": [
             []
         ]
@@ -1810,7 +1759,7 @@
             "1962c3ac9d0da7c8"
         ],
         "x": 675,
-        "y": 700,
+        "y": 1060,
         "wires": []
     },
     {
@@ -1826,7 +1775,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 340,
-        "y": 640,
+        "y": 1000,
         "wires": []
     },
     {
@@ -1856,7 +1805,7 @@
         "to": "",
         "reg": false,
         "x": 520,
-        "y": 700,
+        "y": 1060,
         "wires": [
             [
                 "fe7a6403efe9d533",
@@ -1892,7 +1841,7 @@
         "repair": false,
         "outputs": 3,
         "x": 330,
-        "y": 700,
+        "y": 1060,
         "wires": [
             [
                 "491898993236472c"
@@ -1902,22 +1851,334 @@
         ]
     },
     {
-        "id": "4ef930b6b5f4d981",
-        "type": "function",
+        "id": "ac1f574d8a8e4986",
+        "type": "ui-switch",
         "z": "19fbd7cf3882c4ad",
-        "name": "function 1",
-        "func": "\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 800,
-        "y": 660,
+        "name": "Audio",
+        "label": "Audio",
+        "group": "5176b798f54b89e5",
+        "order": 8,
+        "width": "1",
+        "height": "1",
+        "passthru": false,
+        "decouple": false,
+        "topic": "audio",
+        "topicType": "str",
+        "style": "",
+        "className": "",
+        "layout": "row-left",
+        "clickableArea": "switch",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 350,
+        "y": 1440,
         "wires": [
             []
         ]
+    },
+    {
+        "id": "1f485cb6f8f09b64",
+        "type": "ui-template",
+        "z": "19fbd7cf3882c4ad",
+        "group": "5ecf38be0d49e017",
+        "page": "",
+        "ui": "",
+        "name": "LED Status",
+        "order": 3,
+        "width": "2",
+        "height": "1",
+        "head": "",
+        "format": "<template>\n  <div class=\"led-wrap\" :class=\"layoutClass\">\n    <span\n      class=\"led\"\n      :class=\"[ledClass, blinkClass]\"\n      :title=\"text\"\n      aria-hidden=\"true\"\n    ></span>\n\n    <div class=\"led-text\">\n      <div class=\"led-label\">{{ label }}</div>\n      <div class=\"led-state\">{{ text }}</div>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      // state: 'connected' | 'connecting' | 'disconnected' | 'error'\n      state: \"disconnected\",\n      label: \"Status\",\n      // layout: 'row' or 'column'\n      layout: \"row\",\n      blinkOnConnecting: true,\n    };\n  },\n  computed: {\n    ledClass() {\n      if (this.state === \"connected\") return \"led-green\";\n      if (this.state === \"connecting\") return \"led-amber\";\n      // disconnected + error both red\n      return \"led-red\";\n    },\n    text() {\n      if (this.state === \"connected\") return \"Connected\";\n      if (this.state === \"connecting\") return \"Connecting…\";\n      if (this.state === \"error\") return \"Error\";\n      return \"Disconnected\";\n    },\n    blinkClass() {\n      if (this.state === \"error\") return \"blink-fast\";\n      if (this.state === \"connecting\" && this.blinkOnConnecting) return \"blink-slow\";\n      return \"\";\n    },\n    layoutClass() {\n      return this.layout === \"column\" ? \"layout-column\" : \"layout-row\";\n    },\n  },\n  methods: {\n    applyMsg(msg) {\n      const p = msg?.payload;\n\n      if (typeof p === \"string\") {\n        this.state = p;\n        return;\n      }\n\n      if (p && typeof p === \"object\") {\n        if (p.state) this.state = p.state;\n        if (p.label) this.label = p.label;\n        if (p.layout) this.layout = p.layout;\n        if (typeof p.blinkOnConnecting === \"boolean\")\n          this.blinkOnConnecting = p.blinkOnConnecting;\n      }\n    },\n  },\n  mounted() {\n    this.$watch(\n      () => this.msg,\n      (msg) => this.applyMsg(msg),\n      { deep: true, immediate: true }\n    );\n  },\n};\n</script>\n\n<style>\n.led-wrap {\n  display: inline-flex;\n  align-items: center;\n  gap: 12px;\n  padding: 10px 12px;\n  border-radius: 12px;\n  background: rgba(0,0,0,0.06);\n}\n\n.layout-row { flex-direction: row; }\n.layout-column { flex-direction: column; align-items: flex-start; }\n\n.led {\n  width: 18px;\n  height: 18px;\n  border-radius: 999px;\n  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.25),\n              0 0 0 2px rgba(0,0,0,0.12);\n}\n\n.led-green { background: #22c55e; box-shadow: 0 0 14px rgba(34,197,94,0.55), inset 0 0 0 2px rgba(255,255,255,0.25), 0 0 0 2px rgba(0,0,0,0.12); }\n.led-amber { background: #f59e0b; box-shadow: 0 0 14px rgba(245,158,11,0.55), inset 0 0 0 2px rgba(255,255,255,0.25), 0 0 0 2px rgba(0,0,0,0.12); }\n.led-red   { background: #ef4444; box-shadow: 0 0 14px rgba(239,68,68,0.55), inset 0 0 0 2px rgba(255,255,255,0.25), 0 0 0 2px rgba(0,0,0,0.12); }\n\n.led-text { display: flex; flex-direction: column; line-height: 1.15; }\n.led-label { font-size: 12px; opacity: 0.75; }\n.led-state { font-size: 18px; font-weight: 700; }\n\n.blink-slow { animation: blink 0.85s infinite ease-in-out; }\n.blink-fast { animation: blink 0.35s infinite ease-in-out; }\n\n@keyframes blink {\n  0%, 100% { opacity: 1; }\n  50% { opacity: 0.15; }\n}\n</style>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 450,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4fefee6421139eb8",
+        "type": "inject",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Connected",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"state\":\"connected\",\"label\":\"Watchout\",\"layout\":\"row\"}",
+        "payloadType": "json",
+        "x": 160,
+        "y": 420,
+        "wires": [
+            [
+                "1f485cb6f8f09b64"
+            ]
+        ]
+    },
+    {
+        "id": "f93fba23136576ba",
+        "type": "inject",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Connecting",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"state\":\"connecting\",\"label\":\"Watchout\",\"layout\":\"row\"}",
+        "payloadType": "json",
+        "x": 170,
+        "y": 460,
+        "wires": [
+            [
+                "1f485cb6f8f09b64"
+            ]
+        ]
+    },
+    {
+        "id": "fb382bdd78eea147",
+        "type": "inject",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Disconnected",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"state\":\"disconnected\",\"label\":\"Watchout\",\"layout\":\"row\"}",
+        "payloadType": "json",
+        "x": 170,
+        "y": 500,
+        "wires": [
+            [
+                "1f485cb6f8f09b64"
+            ]
+        ]
+    },
+    {
+        "id": "fc1aa80241f418ba",
+        "type": "inject",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Error",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"state\":\"error\",\"label\":\"Watchout\",\"layout\":\"row\"}",
+        "payloadType": "json",
+        "x": 150,
+        "y": 540,
+        "wires": [
+            [
+                "1f485cb6f8f09b64"
+            ]
+        ]
+    },
+    {
+        "id": "5afd3867d48c70fc",
+        "type": "link in",
+        "z": "19fbd7cf3882c4ad",
+        "name": "To WO LED Status",
+        "links": [
+            "fdfbb04d88a99ef7"
+        ],
+        "x": 315,
+        "y": 560,
+        "wires": [
+            [
+                "1f485cb6f8f09b64"
+            ]
+        ]
+    },
+    {
+        "id": "391c22b4831ae5eb",
+        "type": "ui-template",
+        "z": "19fbd7cf3882c4ad",
+        "group": "26c96904b4efbb4b",
+        "page": "",
+        "ui": "",
+        "name": "Satus(es)",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "head": "",
+        "format": "<template>\n  <div class=\"status-board\">\n    <!-- SECTION 1 -->\n    <div class=\"section\">\n      <div class=\"section-title\">Exit10 Systems</div>\n\n      <div class=\"system-grid\">\n        <div\n          class=\"system-card\"\n          v-for=\"(sys, idx) in exit10Systems\"\n          :key=\"sys.id\"\n          :class=\"idx % 2 === 0 ? 'alt-a' : 'alt-b'\"\n        >\n          <div class=\"system-title\">{{ sys.title }}</div>\n\n          <div class=\"endpoints\">\n            <div class=\"endpoint\" v-for=\"ep in sys.items\" :key=\"ep.id\">\n              <div class=\"ep-name\">{{ ep.name }}</div>\n\n              <div class=\"ep-indicator\">\n                <span class=\"led\" :class=\"[ledClass(ep.state), blinkClass(ep.state)]\"></span>\n                <span class=\"state-text\">{{ stateText(ep.state) }}</span>\n              </div>\n            </div>\n          </div>\n\n          <div class=\"meta\" v-if=\"sys.meta\">{{ sys.meta }}</div>\n        </div>\n      </div>\n    </div>\n\n    <!-- SECTION 2 -->\n    <div class=\"section\">\n      <div class=\"section-title\">External Systems</div>\n\n      <div class=\"external-grid\">\n        <div\n          class=\"external-card\"\n          v-for=\"(item, idx) in externalItems\"\n          :key=\"item.id\"\n          :class=\"idx % 2 === 0 ? 'alt-a' : 'alt-b'\"\n        >\n          <div class=\"card-top\">\n            <div class=\"name\">{{ item.name }}</div>\n\n            <div class=\"indicator\">\n              <span class=\"led\" :class=\"[ledClass(item.state), blinkClass(item.state)]\"></span>\n              <span class=\"state-text\">{{ stateText(item.state) }}</span>\n            </div>\n          </div>\n\n          <div class=\"meta\" v-if=\"item.meta\">{{ item.meta }}</div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      // SECTION 1\n      exit10Systems: [\n        {\n          id: \"sys_watchout\",\n          title: \"Watchout\",\n          items: [\n            { id: \"watchout_main\", name: \"Main\", state: \"disconnected\" },\n            { id: \"watchout_backup\", name: \"Backup\", state: \"disconnected\" },\n          ],\n          meta: \"\",\n        },\n        {\n          id: \"sys_grandma\",\n          title: \"GrandMA\",\n          items: [\n            { id: \"grandma_main\", name: \"Main\", state: \"disconnected\" },\n            { id: \"grandma_backup\", name: \"Backup\", state: \"disconnected\" },\n          ],\n          meta: \"\",\n        },\n        {\n          id: \"sys_qsys\",\n          title: \"Qsys\",\n          items: [\n            { id: \"qsys_main\", name: \"Main\", state: \"disconnected\" },\n            { id: \"qsys_backup\", name: \"Backup\", state: \"disconnected\" },\n          ],\n          meta: \"\",\n        },\n        {\n          id: \"sys_video_h15\",\n          title: \"Video H15\",\n          items: [\n            { id: \"video_h15_main\", name: \"Main\", state: \"disconnected\" },\n            { id: \"video_h15_backup\", name: \"Backup\", state: \"disconnected\" },\n          ],\n          meta: \"\",\n        },\n        {\n          id: \"sys_relays\",\n          title: \"Relay Panels\",\n          items: [\n            { id: \"relay_panel_1\", name: \"Panel 1\", state: \"disconnected\" },\n            { id: \"relay_panel_2\", name: \"Panel 2\", state: \"disconnected\" },\n          ],\n          meta: \"\",\n        },\n      ],\n\n      // SECTION 2\n      externalItems: [\n        { id: \"pharos_main\",            name: \"Pharos Main\",            state: \"disconnected\", meta: \"\" },\n        { id: \"pharos_2\",               name: \"Pharos 2\",               state: \"disconnected\", meta: \"\" },\n        { id: \"pharos_3\",               name: \"Pharos 3\",               state: \"disconnected\", meta: \"\" },\n        { id: \"cinema_dome_brightsign\", name: \"Cinema Dome Brightsign\", state: \"disconnected\", meta: \"\" },\n        { id: \"cinema_led_columns\",     name: \"Cinema LED columns\",     state: \"disconnected\", meta: \"\" },\n        { id: \"water_feature_1\",        name: \"Water Feature 1\",        state: \"disconnected\", meta: \"\" },\n        { id: \"water_feature_2\",        name: \"Water Feature 2\",        state: \"disconnected\", meta: \"\" },\n        { id: \"water_feature_3\",        name: \"Water Feature 3\",        state: \"disconnected\", meta: \"\" },\n      ],\n    };\n  },\n\n  methods: {\n    ledClass(state) {\n      if (state === \"connected\") return \"led-green\";\n      if (state === \"connecting\") return \"led-amber\";\n      return \"led-red\"; // disconnected + error\n    },\n    blinkClass(state) {\n      if (state === \"error\") return \"blink-fast\";\n      if (state === \"connecting\") return \"blink-slow\";\n      return \"\";\n    },\n    stateText(state) {\n      if (state === \"connected\") return \"Connected\";\n      if (state === \"connecting\") return \"Connecting…\";\n      if (state === \"error\") return \"Error\";\n      return \"Disconnected\";\n    },\n\n    findEndpointById(id) {\n      for (const sys of this.exit10Systems) {\n        const ep = sys.items.find((x) => x.id === id);\n        if (ep) return ep;\n      }\n      const ext = this.externalItems.find((x) => x.id === id);\n      if (ext) return ext;\n      return null;\n    },\n\n    setItem(id, patch) {\n      const item = this.findEndpointById(id);\n      if (!item) return false;\n\n      if (patch.state) item.state = patch.state;\n      if (typeof patch.meta === \"string\") item.meta = patch.meta; // external only\n      if (typeof patch.name === \"string\") item.name = patch.name;\n      return true;\n    },\n\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p) return;\n\n      // single update: { id, state, meta }\n      if (typeof p === \"object\" && p.id) {\n        this.setItem(p.id, p);\n        return;\n      }\n\n      // bulk update: { id1: \"connected\", id2: {state, meta}, ... }\n      if (typeof p === \"object\") {\n        for (const [id, val] of Object.entries(p)) {\n          if (val && typeof val === \"object\") this.setItem(id, val);\n          else if (typeof val === \"string\") this.setItem(id, { state: val });\n        }\n      }\n    },\n  },\n\n  mounted() {\n    this.$watch(\n      () => this.msg,\n      (msg) => this.applyMsg(msg),\n      { deep: true, immediate: true }\n    );\n  },\n};\n</script>\n\n<style>\n/* Overall */\n.status-board {\n  display: flex;\n  flex-direction: column;\n  gap: 14px;\n}\n\n.section {\n  padding: 12px;\n  border-radius: 14px;\n  background: rgba(0,0,0,0.035);\n}\n\n.section-title {\n  font-size: 22px;     /* bigger titles */\n  font-weight: 950;\n  letter-spacing: 0.2px;\n  margin: 4px 0 10px 2px;\n}\n\n/* Cards: 2-up when space allows; 1-up on small screens */\n.system-grid,\n.external-grid {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(280px, 1fr));\n  gap: 10px;           /* tighter spacing between cards */\n}\n\n@media (max-width: 820px) {\n  .system-grid,\n  .external-grid {\n    grid-template-columns: 1fr;  /* only side-by-side when width allows */\n  }\n}\n\n/* Alternating light purple tint to differentiate cards */\n.alt-a {\n  background: rgba(255,255,255,0.68);\n}\n.alt-b {\n  background: rgba(152, 92, 255, 0.07); /* light purple */\n}\n\n/* System card */\n.system-card,\n.external-card {\n  padding: 10px 10px;     /* smaller card */\n  border-radius: 16px;\n  box-shadow: 0 1px 0 rgba(0,0,0,0.04);\n}\n\n.system-title {\n  font-size: 18px;        /* focus on title */\n  font-weight: 900;\n  margin: 2px 0 8px 2px;\n}\n\n/* Endpoints inside system card */\n.endpoints {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;               /* reduced spacing between Main/Backup */\n}\n\n.endpoint {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 10px;\n  padding: 9px 10px;      /* smaller endpoint rows */\n  border-radius: 14px;\n  background: rgba(255,255,255,0.55);\n}\n\n.ep-name {\n  font-size: 14px;        /* smaller + not bold */\n  font-weight: 500;\n  opacity: 0.9;\n}\n\n.ep-indicator,\n.indicator {\n  display: inline-flex;\n  align-items: center;\n  gap: 8px;\n  flex-shrink: 0;\n}\n\n.state-text {\n  font-size: 14px;        /* smaller */\n  font-weight: 700;\n}\n\n/* External card top */\n.card-top {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 10px;\n}\n\n.name {\n  font-size: 14px;\n  font-weight: 700;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n.meta {\n  margin-top: 6px;\n  font-size: 12px;\n  opacity: 0.75;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n/* LED */\n.led {\n  width: 14px;\n  height: 14px;\n  border-radius: 999px;\n  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.22),\n              0 0 0 2px rgba(0,0,0,0.10);\n}\n\n.led-green { background: #22c55e; box-shadow: 0 0 12px rgba(34,197,94,0.50), inset 0 0 0 2px rgba(255,255,255,0.22), 0 0 0 2px rgba(0,0,0,0.10); }\n.led-amber { background: #f59e0b; box-shadow: 0 0 12px rgba(245,158,11,0.50), inset 0 0 0 2px rgba(255,255,255,0.22), 0 0 0 2px rgba(0,0,0,0.10); }\n.led-red   { background: #ef4444; box-shadow: 0 0 12px rgba(239,68,68,0.50), inset 0 0 0 2px rgba(255,255,255,0.22), 0 0 0 2px rgba(0,0,0,0.10); }\n\n/* Blink */\n.blink-slow { animation: blink 0.9s infinite ease-in-out; }\n.blink-fast { animation: blink 0.35s infinite ease-in-out; }\n@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }\n</style>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 440,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d6e4aef865014185",
+        "type": "ui-template",
+        "z": "19fbd7cf3882c4ad",
+        "group": "5ecf38be0d49e017",
+        "page": "",
+        "ui": "",
+        "name": "Playing Details v2",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "head": "",
+        "format": "<template>\n  <div class=\"pd-board\">\n    <!-- EXIT10 -->\n    <div class=\"section\">\n      <div class=\"section-title\">Playing Details — Exit10</div>\n\n      <div class=\"matrix-card purple\">\n        <div class=\"matrix-head\">\n          <div class=\"corner\"></div>\n          <div class=\"col\" v-for=\"c in exit10.cols\" :key=\"c\">{{ c }}</div>\n        </div>\n\n        <div class=\"matrix-body\">\n          <div class=\"grid-wrap\">\n            <div class=\"row-titles\" :style=\"{ gridTemplateRows: `repeat(${exit10.rows.length}, var(--row-unit))` }\">\n              <div class=\"row-title\" v-for=\"r in exit10.rows\" :key=\"r\">{{ r }}</div>\n            </div>\n\n            <div\n              class=\"cells-grid\"\n              :style=\"{\n                gridTemplateColumns: `repeat(${exit10.cols.length}, minmax(140px, 1fr))`,\n                gridTemplateRows: `repeat(${exit10.rows.length}, var(--row-unit))`\n              }\"\n            >\n              <div\n                v-for=\"cell in exit10Cells\"\n                :key=\"cell.key\"\n                class=\"cell\"\n                :class=\"cellClass(cell.text)\"\n                :style=\"{\n                  gridColumn: `${cell.col + 1} / span ${cell.colSpan}`,\n                  gridRow: `${cell.row + 1} / span ${cell.rowSpan}`\n                }\"\n              >\n                <div class=\"cell-inner\">\n                  <span class=\"icon\" aria-hidden=\"true\">{{ iconFor(cell.text) }}</span>\n                  <span class=\"cell-text\">{{ cell.text }}</span>\n                </div>\n              </div>\n            </div>\n          </div>\n\n          <div class=\"hint\">\n            Cells merge when adjacent spaces and/or adjacent categories share the same value.\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <!-- EXTERNAL (one row per device) -->\n    <div class=\"section\">\n      <div class=\"section-title\">Playing Details — External</div>\n\n      <div class=\"matrix-card purple\">\n        <div class=\"matrix-head external\">\n          <div class=\"corner\"></div>\n          <div class=\"col\" v-for=\"c in external.cols\" :key=\"c\">{{ c }}</div>\n        </div>\n\n        <div class=\"matrix-body\">\n          <div class=\"external-table\">\n            <div class=\"ext-row\" v-for=\"r in external.rows\" :key=\"r\">\n              <div class=\"row-title\">{{ r }}</div>\n\n              <div class=\"ext-cells\">\n                <div class=\"cell\" v-for=\"c in external.cols\" :key=\"r + '_' + c\">\n                  <div class=\"cell-inner\">\n                    <span class=\"cell-text\">{{ getCell(external, r, c) }}</span>\n                  </div>\n                </div>\n              </div>\n            </div>\n          </div>\n\n          <div class=\"hint\" v-if=\"externalHint\">{{ externalHint }}</div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      // EXIT10\n      exit10: {\n        rows: [\"Video\", \"Lighting\", \"Audio\"],\n        cols: [\"Atrium 1\", \"Atrium 2\", \"Atrium 3\", \"Landscape\"],\n        values: {\n          Video: {\n            \"Atrium 1\": \"Ambiance 1\",\n            \"Atrium 2\": \"Ambiance 2\",\n            \"Atrium 3\": \"Show 1\",\n            Landscape: \"Ambiance 1\",\n          },\n          Lighting: {\n            \"Atrium 1\": \"Ambiance 1\",\n            \"Atrium 2\": \"Ambiance 2\",\n            \"Atrium 3\": \"Show 1\",\n            Landscape: \"Ambiance 1\",\n          },\n          Audio: {\n            \"Atrium 1\": \"BG Music\",\n            \"Atrium 2\": \"BG Music\",\n            \"Atrium 3\": \"Show 1\",\n            Landscape: \"BG Music\",\n          },\n        },\n      },\n\n      // EXTERNAL (one row per device)\n      external: {\n        rows: [\n          \"Pharos Main\",\n          \"Pharos 2\",\n          \"Pharos 3\",\n          \"Cinema Dome Brightsign\",\n          \"Cinema LED columns\",\n          \"Water Feature 1\",\n          \"Water Feature 2\",\n          \"Water Feature 3\",\n        ],\n        cols: [\"Status / Mode\", \"Now Playing\"],\n        values: {\n          \"Pharos Main\": { \"Status / Mode\": \"—\", \"Now Playing\": \"—\" },\n          \"Pharos 2\": { \"Status / Mode\": \"—\", \"Now Playing\": \"—\" },\n          \"Pharos 3\": { \"Status / Mode\": \"—\", \"Now Playing\": \"—\" },\n          \"Cinema Dome Brightsign\": { \"Status / Mode\": \"—\", \"Now Playing\": \"—\" },\n          \"Cinema LED columns\": { \"Status / Mode\": \"—\", \"Now Playing\": \"—\" },\n          \"Water Feature 1\": { \"Status / Mode\": \"—\", \"Now Playing\": \"—\" },\n          \"Water Feature 2\": { \"Status / Mode\": \"—\", \"Now Playing\": \"—\" },\n          \"Water Feature 3\": { \"Status / Mode\": \"—\", \"Now Playing\": \"—\" },\n        },\n      },\n\n      externalHint: \"External playing details can be filled in as you integrate those systems.\",\n    };\n  },\n\n  computed: {\n    exit10Cells() {\n      return this.buildMergedCells(this.exit10);\n    },\n  },\n\n  methods: {\n    getCell(section, row, col) {\n      return section?.values?.[row]?.[col] ?? \"—\";\n    },\n\n    gridTexts(section) {\n      const rows = section.rows;\n      const cols = section.cols;\n      return rows.map((r) => cols.map((c) => this.getCell(section, r, c)));\n    },\n\n    // 2D merge (greedy rectangles of identical values)\n    buildMergedCells(section) {\n      const rowCount = section.rows.length;\n      const colCount = section.cols.length;\n      const texts = this.gridTexts(section);\n\n      const used = Array.from({ length: rowCount }, () => Array(colCount).fill(false));\n      const cells = [];\n\n      const canExpandCol = (r0, c0, rSpan, cNext, text) => {\n        if (cNext >= colCount) return false;\n        for (let r = r0; r < r0 + rSpan; r++) {\n          if (used[r][cNext]) return false;\n          if (texts[r][cNext] !== text) return false;\n        }\n        return true;\n      };\n\n      const canExpandRow = (rNext, c0, cSpan, text) => {\n        if (rNext >= rowCount) return false;\n        for (let c = c0; c < c0 + cSpan; c++) {\n          if (used[rNext][c]) return false;\n          if (texts[rNext][c] !== text) return false;\n        }\n        return true;\n      };\n\n      for (let r = 0; r < rowCount; r++) {\n        for (let c = 0; c < colCount; c++) {\n          if (used[r][c]) continue;\n\n          const text = texts[r][c];\n          let rSpan = 1;\n          let cSpan = 1;\n\n          while (canExpandCol(r, c, rSpan, c + cSpan, text)) cSpan++;\n          while (canExpandRow(r + rSpan, c, cSpan, text)) rSpan++;\n          while (canExpandCol(r, c, rSpan, c + cSpan, text)) cSpan++;\n\n          for (let rr = r; rr < r + rSpan; rr++) {\n            for (let cc = c; cc < c + cSpan; cc++) used[rr][cc] = true;\n          }\n\n          cells.push({\n            key: `${r}_${c}_${rSpan}x${cSpan}_${text}`,\n            row: r,\n            col: c,\n            rowSpan: rSpan,\n            colSpan: cSpan,\n            text,\n          });\n        }\n      }\n\n      return cells;\n    },\n\n    // Icons & styling\n    norm(s) {\n      return String(s || \"\").trim().toLowerCase();\n    },\n    iconFor(text) {\n      const s = this.norm(text);\n      if (s.startsWith(\"show\")) return \"🎬\";\n      if (s.startsWith(\"ambi\")) return \"🌙\";\n      if (s.includes(\"bg\") || s.includes(\"music\")) return \"🎵\";\n      if (s === \"—\" || s === \"-\" || s === \"\") return \"•\";\n      return \"▢\";\n    },\n    cellClass(text) {\n      const s = this.norm(text);\n      if (s.startsWith(\"show\")) return \"is-show\";\n      if (s.startsWith(\"ambi\")) return \"is-ambi\";\n      if (s.includes(\"bg\") || s.includes(\"music\")) return \"is-music\";\n      return \"\";\n    },\n\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p || typeof p !== \"object\") return;\n\n      if (p.exit10 && typeof p.exit10 === \"object\") {\n        this.exit10 = { ...this.exit10, ...p.exit10 };\n        if (p.exit10.values) this.exit10.values = { ...this.exit10.values, ...p.exit10.values };\n      }\n\n      if (p.external && typeof p.external === \"object\") {\n        this.external = { ...this.external, ...p.external };\n        if (p.external.values) this.external.values = { ...this.external.values, ...p.external.values };\n      }\n\n      if (typeof p.externalHint === \"string\") this.externalHint = p.externalHint;\n    },\n  },\n\n  mounted() {\n    this.$watch(\n      () => this.msg,\n      (msg) => this.applyMsg(msg),\n      { deep: true, immediate: true }\n    );\n  },\n};\n</script>\n\n<style>\n/* Control the fixed height of one “category row” (Video/Lighting/Audio) */\n:root {\n  --row-unit: 46px; /* adjust 56–72 as needed */\n}\n\n.pd-board {\n  display: flex;\n  flex-direction: column;\n  gap: 14px;\n}\n\n.section {\n  padding: 12px;\n  border-radius: 14px;\n  background: rgba(0,0,0,0.035);\n}\n\n.section-title {\n  font-size: 22px;\n  font-weight: 950;\n  letter-spacing: 0.2px;\n  margin: 4px 0 10px 2px;\n}\n\n/* Both sections light purple */\n.matrix-card.purple {\n  background: rgba(152, 92, 255, 0.07);\n  border-radius: 16px;\n  padding: 10px;\n  box-shadow: 0 1px 0 rgba(0,0,0,0.04);\n  overflow-x: auto;\n}\n\n/* Headers */\n.matrix-head {\n  display: grid;\n  grid-template-columns: 140px repeat(4, minmax(140px, 1fr));\n  gap: 8px;\n  align-items: center;\n}\n\n.matrix-head.external {\n  grid-template-columns: 140px repeat(2, minmax(180px, 1fr));\n}\n\n.corner {\n  height: 1px;\n}\n\n.col {\n  font-size: 14px;\n  font-weight: 800;\n  opacity: 0.85;\n  padding: 8px 10px;\n  text-align: center;\n}\n\n.matrix-body {\n  margin-top: 8px;\n}\n\n.grid-wrap {\n  display: grid;\n  grid-template-columns: 140px 1fr;\n  gap: 8px;\n}\n\n/* Row titles: match fixed row unit height */\n.row-titles {\n  display: grid;\n  gap: 8px;\n}\n\n.row-title {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n\n  font-size: 14px;\n  font-weight: 900;\n  opacity: 0.85;\n\n  padding: 10px;\n  border-radius: 12px;\n  background: rgba(255,255,255,0.45);\n}\n\n/* Merged grid */\n.cells-grid {\n  display: grid;\n  gap: 8px;\n  align-items: stretch;\n}\n\n.cell {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n\n  padding: 10px;\n  border-radius: 12px;\n  background: rgba(255,255,255,0.55);\n\n  min-height: 0;\n}\n\n.cell-inner {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 8px;\n}\n\n.icon {\n  opacity: 0.9;\n  font-size: 14px;\n  width: 18px;\n  text-align: center;\n}\n\n.cell-text {\n  font-size: 14px;\n  font-weight: 400;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n\n/* Content-type tint */\n.is-show  { background: rgba(59, 130, 246, 0.10); }\n.is-ambi  { background: rgba(152, 92, 255, 0.10); }\n.is-music { background: rgba(34, 197, 94, 0.10); }\n\n/* External device table */\n.external-table {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n}\n\n.ext-row {\n  display: grid;\n  grid-template-columns: 140px 1fr;\n  gap: 8px;\n  align-items: stretch;\n}\n\n.ext-cells {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(180px, 1fr));\n  gap: 8px;\n}\n\n.hint {\n  margin-top: 8px;\n  font-size: 12px;\n  opacity: 0.65;\n}\n</style>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 330,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8e0e70df4d119293",
+        "type": "inject",
+        "z": "19fbd7cf3882c4ad",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"exit10\":{\"values\":{\"Video\":{\"Atrium 1\":\"Ambiance 1\",\"Atrium 2\":\"Ambiance 2\",\"Atrium 3\":\"Show 1\",\"Landscape\":\"Ambiance 1\"},\"Lighting\":{\"Atrium 1\":\"Stage 1\",\"Atrium 2\":\"Ambiance 2\",\"Atrium 3\":\"Show 1\",\"Landscape\":\"Ambiance 1\"},\"Audio\":{\"Atrium 1\":\"BG Music\",\"Atrium 2\":\"BG Music\",\"Atrium 3\":\"Show 1\",\"Landscape\":\"BG Music\"}}}}",
+        "payloadType": "json",
+        "x": 130,
+        "y": 740,
+        "wires": [
+            [
+                "d6e4aef865014185"
+            ]
+        ]
+    },
+    {
+        "id": "5bba1dc98b72437a",
+        "type": "inject",
+        "z": "19fbd7cf3882c4ad",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"exit10\":{\"values\":{\"Video\":{\"Atrium 1\":\"Ambiance 1\",\"Atrium 2\":\"Ambiance 2\",\"Atrium 3\":\"Show 1\",\"Landscape\":\"Ambiance 1\"},\"Lighting\":{\"Atrium 1\":\"Ambiance 1\",\"Atrium 2\":\"Ambiance 2\",\"Atrium 3\":\"Show 1\",\"Landscape\":\"Ambiance 1\"},\"Audio\":{\"Atrium 1\":\"BG Music\",\"Atrium 2\":\"BG Music\",\"Atrium 3\":\"Show 1\",\"Landscape\":\"BG Music\"}}}}",
+        "payloadType": "json",
+        "x": 130,
+        "y": 780,
+        "wires": [
+            [
+                "d6e4aef865014185"
+            ]
+        ]
+    },
+    {
+        "id": "d3c23f0cdb9ddd23",
+        "type": "inject",
+        "z": "19fbd7cf3882c4ad",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"exit10\":{\"values\":{\"Video\":{\"Atrium 1\":\"Show 1\",\"Atrium 2\":\"Show 1\",\"Atrium 3\":\"Show 1\",\"Landscape\":\"Show 1\"},\"Lighting\":{\"Atrium 1\":\"Show 1\",\"Atrium 2\":\"Show 1\",\"Atrium 3\":\"Show 1\",\"Landscape\":\"Show 1\"},\"Audio\":{\"Atrium 1\":\"Show 1\",\"Atrium 2\":\"Show 1\",\"Atrium 3\":\"Show 1\",\"Landscape\":\"Show 1\"}}}}",
+        "payloadType": "json",
+        "x": 130,
+        "y": 820,
+        "wires": [
+            [
+                "d6e4aef865014185"
+            ]
+        ]
+    },
+    {
+        "id": "8bffc2ba10de9951",
+        "type": "inject",
+        "z": "19fbd7cf3882c4ad",
+        "name": "ex for Section 2",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"external\":{\"rows\":[\"Pharos Main\",\"Pharos 2\",\"Pharos 3\",\"Cinema Dome Brightsign\",\"Cinema LED columns\",\"Water Feature 1\",\"Water Feature 2\",\"Water Feature 3\"],\"cols\":[\"Status / Mode\",\"Now Playing\"],\"values\":{\"Pharos Main\":{\"Status / Mode\":\"Online · Enabled\",\"Now Playing\":\"Show 1\"},\"Pharos 2\":{\"Status / Mode\":\"Online · Enabled\",\"Now Playing\":\"Ambiance 1\"},\"Pharos 3\":{\"Status / Mode\":\"Offline\",\"Now Playing\":\"—\"},\"Cinema Dome Brightsign\":{\"Status / Mode\":\"Online · Enabled\",\"Now Playing\":\"Show 1\"},\"Cinema LED columns\":{\"Status / Mode\":\"Online · Manual Override\",\"Now Playing\":\"Loop: Promo A\"},\"Water Feature 1\":{\"Status / Mode\":\"Online · Enabled\",\"Now Playing\":\"Ambiance 2\"},\"Water Feature 2\":{\"Status / Mode\":\"Fault (E‑Stop)\",\"Now Playing\":\"Stopped\"},\"Water Feature 3\":{\"Status / Mode\":\"Online · Enabled\",\"Now Playing\":\"Scheduled\"}}}}",
+        "payloadType": "json",
+        "x": 160,
+        "y": 880,
+        "wires": [
+            [
+                "d6e4aef865014185"
+            ]
+        ]
+    },
+    {
+        "id": "b5cb8f0c017fb90b",
+        "type": "comment",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Status(es)",
+        "info": "",
+        "x": 160,
+        "y": 380,
+        "wires": []
     },
     {
         "id": "8725c52de1c071e8",
@@ -1951,7 +2212,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 130,
-        "y": 280,
+        "y": 620,
         "wires": [
             []
         ]
@@ -1961,8 +2222,8 @@
         "type": "ui-slider",
         "z": "8ccf58caed82bbf6",
         "group": "89a49ec7808083dd",
-        "name": "Master",
-        "label": "Master",
+        "name": "Show",
+        "label": "Show",
         "tooltip": "",
         "order": 1,
         "width": "1",
@@ -1984,7 +2245,7 @@
         "colorThumb": "",
         "showTextField": false,
         "x": 130,
-        "y": 200,
+        "y": 540,
         "wires": [
             []
         ]
@@ -1994,8 +2255,8 @@
         "type": "ui-slider",
         "z": "8ccf58caed82bbf6",
         "group": "89a49ec7808083dd",
-        "name": "Show",
-        "label": "Show",
+        "name": "BGM",
+        "label": "BGM",
         "tooltip": "",
         "order": 2,
         "width": "1",
@@ -2017,7 +2278,7 @@
         "colorThumb": "",
         "showTextField": false,
         "x": 250,
-        "y": 200,
+        "y": 540,
         "wires": [
             []
         ]
@@ -2027,8 +2288,8 @@
         "type": "ui-slider",
         "z": "8ccf58caed82bbf6",
         "group": "89a49ec7808083dd",
-        "name": "BGM",
-        "label": "BGM",
+        "name": "Special Content",
+        "label": "Special Content",
         "tooltip": "",
         "order": 3,
         "width": "1",
@@ -2049,8 +2310,8 @@
         "colorTrack": "",
         "colorThumb": "",
         "showTextField": false,
-        "x": 370,
-        "y": 200,
+        "x": 400,
+        "y": 540,
         "wires": [
             []
         ]
@@ -2124,7 +2385,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 250,
-        "y": 280,
+        "y": 620,
         "wires": [
             []
         ]
@@ -2161,7 +2422,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 370,
-        "y": 280,
+        "y": 620,
         "wires": [
             []
         ]
@@ -2187,7 +2448,7 @@
         "value": "payload",
         "valueType": "msg",
         "x": 140,
-        "y": 240,
+        "y": 580,
         "wires": []
     },
     {
@@ -2281,7 +2542,7 @@
         "name": "Atrium 1",
         "info": "",
         "x": 140,
-        "y": 160,
+        "y": 500,
         "wires": []
     },
     {
@@ -2316,7 +2577,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 130,
-        "y": 460,
+        "y": 800,
         "wires": [
             []
         ]
@@ -2349,7 +2610,7 @@
         "colorThumb": "",
         "showTextField": false,
         "x": 130,
-        "y": 380,
+        "y": 720,
         "wires": [
             []
         ]
@@ -2382,7 +2643,7 @@
         "colorThumb": "",
         "showTextField": false,
         "x": 250,
-        "y": 380,
+        "y": 720,
         "wires": [
             []
         ]
@@ -2415,7 +2676,7 @@
         "colorThumb": "",
         "showTextField": false,
         "x": 370,
-        "y": 380,
+        "y": 720,
         "wires": [
             []
         ]
@@ -2452,7 +2713,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 250,
-        "y": 460,
+        "y": 800,
         "wires": [
             []
         ]
@@ -2489,7 +2750,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 370,
-        "y": 460,
+        "y": 800,
         "wires": [
             []
         ]
@@ -2515,7 +2776,7 @@
         "value": "payload",
         "valueType": "msg",
         "x": 140,
-        "y": 420,
+        "y": 760,
         "wires": []
     },
     {
@@ -2525,7 +2786,7 @@
         "name": "Atrium 2",
         "info": "",
         "x": 140,
-        "y": 340,
+        "y": 680,
         "wires": []
     },
     {
@@ -2560,7 +2821,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 130,
-        "y": 640,
+        "y": 980,
         "wires": [
             []
         ]
@@ -2593,7 +2854,7 @@
         "colorThumb": "",
         "showTextField": false,
         "x": 130,
-        "y": 560,
+        "y": 900,
         "wires": [
             []
         ]
@@ -2626,7 +2887,7 @@
         "colorThumb": "",
         "showTextField": false,
         "x": 250,
-        "y": 560,
+        "y": 900,
         "wires": [
             []
         ]
@@ -2659,7 +2920,7 @@
         "colorThumb": "",
         "showTextField": false,
         "x": 370,
-        "y": 560,
+        "y": 900,
         "wires": [
             []
         ]
@@ -2696,7 +2957,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 250,
-        "y": 640,
+        "y": 980,
         "wires": [
             []
         ]
@@ -2733,7 +2994,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 370,
-        "y": 640,
+        "y": 980,
         "wires": [
             []
         ]
@@ -2759,7 +3020,7 @@
         "value": "payload",
         "valueType": "msg",
         "x": 140,
-        "y": 600,
+        "y": 940,
         "wires": []
     },
     {
@@ -2769,7 +3030,7 @@
         "name": "Atrium 2",
         "info": "",
         "x": 140,
-        "y": 520,
+        "y": 860,
         "wires": []
     },
     {
@@ -2790,7 +3051,465 @@
         "templateScope": "local",
         "className": "",
         "x": 600,
-        "y": 140,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3b885ccf15fd5485",
+        "type": "ui-button",
+        "z": "8ccf58caed82bbf6",
+        "group": "23200f99e87865d6",
+        "name": "Show Music",
+        "label": "Show Music (WO 5-64)",
+        "order": 1,
+        "width": "2",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "mdi mdi-video-vintage",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 150,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e40c50ad25ff4955",
+        "type": "ui-button",
+        "z": "8ccf58caed82bbf6",
+        "group": "23200f99e87865d6",
+        "name": "BG Music",
+        "label": "BG Music (WO 3-4)",
+        "order": 2,
+        "width": "2",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "mdi mdi-music",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 320,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d3057fe837f1915e",
+        "type": "ui-button",
+        "z": "8ccf58caed82bbf6",
+        "group": "23200f99e87865d6",
+        "name": "Special Content",
+        "label": "Special Content (WO 1-2)",
+        "order": 3,
+        "width": "2",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "mdi-star-four-points-box",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 480,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "560d7b9e5110fda9",
+        "type": "ui-button",
+        "z": "8ccf58caed82bbf6",
+        "group": "23200f99e87865d6",
+        "name": "Live Mixer",
+        "label": "Live Mixer",
+        "order": 4,
+        "width": "2",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "mdi-microphone-variant",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 690,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7c4a394b89130aef",
+        "type": "ui-button",
+        "z": "8ccf58caed82bbf6",
+        "group": "23200f99e87865d6",
+        "name": "None (Mute)",
+        "label": "None (Mute)",
+        "order": 6,
+        "width": "2",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "mdi mdi-volume-off",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 870,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "02e884e848eaae2f",
+        "type": "ui-button",
+        "z": "8ccf58caed82bbf6",
+        "group": "23200f99e87865d6",
+        "name": "Live Microphones",
+        "label": "Live Microphones",
+        "order": 5,
+        "width": "2",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "mdi-microphone-variant",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 710,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dfe33faef64135d3",
+        "type": "ui-switch",
+        "z": "8ccf58caed82bbf6",
+        "name": "Atrium 1",
+        "label": "Atrium 1",
+        "group": "ab71585fe7e4cdb3",
+        "order": 5,
+        "width": "1",
+        "height": "1",
+        "passthru": false,
+        "decouple": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "className": "",
+        "layout": "row-left",
+        "clickableArea": "switch",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 140,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "38010a8b583a91e1",
+        "type": "ui-switch",
+        "z": "8ccf58caed82bbf6",
+        "name": "Atrium 2",
+        "label": "Atrium 2",
+        "group": "ab71585fe7e4cdb3",
+        "order": 6,
+        "width": "1",
+        "height": "1",
+        "passthru": false,
+        "decouple": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "className": "",
+        "layout": "row-left",
+        "clickableArea": "switch",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 300,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "239c0ac2546f9e8b",
+        "type": "ui-switch",
+        "z": "8ccf58caed82bbf6",
+        "name": "Atrium 3",
+        "label": "Atrium 3",
+        "group": "ab71585fe7e4cdb3",
+        "order": 7,
+        "width": "1",
+        "height": "1",
+        "passthru": false,
+        "decouple": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "className": "",
+        "layout": "row-left",
+        "clickableArea": "switch",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 460,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f899a062eac0919f",
+        "type": "ui-number-input",
+        "z": "8ccf58caed82bbf6",
+        "group": "ab71585fe7e4cdb3",
+        "name": "In 1",
+        "label": "In 1",
+        "order": 1,
+        "width": "1",
+        "height": "1",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "30",
+        "step": 1,
+        "tooltip": "",
+        "delay": 300,
+        "passthru": true,
+        "sendOnDelay": false,
+        "sendOnBlur": false,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": false,
+        "icon": "",
+        "iconPosition": "left",
+        "iconInnerPosition": "inside",
+        "spinner": "default",
+        "x": 130,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e4a52e676e159b93",
+        "type": "ui-number-input",
+        "z": "8ccf58caed82bbf6",
+        "group": "ab71585fe7e4cdb3",
+        "name": "In 2",
+        "label": "In 2",
+        "order": 2,
+        "width": "1",
+        "height": "1",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "30",
+        "step": 1,
+        "tooltip": "",
+        "delay": 300,
+        "passthru": true,
+        "sendOnDelay": false,
+        "sendOnBlur": false,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": false,
+        "icon": "",
+        "iconPosition": "right",
+        "iconInnerPosition": "inside",
+        "spinner": "default",
+        "x": 290,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "462172e88dacb3ae",
+        "type": "ui-button",
+        "z": "8ccf58caed82bbf6",
+        "group": "ab71585fe7e4cdb3",
+        "name": "Accept Mixer Inputs",
+        "label": "Accept Mixer Inputs",
+        "order": 3,
+        "width": "2",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "mdi-tune-vertical",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 500,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "613714e1f22a42ce",
+        "type": "ui-button",
+        "z": "8ccf58caed82bbf6",
+        "group": "ab71585fe7e4cdb3",
+        "name": "A1 Out Preset 1",
+        "label": "A1 Out Preset 1",
+        "order": 8,
+        "width": "1",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "mdi-tune-vertical",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 160,
+        "y": 360,
         "wires": [
             []
         ]
@@ -3176,470 +3895,6 @@
         "pointerupPayloadType": "str",
         "x": 450,
         "y": 120,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "0f0e1d9147fd0a52",
-        "type": "http request",
-        "z": "4427b69f42325844",
-        "name": "",
-        "method": "GET",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "http://host.docker.internal:3019/v0/state",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 550,
-        "y": 700,
-        "wires": [
-            [
-                "25b16ed9a6a61254"
-            ]
-        ]
-    },
-    {
-        "id": "dcf9235fa722d331",
-        "type": "inject",
-        "z": "4427b69f42325844",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 340,
-        "y": 700,
-        "wires": [
-            [
-                "0f0e1d9147fd0a52",
-                "1f124628f2dacf95"
-            ]
-        ]
-    },
-    {
-        "id": "25b16ed9a6a61254",
-        "type": "debug",
-        "z": "4427b69f42325844",
-        "name": "debug 2",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 720,
-        "y": 700,
-        "wires": []
-    },
-    {
-        "id": "1f124628f2dacf95",
-        "type": "http request",
-        "z": "4427b69f42325844",
-        "name": "",
-        "method": "POST",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "http://host.docker.internal:3019/v0/play/2",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 550,
-        "y": 740,
-        "wires": [
-            [
-                "25b16ed9a6a61254"
-            ]
-        ]
-    },
-    {
-        "id": "0979cea3988209be",
-        "type": "inject",
-        "z": "4427b69f42325844",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 340,
-        "y": 800,
-        "wires": [
-            [
-                "40b13d2f22965063"
-            ]
-        ]
-    },
-    {
-        "id": "40b13d2f22965063",
-        "type": "http request",
-        "z": "4427b69f42325844",
-        "name": "",
-        "method": "GET",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "http://host.docker.internal:3019/v1/sse",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 550,
-        "y": 800,
-        "wires": [
-            [
-                "25b16ed9a6a61254"
-            ]
-        ]
-    },
-    {
-        "id": "8417d5858586e845",
-        "type": "inject",
-        "z": "4427b69f42325844",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 340,
-        "y": 860,
-        "wires": [
-            [
-                "ab661dd2f52ce072"
-            ]
-        ]
-    },
-    {
-        "id": "ab661dd2f52ce072",
-        "type": "http request",
-        "z": "4427b69f42325844",
-        "name": "",
-        "method": "GET",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "http://host.docker.internal:3019/v0/timelines",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 550,
-        "y": 860,
-        "wires": [
-            [
-                "25b16ed9a6a61254"
-            ]
-        ]
-    },
-    {
-        "id": "67d8972010009125",
-        "type": "http request",
-        "z": "4427b69f42325844",
-        "name": "",
-        "method": "use",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "http://host.docker.internal:3019/{{{topic}}}",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 550,
-        "y": 1040,
-        "wires": [
-            [
-                "90e94aa4a467747c",
-                "b1f027da3ca2ce46",
-                "4f7fc0d6fe6768a1"
-            ]
-        ]
-    },
-    {
-        "id": "9a5c4307d07b3346",
-        "type": "inject",
-        "z": "4427b69f42325844",
-        "name": "",
-        "props": [
-            {
-                "p": "method",
-                "v": "GET",
-                "vt": "str"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "v0/timelines",
-        "x": 350,
-        "y": 1000,
-        "wires": [
-            [
-                "67d8972010009125"
-            ]
-        ]
-    },
-    {
-        "id": "90e94aa4a467747c",
-        "type": "debug",
-        "z": "4427b69f42325844",
-        "name": "debug 5",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 720,
-        "y": 1040,
-        "wires": []
-    },
-    {
-        "id": "e35d8ae5a4661a03",
-        "type": "inject",
-        "z": "4427b69f42325844",
-        "name": "",
-        "props": [
-            {
-                "p": "method",
-                "v": "GET",
-                "vt": "str"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "v0/state",
-        "x": 340,
-        "y": 1040,
-        "wires": [
-            [
-                "67d8972010009125"
-            ]
-        ]
-    },
-    {
-        "id": "d87b48746227f5c2",
-        "type": "inject",
-        "z": "4427b69f42325844",
-        "name": "",
-        "props": [
-            {
-                "p": "method",
-                "v": "POST",
-                "vt": "str"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "v0/play/2",
-        "x": 340,
-        "y": 1080,
-        "wires": [
-            [
-                "67d8972010009125"
-            ]
-        ]
-    },
-    {
-        "id": "1962c3ac9d0da7c8",
-        "type": "link in",
-        "z": "4427b69f42325844",
-        "name": "To WO HTTP Request",
-        "links": [
-            "fe7a6403efe9d533"
-        ],
-        "x": 385,
-        "y": 1140,
-        "wires": [
-            [
-                "67d8972010009125"
-            ]
-        ]
-    },
-    {
-        "id": "aeda62a37bec44b7",
-        "type": "change",
-        "z": "4427b69f42325844",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "wo_timelines",
-                "pt": "global",
-                "to": "payload",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 870,
-        "y": 920,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "b1f027da3ca2ce46",
-        "type": "switch",
-        "z": "4427b69f42325844",
-        "name": "",
-        "property": "payload",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "cont",
-                "v": "Main Timeline",
-                "vt": "str"
-            },
-            {
-                "t": "cont",
-                "v": "clockTime",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 670,
-        "y": 940,
-        "wires": [
-            [
-                "aeda62a37bec44b7"
-            ],
-            [
-                "be79e0848fdfe95e"
-            ]
-        ]
-    },
-    {
-        "id": "be79e0848fdfe95e",
-        "type": "change",
-        "z": "4427b69f42325844",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "wo_state",
-                "pt": "global",
-                "to": "payload",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 850,
-        "y": 960,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "4f7fc0d6fe6768a1",
-        "type": "file",
-        "z": "4427b69f42325844",
-        "name": "",
-        "filename": "/data/wo.json",
-        "filenameType": "str",
-        "appendNewline": true,
-        "createDir": false,
-        "overwriteFile": "true",
-        "encoding": "none",
-        "x": 730,
-        "y": 1000,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "922831f9300c30d1",
-        "type": "file in",
-        "z": "4427b69f42325844",
-        "name": "",
-        "filename": "",
-        "filenameType": "str",
-        "format": "utf8",
-        "chunk": false,
-        "sendError": false,
-        "encoding": "none",
-        "allProps": false,
-        "x": 560,
-        "y": 1120,
         "wires": [
             []
         ]
@@ -4788,12 +5043,13 @@
         "id": "wo2-control-in",
         "type": "http in",
         "z": "wo2-tab",
+        "g": "dbd2c45c3962d1cd",
         "name": "POST /watchout/control",
         "url": "/watchout/control",
         "method": "post",
         "upload": false,
         "swaggerDoc": "",
-        "x": 140,
+        "x": 180,
         "y": 660,
         "wires": [
             [
@@ -4805,14 +5061,16 @@
         "id": "wo2-control-fn",
         "type": "function",
         "z": "wo2-tab",
+        "g": "dbd2c45c3962d1cd",
         "name": "Prepare control request",
         "func": "// Validate input and build HTTP request for timeline control.\n// Output 1: valid command  → HTTP Request node\n// Output 2: unknown command → HTTP Response (error)\n\nconst cfg     = flow.get('watchout_config') || {};\nconst host    = cfg.host || 'localhost';\nconst port    = cfg.port || 3019;\nconst baseUrl = 'http://' + host + ':' + port;\n\nconst input   = msg.payload || {};\nconst command = input.command;\nconst mapping = flow.get('watchout_mapping') || {};\n\nfunction resolveTimelineId(contentId) {\n    return (contentId in mapping) ? mapping[contentId] : String(contentId);\n}\n\nmsg._command = command;\nmsg.headers  = { 'Content-Type': 'application/json' };\n\nswitch (command) {\n    case 'start':\n    case 'stop':\n    case 'pause': {\n        const timelineId   = resolveTimelineId(input.contentId);\n        msg._timelineId    = timelineId;\n        msg.method         = 'POST';\n        const action       = (command === 'start') ? 'play' : command;\n        msg.url            = baseUrl + '/v0/timelines/' + timelineId + '/' + action;\n        msg.payload        = null;\n        return [msg, null];\n    }\n    case 'setVar': {\n        msg.method  = 'PUT';\n        msg.url     = baseUrl + '/v0/vars/' + encodeURIComponent(input.varName);\n        msg.payload = { value: input.varValue };\n        return [msg, null];\n    }\n    case 'getState': {\n        msg.method  = 'GET';\n        msg.url     = baseUrl + '/v0/state';\n        msg.payload = null;\n        return [msg, null];\n    }\n    default: {\n        msg.statusCode = 400;\n        msg.payload    = JSON.stringify({ success: false, error: 'Unknown command: ' + command });\n        return [null, msg];\n    }\n}",
         "outputs": 2,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 380,
+        "x": 430,
         "y": 660,
         "wires": [
             [
@@ -4827,10 +5085,11 @@
         "id": "wo2-control-resp",
         "type": "http response",
         "z": "wo2-tab",
+        "g": "dbd2c45c3962d1cd",
         "name": "HTTP Response",
         "statusCode": "",
         "headers": {},
-        "x": 1080,
+        "x": 1120,
         "y": 680,
         "wires": []
     },
@@ -5031,6 +5290,7 @@
         "id": "wo2-control-http",
         "type": "http request",
         "z": "wo2-tab",
+        "g": "dbd2c45c3962d1cd",
         "name": "Watchout API call",
         "method": "use",
         "ret": "obj",
@@ -5043,8 +5303,8 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 630,
-        "y": 660,
+        "x": 670,
+        "y": 640,
         "wires": [
             [
                 "wo2-control-format-fn"
@@ -5055,6 +5315,7 @@
         "id": "wo2-control-format-fn",
         "type": "function",
         "z": "wo2-tab",
+        "g": "dbd2c45c3962d1cd",
         "name": "Format control response",
         "func": "// Normalize the Watchout API response into a uniform JSON object\nconst command    = msg._command;\nconst timelineId = msg._timelineId;\nconst statusCode = msg.statusCode || 200;\n\nmsg.payload    = JSON.stringify({\n    success:    statusCode < 300,\n    command:    command,\n    timelineId: timelineId,\n    statusCode: statusCode,\n    body:       msg.payload\n});\nmsg.statusCode = 200;\nmsg.headers    = { 'Content-Type': 'application/json' };\nreturn msg;",
         "outputs": 1,
@@ -5062,35 +5323,11 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 860,
+        "x": 900,
         "y": 640,
         "wires": [
             [
                 "wo2-control-resp"
-            ]
-        ]
-    },
-    {
-        "id": "wo2-sse-node",
-        "type": "sse-client",
-        "z": "wo2-tab",
-        "d": true,
-        "name": "SSE /v1/sse",
-        "url": "http://host.docker.internal:3019/v1/sse",
-        "events": [],
-        "headers": {
-            "Accept": "text/event-stream"
-        },
-        "proxy": "",
-        "restart": false,
-        "rejectUnauthorized": true,
-        "withCredentials": false,
-        "timeout": "",
-        "x": 580,
-        "y": 780,
-        "wires": [
-            [
-                "wo2-sse-event-fn"
             ]
         ]
     },
@@ -5272,5 +5509,542 @@
                 "wo2-action-switch"
             ]
         ]
+    },
+    {
+        "id": "0b90fd227eb5a4aa",
+        "type": "comment",
+        "z": "wo2-tab",
+        "g": "dbd2c45c3962d1cd",
+        "name": "Sent Commands to WO",
+        "info": "",
+        "x": 190,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "0f0e1d9147fd0a52",
+        "type": "http request",
+        "z": "wo2-tab",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://host.docker.internal:3019/v0/state",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 390,
+        "y": 1120,
+        "wires": [
+            [
+                "25b16ed9a6a61254"
+            ]
+        ]
+    },
+    {
+        "id": "dcf9235fa722d331",
+        "type": "inject",
+        "z": "wo2-tab",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 1120,
+        "wires": [
+            [
+                "0f0e1d9147fd0a52",
+                "1f124628f2dacf95"
+            ]
+        ]
+    },
+    {
+        "id": "25b16ed9a6a61254",
+        "type": "debug",
+        "z": "wo2-tab",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 1120,
+        "wires": []
+    },
+    {
+        "id": "1f124628f2dacf95",
+        "type": "http request",
+        "z": "wo2-tab",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://host.docker.internal:3019/v0/play/2",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 390,
+        "y": 1160,
+        "wires": [
+            [
+                "25b16ed9a6a61254"
+            ]
+        ]
+    },
+    {
+        "id": "0979cea3988209be",
+        "type": "inject",
+        "z": "wo2-tab",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 1220,
+        "wires": [
+            [
+                "40b13d2f22965063"
+            ]
+        ]
+    },
+    {
+        "id": "40b13d2f22965063",
+        "type": "http request",
+        "z": "wo2-tab",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://host.docker.internal:3019/v1/sse",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 390,
+        "y": 1220,
+        "wires": [
+            [
+                "25b16ed9a6a61254"
+            ]
+        ]
+    },
+    {
+        "id": "8417d5858586e845",
+        "type": "inject",
+        "z": "wo2-tab",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 1280,
+        "wires": [
+            [
+                "ab661dd2f52ce072"
+            ]
+        ]
+    },
+    {
+        "id": "ab661dd2f52ce072",
+        "type": "http request",
+        "z": "wo2-tab",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://host.docker.internal:3019/v0/timelines",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 390,
+        "y": 1280,
+        "wires": [
+            [
+                "25b16ed9a6a61254"
+            ]
+        ]
+    },
+    {
+        "id": "67d8972010009125",
+        "type": "http request",
+        "z": "wo2-tab",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://host.docker.internal:3019/{{{topic}}}",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 390,
+        "y": 1460,
+        "wires": [
+            [
+                "90e94aa4a467747c",
+                "b1f027da3ca2ce46",
+                "4f7fc0d6fe6768a1"
+            ]
+        ]
+    },
+    {
+        "id": "9a5c4307d07b3346",
+        "type": "inject",
+        "z": "wo2-tab",
+        "name": "",
+        "props": [
+            {
+                "p": "method",
+                "v": "GET",
+                "vt": "str"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "v0/timelines",
+        "x": 190,
+        "y": 1420,
+        "wires": [
+            [
+                "67d8972010009125"
+            ]
+        ]
+    },
+    {
+        "id": "90e94aa4a467747c",
+        "type": "debug",
+        "z": "wo2-tab",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 1460,
+        "wires": []
+    },
+    {
+        "id": "e35d8ae5a4661a03",
+        "type": "inject",
+        "z": "wo2-tab",
+        "name": "",
+        "props": [
+            {
+                "p": "method",
+                "v": "GET",
+                "vt": "str"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "v0/state",
+        "x": 180,
+        "y": 1460,
+        "wires": [
+            [
+                "67d8972010009125"
+            ]
+        ]
+    },
+    {
+        "id": "d87b48746227f5c2",
+        "type": "inject",
+        "z": "wo2-tab",
+        "name": "",
+        "props": [
+            {
+                "p": "method",
+                "v": "POST",
+                "vt": "str"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "v0/play/2",
+        "x": 180,
+        "y": 1500,
+        "wires": [
+            [
+                "67d8972010009125"
+            ]
+        ]
+    },
+    {
+        "id": "1962c3ac9d0da7c8",
+        "type": "link in",
+        "z": "wo2-tab",
+        "name": "To WO HTTP Request",
+        "links": [
+            "fe7a6403efe9d533"
+        ],
+        "x": 225,
+        "y": 1560,
+        "wires": [
+            [
+                "67d8972010009125"
+            ]
+        ]
+    },
+    {
+        "id": "aeda62a37bec44b7",
+        "type": "change",
+        "z": "wo2-tab",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "wo_timelines",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 710,
+        "y": 1340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b1f027da3ca2ce46",
+        "type": "switch",
+        "z": "wo2-tab",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "Main Timeline",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "clockTime",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 510,
+        "y": 1360,
+        "wires": [
+            [
+                "aeda62a37bec44b7"
+            ],
+            [
+                "be79e0848fdfe95e"
+            ]
+        ]
+    },
+    {
+        "id": "be79e0848fdfe95e",
+        "type": "change",
+        "z": "wo2-tab",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "wo_state",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 690,
+        "y": 1380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4f7fc0d6fe6768a1",
+        "type": "file",
+        "z": "wo2-tab",
+        "name": "",
+        "filename": "/data/wo.json",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 570,
+        "y": 1420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "922831f9300c30d1",
+        "type": "file in",
+        "z": "wo2-tab",
+        "name": "",
+        "filename": "",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 400,
+        "y": 1540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "896224c4eaee7e43",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "WO LED status mapper",
+        "func": "// Input can be:\n// - msg.watchout_sse_status\n// - msg.payload.status\n// - or read from flow context\nconst raw =\n  msg.watchout_sse_status ||\n  msg.payload?.watchout_sse_status ||\n  flow.get(\"watchout_sse_status\");\n\nlet state = \"disconnected\";\nif (raw === \"connected\") state = \"connected\";\nelse if (raw === \"disconnected\") state = \"disconnected\";\nelse if (raw === \"error\") state = \"error\";\nelse if (raw === \"connecting\") state = \"connecting\"; // if you add this in your flow\n\nmsg.payload = {\n  state,\n  label: \"Watchout\",\n  layout: \"row\",\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1490,
+        "y": 800,
+        "wires": [
+            [
+                "fdfbb04d88a99ef7"
+            ]
+        ]
+    },
+    {
+        "id": "9bd1967afe321d77",
+        "type": "inject",
+        "z": "wo2-tab",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 1280,
+        "y": 800,
+        "wires": [
+            [
+                "896224c4eaee7e43"
+            ]
+        ]
+    },
+    {
+        "id": "fdfbb04d88a99ef7",
+        "type": "link out",
+        "z": "wo2-tab",
+        "name": "WO LED Status",
+        "mode": "link",
+        "links": [
+            "5afd3867d48c70fc"
+        ],
+        "x": 1655,
+        "y": 800,
+        "wires": []
     }
 ]
