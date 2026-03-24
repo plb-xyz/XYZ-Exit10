@@ -53,6 +53,32 @@
         "out": []
     },
     {
+        "id": "dbd2c45c3962d1cd",
+        "type": "group",
+        "z": "wo2-tab",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "wo2-control-in",
+            "wo2-control-fn",
+            "wo2-control-resp",
+            "wo2-control-http",
+            "wo2-control-format-fn",
+            "0b90fd227eb5a4aa"
+        ],
+        "x": 54,
+        "y": 579,
+        "w": 1182,
+        "h": 142
+    },
+    {
         "id": "f34314dbb36334ec",
         "type": "ui-base",
         "name": "My Dashboard",
@@ -4788,12 +4814,13 @@
         "id": "wo2-control-in",
         "type": "http in",
         "z": "wo2-tab",
+        "g": "dbd2c45c3962d1cd",
         "name": "POST /watchout/control",
         "url": "/watchout/control",
         "method": "post",
         "upload": false,
         "swaggerDoc": "",
-        "x": 140,
+        "x": 180,
         "y": 660,
         "wires": [
             [
@@ -4805,14 +4832,16 @@
         "id": "wo2-control-fn",
         "type": "function",
         "z": "wo2-tab",
+        "g": "dbd2c45c3962d1cd",
         "name": "Prepare control request",
         "func": "// Validate input and build HTTP request for timeline control.\n// Output 1: valid command  → HTTP Request node\n// Output 2: unknown command → HTTP Response (error)\n\nconst cfg     = flow.get('watchout_config') || {};\nconst host    = cfg.host || 'localhost';\nconst port    = cfg.port || 3019;\nconst baseUrl = 'http://' + host + ':' + port;\n\nconst input   = msg.payload || {};\nconst command = input.command;\nconst mapping = flow.get('watchout_mapping') || {};\n\nfunction resolveTimelineId(contentId) {\n    return (contentId in mapping) ? mapping[contentId] : String(contentId);\n}\n\nmsg._command = command;\nmsg.headers  = { 'Content-Type': 'application/json' };\n\nswitch (command) {\n    case 'start':\n    case 'stop':\n    case 'pause': {\n        const timelineId   = resolveTimelineId(input.contentId);\n        msg._timelineId    = timelineId;\n        msg.method         = 'POST';\n        const action       = (command === 'start') ? 'play' : command;\n        msg.url            = baseUrl + '/v0/timelines/' + timelineId + '/' + action;\n        msg.payload        = null;\n        return [msg, null];\n    }\n    case 'setVar': {\n        msg.method  = 'PUT';\n        msg.url     = baseUrl + '/v0/vars/' + encodeURIComponent(input.varName);\n        msg.payload = { value: input.varValue };\n        return [msg, null];\n    }\n    case 'getState': {\n        msg.method  = 'GET';\n        msg.url     = baseUrl + '/v0/state';\n        msg.payload = null;\n        return [msg, null];\n    }\n    default: {\n        msg.statusCode = 400;\n        msg.payload    = JSON.stringify({ success: false, error: 'Unknown command: ' + command });\n        return [null, msg];\n    }\n}",
         "outputs": 2,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 380,
+        "x": 430,
         "y": 660,
         "wires": [
             [
@@ -4827,10 +4856,11 @@
         "id": "wo2-control-resp",
         "type": "http response",
         "z": "wo2-tab",
+        "g": "dbd2c45c3962d1cd",
         "name": "HTTP Response",
         "statusCode": "",
         "headers": {},
-        "x": 1080,
+        "x": 1120,
         "y": 680,
         "wires": []
     },
@@ -5031,6 +5061,7 @@
         "id": "wo2-control-http",
         "type": "http request",
         "z": "wo2-tab",
+        "g": "dbd2c45c3962d1cd",
         "name": "Watchout API call",
         "method": "use",
         "ret": "obj",
@@ -5043,8 +5074,8 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 630,
-        "y": 660,
+        "x": 670,
+        "y": 640,
         "wires": [
             [
                 "wo2-control-format-fn"
@@ -5055,6 +5086,7 @@
         "id": "wo2-control-format-fn",
         "type": "function",
         "z": "wo2-tab",
+        "g": "dbd2c45c3962d1cd",
         "name": "Format control response",
         "func": "// Normalize the Watchout API response into a uniform JSON object\nconst command    = msg._command;\nconst timelineId = msg._timelineId;\nconst statusCode = msg.statusCode || 200;\n\nmsg.payload    = JSON.stringify({\n    success:    statusCode < 300,\n    command:    command,\n    timelineId: timelineId,\n    statusCode: statusCode,\n    body:       msg.payload\n});\nmsg.statusCode = 200;\nmsg.headers    = { 'Content-Type': 'application/json' };\nreturn msg;",
         "outputs": 1,
@@ -5062,7 +5094,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 860,
+        "x": 900,
         "y": 640,
         "wires": [
             [
@@ -5248,5 +5280,16 @@
                 "wo2-action-switch"
             ]
         ]
+    },
+    {
+        "id": "0b90fd227eb5a4aa",
+        "type": "comment",
+        "z": "wo2-tab",
+        "g": "dbd2c45c3962d1cd",
+        "name": "Sent Commands to WO",
+        "info": "",
+        "x": 190,
+        "y": 620,
+        "wires": []
     }
 ]
