@@ -42,17 +42,13 @@ persistence:
 ```
 node-red/
 ├── flows/
-│   ├── watchout-v2.json          ← Self-contained Node-RED flow (importable) ← USE THIS
-│   └── watchout-integration.json ← Previous flow (v0.1, kept for reference)
+│   └── watchout-v2.json          ← Self-contained Node-RED flow (importable) ← USE THIS
 ├── config/
 │   └── watchout-config.json      ← Config template (copy to /config/ in Docker)
 └── data/
     └── .gitkeep                  ← Runtime-generated mapping goes here (or /data/)
 ```
 
-> **v0.2 change:** No files under `node-red/modules/` or `node-red/functions/`
-> are required.  All logic is self-contained inside Node-RED nodes.
->
 > In Docker the recommended mounts are:
 > - host `node-red/config` → container `/config` (config file)
 > - host `node-red/data`   → container `/data`   (mapping file)
@@ -393,27 +389,8 @@ node has known limitations (see § Required Node-RED nodes above).
 
 ---
 
-## Migration from v0.1
-
-v0.1 stored the timeline mapping at a path configured inside the inject node
-(`storageFile`) and loaded it via `fs.readFileSync` in function nodes.
-
-To migrate an existing mapping file:
-
-1. Open the new `watchout-v2.json` flow.
-2. Edit the startup inject node payload to point to your config, e.g.
-   `/config/watchout-config.json`.
-3. In the config JSON, set `mappingFile` to the path of your existing mapping
-   file.  The flow will read it on next deploy.
-4. Run **Re-discover Timelines** and confirm to rewrite the mapping file in the
-   new `{ contentId: { displayName, watchoutId } }` schema.
-
----
-
 ## Roadmap
 
-- **v0.1** *(previous)* — Logic in external JS modules (`watchout-http.js`,
-  `watchout-integration.js`, `functions/*.js`)
 - **v0.2** *(this version)* — All logic self-contained in Node-RED nodes;
   Node-RED HTTP Request nodes for all Watchout API calls; **NDJSON streaming**
   via `GET /v1/ndjson` for real-time monitoring (no contrib node required);
