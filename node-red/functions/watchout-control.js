@@ -23,7 +23,7 @@
  *
  * Flow context variables used:
  *   flow.get('watchout_config')   — { host, port }
- *   flow.get('watchout_mapping')  — { [contentId]: timelineId }
+ *   flow.get('watchout_mapping')  — { [contentId]: { displayName, watchoutId } }
  */
 
 'use strict';
@@ -69,8 +69,9 @@ function httpRequest(method, urlPath, body) {
 
 function resolveTimelineId(contentId) {
     const mapping = flow.get('watchout_mapping') || {};
-    if (contentId in mapping) return mapping[contentId];
-    return String(contentId); // assume it is already a raw timeline ID
+    const entry = mapping[contentId];
+    if (!entry) return String(contentId); // assume it is already a raw timeline ID
+    return String(entry.watchoutId);
 }
 
 // ─── Main ──────────────────────────────────────────────────────────────────

@@ -8,7 +8,7 @@ modules are required.  The only external files are two JSON files used for
 persistence:
 
 - `watchout-config.json` — host, port, and file paths
-- `timeline-mapping.json` — the active `contentId → timelineId` mapping
+- `timeline-mapping.json` — the active `contentId → { displayName, watchoutId }` mapping
 
 **Default port:** `3019`
 
@@ -176,7 +176,7 @@ Operator opens Node-RED dashboard → "Watchout" tab
 2.  Node-RED calls  GET /v0/timelines  from Watchout (port 3019)
         │
         ▼
-3.  Response parsed → new contentId → timelineId mapping built
+3.  Response parsed → new contentId → { displayName, watchoutId } mapping built
         │
         ▼
 4.  New mapping compared to stored mapping
@@ -207,6 +207,19 @@ Watchout timeline names are converted to **content IDs** using these rules:
 | Trimmed and lower-cased | `Show 1` | `show_1` |
 | Spaces → underscores | `Ambience Scene 2` | `ambience_scene_2` |
 | Non-alphanumeric chars removed | `Show (Main)` | `show_main` |
+
+Each discovered timeline produces one entry in the mapping:
+
+```json
+{
+  "show_1":    { "displayName": "Show 1",    "watchoutId": "1" },
+  "ambience_1": { "displayName": "Ambience 1", "watchoutId": "3" }
+}
+```
+
+- **`contentId`** — the normalized key used in ISAAC events and Node-RED messages (e.g. `"show_1"`)
+- **`displayName`** — the original Watchout timeline name; used for human-readable labels in the UI
+- **`watchoutId`** — the Watchout numeric timeline ID sent to the REST API
 
 ---
 
@@ -270,7 +283,7 @@ Watchout REST endpoints (see [§ Watchout 7 HTTP API Reference](#watchout-7-http
 | Variable | Type | Description |
 |----------|------|-------------|
 | `watchout_config` | object | `{ host, port, mappingFile }` |
-| `watchout_mapping` | object | Active `{ contentId: timelineId }` mapping |
+| `watchout_mapping` | object | Active `{ contentId: { displayName, watchoutId } }` mapping |
 | `watchout_pending` | object | Pending mapping awaiting operator confirmation |
 | `watchout_state` | object | Latest state from SSE or polling |
 | `watchout_sse_status` | string | `'connected'` \| `'disconnected'` \| `'error'` |
@@ -392,10 +405,8 @@ To migrate an existing mapping file:
    `/config/watchout-config.json`.
 3. In the config JSON, set `mappingFile` to the path of your existing mapping
    file.  The flow will read it on next deploy.
-
-If your existing mapping file uses the old `{ mapping: {...} }` wrapper format
-it will be read correctly.  A flat `{ contentId: timelineId }` format is also
-accepted.
+4. Run **Re-discover Timelines** and confirm to rewrite the mapping file in the
+   new `{ contentId: { displayName, watchoutId } }` schema.
 
 ---
 

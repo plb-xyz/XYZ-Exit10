@@ -8,7 +8,7 @@
  *
  * Flow context variables used:
  *   flow.get('watchout_config')   — { host, port, storageFile }
- *   flow.get('watchout_mapping')  — { [contentId]: timelineId }
+ *   flow.get('watchout_mapping')  — { [contentId]: { displayName, watchoutId } }
  *   flow.get('watchout_pending')  — pending new mapping (awaiting confirmation)
  *
  * Output msg.payload:
@@ -16,7 +16,7 @@
  *     status:     'diff_ready' | 'no_changes' | 'error',
  *     hasChanges: boolean,
  *     diff:       { added: [], removed: [], unchanged: [], changed: [] },
- *     newMapping: { [contentId]: timelineId },
+ *     newMapping: { [contentId]: { displayName, watchoutId } },
  *     diffLines:  string[],   // human-readable lines for display
  *     error:      string      // only on status === 'error'
  *   }
@@ -73,8 +73,8 @@ function compareMapping(oldMap, newMap) {
     return {
         removed:   oldKeys.filter(k => !(k in newMap)),
         added:     newKeys.filter(k => !(k in oldMap)),
-        unchanged: oldKeys.filter(k => (k in newMap) && oldMap[k] === newMap[k]),
-        changed:   oldKeys.filter(k => (k in newMap) && oldMap[k] !== newMap[k]),
+        unchanged: oldKeys.filter(k => (k in newMap) && oldMap[k].watchoutId === newMap[k].watchoutId),
+        changed:   oldKeys.filter(k => (k in newMap) && oldMap[k].watchoutId !== newMap[k].watchoutId),
     };
 }
 
@@ -108,7 +108,7 @@ async function discover() {
     timelines.forEach(tl => {
         const contentId = parseTimelineName(tl.name);
         if (contentId) {
-            newMapping[contentId] = String(tl.id);
+            newMapping[contentId] = { displayName: tl.name, watchoutId: String(tl.id) };
         }
     });
 

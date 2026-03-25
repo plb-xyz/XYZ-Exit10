@@ -44,7 +44,7 @@ class WatchoutHTTP extends EventEmitter {
       path.join(__dirname, '../data/timeline-mapping.json');
     this.context = options.context || null;
 
-    /** @type {{ [contentId: string]: string }} contentId → timelineId */
+    /** @type {{ [contentId: string]: { displayName: string, watchoutId: string } }} contentId → { displayName, watchoutId } */
     this._mapping = {};
 
     this._sseRequest = null;
@@ -203,7 +203,7 @@ class WatchoutHTTP extends EventEmitter {
    * reviews the diff.
    *
    * @returns {Promise<{
-   *   newMapping: { [contentId: string]: string },
+   *   newMapping: { [contentId: string]: { displayName: string, watchoutId: string } },
    *   diff: { added: string[], removed: string[], unchanged: string[], changed: string[] },
    *   hasChanges: boolean
    * }>}
@@ -227,7 +227,7 @@ class WatchoutHTTP extends EventEmitter {
     for (const tl of timelines) {
       const contentId = this.parseTimelineName(tl.name);
       if (contentId) {
-        newMapping[contentId] = String(tl.id);
+        newMapping[contentId] = { displayName: tl.name, watchoutId: String(tl.id) };
       }
     }
 
@@ -268,8 +268,8 @@ class WatchoutHTTP extends EventEmitter {
   /**
    * Compare old and new mappings and return categorised differences.
    *
-   * @param {{ [contentId: string]: string }} oldMapping
-   * @param {{ [contentId: string]: string }} newMapping
+   * @param {{ [contentId: string]: { displayName: string, watchoutId: string } }} oldMapping
+   * @param {{ [contentId: string]: { displayName: string, watchoutId: string } }} newMapping
    * @returns {{ added: string[], removed: string[], unchanged: string[], changed: string[] }}
    */
   _compareMapping(oldMapping, newMapping) {
@@ -281,12 +281,12 @@ class WatchoutHTTP extends EventEmitter {
     const unchanged = oldKeys.filter(
       (k) =>
         Object.prototype.hasOwnProperty.call(newMapping, k) &&
-        oldMapping[k] === newMapping[k]
+        oldMapping[k].watchoutId === newMapping[k].watchoutId
     );
     const changed = oldKeys.filter(
       (k) =>
         Object.prototype.hasOwnProperty.call(newMapping, k) &&
-        oldMapping[k] !== newMapping[k]
+        oldMapping[k].watchoutId !== newMapping[k].watchoutId
     );
 
     return { added, removed, unchanged, changed };
@@ -325,9 +325,8 @@ class WatchoutHTTP extends EventEmitter {
    * @returns {string}
    */
   _resolveTimelineId(contentIdOrTimelineId) {
-    if (Object.prototype.hasOwnProperty.call(this._mapping, contentIdOrTimelineId)) {
-      return this._mapping[contentIdOrTimelineId];
-    }
+    const entry = this._mapping[contentIdOrTimelineId];
+    if (entry) return String(entry.watchoutId);
     return String(contentIdOrTimelineId);
   }
 
