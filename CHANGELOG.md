@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Removed
+
+- **`node-red/config/watchout-defaults.json`** — Legacy defaults file deleted; superseded by `watchout-config.json` (v0.2 config template).
+
+---
+
 ## [v0.1.0] - 2026-03-11
 
 ### Added
