@@ -6377,14 +6377,5 @@
         "x": 1050,
         "y": 680,
         "wires": []
-    },
-    {
-        "id": "fb54391d3e8db4aa",
-        "type": "subflow:22f501abaf7e8db6",
-        "z": "wo2-tab",
-        "name": "",
-        "x": 300,
-        "y": 600,
-        "wires": []
     }
 ]

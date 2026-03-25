@@ -40,31 +40,11 @@
     {
         "id": "22f501abaf7e8db6",
         "type": "subflow",
-        "name": "Subflow 1",
-        "info": "",
-        "in": [],
-        "out": []
-    },
-    {
-        "id": "69abad96dfa79716",
-        "type": "subflow",
-        "name": "WO Control",
+        "name": "Atrium Selection Switch",
         "info": "",
         "category": "",
-        "in": [
-            {
-                "x": 50,
-                "y": 30,
-                "wires": []
-            }
-        ],
-        "out": [
-            {
-                "x": 1300,
-                "y": 40,
-                "wires": []
-            }
-        ],
+        "in": [],
+        "out": [],
         "env": [],
         "meta": {},
         "color": "#DDAA99"
@@ -6396,6 +6376,15 @@
         "statusType": "auto",
         "x": 1050,
         "y": 680,
+        "wires": []
+    },
+    {
+        "id": "fb54391d3e8db4aa",
+        "type": "subflow:22f501abaf7e8db6",
+        "z": "wo2-tab",
+        "name": "",
+        "x": 300,
+        "y": 600,
         "wires": []
     }
 ]
