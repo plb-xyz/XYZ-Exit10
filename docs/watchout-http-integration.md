@@ -177,10 +177,10 @@ Operator opens Node-RED dashboard → "Watchout" tab
         ▼
 4.  New mapping compared to stored mapping
         │
-        ├─ REMOVED  : "Timeline 'show1' no longer exists"
-        ├─ ADDED    : "New timeline 'show3' discovered"
-        ├─ CHANGED  : "Timeline 'ambience1' ID has changed"
-        └─ OK       : "show2"
+        ├─ REMOVED  : "Timeline 'show_1' no longer exists"
+        ├─ ADDED    : "New timeline 'show_3' discovered"
+        ├─ CHANGED  : "Timeline 'ambience_1' ID has changed"
+        └─ OK       : "show_2"
         │
         ▼
 5.  Diff UI displayed
@@ -227,19 +227,19 @@ Watchout REST endpoints (see [§ Watchout 7 HTTP API Reference](#watchout-7-http
 
 ### Start a timeline
 ```json
-{ "command": "start", "contentId": "show1" }
+{ "command": "start", "contentId": "show_1" }
 ```
 → `POST /v0/play/{id}`
 
 ### Stop a timeline
 ```json
-{ "command": "stop", "contentId": "show1" }
+{ "command": "stop", "contentId": "show_1" }
 ```
 → `POST /v0/stop/{id}`
 
 ### Pause a timeline
 ```json
-{ "command": "pause", "contentId": "show1" }
+{ "command": "pause", "contentId": "show_1" }
 ```
 → `POST /v0/pause/{id}`
 
