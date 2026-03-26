@@ -1,14 +1,53 @@
 {
   "mapping": {
-    "main_timeline": { "displayName": "Main Timeline", "watchoutId": "0" },
-    "show_1": { "displayName": "Show 1", "watchoutId": "1" },
-    "special_overlay_1": { "displayName": "Special Overlay 1", "watchoutId": "2" },
-    "ambience_1": { "displayName": "Ambience 1", "watchoutId": "3" },
-    "ambience_2": { "displayName": "Ambience 2", "watchoutId": "4" },
-    "transition_1": { "displayName": "Transition 1", "watchoutId": "5" },
-    "special_overlay_2": { "displayName": "Special Overlay 2", "watchoutId": "6" },
-    "bg_music_1": { "displayName": "BG Music 1", "watchoutId": "7" },
-    "bg_music_2": { "displayName": "BG Music 2", "watchoutId": "8" }
+    "main_timeline": {
+      "displayName": "Main Timeline",
+      "watchoutId": "0"
+    },
+    "show_1": {
+      "displayName": "Show 1",
+      "watchoutId": "1"
+    },
+    "special_overlay_1": {
+      "displayName": "Special Overlay 1",
+      "watchoutId": "2"
+    },
+    "ambience_1": {
+      "displayName": "Ambience 1",
+      "watchoutId": "3"
+    },
+    "ambience_2": {
+      "displayName": "Ambience 2",
+      "watchoutId": "4"
+    },
+    "transition_1": {
+      "displayName": "Transition 1",
+      "watchoutId": "5"
+    },
+    "special_overlay_2": {
+      "displayName": "Special Overlay 2",
+      "watchoutId": "6"
+    },
+    "bg_music_1": {
+      "displayName": "BG Music 1",
+      "watchoutId": "7"
+    },
+    "bg_music_2": {
+      "displayName": "BG Music 2",
+      "watchoutId": "8"
+    },
+    "show_2": {
+      "displayName": "Show 2",
+      "watchoutId": "9"
+    },
+    "show_3": {
+      "displayName": "Show 3",
+      "watchoutId": "10"
+    },
+    "show_4": {
+      "displayName": "Show 4",
+      "watchoutId": "11"
+    }
   },
-  "lastSaved": "2026-03-24T19:19:49.066Z"
+  "lastSaved": "2026-03-26T18:30:02.781Z"
 }
