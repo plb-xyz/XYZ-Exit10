@@ -38,11 +38,11 @@
         "info": ""
     },
     {
-        "id": "wo-ndjson-ui-tab",
+        "id": "7b0b7f3f4a6f4a1d",
         "type": "tab",
-        "label": "Watchout NDJSON Status (Dashboard2)",
+        "label": "D2 Confirm Cancel Modal",
         "disabled": false,
-        "info": "Importable flow for FlowFuse Dashboard 2.0 that:\n1) Connects to Watchout NDJSON stream: GET /v1/ndjson\n2) Shows connection status (connected / disconnected / reconnecting)\n3) Shows currently RUNNING timelines (playbackStatus === \"run\")\n\nAssumptions:\n- flow.watchout_config exists (as in your watchout-v2 flow): { host, port }\n- If not present, defaults host=localhost port=3019.\n\nIf Node-RED runs inside Docker on Windows, set host to host.docker.internal in your watchout-config.json.\n\nThis flow is self-contained for status UI; it does NOT modify your existing control API."
+        "info": ""
     },
     {
         "id": "22f501abaf7e8db6",
@@ -483,7 +483,7 @@
         "page": "8dd9d92e5b5cc9e6",
         "width": 6,
         "height": 1,
-        "order": 5,
+        "order": 4,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -511,7 +511,7 @@
         "page": "8dd9d92e5b5cc9e6",
         "width": 6,
         "height": 1,
-        "order": 3,
+        "order": 2,
         "showTitle": false,
         "className": "",
         "visible": "true",
@@ -525,7 +525,7 @@
         "page": "8dd9d92e5b5cc9e6",
         "width": 6,
         "height": 1,
-        "order": 4,
+        "order": 3,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -720,21 +720,7 @@
         "page": "e155175a9ba21767",
         "width": 6,
         "height": 2,
-        "order": 3,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
-        "id": "wo-ndjson-ui-group-status",
-        "type": "ui-group",
-        "name": "WO Status (NDJSON)",
-        "page": "e155175a9ba21767",
-        "width": 6,
-        "height": 2,
-        "order": 1,
+        "order": 4,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -748,7 +734,7 @@
         "page": "e155175a9ba21767",
         "width": 6,
         "height": 4,
-        "order": 2,
+        "order": 3,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -1529,7 +1515,7 @@
         "type": "subflow:22f501abaf7e8db6",
         "z": "19fbd7cf3882c4ad",
         "name": "",
-        "x": 360,
+        "x": 400,
         "y": 1380,
         "wires": []
     },
@@ -1596,38 +1582,13 @@
         "wires": []
     },
     {
-        "id": "8b9aee18b610f4ad",
-        "type": "ui-template",
-        "z": "19fbd7cf3882c4ad",
-        "d": true,
-        "group": "8ad5a7c72deac7fb",
-        "page": "",
-        "ui": "",
-        "name": "",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "head": "",
-        "format": "<template>\n  <div v-if=\"visible\" class=\"nr-modal-backdrop\" @click.self=\"cancel\">\n    <div class=\"nr-modal\" role=\"dialog\" aria-modal=\"true\" :aria-label=\"title\">\n      <div class=\"nr-modal-header\">\n        <div class=\"nr-modal-title\">{{ title }}</div>\n      </div>\n\n      <div class=\"nr-modal-body\">\n        <div class=\"nr-modal-message\" v-html=\"message\"></div>\n      </div>\n\n      <div class=\"nr-modal-actions\">\n        <button class=\"nr-btn nr-btn-cancel\" @click=\"cancel\">\n          {{ cancelText }}\n        </button>\n        <button class=\"nr-btn nr-btn-confirm\" @click=\"confirm\">\n          {{ confirmText }}\n        </button>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      visible: false,\n      title: \"Confirm\",\n      message: \"Are you sure?\",\n      confirmText: \"Confirm\",\n      cancelText: \"Cancel\",\n      actionId: null,\n    };\n  },\n  methods: {\n    open(payload) {\n      this.title = payload?.title ?? \"Confirm\";\n      this.message = payload?.message ?? \"Are you sure?\";\n      this.confirmText = payload?.confirmText ?? \"Confirm\";\n      this.cancelText = payload?.cancelText ?? \"Cancel\";\n      this.actionId = payload?.actionId ?? null;\n      this.visible = true;\n    },\n    close() {\n      this.visible = false;\n    },\n    confirm() {\n      this.$emit(\"send\", { payload: { actionId: this.actionId, choice: \"confirm\" } });\n      this.close();\n    },\n    cancel() {\n      this.$emit(\"send\", { payload: { actionId: this.actionId, choice: \"cancel\" } });\n      this.close();\n    },\n  },\n  mounted() {\n    // Dashboard 2 pushes msg updates into the component; `this.msg` is reactive\n    // We'll watch for \"open\" messages.\n    this.$watch(\n      () => this.msg,\n      (msg) => {\n        const p = msg?.payload;\n        if (p && p.open === true) this.open(p);\n        if (p && p.open === false) this.close();\n      },\n      { deep: true }\n    );\n  },\n};\n</script>\n\n<style>\n/* Backdrop */\n.nr-modal-backdrop {\n  position: fixed;\n  inset: 0;\n  background: rgba(0,0,0,0.65);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  z-index: 9999;\n  padding: 24px;\n}\n\n/* Modal */\n.nr-modal {\n  width: min(720px, 100%);\n  background: #111827;           /* dark slate */\n  color: #f9fafb;\n  border: 2px solid rgba(255,255,255,0.12);\n  border-radius: 14px;\n  box-shadow: 0 20px 60px rgba(0,0,0,0.5);\n  overflow: hidden;\n}\n\n/* Header */\n.nr-modal-header {\n  padding: 18px 20px;\n  border-bottom: 1px solid rgba(255,255,255,0.10);\n}\n.nr-modal-title {\n  font-size: 28px;               /* big text */\n  font-weight: 700;\n  letter-spacing: 0.2px;\n}\n\n/* Body */\n.nr-modal-body {\n  padding: 18px 20px 6px 20px;\n}\n.nr-modal-message {\n  font-size: 20px;               /* big message text */\n  line-height: 1.35;\n}\n\n/* Actions */\n.nr-modal-actions {\n  display: flex;\n  gap: 12px;\n  justify-content: flex-end;\n  padding: 16px 20px 20px 20px;\n}\n\n.nr-btn {\n  font-size: 18px;\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 0;\n  cursor: pointer;\n  min-width: 140px;\n}\n\n.nr-btn-cancel {\n  background: rgba(255,255,255,0.12);\n  color: #f9fafb;\n}\n.nr-btn-cancel:hover {\n  background: rgba(255,255,255,0.18);\n}\n\n.nr-btn-confirm {\n  background: #dc2626;           /* red confirm */\n  color: white;\n}\n.nr-btn-confirm:hover {\n  background: #b91c1c;\n}\n</style>",
-        "storeOutMessages": true,
-        "passthru": true,
-        "resendOnRefresh": true,
-        "templateScope": "local",
-        "className": "",
-        "x": 310,
-        "y": 1100,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "de05e3ee40a21958",
         "type": "ui-button",
         "z": "19fbd7cf3882c4ad",
         "group": "8ad5a7c72deac7fb",
         "name": "Show 1",
         "label": "Show 1",
-        "order": 2,
+        "order": 3,
         "width": "1",
         "height": "2",
         "emulateClick": false,
@@ -1637,7 +1598,7 @@
         "className": "",
         "icon": "",
         "iconPosition": "left",
-        "payload": "{   \"showId\": \"show1\" }",
+        "payload": "{\"command\":\"start\",\"contentId\":\"show_1\"}",
         "payloadType": "json",
         "topic": "ui/startShow",
         "topicType": "str",
@@ -1655,9 +1616,7 @@
         "y": 1100,
         "wires": [
             [
-                "8b9aee18b610f4ad",
-                "8bf4437e10a6bc7f",
-                "ea13f009b91065c7"
+                "fe7a6403efe9d533"
             ]
         ]
     },
@@ -1668,7 +1627,7 @@
         "group": "8ad5a7c72deac7fb",
         "name": "Show 2",
         "label": "Show 2",
-        "order": 3,
+        "order": 4,
         "width": "1",
         "height": "2",
         "emulateClick": false,
@@ -1678,8 +1637,8 @@
         "className": "",
         "icon": "",
         "iconPosition": "left",
-        "payload": "Are you sure?",
-        "payloadType": "str",
+        "payload": "{\"ui\":\"openConfirm\",\"id\":\"abc123\",\"title\":\"Confirm\",\"text\":\"Are you sure?\",\"confirmText\":\"Confirm\",\"cancelText\":\"Cancel\"}",
+        "payloadType": "json",
         "topic": "topic",
         "topicType": "msg",
         "buttonColor": "",
@@ -1696,7 +1655,8 @@
         "y": 1140,
         "wires": [
             [
-                "d2339c4649d7dc3c"
+                "a3f40aebf09a7617",
+                "44a7df78f7cb11e3"
             ]
         ]
     },
@@ -1749,7 +1709,7 @@
         "group": "8ad5a7c72deac7fb",
         "name": "Show 3",
         "label": "Show 3",
-        "order": 4,
+        "order": 5,
         "width": "1",
         "height": "2",
         "emulateClick": false,
@@ -1759,8 +1719,8 @@
         "className": "",
         "icon": "",
         "iconPosition": "left",
-        "payload": "Are you sure?",
-        "payloadType": "str",
+        "payload": "{     \"command\": \"start\",     \"contentId\": \"show_3\" }",
+        "payloadType": "json",
         "topic": "topic",
         "topicType": "msg",
         "buttonColor": "",
@@ -1776,7 +1736,9 @@
         "x": 140,
         "y": 1180,
         "wires": [
-            []
+            [
+                "fe7a6403efe9d533"
+            ]
         ]
     },
     {
@@ -1786,7 +1748,7 @@
         "group": "8ad5a7c72deac7fb",
         "name": "Show 4",
         "label": "Show 4",
-        "order": 5,
+        "order": 6,
         "width": "1",
         "height": "2",
         "emulateClick": false,
@@ -1796,8 +1758,8 @@
         "className": "",
         "icon": "",
         "iconPosition": "left",
-        "payload": "Are you sure?",
-        "payloadType": "str",
+        "payload": "{     \"command\": \"start\",     \"contentId\": \"show_4\" }",
+        "payloadType": "json",
         "topic": "topic",
         "topicType": "msg",
         "buttonColor": "",
@@ -1813,7 +1775,9 @@
         "x": 140,
         "y": 1220,
         "wires": [
-            []
+            [
+                "fe7a6403efe9d533"
+            ]
         ]
     },
     {
@@ -1823,99 +1787,11 @@
         "name": "Show1",
         "mode": "link",
         "links": [
-            "1962c3ac9d0da7c8"
+            "9fc262ddc940c877"
         ],
-        "x": 675,
+        "x": 275,
         "y": 1060,
         "wires": []
-    },
-    {
-        "id": "8bf4437e10a6bc7f",
-        "type": "debug",
-        "z": "19fbd7cf3882c4ad",
-        "name": "debug 8",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 340,
-        "y": 1000,
-        "wires": []
-    },
-    {
-        "id": "491898993236472c",
-        "type": "change",
-        "z": "19fbd7cf3882c4ad",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "method",
-                "pt": "msg",
-                "to": "POST",
-                "tot": "str"
-            },
-            {
-                "t": "set",
-                "p": "topic",
-                "pt": "msg",
-                "to": "v0/play/1",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 520,
-        "y": 1060,
-        "wires": [
-            [
-                "fe7a6403efe9d533",
-                "8bf4437e10a6bc7f"
-            ]
-        ]
-    },
-    {
-        "id": "ea13f009b91065c7",
-        "type": "switch",
-        "z": "19fbd7cf3882c4ad",
-        "name": "",
-        "property": "payload",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "Show1",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "Show2",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "Show3",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 3,
-        "x": 330,
-        "y": 1060,
-        "wires": [
-            [
-                "491898993236472c"
-            ],
-            [],
-            []
-        ]
     },
     {
         "id": "ac1f574d8a8e4986",
@@ -2511,6 +2387,155 @@
         "libs": [],
         "x": 830,
         "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a3f40aebf09a7617",
+        "type": "function",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Confirm: Prepare + store pending",
+        "func": "// Any node (e.g. ui-button) can trigger this.\n// Optional: msg.confirm = { title, text, confirmText, cancelText, id }\n\nconst confirm = (msg.confirm && typeof msg.confirm === 'object') ? msg.confirm : {};\n\nconst id = confirm.id || msg._confirmId || (Date.now().toString(36) + Math.random().toString(36).slice(2));\nmsg._confirmId = id;\n\n// Store ORIGINAL msg so we can output it back on confirm/cancel.\nflow.set('d2_confirm_pending_' + id, msg);\n\n// Send a UI control message to the ui-template\nreturn {\n  payload: {\n    ui: 'openConfirm',\n    id,\n    title: confirm.title || msg.topic || 'Confirm',\n    text: confirm.text || 'Are you sure?',\n    confirmText: confirm.confirmText || 'Confirm',\n    cancelText: confirm.cancelText || 'Cancel'\n  }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 815,
+        "y": 1080,
+        "wires": [
+            [
+                "6bd5e94aa2cb5c71",
+                "e5452c1b6138bdca"
+            ]
+        ]
+    },
+    {
+        "id": "e4f5f2f0a7b6b86a",
+        "type": "function",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Confirm: Router (confirmed/cancelled)",
+        "func": "const p = msg?.payload;\nif (!p || p.ui !== 'confirmResult' || !p.id) return null;\n\nconst key = 'd2_confirm_pending_' + p.id;\nconst original = flow.get(key);\nflow.set(key, null);\n\nif (!original) return null;\n\noriginal.payload = {\n  ...(original.payload && typeof original.payload === 'object' ? original.payload : {}),\n  confirmed: !!p.confirmed,\n  confirmId: p.id\n};\n\nif (p.confirmed) return [original, null];\nreturn [null, original];",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 825,
+        "y": 1180,
+        "wires": [
+            [
+                "d6c2b6f8f0d2f2be"
+            ],
+            [
+                "95dfc1d6b7df7a4f"
+            ]
+        ]
+    },
+    {
+        "id": "d6c2b6f8f0d2f2be",
+        "type": "link out",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Confirmed OUT",
+        "mode": "link",
+        "links": [],
+        "x": 1105,
+        "y": 1160,
+        "wires": []
+    },
+    {
+        "id": "95dfc1d6b7df7a4f",
+        "type": "link out",
+        "z": "19fbd7cf3882c4ad",
+        "name": "Cancelled OUT",
+        "mode": "link",
+        "links": [],
+        "x": 1105,
+        "y": 1200,
+        "wires": []
+    },
+    {
+        "id": "6bd5e94aa2cb5c71",
+        "type": "ui-template",
+        "z": "19fbd7cf3882c4ad",
+        "group": "8ad5a7c72deac7fb",
+        "page": "",
+        "ui": "",
+        "name": "",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "head": "",
+        "format": "<template>\n  <div style=\"padding:8px;\">\n    <!-- (optional) visible debug line so you can confirm message receipt -->\n    <div style=\"font-size:12px; opacity:0.7;\">Last msg ui: {{ lastUi }}</div>\n\n    <v-dialog v-model=\"open\" max-width=\"520\" persistent>\n      <v-card>\n        <v-card-title class=\"text-h6\" style=\"font-weight:900;\">\n          {{ title }}\n        </v-card-title>\n\n        <v-card-text style=\"white-space: pre-wrap;\">\n          {{ text }}\n        </v-card-text>\n\n        <v-card-actions>\n          <v-spacer></v-spacer>\n          <v-btn variant=\"text\" color=\"grey\" @click=\"cancel()\">\n            {{ cancelText }}\n          </v-btn>\n          <v-btn variant=\"elevated\" color=\"deep-purple\" @click=\"confirm()\">\n            {{ confirmText }}\n          </v-btn>\n        </v-card-actions>\n      </v-card>\n    </v-dialog>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      // dialog\n      open: false,\n\n      // debug\n      lastUi: \"(none)\",\n\n      // content\n      id: null,\n      title: \"Confirm\",\n      text: \"Are you sure?\",\n      confirmText: \"Confirm\",\n      cancelText: \"Cancel\",\n    };\n  },\n\n  mounted() {\n    // EXACT same working pattern as your diagnostic test\n    this.$watch(\n      () => this.msg,\n      (m) => {\n        const p = m?.payload || {};\n        this.lastUi = p.ui || \"(none)\";\n\n        if (p.ui === \"openConfirm\") {\n          this.id = p.id ?? null;\n          this.title = p.title ?? \"Confirm\";\n          this.text = p.text ?? \"Are you sure?\";\n          this.confirmText = p.confirmText ?? \"Confirm\";\n          this.cancelText = p.cancelText ?? \"Cancel\";\n          this.open = true;\n        }\n      },\n      { deep: true, immediate: true }\n    );\n  },\n\n  methods: {\n    confirm() {\n      const id = this.id;\n      this.open = false;\n      this.send({ payload: { ui: \"confirmResult\", id, confirmed: true } });\n    },\n    cancel() {\n      const id = this.id;\n      this.open = false;\n      this.send({ payload: { ui: \"confirmResult\", id, confirmed: false } });\n    },\n  },\n};\n</script>\n\n<style>\n.v-card-text { font-size: 14px; }\n</style>",
+        "storeOutMessages": true,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 1065,
+        "y": 1080,
+        "wires": [
+            [
+                "e4f5f2f0a7b6b86a",
+                "f1041ae16e47c7d4"
+            ]
+        ]
+    },
+    {
+        "id": "e5452c1b6138bdca",
+        "type": "debug",
+        "z": "19fbd7cf3882c4ad",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 990,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "f1041ae16e47c7d4",
+        "type": "debug",
+        "z": "19fbd7cf3882c4ad",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1170,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "44a7df78f7cb11e3",
+        "type": "ui-template",
+        "z": "19fbd7cf3882c4ad",
+        "group": "8ad5a7c72deac7fb",
+        "page": "",
+        "ui": "",
+        "name": "",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "head": "",
+        "format": "<template>\n  <div style=\"padding:8px;\">\n    <!-- (optional) visible debug line so you can confirm message receipt -->\n    <div style=\"font-size:12px; opacity:0.7;\">Last msg ui: {{ lastUi }}</div>\n\n    <v-dialog v-model=\"open\" max-width=\"520\" persistent>\n      <v-card>\n        <v-card-title class=\"text-h6\" style=\"font-weight:900;\">\n          {{ title }}\n        </v-card-title>\n\n        <v-card-text style=\"white-space: pre-wrap;\">\n          {{ text }}\n        </v-card-text>\n\n        <v-card-actions>\n          <v-spacer></v-spacer>\n          <v-btn variant=\"text\" color=\"grey\" @click=\"cancel()\">\n            {{ cancelText }}\n          </v-btn>\n          <v-btn variant=\"elevated\" color=\"deep-purple\" @click=\"confirm()\">\n            {{ confirmText }}\n          </v-btn>\n        </v-card-actions>\n      </v-card>\n    </v-dialog>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      // dialog\n      open: false,\n\n      // debug\n      lastUi: \"(none)\",\n\n      // content\n      id: null,\n      title: \"Confirm\",\n      text: \"Are you sure?\",\n      confirmText: \"Confirm\",\n      cancelText: \"Cancel\",\n    };\n  },\n\n  mounted() {\n    // EXACT same working pattern as your diagnostic test\n    this.$watch(\n      () => this.msg,\n      (m) => {\n        const p = m?.payload || {};\n        this.lastUi = p.ui || \"(none)\";\n\n        if (p.ui === \"openConfirm\") {\n          this.id = p.id ?? null;\n          this.title = p.title ?? \"Confirm\";\n          this.text = p.text ?? \"Are you sure?\";\n          this.confirmText = p.confirmText ?? \"Confirm\";\n          this.cancelText = p.cancelText ?? \"Cancel\";\n          this.open = true;\n        }\n      },\n      { deep: true, immediate: true }\n    );\n  },\n\n  methods: {\n    confirm() {\n      const id = this.id;\n      this.open = false;\n      this.send({ payload: { ui: \"confirmResult\", id, confirmed: true } });\n    },\n    cancel() {\n      const id = this.id;\n      this.open = false;\n      this.send({ payload: { ui: \"confirmResult\", id, confirmed: false } });\n    },\n  },\n};\n</script>\n\n<style>\n.v-card-text { font-size: 14px; }\n</style>",
+        "storeOutMessages": true,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 460,
+        "y": 1020,
         "wires": [
             []
         ]
@@ -4409,7 +4434,7 @@
         "targetType": "msg",
         "statusVal": "payload.owner",
         "statusType": "auto",
-        "x": 640,
+        "x": 740,
         "y": 240,
         "wires": []
     },
@@ -4560,7 +4585,7 @@
         "name": "Zone Sync",
         "func": "'use strict';\n// Outputs: [sw-all, sw-a1, sw-a2, sw-a3, sw-ls]\n// passthru:false on each switch prevents incoming state msgs from re-firing\n// output, so updating switches here never creates feedback loops.\nvar topic = msg.topic;\nvar val = !!msg.payload;\nvar zones = global.get('ma_zones') || { a1: false, a2: false, a3: false, ls: false };\nif (topic === 'zone/all') {\n    zones.a1 = val;\n    zones.a2 = val;\n    zones.a3 = val;\n    zones.ls = val;\n} else {\n    var zone = topic.split('/')[1];\n    if (zone && Object.prototype.hasOwnProperty.call(zones, zone)) {\n        zones[zone] = val;\n    }\n}\nglobal.set('ma_zones', zones);\nvar allOn = zones.a1 && zones.a2 && zones.a3 && zones.ls;\nreturn [\n    [{ payload: allOn,    topic: 'zone/all' }],\n    [{ payload: zones.a1, topic: 'zone/a1'  }],\n    [{ payload: zones.a2, topic: 'zone/a2'  }],\n    [{ payload: zones.a3, topic: 'zone/a3'  }],\n    [{ payload: zones.ls, topic: 'zone/ls'  }]\n];",
         "outputs": 5,
-        "x": 430,
+        "x": 350,
         "y": 620,
         "wires": [
             [
@@ -4679,8 +4704,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 660,
-        "y": 940,
+        "x": 970,
+        "y": 900,
         "wires": []
     },
     {
@@ -4696,8 +4721,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 670,
-        "y": 1020,
+        "x": 960,
+        "y": 960,
         "wires": []
     },
     {
@@ -4836,8 +4861,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 660,
-        "y": 1240,
+        "x": 790,
+        "y": 1200,
         "wires": []
     },
     {
@@ -4853,8 +4878,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 670,
-        "y": 1320,
+        "x": 780,
+        "y": 1280,
         "wires": []
     },
     {
@@ -4984,7 +5009,7 @@
         "sendError": true,
         "encoding": "none",
         "allProps": false,
-        "x": 510,
+        "x": 550,
         "y": 60,
         "wires": [
             [
@@ -5004,7 +5029,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 730,
+        "x": 770,
         "y": 60,
         "wires": [
             [
@@ -5021,7 +5046,7 @@
             "wo2-config-file-in"
         ],
         "uncaught": false,
-        "x": 410,
+        "x": 510,
         "y": 160,
         "wires": [
             [
@@ -5041,7 +5066,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 680,
+        "x": 740,
         "y": 160,
         "wires": [
             [
@@ -5060,7 +5085,7 @@
         "createDir": true,
         "overwriteFile": "true",
         "encoding": "utf8",
-        "x": 940,
+        "x": 1000,
         "y": 160,
         "wires": [
             [
@@ -5080,7 +5105,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1180,
+        "x": 1240,
         "y": 160,
         "wires": [
             [
@@ -5100,7 +5125,7 @@
         "sendError": true,
         "encoding": "none",
         "allProps": false,
-        "x": 960,
+        "x": 1000,
         "y": 60,
         "wires": [
             [
@@ -5119,7 +5144,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1200,
+        "x": 1240,
         "y": 60,
         "wires": [
             []
@@ -5134,8 +5159,8 @@
             "wo2-mapping-file-in"
         ],
         "uncaught": false,
-        "x": 950,
-        "y": 260,
+        "x": 1010,
+        "y": 220,
         "wires": [
             [
                 "wo2-default-map-fn"
@@ -5154,8 +5179,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1180,
-        "y": 260,
+        "x": 1240,
+        "y": 220,
         "wires": [
             []
         ]
@@ -5233,7 +5258,7 @@
         "resendOnRefresh": false,
         "templateScope": "local",
         "className": "",
-        "x": 590,
+        "x": 770,
         "y": 380,
         "wires": [
             [
@@ -5263,8 +5288,8 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 570,
-        "y": 460,
+        "x": 680,
+        "y": 480,
         "wires": [
             [
                 "wo2-confirm-prepare-fn"
@@ -5286,8 +5311,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 790,
-        "y": 440,
+        "x": 900,
+        "y": 460,
         "wires": [
             [
                 "wo2-write-mapping-file"
@@ -5305,8 +5330,8 @@
         "createDir": true,
         "overwriteFile": "true",
         "encoding": "utf8",
-        "x": 1030,
-        "y": 440,
+        "x": 1140,
+        "y": 460,
         "wires": [
             [
                 "wo2-confirm-done-fn"
@@ -5324,8 +5349,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1240,
-        "y": 440,
+        "x": 1350,
+        "y": 460,
         "wires": [
             [
                 "wo2-status-template"
@@ -5343,8 +5368,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 790,
-        "y": 520,
+        "x": 900,
+        "y": 540,
         "wires": [
             [
                 "wo2-status-template"
@@ -5368,8 +5393,8 @@
         "resendOnRefresh": false,
         "templateScope": "local",
         "className": "",
-        "x": 1000,
-        "y": 520,
+        "x": 1110,
+        "y": 540,
         "wires": [
             []
         ]
@@ -5425,7 +5450,7 @@
         "page": "",
         "ui": "",
         "name": "Live State",
-        "order": 2,
+        "order": 1,
         "width": "0",
         "height": "0",
         "format": "<template>\n  <div style=\"padding:4px\">\n    <p v-if=\"!msg\" style=\"color:#aaa\">Waiting for state...</p>\n    <div v-else>\n      <div style=\"margin-bottom:6px\">\n        <span v-if=\"msg.payload.type === 'poll'\" style=\"color:#ff9800;font-size:0.9em\">Polling (SSE offline)</span>\n        <span v-else style=\"color:#4caf50;font-size:0.9em\">SSE Live</span>\n      </div>\n      <pre style=\"background:#1b1b2e;color:#e0e0e0;padding:8px;border-radius:4px;font-size:0.82em;max-height:200px;overflow-y:auto\">{{ JSON.stringify(msg.payload.data, null, 2) }}</pre>\n    </div>\n  </div>\n</template>",
@@ -5578,8 +5603,8 @@
         "enablePointerup": false,
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
-        "x": 300,
-        "y": 440,
+        "x": 410,
+        "y": 460,
         "wires": [
             [
                 "wo2-action-switch"
@@ -5617,8 +5642,8 @@
         "enablePointerup": false,
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
-        "x": 280,
-        "y": 480,
+        "x": 390,
+        "y": 500,
         "wires": [
             [
                 "wo2-action-switch"
@@ -5775,7 +5800,8 @@
         "g": "dbd2c45c3962d1cd",
         "name": "Send To WO",
         "links": [
-            "wo2-ui-link-out"
+            "wo2-ui-link-out",
+            "fe7a6403efe9d533"
         ],
         "x": 205,
         "y": 720,
