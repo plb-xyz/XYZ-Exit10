@@ -38,6 +38,13 @@
         "info": ""
     },
     {
+        "id": "wo2-ui-linkout-tab",
+        "type": "tab",
+        "label": "Watchout - Timeline Controls UI (Link Out)",
+        "disabled": false,
+        "info": "Dropdown is populated from flow context `watchout_mapping`.\n\nMapping schema expected:\n  flow.watchout_mapping = { [contentId]: { displayName, watchoutId } }\n\nUI behavior:\n- Dropdown shows ONLY displayName.\n- Dropdown value remains `contentId` (so we can send {command, contentId}).\n- Play / Pause / Stop buttons emit msg.payload to a Link Out node:\n    { command: \"start\"|\"pause\"|\"stop\", contentId: \"show_1\" }\n\nAfter import:\n1) Open the UI Group node and select the Dashboard page/group you want.\n2) Wire the Link Out node to your existing \"Prepare control request\" function node.\n\nNote: This flow does NOT make any HTTP calls itself."
+    },
+    {
         "id": "22f501abaf7e8db6",
         "type": "subflow",
         "name": "Atrium Selection Switch",
@@ -701,6 +708,20 @@
         "height": 1,
         "order": 1,
         "showTitle": false,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "wo2-ui-timeline-controls-group",
+        "type": "ui-group",
+        "name": "Timeline Controls",
+        "page": "e155175a9ba21767",
+        "width": 6,
+        "height": 2,
+        "order": 3,
+        "showTitle": true,
         "className": "",
         "visible": "true",
         "disabled": "false",
@@ -6335,7 +6356,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "{ \"command\": \"start\", \"contentId\": \"show_1\" }",
+        "payload": "{ \"command\": \"start\", \"contentId\": \"show_2\" }",
         "payloadType": "json",
         "x": 150,
         "y": 760,
@@ -6378,6 +6399,234 @@
         "statusType": "auto",
         "x": 1050,
         "y": 680,
+        "wires": []
+    },
+    {
+        "id": "wo2-ui-init",
+        "type": "inject",
+        "z": "wo2-tab",
+        "name": "Init / Refresh dropdown",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 1,
+        "payload": "{\"action\":\"init\"}",
+        "payloadType": "json",
+        "x": 183.0449981689453,
+        "y": 2032.205078125,
+        "wires": [
+            [
+                "wo2-ui-build-options"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-ui-refresh",
+        "type": "ui-button",
+        "z": "wo2-tab",
+        "group": "wo2-ui-timeline-controls-group",
+        "name": "Refresh timelines",
+        "label": "Refresh",
+        "order": 1,
+        "width": 2,
+        "height": 1,
+        "tooltip": "Rebuild dropdown options from stored mapping",
+        "color": "#ffffff",
+        "bgcolor": "#6c6c6c",
+        "className": "",
+        "icon": "mdi-refresh",
+        "payload": "{\"action\":\"refresh\"}",
+        "payloadType": "json",
+        "topic": "refresh",
+        "topicType": "str",
+        "enableClick": true,
+        "x": 163.0449981689453,
+        "y": 2092.205078125,
+        "wires": [
+            [
+                "wo2-ui-build-options"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-ui-build-options",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "Build dropdown options (label=displayName)",
+        "func": "// Build ui-dropdown options from flow.watchout_mapping\n// Show ONLY displayName in the dropdown, but keep value = contentId.\n\nconst mapping = flow.get('watchout_mapping') || {};\n\nconst keys = Object.keys(mapping);\nkeys.sort((a, b) => {\n    const da = (mapping[a] && mapping[a].displayName) ? String(mapping[a].displayName) : String(a);\n    const db = (mapping[b] && mapping[b].displayName) ? String(mapping[b].displayName) : String(b);\n    return da.localeCompare(db);\n});\n\nconst options = keys.map(contentId => {\n    const entry = mapping[contentId] || {};\n    const displayName = entry.displayName ? String(entry.displayName) : String(contentId);\n    return { value: contentId, label: displayName };\n});\n\n// Preserve selection if possible\nconst current = flow.get('watchout_selected_contentId');\nlet selected = current;\nif (!selected || !Object.prototype.hasOwnProperty.call(mapping, selected)) {\n    selected = options.length ? options[0].value : '';\n}\nflow.set('watchout_selected_contentId', selected);\n\nmsg.options = options;\nmsg.payload = selected;\n\nnode.status({ fill: 'green', shape: 'dot', text: 'Options: ' + options.length });\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 583.0449981689453,
+        "y": 2062.205078125,
+        "wires": [
+            [
+                "wo2-ui-dropdown"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-ui-dropdown",
+        "type": "ui-dropdown",
+        "z": "wo2-tab",
+        "group": "wo2-ui-timeline-controls-group",
+        "name": "Timeline dropdown",
+        "label": "Timeline",
+        "tooltip": "",
+        "order": 2,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "multiple": false,
+        "options": [],
+        "payload": "",
+        "topic": "watchout_timeline",
+        "topicType": "str",
+        "className": "",
+        "x": 890,
+        "y": 2060,
+        "wires": [
+            [
+                "wo2-ui-store-selection"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-ui-store-selection",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "Store selected contentId",
+        "func": "flow.set('watchout_selected_contentId', msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1130,
+        "y": 2080,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "wo2-ui-play",
+        "type": "ui-button",
+        "z": "wo2-tab",
+        "group": "wo2-ui-timeline-controls-group",
+        "name": "Play",
+        "label": "Play",
+        "order": 3,
+        "width": 2,
+        "height": 1,
+        "tooltip": "Start selected timeline",
+        "color": "#ffffff",
+        "bgcolor": "#2e7d32",
+        "className": "",
+        "icon": "mdi-play",
+        "payload": "start",
+        "payloadType": "str",
+        "topic": "watchout_cmd",
+        "topicType": "str",
+        "x": 123.04499816894531,
+        "y": 2172.205078125,
+        "wires": [
+            [
+                "wo2-ui-build-command"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-ui-pause",
+        "type": "ui-button",
+        "z": "wo2-tab",
+        "group": "wo2-ui-timeline-controls-group",
+        "name": "Pause",
+        "label": "Pause",
+        "order": 4,
+        "width": 2,
+        "height": 1,
+        "tooltip": "Pause selected timeline",
+        "color": "#ffffff",
+        "bgcolor": "#ef6c00",
+        "className": "",
+        "icon": "mdi-pause",
+        "payload": "pause",
+        "payloadType": "str",
+        "topic": "watchout_cmd",
+        "topicType": "str",
+        "x": 123.04499816894531,
+        "y": 2232.205078125,
+        "wires": [
+            [
+                "wo2-ui-build-command"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-ui-stop",
+        "type": "ui-button",
+        "z": "wo2-tab",
+        "group": "wo2-ui-timeline-controls-group",
+        "name": "Stop",
+        "label": "Stop",
+        "order": 5,
+        "width": 2,
+        "height": 1,
+        "tooltip": "Stop selected timeline",
+        "color": "#ffffff",
+        "bgcolor": "#c62828",
+        "className": "",
+        "icon": "mdi-stop",
+        "payload": "stop",
+        "payloadType": "str",
+        "topic": "watchout_cmd",
+        "topicType": "str",
+        "x": 123.04499816894531,
+        "y": 2292.205078125,
+        "wires": [
+            [
+                "wo2-ui-build-command"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-ui-build-command",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "Build API payload → Link Out",
+        "func": "const command = msg.payload; // start|pause|stop\nconst contentId = flow.get('watchout_selected_contentId');\n\nif (!contentId) {\n    node.status({ fill: 'red', shape: 'ring', text: 'No timeline selected' });\n    return null;\n}\n\nmsg.payload = { command, contentId };\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 533.0449981689453,
+        "y": 2232.205078125,
+        "wires": [
+            [
+                "wo2-ui-link-out"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-ui-link-out",
+        "type": "link out",
+        "z": "wo2-tab",
+        "name": "→ Prepare control request",
+        "mode": "link",
+        "links": [],
+        "x": 713.0449981689453,
+        "y": 2232.205078125,
         "wires": []
     }
 ]
