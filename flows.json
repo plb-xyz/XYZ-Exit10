@@ -42,7 +42,7 @@
         "type": "tab",
         "label": "Watchout - Timeline Controls UI (Link Out)",
         "disabled": false,
-        "info": "Dropdown is populated from flow context `watchout_mapping`.\n\nMapping schema expected:\n  flow.watchout_mapping = { [contentId]: { displayName, watchoutId } }\n\nUI behavior:\n- Dropdown shows ONLY displayName.\n- Dropdown value remains `contentId` (so we can send {command, contentId}).\n- Play / Pause / Stop buttons emit msg.payload to a Link Out node:\n    { command: \"start\"|\"pause\"|\"stop\", contentId: \"show_1\" }\n\nAfter import:\n1) Open the UI Group node and select the Dashboard page/group you want.\n2) Wire the Link Out node to your existing \"Prepare control request\" function node.\n\nNote: This flow does NOT make any HTTP calls itself."
+        "info": ""
     },
     {
         "id": "22f501abaf7e8db6",
@@ -6631,6 +6631,16 @@
         ],
         "x": 713.0449981689453,
         "y": 2232.205078125,
+        "wires": []
+    },
+    {
+        "id": "e4d5505b0654cfbb",
+        "type": "comment",
+        "z": "wo2-tab",
+        "name": "WO Dropdown Timeline Control",
+        "info": "Dropdown is populated from flow context `watchout_mapping`.\n\nMapping schema expected:\n  flow.watchout_mapping = { [contentId]: { displayName, watchoutId } }\n\nUI behavior:\n- Dropdown shows ONLY displayName.\n- Dropdown value remains `contentId` (so we can send {command, contentId}).\n- Play / Pause / Stop buttons emit msg.payload to a Link Out node:\n    { command: \"start\"|\"pause\"|\"stop\", contentId: \"show_1\" }\n\nAfter import:\n1) Open the UI Group node and select the Dashboard page/group you want.\n2) Wire the Link Out node to your existing \"Prepare control request\" function node.\n\nNote: This flow does NOT make any HTTP calls itself.",
+        "x": 210,
+        "y": 1980,
         "wires": []
     }
 ]

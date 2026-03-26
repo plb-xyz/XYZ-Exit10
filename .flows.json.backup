@@ -6331,7 +6331,9 @@
         "z": "wo2-tab",
         "g": "dbd2c45c3962d1cd",
         "name": "Send To WO",
-        "links": [],
+        "links": [
+            "wo2-ui-link-out"
+        ],
         "x": 205,
         "y": 720,
         "wires": [
@@ -6624,7 +6626,9 @@
         "z": "wo2-tab",
         "name": "→ Prepare control request",
         "mode": "link",
-        "links": [],
+        "links": [
+            "9fc262ddc940c877"
+        ],
         "x": 713.0449981689453,
         "y": 2232.205078125,
         "wires": []
