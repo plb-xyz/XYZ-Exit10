@@ -38,11 +38,11 @@
         "info": ""
     },
     {
-        "id": "wo2-ui-linkout-tab",
+        "id": "wo-ndjson-ui-tab",
         "type": "tab",
-        "label": "Watchout - Timeline Controls UI (Link Out)",
+        "label": "Watchout NDJSON Status (Dashboard2)",
         "disabled": false,
-        "info": "Dropdown is populated from flow context `watchout_mapping`.\n\nMapping schema expected:\n  flow.watchout_mapping = { [contentId]: { displayName, watchoutId } }\n\nUI behavior:\n- Dropdown shows ONLY displayName.\n- Dropdown value remains `contentId` (so we can send {command, contentId}).\n- Play / Pause / Stop buttons emit msg.payload to a Link Out node:\n    { command: \"start\"|\"pause\"|\"stop\", contentId: \"show_1\" }\n\nAfter import:\n1) Open the UI Group node and select the Dashboard page/group you want.\n2) Wire the Link Out node to your existing \"Prepare control request\" function node.\n\nNote: This flow does NOT make any HTTP calls itself."
+        "info": "Importable flow for FlowFuse Dashboard 2.0 that:\n1) Connects to Watchout NDJSON stream: GET /v1/ndjson\n2) Shows connection status (connected / disconnected / reconnecting)\n3) Shows currently RUNNING timelines (playbackStatus === \"run\")\n\nAssumptions:\n- flow.watchout_config exists (as in your watchout-v2 flow): { host, port }\n- If not present, defaults host=localhost port=3019.\n\nIf Node-RED runs inside Docker on Windows, set host to host.docker.internal in your watchout-config.json.\n\nThis flow is self-contained for status UI; it does NOT modify your existing control API."
     },
     {
         "id": "22f501abaf7e8db6",
@@ -721,6 +721,34 @@
         "width": 6,
         "height": 2,
         "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "wo-ndjson-ui-group-status",
+        "type": "ui-group",
+        "name": "WO Status (NDJSON)",
+        "page": "e155175a9ba21767",
+        "width": 6,
+        "height": 2,
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "wo-ndjson-ui-group-running",
+        "type": "ui-group",
+        "name": "Running Timelines",
+        "page": "e155175a9ba21767",
+        "width": 6,
+        "height": 4,
+        "order": 2,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -5347,49 +5375,6 @@
         ]
     },
     {
-        "id": "wo2-sse-inj",
-        "type": "inject",
-        "z": "wo2-tab",
-        "name": "Start SSE monitor",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 1,
-        "topic": "start_sse",
-        "payload": "start",
-        "payloadType": "str",
-        "x": 170,
-        "y": 1080,
-        "wires": [
-            [
-                "wo2-sse-fn"
-            ]
-        ]
-    },
-    {
-        "id": "wo2-sse-fn",
-        "type": "function",
-        "z": "wo2-tab",
-        "name": "Configure SSE URL",
-        "func": "// Build the SSE endpoint URL from flow config and trigger the SSE client\nconst cfg  = flow.get('watchout_config') || {};\nconst host = cfg.host || 'host.docker.internal';\nconst port = cfg.port || 3019;\nmsg.url     = 'http://' + host + ':' + port + '/v1/sse';\nmsg.headers = { 'Accept': 'text/event-stream', 'Cache-Control': 'no-cache' };\nflow.set('watchout_sse_status', 'connecting');\nreturn msg;",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 370,
-        "y": 1080,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "wo2-poll-inj",
         "type": "inject",
         "z": "wo2-tab",
@@ -5405,8 +5390,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 170,
-        "y": 1240,
+        "x": 120,
+        "y": 900,
         "wires": [
             [
                 "wo2-poll-fn"
@@ -5424,8 +5409,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 370,
-        "y": 1240,
+        "x": 300,
+        "y": 900,
         "wires": [
             [
                 "wo2-poll-http"
@@ -5449,31 +5434,8 @@
         "resendOnRefresh": false,
         "templateScope": "local",
         "className": "",
-        "x": 1080,
-        "y": 1190,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "wo2-sse-status-template",
-        "type": "ui-template",
-        "z": "wo2-tab",
-        "group": "e79267107587d426",
-        "page": "",
-        "ui": "",
-        "name": "SSE Status",
-        "order": 1,
-        "width": "0",
-        "height": "0",
-        "format": "<template>\n  <div style=\"padding:4px;font-size:0.9em\">\n    <span v-if=\"!msg\" style=\"color:#aaa\">SSE: unknown</span>\n    <span v-else-if=\"msg.payload.status === 'sse_connected'\"    style=\"color:#4caf50\">SSE Connected</span>\n    <span v-else-if=\"msg.payload.status === 'sse_disconnected'\" style=\"color:#ff9800\">SSE Disconnected - polling</span>\n    <span v-else-if=\"msg.payload.status === 'sse_error'\"        style=\"color:#f44336\">SSE Error: {{ msg.payload.message }}</span>\n  </div>\n</template>",
-        "storeOutMessages": true,
-        "passthru": true,
-        "resendOnRefresh": false,
-        "templateScope": "local",
-        "className": "",
-        "x": 1080,
-        "y": 1080,
+        "x": 940,
+        "y": 850,
         "wires": [
             []
         ]
@@ -5541,64 +5503,6 @@
         ]
     },
     {
-        "id": "wo2-sse-event-fn",
-        "type": "function",
-        "z": "wo2-tab",
-        "name": "Process SSE event",
-        "func": "// Process an incoming SSE event from the Watchout SSE client node.\n// msg.payload = event data (auto-parsed JSON if possible)\n// msg.event   = event type string\n\nconst wasConnected = flow.get('watchout_sse_status') === 'connected';\n\nconst event = {\n    type: msg.event || 'message',\n    data: msg.payload\n};\n\nflow.set('watchout_state',      event.data || event);\nflow.set('watchout_sse_status', 'connected');\n\n// Output 1: state event for Live State UI\nconst stateMsg  = { payload: event, topic: 'watchout/state' };\n\n// Output 2: SSE status update (only send once on initial connect)\nconst statusMsg = wasConnected ? null\n    : { payload: { status: 'sse_connected' } };\n\nnode.send([stateMsg, statusMsg]);\nreturn null;",
-        "outputs": 2,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 830,
-        "y": 1080,
-        "wires": [
-            [
-                "wo2-state-template"
-            ],
-            [
-                "wo2-sse-status-template"
-            ]
-        ]
-    },
-    {
-        "id": "wo2-sse-catch",
-        "type": "catch",
-        "z": "wo2-tab",
-        "name": "SSE error",
-        "scope": [
-            "wo2-sse-node"
-        ],
-        "uncaught": false,
-        "x": 600,
-        "y": 1140,
-        "wires": [
-            [
-                "wo2-sse-error-fn"
-            ]
-        ]
-    },
-    {
-        "id": "wo2-sse-error-fn",
-        "type": "function",
-        "z": "wo2-tab",
-        "name": "SSE error handler",
-        "func": "// Handle SSE connection errors / disconnects\nflow.set('watchout_sse_status', 'error');\nconst errMsg = (msg.error && msg.error.message) ? msg.error.message : String(msg.error || 'SSE error');\nnode.send({ payload: { status: 'sse_error', message: errMsg } });\nreturn null;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 830,
-        "y": 1140,
-        "wires": [
-            [
-                "wo2-sse-status-template"
-            ]
-        ]
-    },
-    {
         "id": "wo2-poll-http",
         "type": "http request",
         "z": "wo2-tab",
@@ -5614,8 +5518,8 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 600,
-        "y": 1240,
+        "x": 460,
+        "y": 900,
         "wires": [
             [
                 "wo2-poll-parse-fn"
@@ -5627,16 +5531,18 @@
         "type": "function",
         "z": "wo2-tab",
         "name": "Parse poll response",
-        "func": "// Handle the GET /v0/state poll response\nconst statusCode = msg.statusCode || 200;\nif (statusCode !== 200) {\n    node.warn('[Watchout Poll] HTTP ' + statusCode);\n    return null;\n}\n\nconst state = msg.payload;\nflow.set('watchout_state', state);\n\nnode.send({ payload: { type: 'poll', data: state }, topic: 'watchout/state' });\nreturn null;",
+        "func": "// Handle the GET /v0/state poll response\nconst statusCode = msg.statusCode || 200;\nif (statusCode !== 200) {\n    node.warn('[Watchout Poll] HTTP ' + statusCode);\n    return null;\n}\n\nconst state = msg.payload;\nflow.set('watchout_state', state);\n\n// Pass downstream (and also preserve your existing wrapper shape)\nmsg.topic = 'watchout/state';\nmsg.payload = { type: 'poll', data: state };\nreturn msg;",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 830,
-        "y": 1240,
+        "x": 690,
+        "y": 900,
         "wires": [
             [
+                "5a33eacf66a4c899",
                 "wo2-state-template"
             ]
         ]
@@ -5731,470 +5637,6 @@
         "wires": []
     },
     {
-        "id": "0f0e1d9147fd0a52",
-        "type": "http request",
-        "z": "wo2-tab",
-        "name": "",
-        "method": "GET",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "http://host.docker.internal:3019/v0/state",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 390,
-        "y": 1440,
-        "wires": [
-            [
-                "25b16ed9a6a61254"
-            ]
-        ]
-    },
-    {
-        "id": "dcf9235fa722d331",
-        "type": "inject",
-        "z": "wo2-tab",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 180,
-        "y": 1440,
-        "wires": [
-            [
-                "0f0e1d9147fd0a52",
-                "1f124628f2dacf95"
-            ]
-        ]
-    },
-    {
-        "id": "25b16ed9a6a61254",
-        "type": "debug",
-        "z": "wo2-tab",
-        "name": "debug 2",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 560,
-        "y": 1440,
-        "wires": []
-    },
-    {
-        "id": "1f124628f2dacf95",
-        "type": "http request",
-        "z": "wo2-tab",
-        "name": "",
-        "method": "POST",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "http://host.docker.internal:3019/v0/play/2",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 390,
-        "y": 1480,
-        "wires": [
-            [
-                "25b16ed9a6a61254"
-            ]
-        ]
-    },
-    {
-        "id": "0979cea3988209be",
-        "type": "inject",
-        "z": "wo2-tab",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 180,
-        "y": 1540,
-        "wires": [
-            [
-                "40b13d2f22965063"
-            ]
-        ]
-    },
-    {
-        "id": "40b13d2f22965063",
-        "type": "http request",
-        "z": "wo2-tab",
-        "name": "",
-        "method": "GET",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "http://host.docker.internal:3019/v1/sse",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 390,
-        "y": 1540,
-        "wires": [
-            [
-                "25b16ed9a6a61254"
-            ]
-        ]
-    },
-    {
-        "id": "8417d5858586e845",
-        "type": "inject",
-        "z": "wo2-tab",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 180,
-        "y": 1600,
-        "wires": [
-            [
-                "ab661dd2f52ce072"
-            ]
-        ]
-    },
-    {
-        "id": "ab661dd2f52ce072",
-        "type": "http request",
-        "z": "wo2-tab",
-        "name": "",
-        "method": "GET",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "http://host.docker.internal:3019/v0/timelines",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 390,
-        "y": 1600,
-        "wires": [
-            [
-                "25b16ed9a6a61254"
-            ]
-        ]
-    },
-    {
-        "id": "67d8972010009125",
-        "type": "http request",
-        "z": "wo2-tab",
-        "name": "",
-        "method": "use",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "http://host.docker.internal:3019/{{{topic}}}",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 390,
-        "y": 1780,
-        "wires": [
-            [
-                "90e94aa4a467747c",
-                "b1f027da3ca2ce46",
-                "4f7fc0d6fe6768a1"
-            ]
-        ]
-    },
-    {
-        "id": "9a5c4307d07b3346",
-        "type": "inject",
-        "z": "wo2-tab",
-        "name": "",
-        "props": [
-            {
-                "p": "method",
-                "v": "GET",
-                "vt": "str"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "v0/timelines",
-        "x": 190,
-        "y": 1740,
-        "wires": [
-            [
-                "67d8972010009125"
-            ]
-        ]
-    },
-    {
-        "id": "90e94aa4a467747c",
-        "type": "debug",
-        "z": "wo2-tab",
-        "name": "debug 5",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 560,
-        "y": 1780,
-        "wires": []
-    },
-    {
-        "id": "e35d8ae5a4661a03",
-        "type": "inject",
-        "z": "wo2-tab",
-        "name": "",
-        "props": [
-            {
-                "p": "method",
-                "v": "GET",
-                "vt": "str"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "v0/state",
-        "x": 180,
-        "y": 1780,
-        "wires": [
-            [
-                "67d8972010009125"
-            ]
-        ]
-    },
-    {
-        "id": "d87b48746227f5c2",
-        "type": "inject",
-        "z": "wo2-tab",
-        "name": "",
-        "props": [
-            {
-                "p": "method",
-                "v": "POST",
-                "vt": "str"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "v0/play/2",
-        "x": 180,
-        "y": 1820,
-        "wires": [
-            [
-                "67d8972010009125"
-            ]
-        ]
-    },
-    {
-        "id": "1962c3ac9d0da7c8",
-        "type": "link in",
-        "z": "wo2-tab",
-        "name": "To WO HTTP Request",
-        "links": [
-            "fe7a6403efe9d533"
-        ],
-        "x": 225,
-        "y": 1880,
-        "wires": [
-            [
-                "67d8972010009125"
-            ]
-        ]
-    },
-    {
-        "id": "aeda62a37bec44b7",
-        "type": "change",
-        "z": "wo2-tab",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "wo_timelines",
-                "pt": "global",
-                "to": "payload",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 710,
-        "y": 1660,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "b1f027da3ca2ce46",
-        "type": "switch",
-        "z": "wo2-tab",
-        "name": "",
-        "property": "payload",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "cont",
-                "v": "Main Timeline",
-                "vt": "str"
-            },
-            {
-                "t": "cont",
-                "v": "clockTime",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 510,
-        "y": 1680,
-        "wires": [
-            [
-                "aeda62a37bec44b7"
-            ],
-            [
-                "be79e0848fdfe95e"
-            ]
-        ]
-    },
-    {
-        "id": "be79e0848fdfe95e",
-        "type": "change",
-        "z": "wo2-tab",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "wo_state",
-                "pt": "global",
-                "to": "payload",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 690,
-        "y": 1700,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "4f7fc0d6fe6768a1",
-        "type": "file",
-        "z": "wo2-tab",
-        "name": "",
-        "filename": "/data/wo.json",
-        "filenameType": "str",
-        "appendNewline": true,
-        "createDir": false,
-        "overwriteFile": "true",
-        "encoding": "none",
-        "x": 570,
-        "y": 1740,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "922831f9300c30d1",
-        "type": "file in",
-        "z": "wo2-tab",
-        "name": "",
-        "filename": "",
-        "filenameType": "str",
-        "format": "utf8",
-        "chunk": false,
-        "sendError": false,
-        "encoding": "none",
-        "allProps": false,
-        "x": 400,
-        "y": 1860,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "896224c4eaee7e43",
         "type": "function",
         "z": "wo2-tab",
@@ -6206,8 +5648,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1490,
-        "y": 800,
+        "x": 1060,
+        "y": 1500,
         "wires": [
             [
                 "fdfbb04d88a99ef7"
@@ -6235,8 +5677,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 1290,
-        "y": 1100,
+        "x": 820,
+        "y": 1500,
         "wires": [
             [
                 "896224c4eaee7e43"
@@ -6252,8 +5694,8 @@
         "links": [
             "5afd3867d48c70fc"
         ],
-        "x": 1655,
-        "y": 800,
+        "x": 1225,
+        "y": 1500,
         "wires": []
     },
     {
@@ -6284,7 +5726,7 @@
         "type": "http request",
         "z": "wo2-tab",
         "g": "dbd2c45c3962d1cd",
-        "name": "Watchout API call",
+        "name": "Watchout HTTP request",
         "method": "use",
         "ret": "obj",
         "paytoqs": "ignore",
@@ -6296,11 +5738,12 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 650,
+        "x": 670,
         "y": 720,
         "wires": [
             [
-                "wo2-control-format-fn"
+                "wo2-control-format-fn",
+                "90130b9791133b25"
             ]
         ]
     },
@@ -6419,8 +5862,8 @@
         "onceDelay": 1,
         "payload": "{\"action\":\"init\"}",
         "payloadType": "json",
-        "x": 183.0449981689453,
-        "y": 2032.205078125,
+        "x": 143.0449981689453,
+        "y": 1092.205078125,
         "wires": [
             [
                 "wo2-ui-build-options"
@@ -6447,8 +5890,8 @@
         "topic": "refresh",
         "topicType": "str",
         "enableClick": true,
-        "x": 163.0449981689453,
-        "y": 2092.205078125,
+        "x": 123.04499816894531,
+        "y": 1152.205078125,
         "wires": [
             [
                 "wo2-ui-build-options"
@@ -6467,8 +5910,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 583.0449981689453,
-        "y": 2062.205078125,
+        "x": 530,
+        "y": 1120,
         "wires": [
             [
                 "wo2-ui-dropdown"
@@ -6493,8 +5936,8 @@
         "topic": "watchout_timeline",
         "topicType": "str",
         "className": "",
-        "x": 890,
-        "y": 2060,
+        "x": 850,
+        "y": 1120,
         "wires": [
             [
                 "wo2-ui-store-selection"
@@ -6513,8 +5956,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1130,
-        "y": 2080,
+        "x": 1090,
+        "y": 1120,
         "wires": [
             []
         ]
@@ -6538,8 +5981,8 @@
         "payloadType": "str",
         "topic": "watchout_cmd",
         "topicType": "str",
-        "x": 123.04499816894531,
-        "y": 2172.205078125,
+        "x": 83.04499816894531,
+        "y": 1232.205078125,
         "wires": [
             [
                 "wo2-ui-build-command"
@@ -6565,8 +6008,8 @@
         "payloadType": "str",
         "topic": "watchout_cmd",
         "topicType": "str",
-        "x": 123.04499816894531,
-        "y": 2232.205078125,
+        "x": 83.04499816894531,
+        "y": 1292.205078125,
         "wires": [
             [
                 "wo2-ui-build-command"
@@ -6592,8 +6035,8 @@
         "payloadType": "str",
         "topic": "watchout_cmd",
         "topicType": "str",
-        "x": 123.04499816894531,
-        "y": 2292.205078125,
+        "x": 83.04499816894531,
+        "y": 1352.205078125,
         "wires": [
             [
                 "wo2-ui-build-command"
@@ -6612,8 +6055,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 533.0449981689453,
-        "y": 2232.205078125,
+        "x": 493.0449981689453,
+        "y": 1292.205078125,
         "wires": [
             [
                 "wo2-ui-link-out"
@@ -6629,8 +6072,86 @@
         "links": [
             "9fc262ddc940c877"
         ],
-        "x": 713.0449981689453,
-        "y": 2232.205078125,
+        "x": 673.0449981689453,
+        "y": 1292.205078125,
         "wires": []
+    },
+    {
+        "id": "e4d5505b0654cfbb",
+        "type": "comment",
+        "z": "wo2-tab",
+        "name": "WO Dropdown Timeline Control",
+        "info": "Dropdown is populated from flow context `watchout_mapping`.\n\nMapping schema expected:\n  flow.watchout_mapping = { [contentId]: { displayName, watchoutId } }\n\nUI behavior:\n- Dropdown shows ONLY displayName.\n- Dropdown value remains `contentId` (so we can send {command, contentId}).\n- Play / Pause / Stop buttons emit msg.payload to a Link Out node:\n    { command: \"start\"|\"pause\"|\"stop\", contentId: \"show_1\" }\n\nAfter import:\n1) Open the UI Group node and select the Dashboard page/group you want.\n2) Wire the Link Out node to your existing \"Prepare control request\" function node.\n\nNote: This flow does NOT make any HTTP calls itself.",
+        "x": 170,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "wo-ndjson-ui-running",
+        "type": "ui-template",
+        "z": "wo2-tab",
+        "group": "wo-ndjson-ui-group-running",
+        "page": "",
+        "ui": "",
+        "name": "Running timelines list",
+        "order": 1,
+        "width": 6,
+        "height": 4,
+        "format": "<template>\n  <div style=\"padding:6px\">\n    <div v-if=\"!msg\" style=\"color:#aaa\">Waiting for state…</div>\n    <div v-else>\n      <div v-if=\"!msg.payload.timelines || msg.payload.timelines.length === 0\" style=\"color:#aaa\">\n        No running or paused timelines.\n      </div>\n\n      <div v-else>\n        <div\n          v-for=\"tl in msg.payload.timelines\"\n          :key=\"tl.id\"\n          style=\"padding:6px 8px; margin:6px 0; border:1px solid #333; border-radius:6px; background:#1b1b2e; color:#e0e0e0;\"\n        >\n          <div style=\"display:flex; justify-content:space-between; gap:10px; align-items:baseline;\">\n            <div style=\"font-weight:600;\">{{ tl.name }}</div>\n            <div style=\"font-family:monospace; color:#80cbc4;\">id={{ tl.id }}</div>\n          </div>\n\n          <div style=\"display:flex; justify-content:space-between; margin-top:2px; font-size:0.9em;\">\n            <div :style=\"{ color: tl.stateColor, fontWeight: 600 }\">{{ tl.stateLabel }}</div>\n            <div style=\"font-family:monospace; color:#bbb;\">t={{ tl.timeText }}</div>\n          </div>\n        </div>\n      </div>\n\n      <div style=\"margin-top:8px; font-size:0.85em; color:#aaa\">Updated: {{ msg.payload.ts }}</div>\n    </div>\n  </div>\n</template>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 1200,
+        "y": 920,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5a33eacf66a4c899",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "Wo poll to runing timelines",
+        "func": "// Adapter: GET /v0/state (poll) → UI payload for timelines list\n// Output payload shape expected by the UI template:\n//   { timelines: [{id,name,stateLabel,stateColor,timeText}], ts }\n\nconst state = (msg.payload && msg.payload.data) ? msg.payload.data : msg.payload;\nconst timelines = Array.isArray(state && state.timelines) ? state.timelines : [];\n\n// Mapping schema: { contentId: { displayName, watchoutId } }\nconst mapping = flow.get('watchout_mapping') || {};\n\n// Reverse lookup: watchoutId -> displayName\nconst idToName = {};\nfor (const contentId of Object.keys(mapping)) {\n    const entry = mapping[contentId];\n    if (entry && typeof entry === 'object' && entry.watchoutId != null) {\n        idToName[String(entry.watchoutId)] = entry.displayName || contentId;\n    }\n}\n\n// Derive run/pause/stop from poll fields\nfunction deriveState(tl) {\n    // Prefer NDJSON-style if it exists\n    if (tl.playbackStatus) {\n        const s = String(tl.playbackStatus).toLowerCase();\n        if (s === 'run') return 'run';\n        if (s === 'pause') return 'pause';\n        return 'stop';\n    }\n\n    if (tl.running === true) return 'run';\n\n    const tt = (tl.timelineTime !== undefined && tl.timelineTime !== null) ? Number(tl.timelineTime) : null;\n    // Your requirement: running=false but timeline still \"there\" => treat as paused\n    if (tl.running === false && tt !== null && !Number.isNaN(tt) && tt > 0) return 'pause';\n\n    return 'stop';\n}\n\nfunction formatMmSs(ms) {\n    if (ms === undefined || ms === null) return '--:--';\n    const n = Number(ms);\n    if (Number.isNaN(n) || n < 0) return '--:--';\n    const totalSeconds = Math.floor(n / 1000);\n    const mm = Math.floor(totalSeconds / 60);\n    const ss = totalSeconds % 60;\n    return String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0');\n}\n\nfunction stateMeta(state) {\n    if (state === 'run')  return { stateLabel: 'Running', stateColor: '#4caf50' }; // green\n    if (state === 'pause') return { stateLabel: 'Paused',  stateColor: '#ffeb3b' }; // yellow\n    return { stateLabel: 'Stopped', stateColor: '#9e9e9e' };\n}\n\nconst items = timelines.map(tl => {\n    const id = String(tl.id);\n    const state = deriveState(tl);\n    const meta = stateMeta(state);\n\n    return {\n        id,\n        name: tl.name || idToName[id] || ('Timeline ' + id),\n        state,                 // run|pause|stop (internal)\n        stateLabel: meta.stateLabel,\n        stateColor: meta.stateColor,\n        timeText: formatMmSs(tl.timelineTime)\n    };\n});\n\n// Show only Running + Paused (hide stopped)\nconst visible = items.filter(t => t.state === 'run' || t.state === 'pause');\n\nmsg.topic = 'watchout/timelines';\nmsg.payload = {\n    timelines: visible,\n    ts: new Date().toISOString()\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 950,
+        "y": 920,
+        "wires": [
+            [
+                "wo-ndjson-ui-running"
+            ]
+        ]
+    },
+    {
+        "id": "90130b9791133b25",
+        "type": "delay",
+        "z": "wo2-tab",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "0.3",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 220,
+        "y": 840,
+        "wires": [
+            [
+                "wo2-poll-fn"
+            ]
+        ]
     }
 ]
