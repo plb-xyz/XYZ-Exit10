@@ -3,21 +3,26 @@
 ## Overview
 
 This integration connects Dataton Watchout 7 with Node-RED via the Watchout HTTP
-API.  Everything runs directly inside Node-RED nodes — no external JavaScript
-modules are required.  The only external files are two JSON files used for
-persistence:
+API. Everything runs directly inside Node-RED nodes — no external JavaScript
+modules are required.
+
+Persistence uses two JSON files:
 
 - `watchout-config.json` — host, port, and file paths
 - `timeline-mapping.json` — the active `contentId → { displayName, watchoutId }` mapping
 
 **Default port:** `3019`
 
-> **Note (v0.2):** Real-time monitoring uses the **NDJSON stream** at
-> `GET /v1/ndjson` via the built-in **HTTP Request** node — no contrib node
-> required.  SSE endpoints (`/v0/sse`, `/v1/sse`, `/v2/sse`) remain available
-> as an alternative but the `node-red-contrib-sse-client` package is **optional**.
-> No `require()` calls exist anywhere in the flow — all HTTP I/O goes through
-> built-in **HTTP Request** nodes.
+> **Note (v0.2):** Watchout supports real-time monitoring via **NDJSON**
+> (`GET /v1/ndjson`) and **SSE** (`GET /v1/sse`). In some Docker/Windows +
+> Node-RED environments, long-lived streaming endpoints may not work reliably
+> with the built-in **HTTP Request** node (requests can remain open until they
+> time out). This flow therefore supports:
+>
+> - **Polling** via `GET /v0/state` (reliable)
+> - Optional streaming (NDJSON/SSE) where supported
+> - A recommended pattern to **poll immediately after sending a control command**
+>   (so UI updates quickly even without streaming)
 
 ---
 
@@ -29,10 +34,11 @@ persistence:
 | Change Detection | Compares old vs new mapping — shows removed REMOVED, added ADDED, changed CHANGED, and unchanged OK timelines |
 | Diff UI | Displays the diff to the operator with **[ Confirm & Save]** and **[ Cancel]** buttons |
 | Persistent Storage | Mapping is stored in both Node-RED flow context **and** the file system via Node-RED Read/Write file nodes (survives restarts) |
-| Timeline Control | `start` / `stop` / `pause` timelines and `setInput` / `setInputs` via the stored mapping |
-| Real-time Monitoring | NDJSON stream via `GET /v1/ndjson` (preferred) — parsed with built-in nodes; no contrib required |
-| SSE Alternative | SSE endpoints `/v0/sse` (legacy), `/v1/sse` (full), `/v2/sse` (diff) available if needed |
-| Status Polling | Fallback polling via `GET /v0/state` every 5 s when the stream is disconnected |
+| Timeline Control | `start` / `stop` / `pause` timelines via the stored mapping |
+| Inputs (Variables) Control | `setVar` and `setVars` to update Watchout **Inputs** (called “Variables” in the Watchout UI) |
+| Cue Sets (Cue Group State) | Get and set cue-group-state by **ID** or **Name**, including multi-switch and reset-to-default |
+| Status Polling | Poll current system state via `GET /v0/state` (reliable) |
+| Fast UI Updates | Optional: trigger a one-shot `GET /v0/state` shortly after sending any control command |
 | Error Handling | Graceful failures with human-readable error messages |
 
 ---
@@ -65,7 +71,7 @@ In Node-RED, go to **Menu → Import → Clipboard** and paste the contents of
 ### 2. Set the config file path
 
 The startup inject node fires once on deploy with a default path of
-`/config/watchout-config.json`.  Edit the inject node payload if you
+`/config/watchout-config.json`. Edit the inject node payload if you
 want to store the config elsewhere.
 
 ### 3. Create / edit the config file
@@ -112,25 +118,23 @@ npm install @flowfuse/node-red-dashboard
 Restart Node-RED after installing.
 
 > **Optional — SSE client:** If you prefer SSE over NDJSON, you may install
-> `node-red-contrib-sse-client`.  However, note that this contrib node does
+> `node-red-contrib-sse-client`. However, note that this contrib node does
 > **not** allow overriding its configured URL via `msg.url` or similar message
 > properties — the URL must be set directly in the node's configuration panel.
-> Some versions also enforce a connection timeout that can cause repeated
-> disconnects when the Watchout stream is quiet.  For these reasons **NDJSON
-> via built-in HTTP Request is the recommended approach**.
 
 > **Docker on Windows — URL note:** Node-RED running inside a Docker container
-> on Windows cannot reach `localhost` on the host.  Use
+> on Windows cannot reach `localhost` on the host. Use
 > `http://host.docker.internal:3019/...` instead (Docker Desktop for Windows
-> resolves this hostname to the host machine automatically).  See
+> resolves this hostname to the host machine automatically). See
 > [§ Docker on Windows Networking](#docker-on-windows-networking) below.
 
 ### 5. Deploy
 
-Click **Deploy**.  On startup the flow will:
+Click **Deploy**. On startup the flow will:
+
 1. Read `/config/watchout-config.json` (create with defaults if missing)
 2. Read `/data/timeline-mapping.json` (start with empty mapping if missing)
-3. Begin streaming NDJSON events from Watchout via `GET /v1/ndjson`
+3. Begin monitoring Watchout state via polling (`GET /v0/state`) and/or streaming where supported
 
 ---
 
@@ -146,8 +150,7 @@ container itself — not the Windows host.
 | Node-RED HTTP Request node (inside container) | `http://host.docker.internal:3019/...` |
 
 `host.docker.internal` is automatically resolved to the Windows host by Docker
-Desktop.  Use this hostname in all Node-RED node URL fields, including the
-NDJSON stream URL and any REST calls.
+Desktop. Use this hostname in all Node-RED node URL fields and config files.
 
 **Example config (`watchout-config.json`) for Docker on Windows:**
 
@@ -213,64 +216,133 @@ Each discovered timeline produces one entry in the mapping:
 }
 ```
 
-- **`contentId`** — the normalized key used in ISAAC events and Node-RED messages (e.g. `"show_1"`)
-- **`displayName`** — the original Watchout timeline name; used for human-readable labels in the UI
-- **`watchoutId`** — the Watchout numeric timeline ID sent to the REST API
+- **`contentId`** — normalized key used in Node-RED messages (e.g. `"show_1"`)
+- **`displayName`** — original Watchout timeline name; used for UI labels
+- **`watchoutId`** — numeric timeline ID used in Watchout REST calls
 
 ---
 
-## Timeline Control API
+## Control API (Node-RED)
 
-Send a `POST` request to `/watchout/control` with a JSON body.  The
-**Prepare control request** function node maps these commands to the correct
-Watchout REST endpoints (see [§ Watchout 7 HTTP API Reference](#watchout-7-http-api-reference)):
+Send a `POST` request to `/watchout/control` with a JSON body. The
+**Prepare control request** function node maps these commands to Watchout REST endpoints.
 
-### Start a timeline
+### Timelines
+
+Start a timeline:
 ```json
 { "command": "start", "contentId": "show_1" }
 ```
 → `POST /v0/play/{id}`
 
-### Stop a timeline
+Stop a timeline:
 ```json
 { "command": "stop", "contentId": "show_1" }
 ```
 → `POST /v0/stop/{id}`
 
-### Pause a timeline
+Pause a timeline:
 ```json
 { "command": "pause", "contentId": "show_1" }
 ```
 → `POST /v0/pause/{id}`
 
-### Set a single Watchout input
+Play all timelines:
 ```json
-{ "command": "setInput", "key": "brightness", "value": 0.8 }
+{ "command": "playAll" }
 ```
-→ `POST /v0/input/{key}?value={v}`
+→ `POST /v0/play`
 
-### Set multiple Watchout inputs
-```json
-{ "command": "setInputs", "inputs": [{ "key": "brightness", "value": 0.8 }, { "key": "volume", "value": 50 }] }
-```
-→ `POST /v0/inputs` with JSON array body `[{key, value, duration?}]`
-
-### Get current state
+Get current state:
 ```json
 { "command": "getState" }
 ```
 → `GET /v0/state`
 
-**Response:**
+### Inputs (Variables)
+
+Set a single input:
+```json
+{ "command": "setVar", "varName": "masterVolume", "varValue": 50 }
+```
+→ `POST /v0/input/{key}?value={v}`
+
+Set multiple inputs (bulk / fades):
+```json
+{
+  "command": "setVars",
+  "vars": [
+    { "key": "masterVolume", "value": 50, "duration": 1000 },
+    { "key": "Content", "value": 10 }
+  ]
+}
+```
+→ `POST /v0/inputs` with JSON array body `[{key, value, duration?}]`
+
+### Cue Sets (Cue Group State)
+
+Get states by ID:
+```json
+{ "command": "getCueGroupStatesById" }
+```
+→ `GET /v0/cue-group-state/by-id`
+
+Get states by Name:
+```json
+{ "command": "getCueGroupStatesByName" }
+```
+→ `GET /v0/cue-group-state/by-name`
+
+Switch single variant by ID:
+```json
+{ "command": "setCueGroupVariantById", "groupId": "12", "variantId": "2" }
+```
+→ `POST /v0/cue-group-state/by-id/<groupId>/<variantId>`
+
+Switch single variant by Name:
+```json
+{ "command": "setCueGroupVariantByName", "groupName": "Atrium 1 Mode", "variantName": "Show" }
+```
+→ `POST /v0/cue-group-state/by-name/<groupName>/<variantName>`
+
+Switch multiple variants by ID:
+```json
+{ "command": "setCueGroupVariantsById", "states": { "12": "2", "13": "1" } }
+```
+→ `POST /v0/cue-group-state/by-id` with JSON body `{ "groupId1": "variantId1", ... }`
+
+Switch multiple variants by Name:
+```json
+{ "command": "setCueGroupVariantsByName", "states": { "Atrium 1 Mode": "Show", "Atrium 2 Mode": "Ambient" } }
+```
+→ `POST /v0/cue-group-state/by-name` with JSON body `{ "groupName1": "variantName1", ... }`
+
+Reset all cue groups to default:
+```json
+{ "command": "setCueGroupVariantsByName", "states": {} }
+```
+→ `POST /v0/cue-group-state/by-name` with JSON body `{}`
+
+### Response shape
+
+The flow normalizes Watchout responses into a uniform JSON structure:
+
 ```json
 {
   "success": true,
   "command": "start",
+  "contentId": "show_1",
+  "displayName": "Show 1",
   "timelineId": "1",
   "statusCode": 200,
   "body": {}
 }
 ```
+
+Cue group commands will include cue-related fields when available:
+- `groupId`, `variantId`
+- `groupName`, `variantName`
+- `states` (for multi-switch/reset)
 
 ---
 
@@ -281,83 +353,33 @@ Watchout REST endpoints (see [§ Watchout 7 HTTP API Reference](#watchout-7-http
 | `watchout_config` | object | `{ host, port, mappingFile }` |
 | `watchout_mapping` | object | Active `{ contentId: { displayName, watchoutId } }` mapping |
 | `watchout_pending` | object | Pending mapping awaiting operator confirmation |
-| `watchout_state` | object | Latest state from SSE or polling |
+| `watchout_state` | object | Latest state from polling and/or streaming |
 | `watchout_sse_status` | string | `'connected'` \| `'disconnected'` \| `'error'` |
 
 ---
 
-## Real-time Monitoring
+## Monitoring / State Updates
 
-### Preferred: NDJSON stream (`GET /v1/ndjson`)
+### Polling (`GET /v0/state`)
 
-The flow connects to Watchout's NDJSON event stream at `/v1/ndjson` using a
-built-in **HTTP Request** node.  Each line of the response is a complete JSON
-object with the fields `kind` and `value`, for example:
+Polling is the most reliable approach across Docker/Windows environments.
 
-```json
-{"kind":"playbackState","value":{"clockTime":12345,"timelines":[...],"freeRunningRenders":[]}}
-```
+A common pattern is:
 
-**Node-RED wiring for NDJSON:**
+- poll every 5 seconds, and
+- after sending any command, wait ~200–500 ms and then poll once immediately (one-shot refresh)
 
-1. **Inject** node (fires on deploy / manual trigger)  
-   → sets `msg.url = "http://host.docker.internal:3019/v1/ndjson"` and
-   `msg.method = "GET"` then passes to the HTTP Request node.
+This provides fast dashboard updates even when streaming endpoints are unavailable.
 
-2. **HTTP Request** node  
-   - Method: `GET`  
-   - Return: **a UTF-8 string** (do *not* parse as JSON — the response is
-     multiple JSON objects, one per line)
+### Streaming (NDJSON / SSE) (optional)
 
-3. **Function** node: **"Split NDJSON"**  
-   Keeps a partial-line buffer in `context`, splits on `\n`, parses each
-   complete line, and emits one message per event:
+Watchout provides:
 
-   ```javascript
-   let buf = context.get('buf') || '';
-   buf += msg.payload;
-   const lines = buf.split('\n');
-   const incompleteLine = lines.pop(); // last item may be incomplete — keep for next chunk
-   context.set('buf', incompleteLine);
-   const msgs = [];
-   for (const line of lines) {
-       const trimmed = line.trim();
-       if (!trimmed) continue;
-       try { msgs.push({ payload: JSON.parse(trimmed) }); }
-       catch (e) { node.debug('NDJSON parse error: ' + e.message + ' | line: ' + trimmed); }
-   }
-   return [msgs];
-   ```
+- `GET /v1/ndjson` — NDJSON stream (each line is `{"kind":...,"value":...}`)
+- `GET /v1/sse` — SSE stream (each event is `data: {...}`)
 
-4. **Switch** node: route on `msg.payload.kind`  
-   - `playbackState` → update `flow.watchout_state` and refresh the **Live State** UI tile  
-   - Other kinds (e.g. `inputs`, `showRevision`) → store or ignore as needed
-
-`playbackState` messages contain the equivalent of the REST `GET /v0/state`
-response (`clockTime`, `timelines`, `freeRunningRenders`, etc.).
-
-While NDJSON is streaming:
-- The **Stream Status** tile shows `✓ Streaming (NDJSON)`.
-- If no message is received for > 10 s a trigger node flips the status to
-  `⚠ Offline — reconnecting`.
-- A fallback 5-second poll on `GET /v0/state` keeps state current in case the
-  NDJSON connection drops.
-
-### Alternative: SSE endpoints
-
-Watchout 7 also exposes SSE (Server-Sent Events) endpoints.  These are useful
-if you prefer a true event-source protocol, but the `node-red-contrib-sse-client`
-node has known limitations (see § Required Node-RED nodes above).
-
-| Endpoint | Description |
-|----------|-------------|
-| `GET /v0/sse` | Legacy SSE — basic state updates |
-| `GET /v1/sse` | Full SSE — complete state on each update |
-| `GET /v2/sse` | Diff SSE — optimized; sends only changes / countdown ticks |
-
-> **Validation note:** `/v1/sse` and `/v2/sse` have been confirmed working via
-> `curl http://localhost:3019/v1/sse` on Windows.  `/v2/ndjson` returns 404 in
-> some Watchout builds; use `/v1/ndjson` instead.
+Depending on Node-RED version and environment, you may need a streaming-capable client
+(contrib SSE client or a custom node) rather than the default HTTP Request node.
 
 ---
 
@@ -374,27 +396,18 @@ node has known limitations (see § Required Node-RED nodes above).
 | `POST` | `/v0/inputs` | Set multiple inputs — body: `[{key, value, duration?}]` |
 | `POST` | `/v0/input/{key}?value={v}` | Set a single input by key |
 | `GET` | `/v0/state` | Get current system state (REST poll) |
-| `GET` | `/v0/sse` | SSE stream — legacy/basic state updates |
 | `GET` | `/v1/sse` | SSE stream — full state on each update |
-| `GET` | `/v2/sse` | SSE stream — diff / countdown ticks (optimized) |
-| `GET` | `/v1/ndjson` | **NDJSON stream — preferred** (each line is `{"kind":…,"value":…}`) |
-| `GET` | `/v2/ndjson` | NDJSON stream — diff variant (Watchout manual; may return 404 depending on build) |
-
-> **Endpoint validation:** `curl http://localhost:3019/v1/ndjson` and
-> `curl http://localhost:3019/v1/sse` both confirmed working on Windows.
-> `/v2/ndjson` is documented in the Watchout manual but returns **404** in some
-> builds — use `/v1/ndjson` instead.  Timeline control endpoints (`/v0/play/{id}`,
-> `/v0/pause/{id}`, `/v0/stop/{id}`) confirmed via `curl -X POST
-> http://localhost:3019/v0/play/0`.
+| `GET` | `/v1/ndjson` | NDJSON stream — each line is `{"kind":…,"value":…}` |
+| `GET` | `/v0/cue-group-state/by-id` | Cue group state (Cue Sets) — get current states by ID |
+| `GET` | `/v0/cue-group-state/by-name` | Cue group state (Cue Sets) — get current states by Name |
+| `POST` | `/v0/cue-group-state/by-id/<groupId>/<variantId>` | Cue group state — switch single variant by ID |
+| `POST` | `/v0/cue-group-state/by-name/<groupName>/<variantName>` | Cue group state — switch single variant by Name |
+| `POST` | `/v0/cue-group-state/by-id` | Cue group state — switch multiple variants by ID (object body) |
+| `POST` | `/v0/cue-group-state/by-name` | Cue group state — switch multiple variants by Name (object body; `{}` resets all to default) |
 
 ---
 
 ## Roadmap
 
-- **v0.2** *(this version)* — All logic self-contained in Node-RED nodes;
-  Node-RED HTTP Request nodes for all Watchout API calls; **NDJSON streaming**
-  via `GET /v1/ndjson` for real-time monitoring (no contrib node required);
-  Node-RED Read/Write file nodes for persistence;
-  default paths `/config/watchout-config.json` and `/data/timeline-mapping.json`
-- **v0.3** *(future)* — ISAAC integration (Events & Playables → Show
-  Controller decision tree)
+- **v0.2** *(this version)* — Node-RED-based integration with timeline discovery + mapping persistence, timeline control, inputs control, cue sets control, and polling-based state monitoring (with optional streaming where supported)
+- **v0.3** *(future)* — ISAAC integration (Events & Playables → Show Controller decision tree)
