@@ -9,6 +9,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`node-red/flows/ma-cue-mapper.json`** — MA Cue Mapper module (FlowFuse Dashboard 2.0)
+  - New dashboard page `/ma-cue-map` ("MA Cue Mapper"), order 7 in the navigation.
+  - **Per-space cue label mapping** — supports Atrium 1, Atrium 2, Atrium 3, and Landscape
+    (space keys `a1`, `a2`, `a3`, `ls`). The same label (e.g. "Green Look") is maintained
+    independently for each space.
+  - **Add / Edit Cue group** — Space dropdown, Cue Label text field, Target Type dropdown
+    (Sequence Cue / Executor Cue), Sequence # and Cue # number inputs,
+    **Save Entry** (add or update) and **Delete Entry** buttons.
+  - **Cue Map display** — read-only `ui-template` table showing all entries per space with
+    colour-coded rows (purple = sequence, green = executor).
+  - **Fire Cue by Label group** — Space dropdown, Cue Label text field, **Fire Cue** button.
+    Resolves the label to the stored MA command and routes it through the existing
+    `ma-control-fn` owner-gate.
+  - **Two target types**:
+    1. *Sequence cue* — emits `Go+ Sequence <N> Cue <N>`
+    2. *Executor cue* — emits `Go+ Executor <zone> Cue <N>` (zone derived from selected space)
+  - Persists map to **`node-red/config/ma-cue-map.json`** on every save/delete.
+    Auto-discovers the file via the same project-directory walk used by the MA Init node.
+
+- **`node-red/config/ma-cue-map.json`** — Default empty per-space cue map
+  (`{ "a1": [], "a2": [], "a3": [], "ls": [] }`).
+
 ### Removed
 
 - **`node-red/config/watchout-defaults.json`** — Legacy defaults file deleted; superseded by `watchout-config.json` (v0.2 config template).
