@@ -1,0 +1,4 @@
+{
+    "_comment": "MA Cue Mapper — Node-RED configuration. Edit mappingFile to change the runtime data path.",
+    "mappingFile": "/data/ma-cue-mapping.json"
+}

@@ -123,10 +123,13 @@ Triggers a cue on a **sequence**.
 
 The integration uses a global owner-gate (commonly `global.ma_owner`) to prevent two control sources from fighting.
 
-**Recommended policy (as used in this project’s design):**
+**Policy (as implemented in this project’s `ma-control-fn`):**
 - `owner === null` → open gate → allow both executor cues and sequence cues
-- `owner === "nodered"` → allow **goExecutorCue**, block **goSequenceCue**
+- `owner === "nodered"` → allow **goExecutorCue** and **goSequenceCue** (Node-RED UI is authoritative)
 - `owner === "watchout"` → allow **goSequenceCue**, block **goExecutorCue**
+
+> **Note:** The MA Cue Mapper flow always claims `owner: "nodered"` before firing any cue (sequence or
+> executor). This ensures Node-RED is authoritative when an operator fires from the dashboard.
 
 When blocked, the MA Control function should emit a status/debug message indicating:
 - attempted action
