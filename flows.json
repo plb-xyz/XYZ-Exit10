@@ -6809,5 +6809,678 @@
                 "pt_build_url"
             ]
         ]
+    },
+    {
+        "id": "ma-cmap-tab",
+        "type": "tab",
+        "label": "MA Cue Mapper",
+        "disabled": false,
+        "info": "MA Cue Mapper — FlowFuse Dashboard 2.0. Maintains a per-space mapping of human-friendly cue labels (e.g. \"Green Look\") to MA target commands (sequence cue or executor cue). Persists to node-red/config/ma-cue-map.json. Fire panel wires directly into the existing MA Control gate."
+    },
+    {
+        "id": "ma-cmap-page",
+        "type": "ui-page",
+        "name": "MA Cue Mapper",
+        "ui": "f34314dbb36334ec",
+        "path": "/ma-cue-map",
+        "icon": "mdi-playlist-music-outline",
+        "layout": "notebook",
+        "theme": "a9e4285e36ef776f",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 7,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "ma-cmap-edit-grp",
+        "type": "ui-group",
+        "name": "Add / Edit Cue",
+        "page": "ma-cmap-page",
+        "width": "6",
+        "height": 1,
+        "order": 1,
+        "showTitle": true,
+        "className": ""
+    },
+    {
+        "id": "ma-cmap-map-grp",
+        "type": "ui-group",
+        "name": "Cue Map",
+        "page": "ma-cmap-page",
+        "width": "12",
+        "height": 1,
+        "order": 2,
+        "showTitle": true,
+        "className": ""
+    },
+    {
+        "id": "ma-cmap-fire-grp",
+        "type": "ui-group",
+        "name": "Fire Cue by Label",
+        "page": "ma-cmap-page",
+        "width": "6",
+        "height": 1,
+        "order": 3,
+        "showTitle": true,
+        "className": ""
+    },
+    {
+        "id": "ma-cmap-init-inj",
+        "type": "inject",
+        "z": "ma-cmap-tab",
+        "name": "Init CueMap on deploy",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.2,
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 160,
+        "y": 60,
+        "wires": [
+            [
+                "ma-cmap-init-fn"
+            ]
+        ]
+    },
+    {
+        "id": "ma-cmap-init-fn",
+        "type": "function",
+        "z": "ma-cmap-tab",
+        "name": "Load ma-cue-map.json",
+        "func": "'use strict';\nvar fs   = require('fs');\nvar path = require('path');\nvar userDir = (typeof RED !== 'undefined' && RED.settings && RED.settings.userDir)\n    ? RED.settings.userDir : process.cwd();\n\nfunction findMapPath(dir) {\n    var tried = [];\n    try {\n        var projDir = path.join(dir, 'projects');\n        var projects = fs.readdirSync(projDir);\n        for (var i = 0; i < projects.length; i++) {\n            var p = path.join(projDir, projects[i], 'node-red', 'config', 'ma-cue-map.json');\n            tried.push(p);\n            if (fs.existsSync(p)) return { path: p, tried: tried };\n        }\n    } catch(e) {\n        if (e.code !== 'ENOENT' && e.code !== 'ENOTDIR') {\n            node.warn('[MA Cue Mapper] projects dir scan: ' + e.message);\n        }\n    }\n    var p2 = path.join(dir, 'node-red', 'config', 'ma-cue-map.json');\n    tried.push(p2);\n    if (fs.existsSync(p2)) return { path: p2, tried: tried };\n    var p3 = path.join(dir, 'config', 'ma-cue-map.json');\n    tried.push(p3);\n    if (fs.existsSync(p3)) return { path: p3, tried: tried };\n    return { path: null, tried: tried };\n}\n\nvar found = findMapPath(userDir);\nvar mapPath;\nvar cueMap;\n\nif (!found.path) {\n    node.warn('[MA Cue Mapper] ma-cue-map.json not found — using empty map. Tried: ' + found.tried.join(', '));\n    mapPath = found.tried[found.tried.length - 1];\n    cueMap  = { a1: [], a2: [], a3: [], ls: [] };\n} else {\n    mapPath = found.path;\n    try {\n        cueMap = JSON.parse(fs.readFileSync(mapPath, 'utf8'));\n        cueMap.a1 = cueMap.a1 || [];\n        cueMap.a2 = cueMap.a2 || [];\n        cueMap.a3 = cueMap.a3 || [];\n        cueMap.ls = cueMap.ls || [];\n    } catch (err) {\n        node.error('[MA Cue Mapper] Failed to parse map: ' + err.message);\n        cueMap = { a1: [], a2: [], a3: [], ls: [] };\n    }\n}\n\nflow.set('ma_cue_map', cueMap);\nflow.set('ma_cue_map_path', mapPath);\n\nif (!flow.get('ma_cmap_form_space'))  flow.set('ma_cmap_form_space',  'a1');\nif (!flow.get('ma_cmap_form_label'))  flow.set('ma_cmap_form_label',  '');\nif (!flow.get('ma_cmap_form_type'))   flow.set('ma_cmap_form_type',   'sequence');\nif (!flow.get('ma_cmap_form_seq'))    flow.set('ma_cmap_form_seq',    1);\nif (!flow.get('ma_cmap_form_cue'))    flow.set('ma_cmap_form_cue',    1);\nif (!flow.get('ma_cmap_fire_space'))  flow.set('ma_cmap_fire_space',  'a1');\nif (!flow.get('ma_cmap_fire_label'))  flow.set('ma_cmap_fire_label',  '');\n\nnode.log('[MA Cue Mapper] Loaded from ' + mapPath);\nmsg.payload = cueMap;\nmsg.topic   = 'ma/cue-map/loaded';\nreturn msg;",
+        "outputs": 1,
+        "x": 420,
+        "y": 60,
+        "wires": [
+            [
+                "ma-cmap-map-tmpl",
+                "ma-cmap-init-dbg"
+            ]
+        ]
+    },
+    {
+        "id": "ma-cmap-space-dd",
+        "type": "ui-dropdown",
+        "z": "ma-cmap-tab",
+        "group": "ma-cmap-edit-grp",
+        "name": "Space selector",
+        "label": "Space",
+        "tooltip": "Select the space this cue belongs to",
+        "order": 1,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "multiple": false,
+        "chips": false,
+        "clearable": false,
+        "options": [
+            {
+                "label": "Atrium 1",
+                "value": "a1",
+                "type": "str"
+            },
+            {
+                "label": "Atrium 2",
+                "value": "a2",
+                "type": "str"
+            },
+            {
+                "label": "Atrium 3",
+                "value": "a3",
+                "type": "str"
+            },
+            {
+                "label": "Landscape",
+                "value": "ls",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "ma_cmap_form_space",
+        "topicType": "str",
+        "className": "",
+        "x": 160,
+        "y": 200,
+        "wires": [
+            [
+                "ma-cmap-store-form-fn"
+            ]
+        ]
+    },
+    {
+        "id": "ma-cmap-label-ti",
+        "type": "ui-text-input",
+        "z": "ma-cmap-tab",
+        "group": "ma-cmap-edit-grp",
+        "name": "Cue label",
+        "label": "Cue Label",
+        "tooltip": "Human-friendly name, e.g. \"Green Look\"",
+        "order": 2,
+        "width": "6",
+        "height": "1",
+        "topic": "ma_cmap_form_label",
+        "topicType": "str",
+        "mode": "text",
+        "delay": "0",
+        "passthru": true,
+        "sendOnDelay": false,
+        "sendOnBlur": true,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": true,
+        "sendOnClear": false,
+        "icon": "",
+        "iconPosition": "left",
+        "iconInnerPosition": "inside",
+        "x": 160,
+        "y": 280,
+        "wires": [
+            [
+                "ma-cmap-store-form-fn"
+            ]
+        ]
+    },
+    {
+        "id": "ma-cmap-type-dd",
+        "type": "ui-dropdown",
+        "z": "ma-cmap-tab",
+        "group": "ma-cmap-edit-grp",
+        "name": "Target type",
+        "label": "Target Type",
+        "tooltip": "Sequence cue: Go+ Sequence X Cue Y  |  Executor cue: Go+ Executor [zone] Cue Y",
+        "order": 3,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "multiple": false,
+        "chips": false,
+        "clearable": false,
+        "options": [
+            {
+                "label": "Sequence Cue",
+                "value": "sequence",
+                "type": "str"
+            },
+            {
+                "label": "Executor Cue",
+                "value": "executor",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "ma_cmap_form_type",
+        "topicType": "str",
+        "className": "",
+        "x": 160,
+        "y": 360,
+        "wires": [
+            [
+                "ma-cmap-store-form-fn"
+            ]
+        ]
+    },
+    {
+        "id": "ma-cmap-seq-num",
+        "type": "ui-number-input",
+        "z": "ma-cmap-tab",
+        "group": "ma-cmap-edit-grp",
+        "name": "Sequence number",
+        "label": "Sequence # (sequence type only)",
+        "tooltip": "MA sequence ID — used only when target type is Sequence Cue",
+        "order": 4,
+        "width": "3",
+        "height": "1",
+        "topic": "ma_cmap_form_seq",
+        "topicType": "str",
+        "min": 1,
+        "max": 9999,
+        "step": 1,
+        "passthru": true,
+        "className": "",
+        "x": 160,
+        "y": 440,
+        "wires": [
+            [
+                "ma-cmap-store-form-fn"
+            ]
+        ]
+    },
+    {
+        "id": "ma-cmap-cue-num",
+        "type": "ui-number-input",
+        "z": "ma-cmap-tab",
+        "group": "ma-cmap-edit-grp",
+        "name": "Cue number",
+        "label": "Cue #",
+        "tooltip": "MA cue number (applies to both sequence and executor cue types)",
+        "order": 5,
+        "width": "3",
+        "height": "1",
+        "topic": "ma_cmap_form_cue",
+        "topicType": "str",
+        "min": 1,
+        "max": 9999,
+        "step": 1,
+        "passthru": true,
+        "className": "",
+        "x": 160,
+        "y": 520,
+        "wires": [
+            [
+                "ma-cmap-store-form-fn"
+            ]
+        ]
+    },
+    {
+        "id": "ma-cmap-store-form-fn",
+        "type": "function",
+        "z": "ma-cmap-tab",
+        "name": "Store form field",
+        "func": "'use strict';\nvar ALLOWED = ['ma_cmap_form_space','ma_cmap_form_label','ma_cmap_form_type','ma_cmap_form_seq','ma_cmap_form_cue'];\nif (msg.topic && ALLOWED.includes(msg.topic)) {\n    flow.set(msg.topic, msg.payload);\n} else if (msg.topic) {\n    node.warn('[MA Cue Mapper] Rejected unknown form key: ' + msg.topic);\n}\nreturn null;",
+        "outputs": 1,
+        "x": 440,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ma-cmap-save-btn",
+        "type": "ui-button",
+        "z": "ma-cmap-tab",
+        "group": "ma-cmap-edit-grp",
+        "order": 6,
+        "width": "3",
+        "height": "1",
+        "name": "Save entry button",
+        "label": "Save Entry",
+        "tooltip": "Save (add or update) the cue entry for the selected space and label",
+        "color": "",
+        "bgcolor": "#1565c0",
+        "className": "",
+        "icon": "mdi-content-save",
+        "iconPosition": "left",
+        "payload": "save",
+        "payloadType": "str",
+        "topic": "ma/cue-map/save",
+        "topicType": "str",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "enablePointerup": false,
+        "x": 160,
+        "y": 620,
+        "wires": [
+            [
+                "ma-cmap-save-fn"
+            ]
+        ]
+    },
+    {
+        "id": "ma-cmap-del-btn",
+        "type": "ui-button",
+        "z": "ma-cmap-tab",
+        "group": "ma-cmap-edit-grp",
+        "order": 7,
+        "width": "3",
+        "height": "1",
+        "name": "Delete entry button",
+        "label": "Delete Entry",
+        "tooltip": "Remove the cue entry matching the current space and label",
+        "color": "",
+        "bgcolor": "#b71c1c",
+        "className": "",
+        "icon": "mdi-delete",
+        "iconPosition": "left",
+        "payload": "delete",
+        "payloadType": "str",
+        "topic": "ma/cue-map/delete",
+        "topicType": "str",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "enablePointerup": false,
+        "x": 160,
+        "y": 700,
+        "wires": [
+            [
+                "ma-cmap-del-fn"
+            ]
+        ]
+    },
+    {
+        "id": "ma-cmap-save-fn",
+        "type": "function",
+        "z": "ma-cmap-tab",
+        "name": "Save cue entry",
+        "func": "'use strict';\nvar cueMap = flow.get('ma_cue_map') || { a1: [], a2: [], a3: [], ls: [] };\nvar space  = flow.get('ma_cmap_form_space') || 'a1';\nvar label  = (flow.get('ma_cmap_form_label') || '').trim();\nvar type   = flow.get('ma_cmap_form_type')  || 'sequence';\nif (type !== 'sequence' && type !== 'executor') {\n    node.warn('[MA Cue Mapper] Save: invalid type: ' + type + ' — defaulting to sequence');\n    type = 'sequence';\n}\nvar seq    = Number(flow.get('ma_cmap_form_seq') || 1);\nvar cue    = Number(flow.get('ma_cmap_form_cue') || 1);\n\nif (!label) {\n    node.warn('[MA Cue Mapper] Save: cue label is required');\n    return null;\n}\nif (!['a1','a2','a3','ls'].includes(space)) {\n    node.warn('[MA Cue Mapper] Save: invalid space: ' + space);\n    return null;\n}\n\nif (!cueMap[space]) cueMap[space] = [];\n\nvar entry = (type === 'sequence')\n    ? { label: label, type: 'sequence', sequence: seq, cue: cue }\n    : { label: label, type: 'executor', cue: cue };\n\nvar idx = cueMap[space].findIndex(function(e) { return e.label === label; });\nif (idx >= 0) {\n    cueMap[space][idx] = entry;\n    node.log('[MA Cue Mapper] Updated: ' + space + '/' + label);\n} else {\n    cueMap[space].push(entry);\n    node.log('[MA Cue Mapper] Added: ' + space + '/' + label);\n}\n\ncueMap[space].sort(function(a, b) { return a.label.localeCompare(b.label); });\n\nflow.set('ma_cue_map', cueMap);\nmsg.filename = flow.get('ma_cue_map_path');\nmsg.payload  = JSON.stringify(cueMap, null, 2);\nmsg.cueMap   = cueMap;\nreturn msg;",
+        "outputs": 1,
+        "x": 420,
+        "y": 620,
+        "wires": [
+            [
+                "ma-cmap-file-out"
+            ]
+        ]
+    },
+    {
+        "id": "ma-cmap-del-fn",
+        "type": "function",
+        "z": "ma-cmap-tab",
+        "name": "Delete cue entry",
+        "func": "'use strict';\nvar cueMap = flow.get('ma_cue_map') || { a1: [], a2: [], a3: [], ls: [] };\nvar space  = flow.get('ma_cmap_form_space') || 'a1';\nvar label  = (flow.get('ma_cmap_form_label') || '').trim();\n\nif (!label) {\n    node.warn('[MA Cue Mapper] Delete: cue label is required');\n    return null;\n}\nif (!cueMap[space]) {\n    node.warn('[MA Cue Mapper] Delete: space not found: ' + space);\n    return null;\n}\n\nvar before = cueMap[space].length;\ncueMap[space] = cueMap[space].filter(function(e) { return e.label !== label; });\nvar removed = before - cueMap[space].length;\n\nif (removed === 0) {\n    node.warn('[MA Cue Mapper] Delete: entry not found: ' + space + '/' + label);\n    return null;\n}\n\nflow.set('ma_cue_map', cueMap);\nnode.log('[MA Cue Mapper] Deleted: ' + space + '/' + label);\n\nmsg.filename = flow.get('ma_cue_map_path');\nmsg.payload  = JSON.stringify(cueMap, null, 2);\nmsg.cueMap   = cueMap;\nreturn msg;",
+        "outputs": 1,
+        "x": 420,
+        "y": 700,
+        "wires": [
+            [
+                "ma-cmap-file-out"
+            ]
+        ]
+    },
+    {
+        "id": "ma-cmap-file-out",
+        "type": "file",
+        "z": "ma-cmap-tab",
+        "name": "Write ma-cue-map.json",
+        "filename": "filename",
+        "filenameType": "msg",
+        "appendNewline": false,
+        "createDir": true,
+        "overwriteFile": "true",
+        "encoding": "utf8",
+        "x": 700,
+        "y": 660,
+        "wires": [
+            [
+                "ma-cmap-after-write-fn"
+            ]
+        ]
+    },
+    {
+        "id": "ma-cmap-after-write-fn",
+        "type": "function",
+        "z": "ma-cmap-tab",
+        "name": "Refresh map display",
+        "func": "'use strict';\nmsg.payload = flow.get('ma_cue_map') || {};\nmsg.topic   = 'ma/cue-map/updated';\nreturn msg;",
+        "outputs": 1,
+        "x": 960,
+        "y": 660,
+        "wires": [
+            [
+                "ma-cmap-map-tmpl"
+            ]
+        ]
+    },
+    {
+        "id": "ma-cmap-map-tmpl",
+        "type": "ui-template",
+        "z": "ma-cmap-tab",
+        "group": "ma-cmap-map-grp",
+        "page": "",
+        "ui": "",
+        "name": "Cue Map Display",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "format": "<template>\n  <div style=\"padding:8px\">\n    <p v-if=\"!msg || !msg.payload\" style=\"color:#aaa;font-style:italic\">Cue map loading\\u2026</p>\n    <div v-else style=\"display:grid;grid-template-columns:1fr 1fr;gap:16px\">\n      <div v-for=\"(spaceInfo, spaceKey) in spaces\" :key=\"spaceKey\">\n        <div style=\"font-weight:600;font-size:1em;color:#80cbc4;margin-bottom:6px;\n                    border-bottom:1px solid #444;padding-bottom:4px\">\n          {{ spaceInfo.label }}\n        </div>\n        <div v-if=\"!msg.payload[spaceKey] || msg.payload[spaceKey].length === 0\"\n             style=\"color:#777;font-style:italic;font-size:0.85em;padding:4px 0\">\n          No entries\n        </div>\n        <div v-else>\n          <div v-for=\"(entry, idx) in msg.payload[spaceKey]\"\n               :key=\"idx\"\n               style=\"padding:5px 8px;margin:3px 0;border-radius:4px;background:#1b1b2e;\n                      font-family:monospace;font-size:0.85em;color:#e0e0e0;\n                      border-left:3px solid\"\n               :style=\"{ borderColor: entry.type === 'sequence' ? '#ce93d8' : '#81c784' }\">\n            <span style=\"color:#ffd54f;font-weight:600\">{{ entry.label }}</span>\n            <span style=\"color:#aaa\"> \\u2192 </span>\n            <span v-if=\"entry.type === 'sequence'\" style=\"color:#ce93d8\">\n              Go+ Sequence {{ entry.sequence }} Cue {{ entry.cue }}\n            </span>\n            <span v-else style=\"color:#81c784\">\n              Go+ Executor [{{ spaceKey }}] Cue {{ entry.cue }}\n            </span>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n<script>\nexport default {\n  data() {\n    return {\n      spaces: {\n        a1: { label: 'Atrium 1' },\n        a2: { label: 'Atrium 2' },\n        a3: { label: 'Atrium 3' },\n        ls: { label: 'Landscape' }\n      }\n    };\n  }\n}\n</script>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 1200,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ma-cmap-init-dbg",
+        "type": "debug",
+        "z": "ma-cmap-tab",
+        "name": "Init status",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "ma-cmap-catch",
+        "type": "catch",
+        "z": "ma-cmap-tab",
+        "name": "Catch file errors",
+        "scope": [
+            "ma-cmap-file-out"
+        ],
+        "uncaught": false,
+        "x": 700,
+        "y": 760,
+        "wires": [
+            [
+                "ma-cmap-err-dbg"
+            ]
+        ]
+    },
+    {
+        "id": "ma-cmap-err-dbg",
+        "type": "debug",
+        "z": "ma-cmap-tab",
+        "name": "File error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "ma-cmap-fire-space-dd",
+        "type": "ui-dropdown",
+        "z": "ma-cmap-tab",
+        "group": "ma-cmap-fire-grp",
+        "name": "Fire space selector",
+        "label": "Space",
+        "tooltip": "Space whose cue label list will be searched",
+        "order": 1,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "multiple": false,
+        "chips": false,
+        "clearable": false,
+        "options": [
+            {
+                "label": "Atrium 1",
+                "value": "a1",
+                "type": "str"
+            },
+            {
+                "label": "Atrium 2",
+                "value": "a2",
+                "type": "str"
+            },
+            {
+                "label": "Atrium 3",
+                "value": "a3",
+                "type": "str"
+            },
+            {
+                "label": "Landscape",
+                "value": "ls",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "ma_cmap_fire_space",
+        "topicType": "str",
+        "className": "",
+        "x": 160,
+        "y": 940,
+        "wires": [
+            [
+                "ma-cmap-store-fire-fn"
+            ]
+        ]
+    },
+    {
+        "id": "ma-cmap-fire-label-ti",
+        "type": "ui-text-input",
+        "z": "ma-cmap-tab",
+        "group": "ma-cmap-fire-grp",
+        "name": "Fire cue label",
+        "label": "Cue Label",
+        "tooltip": "Enter the exact cue label to fire (must exist in the selected space)",
+        "order": 2,
+        "width": "6",
+        "height": "1",
+        "topic": "ma_cmap_fire_label",
+        "topicType": "str",
+        "mode": "text",
+        "delay": "0",
+        "passthru": true,
+        "sendOnDelay": false,
+        "sendOnBlur": true,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": true,
+        "sendOnClear": false,
+        "icon": "",
+        "iconPosition": "left",
+        "iconInnerPosition": "inside",
+        "x": 160,
+        "y": 1020,
+        "wires": [
+            [
+                "ma-cmap-store-fire-fn"
+            ]
+        ]
+    },
+    {
+        "id": "ma-cmap-store-fire-fn",
+        "type": "function",
+        "z": "ma-cmap-tab",
+        "name": "Store fire field",
+        "func": "'use strict';\nvar ALLOWED = ['ma_cmap_fire_space','ma_cmap_fire_label'];\nif (msg.topic && ALLOWED.includes(msg.topic)) {\n    flow.set(msg.topic, msg.payload);\n} else if (msg.topic) {\n    node.warn('[MA Cue Mapper] Rejected unknown fire key: ' + msg.topic);\n}\nreturn null;",
+        "outputs": 1,
+        "x": 440,
+        "y": 980,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ma-cmap-fire-btn",
+        "type": "ui-button",
+        "z": "ma-cmap-tab",
+        "group": "ma-cmap-fire-grp",
+        "order": 3,
+        "width": "3",
+        "height": "1",
+        "name": "Fire cue button",
+        "label": "Fire Cue",
+        "tooltip": "Look up the cue label and send the mapped MA command",
+        "color": "",
+        "bgcolor": "#e65100",
+        "className": "",
+        "icon": "mdi-play-circle-outline",
+        "iconPosition": "left",
+        "payload": "fire",
+        "payloadType": "str",
+        "topic": "ma/cue-map/fire",
+        "topicType": "str",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "enablePointerup": false,
+        "x": 160,
+        "y": 1100,
+        "wires": [
+            [
+                "ma-cmap-fire-fn"
+            ]
+        ]
+    },
+    {
+        "id": "ma-cmap-fire-fn",
+        "type": "function",
+        "z": "ma-cmap-tab",
+        "name": "Resolve & fire cue",
+        "func": "'use strict';\nvar cueMap = flow.get('ma_cue_map') || { a1: [], a2: [], a3: [], ls: [] };\nvar space  = flow.get('ma_cmap_fire_space') || 'a1';\nvar label  = (flow.get('ma_cmap_fire_label') || '').trim();\n\nif (!label) {\n    node.warn('[MA Cue Mapper] Fire: cue label is required');\n    return [null, { topic: 'ma/cue-map/fire/error', payload: { error: 'No cue label specified' } }];\n}\n\nvar entries = cueMap[space] || [];\nvar entry = null;\nfor (var i = 0; i < entries.length; i++) {\n    if (entries[i].label === label) { entry = entries[i]; break; }\n}\n\nif (!entry) {\n    node.warn('[MA Cue Mapper] Fire: label not found: ' + space + '/' + label);\n    return [null, { topic: 'ma/cue-map/fire/error', payload: { error: 'Not found: \"' + label + '\" in ' + space } }];\n}\n\nvar maPayload;\nif (entry.type === 'sequence') {\n    maPayload = { action: 'goSequenceCue', sequence: entry.sequence, cue: entry.cue };\n} else {\n    maPayload = { action: 'goExecutorCue', zones: [space], cue: entry.cue };\n}\n\nnode.log('[MA Cue Mapper] Firing: ' + space + '/' + label + ' \\u2192 ' + JSON.stringify(maPayload));\nreturn [\n    { topic: 'ma/cue-map/fire/' + space, payload: maPayload },\n    { topic: 'ma/cue-map/fire/ok', payload: { space: space, label: label, command: maPayload } }\n];",
+        "outputs": 2,
+        "x": 420,
+        "y": 1100,
+        "wires": [
+            [
+                "ma-control-fn"
+            ],
+            [
+                "ma-cmap-fire-dbg"
+            ]
+        ]
+    },
+    {
+        "id": "ma-cmap-fire-dbg",
+        "type": "debug",
+        "z": "ma-cmap-tab",
+        "name": "Fire result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 1100,
+        "wires": []
     }
 ]
