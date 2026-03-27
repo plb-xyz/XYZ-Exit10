@@ -12,16 +12,16 @@
       "displayName": "Special Overlay 1",
       "watchoutId": "2"
     },
-    "ambience_1": {
-      "displayName": "Ambience 1",
+    "ambience_a1": {
+      "displayName": "Ambience A1",
       "watchoutId": "3"
     },
     "ambience_2": {
       "displayName": "Ambience 2",
       "watchoutId": "4"
     },
-    "transition_1": {
-      "displayName": "Transition 1",
+    "transition_1_a2": {
+      "displayName": "Transition 1 A2",
       "watchoutId": "5"
     },
     "special_overlay_2": {
@@ -51,7 +51,11 @@
     "transition_1_a1": {
       "displayName": "Transition 1 A1",
       "watchoutId": "12"
+    },
+    "transition_1_a3": {
+      "displayName": "Transition 1 A3",
+      "watchoutId": "14"
     }
   },
-  "lastSaved": "2026-03-26T18:56:01.901Z"
+  "lastSaved": "2026-03-27T19:37:02.903Z"
 }

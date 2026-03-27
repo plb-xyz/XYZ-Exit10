@@ -45,6 +45,13 @@
         "info": ""
     },
     {
+        "id": "c4c46c49b8c3c2b1",
+        "type": "tab",
+        "label": "Prayer Times (Riyadh) - Umm al-Qura",
+        "disabled": false,
+        "info": ""
+    },
+    {
         "id": "22f501abaf7e8db6",
         "type": "subflow",
         "name": "Atrium Selection Switch",
@@ -57,7 +64,7 @@
         "color": "#DDAA99"
     },
     {
-        "id": "dbd2c45c3962d1cd",
+        "id": "025439f9501b7114",
         "type": "group",
         "z": "wo2-tab",
         "style": {
@@ -70,19 +77,59 @@
             "color": "#a4a4a4"
         },
         "nodes": [
-            "0b90fd227eb5a4aa",
-            "wo2-control-fn",
-            "wo2-control-http",
-            "wo2-control-format-fn",
-            "9fc262ddc940c877",
-            "3b56f39d22af5e1e",
-            "af78f5f1aa4db23f",
-            "83dbc61fe5abe2a8"
+            "wo2-map-catch",
+            "wo2-default-map-fn",
+            "wo2-write-cfg-file",
+            "wo2-default-cfg-fn",
+            "wo2-after-write-cfg-fn",
+            "wo2-cfg-catch",
+            "wo2-mapping-file-in",
+            "wo2-parse-config-fn",
+            "wo2-parse-mapping-fn",
+            "wo2-config-file-in",
+            "wo2-set-cfgpath-fn",
+            "wo2-startup-inj",
+            "432d33d18d95ebef"
         ],
-        "x": 24,
-        "y": 639,
-        "w": 1132,
-        "h": 162
+        "x": -6,
+        "y": 19,
+        "w": 1362,
+        "h": 282
+    },
+    {
+        "id": "f34ab81391d45829",
+        "type": "group",
+        "z": "wo2-tab",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "wo2-discover-btn",
+            "wo2-discover-fn",
+            "wo2-diff-template",
+            "wo2-action-switch",
+            "wo2-confirm-prepare-fn",
+            "wo2-write-mapping-file",
+            "wo2-confirm-done-fn",
+            "wo2-cancel-fn",
+            "wo2-status-template",
+            "wo2-debug-disc",
+            "wo2-discover-http",
+            "wo2-discover-parse-fn",
+            "ea5687e7fe6f95be",
+            "b8e7e6bbe7d88389",
+            "8b7af39f6e207cf2"
+        ],
+        "x": -6,
+        "y": 319,
+        "w": 1462,
+        "h": 302
     },
     {
         "id": "adc1e6a87a00ee98",
@@ -627,7 +674,7 @@
                 "cols": "12"
             }
         ],
-        "order": 6,
+        "order": 7,
         "className": "",
         "visible": "true",
         "disabled": "false"
@@ -735,6 +782,56 @@
         "width": 6,
         "height": 4,
         "order": 4,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "d4724cfa86c7c770",
+        "type": "ui-page",
+        "name": "Prayer Times",
+        "ui": "f34314dbb36334ec",
+        "path": "/page9",
+        "icon": "mdi-hands-pray",
+        "layout": "grid",
+        "theme": "9d013935d2e3f2be",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 6,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "dd705f78da42a9e3",
+        "type": "ui-group",
+        "name": "Prayer Times",
+        "page": "d4724cfa86c7c770",
+        "width": 6,
+        "height": "21",
+        "order": 1,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -4924,15 +5021,15 @@
         "id": "ma-udp-backup",
         "type": "udp out",
         "z": "ma-tab",
-        "name": "UDP Backup RPU (10.154.10.104:8000)",
-        "addr": "10.154.10.104",
+        "name": "RPU",
+        "addr": "192.168.5.24",
         "iface": "",
         "port": "8000",
         "ipv": "udp4",
         "outport": "",
         "base64": false,
         "multicast": "false",
-        "x": 1230,
+        "x": 1120,
         "y": 660,
         "wires": []
     },
@@ -4956,6 +5053,7 @@
         "id": "wo2-startup-inj",
         "type": "inject",
         "z": "wo2-tab",
+        "g": "025439f9501b7114",
         "name": "Startup (once)",
         "props": [
             {
@@ -4970,7 +5068,7 @@
         "payload": "/data/projects/XYZ-Exit10/node-red/config/watchout-config.json",
         "payloadType": "str",
         "x": 130,
-        "y": 60,
+        "y": 100,
         "wires": [
             [
                 "wo2-set-cfgpath-fn"
@@ -4981,6 +5079,7 @@
         "id": "wo2-set-cfgpath-fn",
         "type": "function",
         "z": "wo2-tab",
+        "g": "025439f9501b7114",
         "name": "Set config path",
         "func": "// Set path to watchout-config.json (edit this path if needed)\nmsg.filename = msg.payload || '/data/projects/XYZ-Exit10/node-red/config/watchout-config.json';\nreturn msg;",
         "outputs": 1,
@@ -4990,7 +5089,7 @@
         "finalize": "",
         "libs": [],
         "x": 310,
-        "y": 60,
+        "y": 100,
         "wires": [
             [
                 "wo2-config-file-in"
@@ -5001,6 +5100,7 @@
         "id": "wo2-config-file-in",
         "type": "file in",
         "z": "wo2-tab",
+        "g": "025439f9501b7114",
         "name": "Read watchout-config.json",
         "filename": "filename",
         "filenameType": "msg",
@@ -5010,7 +5110,7 @@
         "encoding": "none",
         "allProps": false,
         "x": 550,
-        "y": 60,
+        "y": 100,
         "wires": [
             [
                 "wo2-parse-config-fn"
@@ -5021,6 +5121,7 @@
         "id": "wo2-parse-config-fn",
         "type": "function",
         "z": "wo2-tab",
+        "g": "025439f9501b7114",
         "name": "Parse config",
         "func": "// Parse watchout-config.json\nlet cfg = {};\ntry {\n    cfg = JSON.parse(msg.payload);\n} catch(e) {\n    node.warn('[Watchout] watchout-config.json parse error, using defaults: ' + e.message);\n}\ncfg.host        = cfg.host        || 'localhost';\ncfg.port        = cfg.port        || 3019;\ncfg.mappingFile = cfg.mappingFile || '/projects/XYZ-Exit10/node-red/data/timeline-mapping.json';\nflow.set('watchout_config', cfg);\nnode.status({ fill: 'green', shape: 'dot', text: 'Config: ' + cfg.host + ':' + cfg.port });\n// Feed filename forward to read mapping file\nmsg.filename = cfg.mappingFile;\nreturn msg;",
         "outputs": 1,
@@ -5030,7 +5131,7 @@
         "finalize": "",
         "libs": [],
         "x": 770,
-        "y": 60,
+        "y": 100,
         "wires": [
             [
                 "wo2-mapping-file-in"
@@ -5041,13 +5142,14 @@
         "id": "wo2-cfg-catch",
         "type": "catch",
         "z": "wo2-tab",
+        "g": "025439f9501b7114",
         "name": "Config file missing",
         "scope": [
             "wo2-config-file-in"
         ],
         "uncaught": false,
         "x": 510,
-        "y": 160,
+        "y": 200,
         "wires": [
             [
                 "wo2-default-cfg-fn"
@@ -5058,6 +5160,7 @@
         "id": "wo2-default-cfg-fn",
         "type": "function",
         "z": "wo2-tab",
+        "g": "025439f9501b7114",
         "name": "Create default config",
         "func": "// Config file missing — create defaults\nconst defaultCfg = {\n    host: 'localhost',\n    port: 3019,\n    mappingFile: '/projects/XYZ-Exit10/node-red/data/timeline-mapping.json'\n};\nflow.set('watchout_config', defaultCfg);\nnode.warn('[Watchout] watchout-config.json not found — writing defaults');\nmsg.filename = '/config/watchout-config.json';\nmsg.payload  = JSON.stringify(defaultCfg, null, 2);\nreturn msg;",
         "outputs": 1,
@@ -5067,7 +5170,7 @@
         "finalize": "",
         "libs": [],
         "x": 740,
-        "y": 160,
+        "y": 200,
         "wires": [
             [
                 "wo2-write-cfg-file"
@@ -5078,6 +5181,7 @@
         "id": "wo2-write-cfg-file",
         "type": "file",
         "z": "wo2-tab",
+        "g": "025439f9501b7114",
         "name": "Write watchout-config.json",
         "filename": "filename",
         "filenameType": "msg",
@@ -5086,7 +5190,7 @@
         "overwriteFile": "true",
         "encoding": "utf8",
         "x": 1000,
-        "y": 160,
+        "y": 200,
         "wires": [
             [
                 "wo2-after-write-cfg-fn"
@@ -5097,6 +5201,7 @@
         "id": "wo2-after-write-cfg-fn",
         "type": "function",
         "z": "wo2-tab",
+        "g": "025439f9501b7114",
         "name": "Set mapping path",
         "func": "// After writing default config, continue to mapping read\nconst cfg = flow.get('watchout_config') || {};\nmsg.filename = cfg.mappingFile || '/projects/XYZ-Exit10/node-red/data/timeline-mapping.json';\nreturn msg;",
         "outputs": 1,
@@ -5106,7 +5211,7 @@
         "finalize": "",
         "libs": [],
         "x": 1240,
-        "y": 160,
+        "y": 200,
         "wires": [
             [
                 "wo2-mapping-file-in"
@@ -5117,6 +5222,7 @@
         "id": "wo2-mapping-file-in",
         "type": "file in",
         "z": "wo2-tab",
+        "g": "025439f9501b7114",
         "name": "Read timeline-mapping.json",
         "filename": "filename",
         "filenameType": "msg",
@@ -5126,7 +5232,7 @@
         "encoding": "none",
         "allProps": false,
         "x": 1000,
-        "y": 60,
+        "y": 100,
         "wires": [
             [
                 "wo2-parse-mapping-fn"
@@ -5137,6 +5243,7 @@
         "id": "wo2-parse-mapping-fn",
         "type": "function",
         "z": "wo2-tab",
+        "g": "025439f9501b7114",
         "name": "Parse mapping",
         "func": "// Parse timeline-mapping.json\nlet mapping = {};\ntry {\n    const raw = JSON.parse(msg.payload);\n    mapping = raw.mapping || raw || {};\n} catch(e) {\n    node.warn('[Watchout] timeline-mapping.json parse error, starting empty: ' + e.message);\n}\nflow.set('watchout_mapping', mapping);\nflow.set('watchout_pending', null);\nconst count = Object.keys(mapping).length;\nnode.status({ fill: 'green', shape: 'dot', text: 'Mapping loaded: ' + count + ' timelines' });\nreturn null;",
         "outputs": 1,
@@ -5145,7 +5252,7 @@
         "finalize": "",
         "libs": [],
         "x": 1240,
-        "y": 60,
+        "y": 100,
         "wires": [
             []
         ]
@@ -5154,13 +5261,14 @@
         "id": "wo2-map-catch",
         "type": "catch",
         "z": "wo2-tab",
+        "g": "025439f9501b7114",
         "name": "Mapping file missing",
         "scope": [
             "wo2-mapping-file-in"
         ],
         "uncaught": false,
         "x": 1010,
-        "y": 220,
+        "y": 260,
         "wires": [
             [
                 "wo2-default-map-fn"
@@ -5171,6 +5279,7 @@
         "id": "wo2-default-map-fn",
         "type": "function",
         "z": "wo2-tab",
+        "g": "025439f9501b7114",
         "name": "Empty mapping",
         "func": "// Mapping file missing — start with empty mapping\nflow.set('watchout_mapping', {});\nflow.set('watchout_pending', null);\nnode.warn('[Watchout] timeline-mapping.json not found — starting with empty mapping');\nreturn null;",
         "outputs": 1,
@@ -5180,15 +5289,700 @@
         "finalize": "",
         "libs": [],
         "x": 1240,
-        "y": 220,
+        "y": 260,
         "wires": [
             []
+        ]
+    },
+    {
+        "id": "wo2-poll-inj",
+        "type": "inject",
+        "z": "wo2-tab",
+        "name": "Poll state (5 s)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 1060,
+        "wires": [
+            [
+                "wo2-poll-fn"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-poll-fn",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "Poll gate",
+        "func": "// Only poll Watchout state when SSE is not connected (fallback mode)\nif (flow.get('watchout_sse_status') === 'connected') {\n    return null;\n}\n\nconst cfg  = flow.get('watchout_config') || {};\nconst host = cfg.host || 'localhost';\nconst port = cfg.port || 3019;\nmsg.method  = 'GET';\nmsg.url     = 'http://' + host + ':' + port + '/v0/state';\nmsg.headers = { 'Content-Type': 'application/json' };\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 1060,
+        "wires": [
+            [
+                "wo2-poll-http"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-state-template",
+        "type": "ui-template",
+        "z": "wo2-tab",
+        "group": "e79267107587d426",
+        "page": "",
+        "ui": "",
+        "name": "Live State",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "format": "<template>\n  <div style=\"padding:4px\">\n    <p v-if=\"!msg\" style=\"color:#aaa\">Waiting for state...</p>\n    <div v-else>\n      <div style=\"margin-bottom:6px\">\n        <span v-if=\"msg.payload.type === 'poll'\" style=\"color:#ff9800;font-size:0.9em\">Polling (SSE offline)</span>\n        <span v-else style=\"color:#4caf50;font-size:0.9em\">SSE Live</span>\n      </div>\n      <pre style=\"background:#1b1b2e;color:#e0e0e0;padding:8px;border-radius:4px;font-size:0.82em;max-height:200px;overflow-y:auto\">{{ JSON.stringify(msg.payload.data, null, 2) }}</pre>\n    </div>\n  </div>\n</template>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": false,
+        "templateScope": "local",
+        "className": "",
+        "x": 990,
+        "y": 1010,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "wo2-poll-http",
+        "type": "http request",
+        "z": "wo2-tab",
+        "name": "GET /v0/state",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 510,
+        "y": 1060,
+        "wires": [
+            [
+                "wo2-poll-parse-fn"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-poll-parse-fn",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "Parse poll response",
+        "func": "// Handle the GET /v0/state poll response\nconst statusCode = msg.statusCode || 200;\nif (statusCode !== 200) {\n    node.warn('[Watchout Poll] HTTP ' + statusCode);\n    return null;\n}\n\nconst state = msg.payload;\nflow.set('watchout_state', state);\n\n// Pass downstream (and also preserve your existing wrapper shape)\nmsg.topic = 'watchout/state';\nmsg.payload = { type: 'poll', data: state };\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 1060,
+        "wires": [
+            [
+                "5a33eacf66a4c899",
+                "wo2-state-template"
+            ]
+        ]
+    },
+    {
+        "id": "0b90fd227eb5a4aa",
+        "type": "comment",
+        "z": "wo2-tab",
+        "name": "Send Commands to WO",
+        "info": "",
+        "x": 170,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "896224c4eaee7e43",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "WO LED status mapper",
+        "func": "// Input can be:\n// - msg.watchout_sse_status\n// - msg.payload.status\n// - or read from flow context\nconst raw =\n  msg.watchout_sse_status ||\n  msg.payload?.watchout_sse_status ||\n  flow.get(\"watchout_sse_status\");\n\nlet state = \"disconnected\";\nif (raw === \"connected\") state = \"connected\";\nelse if (raw === \"disconnected\") state = \"disconnected\";\nelse if (raw === \"error\") state = \"error\";\nelse if (raw === \"connecting\") state = \"connecting\"; // if you add this in your flow\n\nmsg.payload = {\n  state,\n  label: \"Watchout\",\n  layout: \"row\",\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1090,
+        "y": 1580,
+        "wires": [
+            [
+                "fdfbb04d88a99ef7"
+            ]
+        ]
+    },
+    {
+        "id": "9bd1967afe321d77",
+        "type": "inject",
+        "z": "wo2-tab",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 850,
+        "y": 1580,
+        "wires": [
+            [
+                "896224c4eaee7e43"
+            ]
+        ]
+    },
+    {
+        "id": "fdfbb04d88a99ef7",
+        "type": "link out",
+        "z": "wo2-tab",
+        "name": "WO LED Status",
+        "mode": "link",
+        "links": [
+            "5afd3867d48c70fc"
+        ],
+        "x": 1255,
+        "y": 1580,
+        "wires": []
+    },
+    {
+        "id": "wo2-control-fn",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "Prepare control request",
+        "func": "// Validate input and build HTTP request for Watchout control.\n// Output 1: valid command  → HTTP Request node\n// Output 2: invalid command → error object (wire this to debug / ui toast)\n//\n// Expected input (msg.payload):\n//   Timelines:\n//     { command: \"start\"|\"stop\"|\"pause\", contentId: \"show_1\" }\n//     { command: \"playAll\" }\n//     { command: \"getState\" }\n//\n//   Inputs (Watchout UI calls these \"Variables\"; HTTP API calls them \"Inputs\"):\n//     { command: \"setVar\",  varName: \"MyInput\", varValue: 0.5 }\n//     { command: \"setVars\", vars: [{key, value, duration?}, ...] }\n//\n//   Cue Group State (Cue Sets):\n//     { command: \"getCueGroupStatesById\" }\n//     { command: \"getCueGroupStatesByName\" }\n//     { command: \"setCueGroupVariantById\", groupId: \"1\", variantId: \"2\" }\n//     { command: \"setCueGroupVariantByName\", groupName: \"Group A\", variantName: \"Variant 1\" }\n//     { command: \"setCueGroupVariantsById\", states: { \"groupId1\": \"variantId1\", \"groupId2\": \"variantId2\" } }\n//     { command: \"setCueGroupVariantsByName\", states: { \"groupName1\": \"variantName1\", \"groupName2\": \"variantName2\" } }\n//       - Reset all to defaults: { command: \"setCueGroupVariantsByName\", states: {} }\n\nconst cfg = flow.get('watchout_config') || {};\nconst host = cfg.host || 'localhost';\nconst port = cfg.port || 3019;\nconst baseUrl = 'http://' + host + ':' + port;\n\nconst input = msg.payload || {};\nconst command = input.command;\n\nconst mapping = flow.get('watchout_mapping') || {};\n\n// Resolve a contentId (timeline name normalized) to a numeric timeline ID.\n// Mapping schema:\n//   mapping[contentId] = { displayName: string, watchoutId: string }\nfunction resolveTimelineInfo(contentId) {\n    if (contentId === undefined || contentId === null) {\n        return { timelineId: null, contentId: contentId, displayName: undefined };\n    }\n\n    if (Object.prototype.hasOwnProperty.call(mapping, contentId)) {\n        const entry = mapping[contentId];\n\n        // Defensive: allow old flat string mappings if they somehow still exist in memory\n        if (typeof entry === 'string' || typeof entry === 'number') {\n            return { timelineId: String(entry), contentId: contentId, displayName: undefined };\n        }\n\n        if (entry && typeof entry === 'object') {\n            const timelineId = (entry.watchoutId !== undefined && entry.watchoutId !== null)\n                ? String(entry.watchoutId)\n                : null;\n\n            const displayName = (entry.displayName !== undefined && entry.displayName !== null)\n                ? String(entry.displayName)\n                : undefined;\n\n            return { timelineId, contentId: contentId, displayName };\n        }\n\n        // Entry exists but is malformed\n        return { timelineId: null, contentId: contentId, displayName: undefined };\n    }\n\n    // Fallback to provided contentId as-is (useful for direct numeric IDs like \"0\")\n    return { timelineId: String(contentId), contentId: contentId, displayName: undefined };\n}\n\nfunction badRequest(errorText) {\n    const errMsg = {\n        statusCode: 400,\n        payload: {\n            success: false,\n            error: errorText\n        }\n    };\n    return [null, errMsg];\n}\n\nmsg._command = command;\nmsg.headers = { 'Content-Type': 'application/json' };\n\nswitch (command) {\n    // --------------------\n    // Timelines\n    // --------------------\n    case 'playAll': {\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/play';\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'start':\n    case 'stop':\n    case 'pause': {\n        if (!input.contentId && input.contentId !== 0) {\n            return badRequest('Missing payload.contentId for command: ' + command);\n        }\n\n        const info = resolveTimelineInfo(input.contentId);\n        if (!info.timelineId) {\n            return badRequest('Unable to resolve timelineId for contentId: ' + input.contentId);\n        }\n\n        // Timeline metadata for downstream formatter\n        msg._timelineId = info.timelineId;\n        msg._contentId = info.contentId;\n        msg._displayName = info.displayName;\n\n        msg.method = 'POST';\n\n        const action = (command === 'start') ? 'play' : command; // start -> play\n        msg.url = baseUrl + '/v0/' + action + '/' + encodeURIComponent(info.timelineId);\n\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    // --------------------\n    // Inputs (Variables)\n    // --------------------\n    case 'setVar': {\n        if (!input.varName) return badRequest('Missing payload.varName for command: setVar');\n        if (input.varValue === undefined) return badRequest('Missing payload.varValue for command: setVar');\n\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/input/' + encodeURIComponent(String(input.varName)) +\n            '?value=' + encodeURIComponent(String(input.varValue));\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'setVars': {\n        if (!Array.isArray(input.vars)) return badRequest('Missing payload.vars array for command: setVars');\n\n        // Validate each item minimally\n        for (let i = 0; i < input.vars.length; i++) {\n            const v = input.vars[i];\n            if (!v || typeof v !== 'object') return badRequest('setVars: vars[' + i + '] must be an object');\n            if (!('key' in v)) return badRequest('setVars: vars[' + i + '] missing \"key\"');\n            if (!('value' in v)) return badRequest('setVars: vars[' + i + '] missing \"value\"');\n            // duration is optional\n        }\n\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/inputs';\n        msg.payload = input.vars; // array of {key,value,duration?}\n        return [msg, null];\n    }\n\n    case 'getState': {\n        msg.method = 'GET';\n        msg.url = baseUrl + '/v0/state';\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    // --------------------\n    // Cue Sets / Cue Group State\n    // --------------------\n    case 'getCueGroupStatesById': {\n        msg.method = 'GET';\n        msg.url = baseUrl + '/v0/cue-group-state/by-id';\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'getCueGroupStatesByName': {\n        msg.method = 'GET';\n        msg.url = baseUrl + '/v0/cue-group-state/by-name';\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'setCueGroupVariantById': {\n        if (input.groupId === undefined || input.groupId === null || input.groupId === '') {\n            return badRequest('Missing payload.groupId for command: setCueGroupVariantById');\n        }\n        if (input.variantId === undefined || input.variantId === null || input.variantId === '') {\n            return badRequest('Missing payload.variantId for command: setCueGroupVariantById');\n        }\n\n        // Cue metadata for downstream formatter\n        msg._groupId = String(input.groupId);\n        msg._variantId = String(input.variantId);\n\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/cue-group-state/by-id/' +\n            encodeURIComponent(String(input.groupId)) + '/' +\n            encodeURIComponent(String(input.variantId));\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'setCueGroupVariantByName': {\n        if (!input.groupName) return badRequest('Missing payload.groupName for command: setCueGroupVariantByName');\n        if (!input.variantName) return badRequest('Missing payload.variantName for command: setCueGroupVariantByName');\n\n        // Cue metadata for downstream formatter\n        msg._groupName = String(input.groupName);\n        msg._variantName = String(input.variantName);\n\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/cue-group-state/by-name/' +\n            encodeURIComponent(String(input.groupName)) + '/' +\n            encodeURIComponent(String(input.variantName));\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'setCueGroupVariantsById': {\n        // states is an object: { \"groupId1\": \"variantId1\", ... }\n        const states = ('states' in input) ? input.states : input.payload;\n        if (states === undefined || states === null || typeof states !== 'object' || Array.isArray(states)) {\n            return badRequest('Missing payload.states object for command: setCueGroupVariantsById');\n        }\n\n        // Cue metadata for downstream formatter\n        msg._states = states;\n\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/cue-group-state/by-id';\n        msg.payload = states;\n        return [msg, null];\n    }\n\n    case 'setCueGroupVariantsByName': {\n        // states is an object: { \"groupName1\": \"variantName1\", ... } OR {} to reset to default\n        const states = ('states' in input) ? input.states : input.payload;\n        if (states === undefined || states === null || typeof states !== 'object' || Array.isArray(states)) {\n            return badRequest('Missing payload.states object for command: setCueGroupVariantsByName');\n        }\n\n        // Cue metadata for downstream formatter\n        msg._states = states;\n\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/cue-group-state/by-name';\n        msg.payload = states; // {} = reset all to default\n        return [msg, null];\n    }\n\n    default: {\n        return badRequest('Unknown command: ' + command);\n    }\n}",
+        "outputs": 2,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 800,
+        "wires": [
+            [
+                "wo2-control-http",
+                "af78f5f1aa4db23f"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "wo2-control-http",
+        "type": "http request",
+        "z": "wo2-tab",
+        "name": "Watchout HTTP request",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 690,
+        "y": 800,
+        "wires": [
+            [
+                "wo2-control-format-fn",
+                "c9cd38bef4b8737e"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-control-format-fn",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "Format control response",
+        "func": "// Normalize the Watchout API response into a uniform JSON object\n\nconst statusCode = (msg.statusCode !== undefined && msg.statusCode !== null) ? msg.statusCode : 200;\n\n// Fields set by \"Prepare control request\"\nconst command     = msg._command;\n\nconst timelineId  = msg._timelineId;\nconst contentId   = msg._contentId;\nconst displayName = msg._displayName;\n\n// Cue group state fields (optional — set upstream if you want richer echo)\nconst groupId     = msg._groupId;\nconst variantId   = msg._variantId;\nconst groupName   = msg._groupName;\nconst variantName = msg._variantName;\nconst states      = msg._states;\n\n// Build response object, omitting undefined fields\nconst out = {\n    success:    statusCode < 300,\n    command:    command,\n    statusCode: statusCode,\n    body:       msg.payload\n};\n\nif (contentId !== undefined) out.contentId = contentId;\nif (displayName !== undefined) out.displayName = displayName;\nif (timelineId !== undefined) out.timelineId = timelineId;\n\nif (groupId !== undefined) out.groupId = groupId;\nif (variantId !== undefined) out.variantId = variantId;\nif (groupName !== undefined) out.groupName = groupName;\nif (variantName !== undefined) out.variantName = variantName;\nif (states !== undefined) out.states = states;\n\n// Keep same behavior: payload is JSON string for HTTP Response node\nmsg.payload = JSON.stringify(out);\n\nmsg.statusCode = 200;\nmsg.headers = { 'Content-Type': 'application/json' };\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 950,
+        "y": 800,
+        "wires": [
+            [
+                "83dbc61fe5abe2a8"
+            ]
+        ]
+    },
+    {
+        "id": "9fc262ddc940c877",
+        "type": "link in",
+        "z": "wo2-tab",
+        "name": "Send To WO",
+        "links": [
+            "wo2-ui-link-out",
+            "fe7a6403efe9d533"
+        ],
+        "x": 245,
+        "y": 740,
+        "wires": [
+            [
+                "wo2-control-fn"
+            ]
+        ]
+    },
+    {
+        "id": "3b56f39d22af5e1e",
+        "type": "inject",
+        "z": "wo2-tab",
+        "name": "Start Show 2",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{ \"command\": \"start\", \"contentId\": \"show_2\" }",
+        "payloadType": "json",
+        "x": 170,
+        "y": 780,
+        "wires": [
+            [
+                "wo2-control-fn",
+                "75fd5ed8d26abea1"
+            ]
+        ]
+    },
+    {
+        "id": "af78f5f1aa4db23f",
+        "type": "debug",
+        "z": "wo2-tab",
+        "name": "debug 9",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 520,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "83dbc61fe5abe2a8",
+        "type": "debug",
+        "z": "wo2-tab",
+        "name": "debug 10",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1160,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "wo2-ui-init",
+        "type": "inject",
+        "z": "wo2-tab",
+        "name": "Init / Refresh dropdown",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 1,
+        "payload": "{\"action\":\"init\"}",
+        "payloadType": "json",
+        "x": 183.0449981689453,
+        "y": 1292.205078125,
+        "wires": [
+            [
+                "wo2-ui-build-options"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-ui-refresh",
+        "type": "ui-button",
+        "z": "wo2-tab",
+        "group": "wo2-ui-timeline-controls-group",
+        "name": "Refresh timelines",
+        "label": "Refresh",
+        "order": 1,
+        "width": 2,
+        "height": 1,
+        "tooltip": "Rebuild dropdown options from stored mapping",
+        "color": "#ffffff",
+        "bgcolor": "#6c6c6c",
+        "className": "",
+        "icon": "mdi-refresh",
+        "payload": "{\"action\":\"refresh\"}",
+        "payloadType": "json",
+        "topic": "refresh",
+        "topicType": "str",
+        "enableClick": true,
+        "x": 163.0449981689453,
+        "y": 1352.205078125,
+        "wires": [
+            [
+                "wo2-ui-build-options"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-ui-build-options",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "Build dropdown options (label=displayName)",
+        "func": "// Build ui-dropdown options from flow.watchout_mapping\n// Show ONLY displayName in the dropdown, but keep value = contentId.\n\nconst mapping = flow.get('watchout_mapping') || {};\n\nconst keys = Object.keys(mapping);\nkeys.sort((a, b) => {\n    const da = (mapping[a] && mapping[a].displayName) ? String(mapping[a].displayName) : String(a);\n    const db = (mapping[b] && mapping[b].displayName) ? String(mapping[b].displayName) : String(b);\n    return da.localeCompare(db);\n});\n\nconst options = keys.map(contentId => {\n    const entry = mapping[contentId] || {};\n    const displayName = entry.displayName ? String(entry.displayName) : String(contentId);\n    return { value: contentId, label: displayName };\n});\n\n// Preserve selection if possible\nconst current = flow.get('watchout_selected_contentId');\nlet selected = current;\nif (!selected || !Object.prototype.hasOwnProperty.call(mapping, selected)) {\n    selected = options.length ? options[0].value : '';\n}\nflow.set('watchout_selected_contentId', selected);\n\nmsg.options = options;\nmsg.payload = selected;\n\nnode.status({ fill: 'green', shape: 'dot', text: 'Options: ' + options.length });\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 1320,
+        "wires": [
+            [
+                "wo2-ui-dropdown"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-ui-dropdown",
+        "type": "ui-dropdown",
+        "z": "wo2-tab",
+        "group": "wo2-ui-timeline-controls-group",
+        "name": "Timeline dropdown",
+        "label": "Timeline",
+        "tooltip": "",
+        "order": 2,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "multiple": false,
+        "options": [],
+        "payload": "",
+        "topic": "watchout_timeline",
+        "topicType": "str",
+        "className": "",
+        "x": 890,
+        "y": 1320,
+        "wires": [
+            [
+                "wo2-ui-store-selection"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-ui-store-selection",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "Store selected contentId",
+        "func": "flow.set('watchout_selected_contentId', msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1130,
+        "y": 1320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "wo2-ui-play",
+        "type": "ui-button",
+        "z": "wo2-tab",
+        "group": "wo2-ui-timeline-controls-group",
+        "name": "Play",
+        "label": "Play",
+        "order": 3,
+        "width": 2,
+        "height": 1,
+        "tooltip": "Start selected timeline",
+        "color": "#ffffff",
+        "bgcolor": "#2e7d32",
+        "className": "",
+        "icon": "mdi-play",
+        "payload": "start",
+        "payloadType": "str",
+        "topic": "watchout_cmd",
+        "topicType": "str",
+        "x": 123.04499816894531,
+        "y": 1432.205078125,
+        "wires": [
+            [
+                "wo2-ui-build-command"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-ui-pause",
+        "type": "ui-button",
+        "z": "wo2-tab",
+        "group": "wo2-ui-timeline-controls-group",
+        "name": "Pause",
+        "label": "Pause",
+        "order": 4,
+        "width": 2,
+        "height": 1,
+        "tooltip": "Pause selected timeline",
+        "color": "#ffffff",
+        "bgcolor": "#ef6c00",
+        "className": "",
+        "icon": "mdi-pause",
+        "payload": "pause",
+        "payloadType": "str",
+        "topic": "watchout_cmd",
+        "topicType": "str",
+        "x": 123.04499816894531,
+        "y": 1492.205078125,
+        "wires": [
+            [
+                "wo2-ui-build-command"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-ui-stop",
+        "type": "ui-button",
+        "z": "wo2-tab",
+        "group": "wo2-ui-timeline-controls-group",
+        "name": "Stop",
+        "label": "Stop",
+        "order": 5,
+        "width": 2,
+        "height": 1,
+        "tooltip": "Stop selected timeline",
+        "color": "#ffffff",
+        "bgcolor": "#c62828",
+        "className": "",
+        "icon": "mdi-stop",
+        "payload": "stop",
+        "payloadType": "str",
+        "topic": "watchout_cmd",
+        "topicType": "str",
+        "x": 123.04499816894531,
+        "y": 1552.205078125,
+        "wires": [
+            [
+                "wo2-ui-build-command"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-ui-build-command",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "Build API payload → Link Out",
+        "func": "const command = msg.payload; // start|pause|stop\nconst contentId = flow.get('watchout_selected_contentId');\n\nif (!contentId) {\n    node.status({ fill: 'red', shape: 'ring', text: 'No timeline selected' });\n    return null;\n}\n\nmsg.payload = { command, contentId };\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 533.0449981689453,
+        "y": 1492.205078125,
+        "wires": [
+            [
+                "wo2-ui-link-out"
+            ]
+        ]
+    },
+    {
+        "id": "wo2-ui-link-out",
+        "type": "link out",
+        "z": "wo2-tab",
+        "name": "→ Prepare control request",
+        "mode": "link",
+        "links": [
+            "9fc262ddc940c877"
+        ],
+        "x": 713.0449981689453,
+        "y": 1492.205078125,
+        "wires": []
+    },
+    {
+        "id": "e4d5505b0654cfbb",
+        "type": "comment",
+        "z": "wo2-tab",
+        "name": "WO Dropdown Timeline Control",
+        "info": "Dropdown is populated from flow context `watchout_mapping`.\n\nMapping schema expected:\n  flow.watchout_mapping = { [contentId]: { displayName, watchoutId } }\n\nUI behavior:\n- Dropdown shows ONLY displayName.\n- Dropdown value remains `contentId` (so we can send {command, contentId}).\n- Play / Pause / Stop buttons emit msg.payload to a Link Out node:\n    { command: \"start\"|\"pause\"|\"stop\", contentId: \"show_1\" }\n\nAfter import:\n1) Open the UI Group node and select the Dashboard page/group you want.\n2) Wire the Link Out node to your existing \"Prepare control request\" function node.\n\nNote: This flow does NOT make any HTTP calls itself.",
+        "x": 210,
+        "y": 1240,
+        "wires": []
+    },
+    {
+        "id": "wo-ndjson-ui-running",
+        "type": "ui-template",
+        "z": "wo2-tab",
+        "group": "wo-ndjson-ui-group-running",
+        "page": "",
+        "ui": "",
+        "name": "Running timelines list",
+        "order": 1,
+        "width": 6,
+        "height": 4,
+        "format": "<template>\n  <div style=\"padding:6px\">\n    <div v-if=\"!msg\" style=\"color:#aaa\">Waiting for state…</div>\n    <div v-else>\n      <div v-if=\"!msg.payload.timelines || msg.payload.timelines.length === 0\" style=\"color:#aaa\">\n        No running or paused timelines.\n      </div>\n\n      <div v-else>\n        <div\n          v-for=\"tl in msg.payload.timelines\"\n          :key=\"tl.id\"\n          style=\"padding:6px 8px; margin:6px 0; border:1px solid #333; border-radius:6px; background:#1b1b2e; color:#e0e0e0;\"\n        >\n          <div style=\"display:flex; justify-content:space-between; gap:10px; align-items:baseline;\">\n            <div style=\"font-weight:600;\">{{ tl.name }}</div>\n            <div style=\"font-family:monospace; color:#80cbc4;\">id={{ tl.id }}</div>\n          </div>\n\n          <div style=\"display:flex; justify-content:space-between; margin-top:2px; font-size:0.9em;\">\n            <div :style=\"{ color: tl.stateColor, fontWeight: 600 }\">{{ tl.stateLabel }}</div>\n            <div style=\"font-family:monospace; color:#bbb;\">t={{ tl.timeText }}</div>\n          </div>\n        </div>\n      </div>\n\n      <div style=\"margin-top:8px; font-size:0.85em; color:#aaa\">Updated: {{ msg.payload.ts }}</div>\n    </div>\n  </div>\n</template>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 1250,
+        "y": 1080,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5a33eacf66a4c899",
+        "type": "function",
+        "z": "wo2-tab",
+        "name": "Wo poll to runing timelines",
+        "func": "// Adapter: GET /v0/state (poll) → UI payload for timelines list\n// Output payload shape expected by the UI template:\n//   { timelines: [{id,name,stateLabel,stateColor,timeText}], ts }\n\nconst state = (msg.payload && msg.payload.data) ? msg.payload.data : msg.payload;\nconst timelines = Array.isArray(state && state.timelines) ? state.timelines : [];\n\n// Mapping schema: { contentId: { displayName, watchoutId } }\nconst mapping = flow.get('watchout_mapping') || {};\n\n// Reverse lookup: watchoutId -> displayName\nconst idToName = {};\nfor (const contentId of Object.keys(mapping)) {\n    const entry = mapping[contentId];\n    if (entry && typeof entry === 'object' && entry.watchoutId != null) {\n        idToName[String(entry.watchoutId)] = entry.displayName || contentId;\n    }\n}\n\n// Derive run/pause/stop from poll fields\nfunction deriveState(tl) {\n    // Prefer NDJSON-style if it exists\n    if (tl.playbackStatus) {\n        const s = String(tl.playbackStatus).toLowerCase();\n        if (s === 'run') return 'run';\n        if (s === 'pause') return 'pause';\n        return 'stop';\n    }\n\n    if (tl.running === true) return 'run';\n\n    const tt = (tl.timelineTime !== undefined && tl.timelineTime !== null) ? Number(tl.timelineTime) : null;\n    // Your requirement: running=false but timeline still \"there\" => treat as paused\n    if (tl.running === false && tt !== null && !Number.isNaN(tt) && tt > 0) return 'pause';\n\n    return 'stop';\n}\n\nfunction formatMmSs(ms) {\n    if (ms === undefined || ms === null) return '--:--';\n    const n = Number(ms);\n    if (Number.isNaN(n) || n < 0) return '--:--';\n    const totalSeconds = Math.floor(n / 1000);\n    const mm = Math.floor(totalSeconds / 60);\n    const ss = totalSeconds % 60;\n    return String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0');\n}\n\nfunction stateMeta(state) {\n    if (state === 'run')  return { stateLabel: 'Running', stateColor: '#4caf50' }; // green\n    if (state === 'pause') return { stateLabel: 'Paused',  stateColor: '#ffeb3b' }; // yellow\n    return { stateLabel: 'Stopped', stateColor: '#9e9e9e' };\n}\n\nconst items = timelines.map(tl => {\n    const id = String(tl.id);\n    const state = deriveState(tl);\n    const meta = stateMeta(state);\n\n    return {\n        id,\n        name: tl.name || idToName[id] || ('Timeline ' + id),\n        state,                 // run|pause|stop (internal)\n        stateLabel: meta.stateLabel,\n        stateColor: meta.stateColor,\n        timeText: formatMmSs(tl.timelineTime)\n    };\n});\n\n// Show only Running + Paused (hide stopped)\nconst visible = items.filter(t => t.state === 'run' || t.state === 'pause');\n\nmsg.topic = 'watchout/timelines';\nmsg.payload = {\n    timelines: visible,\n    ts: new Date().toISOString()\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1000,
+        "y": 1080,
+        "wires": [
+            [
+                "wo-ndjson-ui-running"
+            ]
+        ]
+    },
+    {
+        "id": "90130b9791133b25",
+        "type": "delay",
+        "z": "wo2-tab",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "0.3",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 270,
+        "y": 1000,
+        "wires": [
+            [
+                "wo2-poll-fn"
+            ]
+        ]
+    },
+    {
+        "id": "432d33d18d95ebef",
+        "type": "comment",
+        "z": "wo2-tab",
+        "g": "025439f9501b7114",
+        "name": "Read and Prepare Watchout-Config File",
+        "info": "",
+        "x": 170,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "5a8a1080892bc80f",
+        "type": "comment",
+        "z": "wo2-tab",
+        "name": "Poll status updates",
+        "info": "",
+        "x": 160,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "c9cd38bef4b8737e",
+        "type": "link out",
+        "z": "wo2-tab",
+        "name": "WO HTTP output",
+        "mode": "link",
+        "links": [
+            "db271fe970ecda74"
+        ],
+        "x": 855,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "db271fe970ecda74",
+        "type": "link in",
+        "z": "wo2-tab",
+        "name": "Poll Delay Input",
+        "links": [
+            "c9cd38bef4b8737e"
+        ],
+        "x": 155,
+        "y": 1000,
+        "wires": [
+            [
+                "90130b9791133b25"
+            ]
         ]
     },
     {
         "id": "wo2-discover-btn",
         "type": "ui-button",
         "z": "wo2-tab",
+        "g": "f34ab81391d45829",
         "group": "20eba16b1f4b5a48",
         "name": "Re-discover Timelines",
         "label": "Re-discover Timelines",
@@ -5214,8 +6008,8 @@
         "enablePointerup": false,
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
-        "x": 130,
-        "y": 380,
+        "x": 120,
+        "y": 420,
         "wires": [
             [
                 "wo2-discover-fn"
@@ -5226,6 +6020,7 @@
         "id": "wo2-discover-fn",
         "type": "function",
         "z": "wo2-tab",
+        "g": "f34ab81391d45829",
         "name": "Prepare timelines request",
         "func": "// Build the HTTP GET request for /v0/timelines\nconst cfg  = flow.get('watchout_config') || {};\nconst host = cfg.host || 'localhost';\nconst port = cfg.port || 3019;\nmsg.method  = 'GET';\nmsg.url     = 'http://' + host + ':' + port + '/v0/timelines';\nmsg.headers = { 'Content-Type': 'application/json' };\nreturn msg;",
         "outputs": 1,
@@ -5234,7 +6029,7 @@
         "finalize": "",
         "libs": [],
         "x": 350,
-        "y": 380,
+        "y": 420,
         "wires": [
             [
                 "wo2-discover-http"
@@ -5245,6 +6040,7 @@
         "id": "wo2-diff-template",
         "type": "ui-template",
         "z": "wo2-tab",
+        "g": "f34ab81391d45829",
         "group": "20eba16b1f4b5a48",
         "page": "",
         "ui": "",
@@ -5259,7 +6055,7 @@
         "templateScope": "local",
         "className": "",
         "x": 770,
-        "y": 380,
+        "y": 420,
         "wires": [
             [
                 "wo2-action-switch"
@@ -5270,6 +6066,7 @@
         "id": "wo2-action-switch",
         "type": "switch",
         "z": "wo2-tab",
+        "g": "f34ab81391d45829",
         "name": "Confirm or Cancel?",
         "property": "payload.action",
         "propertyType": "msg",
@@ -5289,7 +6086,7 @@
         "repair": false,
         "outputs": 2,
         "x": 680,
-        "y": 480,
+        "y": 520,
         "wires": [
             [
                 "wo2-confirm-prepare-fn"
@@ -5303,6 +6100,7 @@
         "id": "wo2-confirm-prepare-fn",
         "type": "function",
         "z": "wo2-tab",
+        "g": "f34ab81391d45829",
         "name": "Prepare mapping write",
         "func": "// Prepare mapping JSON for file write\nconst pending = flow.get('watchout_pending');\nif (!pending) {\n    node.send({ payload: { status: 'nothing_pending' }, topic: 'watchout/confirm' });\n    return null;\n}\n\nflow.set('watchout_mapping', pending);\nflow.set('watchout_pending', null);\n\nconst cfg = flow.get('watchout_config') || {};\nconst savedAt = new Date().toISOString();\n\nmsg.filename = cfg.mappingFile || '/data/projects/XYZ-Exit10/node-red/data/timeline-mapping.json';\nmsg.payload  = JSON.stringify({ mapping: pending, lastSaved: savedAt }, null, 2);\nmsg._pendingMapping = pending;\nmsg._savedAt = savedAt;\nreturn msg;",
         "outputs": 1,
@@ -5312,7 +6110,7 @@
         "finalize": "",
         "libs": [],
         "x": 900,
-        "y": 460,
+        "y": 500,
         "wires": [
             [
                 "wo2-write-mapping-file"
@@ -5323,6 +6121,7 @@
         "id": "wo2-write-mapping-file",
         "type": "file",
         "z": "wo2-tab",
+        "g": "f34ab81391d45829",
         "name": "Write timeline-mapping.json",
         "filename": "filename",
         "filenameType": "msg",
@@ -5331,7 +6130,7 @@
         "overwriteFile": "true",
         "encoding": "utf8",
         "x": 1140,
-        "y": 460,
+        "y": 500,
         "wires": [
             [
                 "wo2-confirm-done-fn"
@@ -5342,6 +6141,7 @@
         "id": "wo2-confirm-done-fn",
         "type": "function",
         "z": "wo2-tab",
+        "g": "f34ab81391d45829",
         "name": "Confirm done",
         "func": "// Confirm & Save completed\nconst mapping = msg._pendingMapping || flow.get('watchout_mapping') || {};\nnode.status({ fill: 'green', shape: 'dot', text: 'Saved: ' + Object.keys(mapping).length + ' timelines' });\nnode.send({\n    payload: {\n        status:  'saved',\n        mapping: mapping,\n        savedAt: msg._savedAt || new Date().toISOString()\n    },\n    topic: 'watchout/confirm'\n});\nreturn null;",
         "outputs": 1,
@@ -5350,7 +6150,7 @@
         "finalize": "",
         "libs": [],
         "x": 1350,
-        "y": 460,
+        "y": 500,
         "wires": [
             [
                 "wo2-status-template"
@@ -5361,6 +6161,7 @@
         "id": "wo2-cancel-fn",
         "type": "function",
         "z": "wo2-tab",
+        "g": "f34ab81391d45829",
         "name": "Cancel discovery",
         "func": "// Cancel pending discovery\nflow.set('watchout_pending', null);\nnode.send({ payload: { status: 'cancelled' }, topic: 'watchout/cancel' });\nreturn null;",
         "outputs": 1,
@@ -5369,7 +6170,7 @@
         "finalize": "",
         "libs": [],
         "x": 900,
-        "y": 540,
+        "y": 580,
         "wires": [
             [
                 "wo2-status-template"
@@ -5380,6 +6181,7 @@
         "id": "wo2-status-template",
         "type": "ui-template",
         "z": "wo2-tab",
+        "g": "f34ab81391d45829",
         "group": "20eba16b1f4b5a48",
         "page": "",
         "ui": "",
@@ -5394,73 +6196,7 @@
         "templateScope": "local",
         "className": "",
         "x": 1110,
-        "y": 540,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "wo2-poll-inj",
-        "type": "inject",
-        "z": "wo2-tab",
-        "name": "Poll state (5 s)",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "5",
-        "crontab": "",
-        "once": false,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 120,
-        "y": 900,
-        "wires": [
-            [
-                "wo2-poll-fn"
-            ]
-        ]
-    },
-    {
-        "id": "wo2-poll-fn",
-        "type": "function",
-        "z": "wo2-tab",
-        "name": "Poll gate",
-        "func": "// Only poll Watchout state when SSE is not connected (fallback mode)\nif (flow.get('watchout_sse_status') === 'connected') {\n    return null;\n}\n\nconst cfg  = flow.get('watchout_config') || {};\nconst host = cfg.host || 'localhost';\nconst port = cfg.port || 3019;\nmsg.method  = 'GET';\nmsg.url     = 'http://' + host + ':' + port + '/v0/state';\nmsg.headers = { 'Content-Type': 'application/json' };\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 300,
-        "y": 900,
-        "wires": [
-            [
-                "wo2-poll-http"
-            ]
-        ]
-    },
-    {
-        "id": "wo2-state-template",
-        "type": "ui-template",
-        "z": "wo2-tab",
-        "group": "e79267107587d426",
-        "page": "",
-        "ui": "",
-        "name": "Live State",
-        "order": 1,
-        "width": "0",
-        "height": "0",
-        "format": "<template>\n  <div style=\"padding:4px\">\n    <p v-if=\"!msg\" style=\"color:#aaa\">Waiting for state...</p>\n    <div v-else>\n      <div style=\"margin-bottom:6px\">\n        <span v-if=\"msg.payload.type === 'poll'\" style=\"color:#ff9800;font-size:0.9em\">Polling (SSE offline)</span>\n        <span v-else style=\"color:#4caf50;font-size:0.9em\">SSE Live</span>\n      </div>\n      <pre style=\"background:#1b1b2e;color:#e0e0e0;padding:8px;border-radius:4px;font-size:0.82em;max-height:200px;overflow-y:auto\">{{ JSON.stringify(msg.payload.data, null, 2) }}</pre>\n    </div>\n  </div>\n</template>",
-        "storeOutMessages": true,
-        "passthru": true,
-        "resendOnRefresh": false,
-        "templateScope": "local",
-        "className": "",
-        "x": 940,
-        "y": 850,
+        "y": 580,
         "wires": [
             []
         ]
@@ -5469,6 +6205,7 @@
         "id": "wo2-debug-disc",
         "type": "debug",
         "z": "wo2-tab",
+        "g": "f34ab81391d45829",
         "name": "Discovery debug",
         "active": true,
         "tosidebar": true,
@@ -5479,13 +6216,14 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1050,
-        "y": 320,
+        "y": 360,
         "wires": []
     },
     {
         "id": "wo2-discover-http",
         "type": "http request",
         "z": "wo2-tab",
+        "g": "f34ab81391d45829",
         "name": "GET /v0/timelines",
         "method": "use",
         "ret": "obj",
@@ -5499,7 +6237,7 @@
         "senderr": false,
         "headers": [],
         "x": 510,
-        "y": 320,
+        "y": 360,
         "wires": [
             [
                 "wo2-discover-parse-fn"
@@ -5510,6 +6248,7 @@
         "id": "wo2-discover-parse-fn",
         "type": "function",
         "z": "wo2-tab",
+        "g": "f34ab81391d45829",
         "name": "Parse timelines response",
         "func": "// Parse GET /v0/timelines response and build diff\n\nif (msg.statusCode !== 200) {\n    msg.payload = { status: 'error', error: 'Watchout returned HTTP ' + (msg.statusCode || 'unknown') };\n    return msg;\n}\n\nfunction parseTimelineName(name) {\n    if (!name || name.startsWith('_')) return null;\n    return name.trim().toLowerCase().replace(/\\s+/g, '_').replace(/[^a-z0-9_]/g, '');\n}\n\nfunction compareMapping(oldMap, newMap) {\n    const oldKeys = Object.keys(oldMap);\n    const newKeys = Object.keys(newMap);\n    return {\n        removed: oldKeys.filter(k => !(k in newMap)),\n        added: newKeys.filter(k => !(k in oldMap)),\n        unchanged: oldKeys.filter(k => (k in newMap) && String(oldMap[k]?.watchoutId) === String(newMap[k]?.watchoutId)),\n        changed: oldKeys.filter(k => (k in newMap) && String(oldMap[k]?.watchoutId) !== String(newMap[k]?.watchoutId)),\n    };\n}\n\nfunction formatDiff(diff) {\n    const lines = [];\n    diff.removed.forEach(n => lines.push(\"REMOVED  : Timeline '\" + n + \"' no longer exists\"));\n    diff.added.forEach(n => lines.push(\"ADDED    : New timeline '\" + n + \"' discovered\"));\n    diff.changed.forEach(n => lines.push(\"CHANGED  : Timeline '\" + n + \"' ID has changed\"));\n    diff.unchanged.forEach(n => lines.push(\"OK       : '\" + n + \"'\"));\n    return lines;\n}\n\nconst timelines = Array.isArray(msg.payload) ? msg.payload : [];\n\nconst newMapping = {};\ntimelines.forEach(tl => {\n    const contentId = parseTimelineName(tl.name);\n    if (!contentId) return;\n\n    newMapping[contentId] = {\n        displayName: tl.name,\n        watchoutId: String(tl.id)\n    };\n});\n\nconst storedMapping = flow.get('watchout_mapping') || {};\nconst diff = compareMapping(storedMapping, newMapping);\nconst diffLines = formatDiff(diff);\n\nflow.set('watchout_pending', newMapping);\n\nconst count = Object.keys(newMapping).length;\nnode.status({ fill: 'green', shape: 'dot', text: 'Discovered: ' + count + ' timelines' });\n\nmsg.payload = { status: 'discovered', count, diffLines, newMapping, diff };\nreturn msg;",
         "outputs": 1,
@@ -5519,7 +6258,7 @@
         "finalize": "",
         "libs": [],
         "x": 790,
-        "y": 320,
+        "y": 360,
         "wires": [
             [
                 "wo2-diff-template",
@@ -5528,54 +6267,10 @@
         ]
     },
     {
-        "id": "wo2-poll-http",
-        "type": "http request",
-        "z": "wo2-tab",
-        "name": "GET /v0/state",
-        "method": "use",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 460,
-        "y": 900,
-        "wires": [
-            [
-                "wo2-poll-parse-fn"
-            ]
-        ]
-    },
-    {
-        "id": "wo2-poll-parse-fn",
-        "type": "function",
-        "z": "wo2-tab",
-        "name": "Parse poll response",
-        "func": "// Handle the GET /v0/state poll response\nconst statusCode = msg.statusCode || 200;\nif (statusCode !== 200) {\n    node.warn('[Watchout Poll] HTTP ' + statusCode);\n    return null;\n}\n\nconst state = msg.payload;\nflow.set('watchout_state', state);\n\n// Pass downstream (and also preserve your existing wrapper shape)\nmsg.topic = 'watchout/state';\nmsg.payload = { type: 'poll', data: state };\nreturn msg;",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 690,
-        "y": 900,
-        "wires": [
-            [
-                "5a33eacf66a4c899",
-                "wo2-state-template"
-            ]
-        ]
-    },
-    {
         "id": "ea5687e7fe6f95be",
         "type": "ui-button",
         "z": "wo2-tab",
+        "g": "f34ab81391d45829",
         "group": "20eba16b1f4b5a48",
         "name": "Confirm & Save",
         "label": "Confirm & Save",
@@ -5604,7 +6299,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 410,
-        "y": 460,
+        "y": 500,
         "wires": [
             [
                 "wo2-action-switch"
@@ -5615,6 +6310,7 @@
         "id": "b8e7e6bbe7d88389",
         "type": "ui-button",
         "z": "wo2-tab",
+        "g": "f34ab81391d45829",
         "group": "20eba16b1f4b5a48",
         "name": "Cancel",
         "label": "Cancel",
@@ -5643,7 +6339,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 390,
-        "y": 500,
+        "y": 540,
         "wires": [
             [
                 "wo2-action-switch"
@@ -5651,41 +6347,123 @@
         ]
     },
     {
-        "id": "0b90fd227eb5a4aa",
+        "id": "8b7af39f6e207cf2",
         "type": "comment",
         "z": "wo2-tab",
-        "g": "dbd2c45c3962d1cd",
-        "name": "Sent Commands to WO",
+        "g": "f34ab81391d45829",
+        "name": "Timeline Discovery",
         "info": "",
-        "x": 160,
-        "y": 680,
+        "x": 110,
+        "y": 380,
         "wires": []
     },
     {
-        "id": "896224c4eaee7e43",
-        "type": "function",
+        "id": "114d1b027c816c6d",
+        "type": "ui-text-input",
         "z": "wo2-tab",
-        "name": "WO LED status mapper",
-        "func": "// Input can be:\n// - msg.watchout_sse_status\n// - msg.payload.status\n// - or read from flow context\nconst raw =\n  msg.watchout_sse_status ||\n  msg.payload?.watchout_sse_status ||\n  flow.get(\"watchout_sse_status\");\n\nlet state = \"disconnected\";\nif (raw === \"connected\") state = \"connected\";\nelse if (raw === \"disconnected\") state = \"disconnected\";\nelse if (raw === \"error\") state = \"error\";\nelse if (raw === \"connecting\") state = \"connecting\"; // if you add this in your flow\n\nmsg.payload = {\n  state,\n  label: \"Watchout\",\n  layout: \"row\",\n};\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1060,
-        "y": 1500,
+        "group": "wo2-ui-timeline-controls-group",
+        "name": "Node-Red WO Commands",
+        "label": "Node-Red WO Commands",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "topic": "topic",
+        "topicType": "msg",
+        "mode": "text",
+        "tooltip": "",
+        "delay": 300,
+        "passthru": true,
+        "sendOnDelay": false,
+        "sendOnBlur": false,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": false,
+        "sendOnClear": false,
+        "icon": "",
+        "iconPosition": "left",
+        "iconInnerPosition": "inside",
+        "x": 220,
+        "y": 860,
         "wires": [
             [
-                "fdfbb04d88a99ef7"
+                "wo2-control-fn",
+                "75fd5ed8d26abea1",
+                "a6c82e7e838b08f3"
             ]
         ]
     },
     {
-        "id": "9bd1967afe321d77",
-        "type": "inject",
+        "id": "75fd5ed8d26abea1",
+        "type": "debug",
+        "z": "wo2-tab",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 450,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "a6c82e7e838b08f3",
+        "type": "change",
         "z": "wo2-tab",
         "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 900,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d857dd1c2ce0b767",
+        "type": "inject",
+        "z": "wo2-tab",
+        "name": "Change Cue set content",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"command\":\"setCueGroupVariantByName\",\"groupName\":\"Transitions A1\",\"variantName\":\"2\"}",
+        "payloadType": "json",
+        "x": 150,
+        "y": 820,
+        "wires": [
+            [
+                "wo2-control-fn"
+            ]
+        ]
+    },
+    {
+        "id": "pt_inject_on_deploy",
+        "type": "inject",
+        "z": "c4c46c49b8c3c2b1",
+        "name": "On Deploy: Fetch this month",
         "props": [
             {
                 "p": "payload"
@@ -5697,61 +6475,102 @@
         ],
         "repeat": "",
         "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "monthly",
         "payload": "",
         "payloadType": "date",
-        "x": 820,
-        "y": 1500,
+        "x": 180,
+        "y": 180,
         "wires": [
             [
-                "896224c4eaee7e43"
+                "pt_build_url"
             ]
         ]
     },
     {
-        "id": "fdfbb04d88a99ef7",
-        "type": "link out",
-        "z": "wo2-tab",
-        "name": "WO LED Status",
-        "mode": "link",
-        "links": [
-            "5afd3867d48c70fc"
+        "id": "pt_inject_daily",
+        "type": "inject",
+        "z": "c4c46c49b8c3c2b1",
+        "name": "Daily refresh (00:10 local)",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
         ],
-        "x": 1225,
-        "y": 1500,
-        "wires": []
+        "repeat": "",
+        "crontab": "10 0 * * *",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "daily",
+        "payload": "",
+        "payloadType": "date",
+        "x": 200,
+        "y": 280,
+        "wires": [
+            [
+                "pt_build_url"
+            ]
+        ]
     },
     {
-        "id": "wo2-control-fn",
+        "id": "pt_inject_monthly",
+        "type": "inject",
+        "z": "c4c46c49b8c3c2b1",
+        "name": "Monthly refresh (1st @ 00:15 local)",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "15 0 1 * *",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "monthly",
+        "payload": "",
+        "payloadType": "date",
+        "x": 210,
+        "y": 320,
+        "wires": [
+            [
+                "pt_build_url"
+            ]
+        ]
+    },
+    {
+        "id": "pt_build_url",
         "type": "function",
-        "z": "wo2-tab",
-        "g": "dbd2c45c3962d1cd",
-        "name": "Prepare control request",
-        "func": "// Validate input and build HTTP request for Watchout timeline control.\n// Output 1: valid command  → HTTP Request node\n// Output 2: invalid command → error object (wire this to debug / ui toast; NOT HTTP Response unless msg.res exists)\n//\n// Expected input (msg.payload):\n//   { command: \"start\"|\"stop\"|\"pause\", contentId: \"show1\" }\n//   { command: \"playAll\" }                             (optional helper)\n//   { command: \"setVar\", varName: \"MyInput\", varValue: 0.5 }   // Watchout UI calls these \"Variables\"; HTTP API calls them \"Inputs\"\n//   { command: \"setVars\", vars: [{key, value, duration?}, ...] } (optional helper for bulk updates)\n//   { command: \"getState\" }\n\nconst cfg = flow.get('watchout_config') || {};\nconst host = cfg.host || 'localhost';\nconst port = cfg.port || 3019;\nconst baseUrl = 'http://' + host + ':' + port;\n\nconst input = msg.payload || {};\nconst command = input.command;\nconst mapping = flow.get('watchout_mapping') || {};\n\n// Resolve a contentId (timeline name normalized) to a numeric timeline ID.\n// Mapping schema:\n//   mapping[contentId] = { displayName: string, watchoutId: string }\nfunction resolveTimelineInfo(contentId) {\n    if (contentId === undefined || contentId === null) {\n        return { timelineId: null, contentId: contentId, displayName: undefined };\n    }\n\n    if (Object.prototype.hasOwnProperty.call(mapping, contentId)) {\n        const entry = mapping[contentId];\n\n        // Defensive: allow old flat string mappings if they somehow still exist in memory\n        if (typeof entry === 'string' || typeof entry === 'number') {\n            return { timelineId: String(entry), contentId: contentId, displayName: undefined };\n        }\n\n        if (entry && typeof entry === 'object') {\n            const timelineId = (entry.watchoutId !== undefined && entry.watchoutId !== null)\n                ? String(entry.watchoutId)\n                : null;\n\n            const displayName = (entry.displayName !== undefined && entry.displayName !== null)\n                ? String(entry.displayName)\n                : undefined;\n\n            return { timelineId, contentId: contentId, displayName };\n        }\n\n        // Entry exists but is malformed\n        return { timelineId: null, contentId: contentId, displayName: undefined };\n    }\n\n    // Fallback to provided contentId as-is (useful for direct numeric IDs like \"0\")\n    return { timelineId: String(contentId), contentId: contentId, displayName: undefined };\n}\n\nfunction badRequest(errorText) {\n    const errMsg = {\n        statusCode: 400,\n        payload: {\n            success: false,\n            error: errorText\n        }\n    };\n    return [null, errMsg];\n}\n\nmsg._command = command;\nmsg.headers = { 'Content-Type': 'application/json' };\n\n// --- Playback controls (validated from Watchout manual) ---\n// POST /v0/play\n// POST /v0/play/{id}\n// POST /v0/pause/{id}\n// POST /v0/stop/{id}\nswitch (command) {\n    case 'playAll': {\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/play';\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'start':\n    case 'stop':\n    case 'pause': {\n        if (!input.contentId && input.contentId !== 0) {\n            return badRequest('Missing payload.contentId for command: ' + command);\n        }\n\n        const info = resolveTimelineInfo(input.contentId);\n        if (!info.timelineId) {\n            return badRequest('Unable to resolve timelineId for contentId: ' + input.contentId);\n        }\n\n        // These are what your improved \"Format control response\" can echo back\n        msg._timelineId = info.timelineId;\n        msg._contentId = info.contentId;\n        msg._displayName = info.displayName;\n\n        msg.method = 'POST';\n\n        const action = (command === 'start') ? 'play' : command; // start -> play\n        msg.url = baseUrl + '/v0/' + action + '/' + encodeURIComponent(info.timelineId);\n\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    // --- Variables/Inputs ---\n    // Watchout UI: \"Variables\"\n    // Watchout HTTP API: \"Inputs\"\n    //\n    // Single:\n    //   POST /v0/input/{key}?value={v}\n    // Multiple:\n    //   POST /v0/inputs   body: [{\"key\":\"MyInput\",\"value\":0.5,\"duration\":1000?}, ...]\n    case 'setVar': {\n        if (!input.varName) return badRequest('Missing payload.varName for command: setVar');\n        if (input.varValue === undefined) return badRequest('Missing payload.varValue for command: setVar');\n\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/input/' + encodeURIComponent(String(input.varName)) +\n            '?value=' + encodeURIComponent(String(input.varValue));\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    // Optional helper for bulk changes/fades/presets\n    case 'setVars': {\n        if (!Array.isArray(input.vars)) return badRequest('Missing payload.vars array for command: setVars');\n\n        // Validate each item minimally\n        for (let i = 0; i < input.vars.length; i++) {\n            const v = input.vars[i];\n            if (!v || typeof v !== 'object') return badRequest('setVars: vars[' + i + '] must be an object');\n            if (!('key' in v)) return badRequest('setVars: vars[' + i + '] missing \"key\"');\n            if (!('value' in v)) return badRequest('setVars: vars[' + i + '] missing \"value\"');\n            // duration is optional\n        }\n\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/inputs';\n        msg.payload = input.vars; // array of {key,value,duration?}\n        return [msg, null];\n    }\n\n    case 'getState': {\n        msg.method = 'GET';\n        msg.url = baseUrl + '/v0/state';\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    default: {\n        return badRequest('Unknown command: ' + command);\n    }\n}",
-        "outputs": 2,
+        "z": "c4c46c49b8c3c2b1",
+        "name": "Build AlAdhan URL (calendarByCity, method=4)",
+        "func": "// Fetch Riyadh monthly prayer times via AlAdhan calendarByCity.\n// Method=4 => Umm Al-Qura University, Makkah.\n// Using aladhan.engconsults.com per request.\n\nconst now = new Date();\nconst year = now.getFullYear();\nconst month = now.getMonth() + 1; // 1-12\n\nconst city = encodeURIComponent(\"Riyadh\");\nconst country = encodeURIComponent(\"Saudi Arabia\");\n\nmsg.method = \"GET\";\nmsg.url = `https://api.aladhan.com/v1/calendarByCity/${year}/${month}?city=${city}&country=${country}&method=4`;\n\nmsg._pt = {\n  year,\n  month,\n  city: \"Riyadh\",\n  country: \"Saudi Arabia\",\n  method: 4,\n  source: \"aladhan.engconsults.com\",\n  trigger: msg.topic || \"manual\"\n};\n\nreturn msg;",
+        "outputs": 1,
         "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 390,
-        "y": 740,
+        "x": 560,
+        "y": 140,
         "wires": [
             [
-                "wo2-control-http",
-                "af78f5f1aa4db23f"
-            ],
-            []
+                "pt_http"
+            ]
         ]
     },
     {
-        "id": "wo2-control-http",
+        "id": "pt_http",
         "type": "http request",
-        "z": "wo2-tab",
-        "g": "dbd2c45c3962d1cd",
-        "name": "Watchout HTTP request",
+        "z": "c4c46c49b8c3c2b1",
+        "name": "GET AlAdhan Calendar",
         "method": "use",
         "ret": "obj",
         "paytoqs": "ignore",
@@ -5763,420 +6582,231 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 670,
-        "y": 720,
+        "x": 880,
+        "y": 140,
         "wires": [
             [
-                "wo2-control-format-fn",
-                "90130b9791133b25"
+                "pt_extract_store"
             ]
         ]
     },
     {
-        "id": "wo2-control-format-fn",
+        "id": "pt_extract_store",
         "type": "function",
-        "z": "wo2-tab",
-        "g": "dbd2c45c3962d1cd",
-        "name": "Format control response",
-        "func": "// Normalize the Watchout API response into a uniform JSON object\nconst command     = msg._command;\nconst timelineId  = msg._timelineId;\nconst contentId   = msg._contentId;     // optional: set upstream\nconst displayName = msg._displayName;   // optional: set upstream\nconst statusCode  = msg.statusCode || 200;\n\nmsg.payload = JSON.stringify({\n    success:     statusCode < 300,\n    command:     command,\n    contentId:   contentId,\n    displayName: displayName,\n    timelineId:  timelineId,\n    statusCode:  statusCode,\n    body:        msg.payload\n});\n\nmsg.statusCode = 200;\nmsg.headers = { 'Content-Type': 'application/json' };\nreturn msg;",
+        "z": "c4c46c49b8c3c2b1",
+        "name": "Extract times + store global truth (flow.prayerTimes.*)",
+        "func": "// Stores global truth in flow context:\n// - flow.prayerTimes.month : array of days\n// - flow.prayerTimes.today : today's object\n// Also emits two UI messages:\n// - { kind:'today', data: todayObj }\n// - { kind:'month', data: monthArr }\n\nfunction stripTZ(s) {\n  // API returns e.g. \"05:12 (+03)\"; keep \"05:12\".\n  if (typeof s !== 'string') return \"\";\n  return s.split(' ')[0].trim();\n}\n\nconst body = msg.payload;\nif (!body || !Array.isArray(body.data)) {\n  node.error(\"Unexpected AlAdhan response shape\", msg);\n  return null;\n}\n\nconst monthDays = body.data.map((d) => {\n  const greg = d?.date?.gregorian;\n\n  // AlAdhan gregorian.date typically is \"DD-MM-YYYY\".\n  // Convert to ISO \"YYYY-MM-DD\".\n  let dateISO = \"\";\n  if (typeof greg?.date === 'string') {\n    const parts = greg.date.split('-');\n    if (parts.length === 3) dateISO = `${parts[2]}-${parts[1]}-${parts[0]}`;\n  }\n\n  const t = d.timings || {};\n  return {\n    dateISO,\n    weekday: greg?.weekday?.en || \"\",\n    fajr: stripTZ(t.Fajr),\n    dhuhr: stripTZ(t.Dhuhr),\n    asr: stripTZ(t.Asr),\n    maghrib: stripTZ(t.Maghrib),\n    isha: stripTZ(t.Isha)\n  };\n});\n\nconst todayISO = new Date().toISOString().slice(0, 10);\nconst today = monthDays.find((x) => x.dateISO === todayISO) || null;\n\n// ---- store global truth ----\nflow.set('prayerTimes.month', monthDays);\nflow.set('prayerTimes.today', today);\n\n// Optional meta\nflow.set('prayerTimes.meta', {\n  ...(msg._pt || {}),\n  fetchedAt: new Date().toISOString(),\n  todayISO\n});\n\nconst fetchedAt = flow.get('prayerTimes.meta')?.fetchedAt;\n\nreturn [\n  { payload: { kind: 'today', data: today, meta: msg._pt || {}, fetchedAt } },\n  { payload: { kind: 'month', data: monthDays, meta: msg._pt || {}, fetchedAt } }\n];",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 220,
+        "wires": [
+            [
+                "pt_ui_today_template"
+            ],
+            [
+                "pt_month_to_table"
+            ]
+        ]
+    },
+    {
+        "id": "pt_ui_today_template",
+        "type": "ui-template",
+        "z": "c4c46c49b8c3c2b1",
+        "group": "dd705f78da42a9e3",
+        "page": "",
+        "ui": "",
+        "name": "Today Prayer Times (Adhan)",
+        "order": 3,
+        "width": "12",
+        "height": "4",
+        "format": "<template>\n  <div class=\"pt-wrap\">\n    <div class=\"pt-head\">\n      <div class=\"pt-title\">Riyadh Prayer Times (Adhan)</div>\n      <div class=\"pt-sub\">Umm al-Qura (method=4) · Updated: {{ fetchedAtLocal }}</div>\n    </div>\n\n    <div v-if=\"!today\" class=\"pt-empty\">No data yet (waiting for fetch)...</div>\n\n    <div v-else class=\"pt-grid\">\n      <div class=\"pt-card\"><div class=\"k\">Fajr</div><div class=\"v\">{{ today.fajr }}</div></div>\n      <div class=\"pt-card\"><div class=\"k\">Dhuhr</div><div class=\"v\">{{ today.dhuhr }}</div></div>\n      <div class=\"pt-card\"><div class=\"k\">Asr</div><div class=\"v\">{{ today.asr }}</div></div>\n      <div class=\"pt-card\"><div class=\"k\">Maghrib</div><div class=\"v\">{{ today.maghrib }}</div></div>\n      <div class=\"pt-card\"><div class=\"k\">Isha</div><div class=\"v\">{{ today.isha }}</div></div>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      today: null,\n      fetchedAt: null,\n    }\n  },\n  computed: {\n    fetchedAtLocal() {\n      if (!this.fetchedAt) return '—'\n      try { return new Date(this.fetchedAt).toLocaleString() } catch (e) { return this.fetchedAt }\n    }\n  },\n  mounted() {\n    this.$watch(() => this.msg, (m) => {\n      const p = m?.payload\n      if (!p || p.kind !== 'today') return\n      this.today = p.data || null\n      this.fetchedAt = p.fetchedAt || null\n    }, { deep: true, immediate: true })\n  }\n}\n</script>\n\n<style>\n.pt-wrap { padding: 8px; }\n.pt-head { margin-bottom: 10px; }\n.pt-title { font-size: 18px; font-weight: 900; }\n.pt-sub { font-size: 12px; opacity: 0.7; }\n.pt-empty { font-size: 13px; opacity: 0.8; }\n.pt-grid { display: grid; grid-template-columns: repeat(5, minmax(120px, 1fr)); gap: 10px; }\n@media (max-width: 900px) { .pt-grid { grid-template-columns: repeat(2, minmax(140px, 1fr)); } }\n.pt-card { padding: 10px; border-radius: 14px; background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.06); }\n.pt-card .k { font-size: 12px; opacity: 0.75; font-weight: 700; }\n.pt-card .v { font-size: 20px; font-weight: 950; margin-top: 4px; }\n</style>\n",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 1060,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "pt_month_to_table",
+        "type": "function",
+        "z": "c4c46c49b8c3c2b1",
+        "name": "Format month rows for ui-table (5 prayer columns)",
+        "func": "// Dashboard 2 ui-table: send msg.payload as an ARRAY of row objects.\n// If you send {columns, rows}, the table will show \"columns\" and \"rows\" as fields (wrong).\n\nconst p = msg.payload;\n\n// accept both upstream shapes\nlet month = null;\nif (p && typeof p === \"object\") {\n  if (Array.isArray(p.month)) month = p.month;                 // {month:[...]}\n  else if (p.kind === \"month\" && Array.isArray(p.data)) month = p.data; // {kind:'month', data:[...]}\n}\n\nif (!Array.isArray(month)) {\n  node.warn(\"No month array found; nothing sent to ui-table.\");\n  return null;\n}\n\n// Build rows (these keys become the columns)\nmsg.payload = month.map((d) => ({\n  Date: d.dateISO || \"\",\n  Fajr: d.fajr || \"\",\n  Dhuhr: d.dhuhr || \"\",\n  Asr: d.asr || \"\",\n  Maghrib: d.maghrib || \"\",\n  Isha: d.isha || \"\"\n}));\n\n// Force replace (works even if the node is set to Append in UI)\nmsg.ui_control = { action: \"replace\" };\n\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 930,
-        "y": 720,
+        "x": 680,
+        "y": 300,
         "wires": [
             [
-                "83dbc61fe5abe2a8"
+                "pt_ui_month_table"
             ]
         ]
     },
     {
-        "id": "9fc262ddc940c877",
-        "type": "link in",
-        "z": "wo2-tab",
-        "g": "dbd2c45c3962d1cd",
-        "name": "Send To WO",
-        "links": [
-            "wo2-ui-link-out",
-            "fe7a6403efe9d533"
-        ],
-        "x": 205,
-        "y": 720,
+        "id": "pt_ui_month_table",
+        "type": "ui-table",
+        "z": "c4c46c49b8c3c2b1",
+        "group": "dd705f78da42a9e3",
+        "name": "Monthly Prayer Times Table",
+        "label": "",
+        "order": 4,
+        "width": "0",
+        "height": "0",
+        "maxrows": "",
+        "autocols": true,
+        "showSearch": true,
+        "deselect": true,
+        "selectionType": "none",
+        "columns": [],
+        "mobileBreakpoint": "sm",
+        "mobileBreakpointType": "defaults",
+        "action": "replace",
+        "className": "pt-month-table",
+        "x": 1080,
+        "y": 300,
         "wires": [
-            [
-                "wo2-control-fn"
-            ]
+            []
         ]
     },
     {
-        "id": "3b56f39d22af5e1e",
-        "type": "inject",
-        "z": "wo2-tab",
-        "g": "dbd2c45c3962d1cd",
+        "id": "2a50a1e51c7d9366",
+        "type": "ui-template",
+        "z": "c4c46c49b8c3c2b1",
+        "group": "",
+        "page": "d4724cfa86c7c770",
+        "ui": "",
         "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "{ \"command\": \"start\", \"contentId\": \"show_2\" }",
-        "payloadType": "json",
-        "x": 150,
-        "y": 760,
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "head": "",
+        "format": "<template></template>\n\n<style>\n/* Debug helper: give the table a visible outline so you can confirm CSS is loading */\n.pt-month-table {\n  outline: 2px dashed rgba(159,0,245,.35);\n  outline-offset: 4px;\n}\n\n/* Zebra striping (Vuetify v-data-table) */\n.pt-month-table table tbody tr:nth-child(odd) > td {\n  background-color: #ffffff !important;\n}\n\n.pt-month-table table tbody tr:nth-child(even) > td {\n  background-color: #f3f4f6 !important; /* light grey */\n}\n\n/* Keep header readable */\n.pt-month-table table thead th {\n  background-color: var(--v-theme-surface, #ffffff) !important;\n}\n\n/* Optional: hover */\n.pt-month-table table tbody tr:hover > td {\n  background-color: rgba(159,0,245,.08) !important;\n}\n</style>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "page:style",
+        "className": "",
+        "x": 1020,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "190cf07de27e88d5",
+        "type": "ui-button",
+        "z": "c4c46c49b8c3c2b1",
+        "group": "dd705f78da42a9e3",
+        "name": "Refresh Daily Times",
+        "label": "Refresh Daily Times",
+        "order": 1,
+        "width": "3",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "daily",
+        "topicType": "str",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 180,
+        "y": 60,
         "wires": [
             [
-                "wo2-control-fn"
+                "pt_build_url"
             ]
         ]
     },
     {
-        "id": "af78f5f1aa4db23f",
-        "type": "debug",
-        "z": "wo2-tab",
-        "g": "dbd2c45c3962d1cd",
-        "name": "debug 9",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 510,
-        "y": 680,
-        "wires": []
-    },
-    {
-        "id": "83dbc61fe5abe2a8",
-        "type": "debug",
-        "z": "wo2-tab",
-        "g": "dbd2c45c3962d1cd",
-        "name": "debug 10",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1050,
-        "y": 680,
-        "wires": []
-    },
-    {
-        "id": "wo2-ui-init",
+        "id": "bc67f28c8ce074a4",
         "type": "inject",
-        "z": "wo2-tab",
-        "name": "Init / Refresh dropdown",
+        "z": "c4c46c49b8c3c2b1",
+        "name": "On Deploy: Fetch today",
         "props": [
             {
                 "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
             }
         ],
         "repeat": "",
         "crontab": "",
         "once": true,
-        "onceDelay": 1,
-        "payload": "{\"action\":\"init\"}",
-        "payloadType": "json",
-        "x": 143.0449981689453,
-        "y": 1092.205078125,
-        "wires": [
-            [
-                "wo2-ui-build-options"
-            ]
-        ]
-    },
-    {
-        "id": "wo2-ui-refresh",
-        "type": "ui-button",
-        "z": "wo2-tab",
-        "group": "wo2-ui-timeline-controls-group",
-        "name": "Refresh timelines",
-        "label": "Refresh",
-        "order": 1,
-        "width": 2,
-        "height": 1,
-        "tooltip": "Rebuild dropdown options from stored mapping",
-        "color": "#ffffff",
-        "bgcolor": "#6c6c6c",
-        "className": "",
-        "icon": "mdi-refresh",
-        "payload": "{\"action\":\"refresh\"}",
-        "payloadType": "json",
-        "topic": "refresh",
-        "topicType": "str",
-        "enableClick": true,
-        "x": 123.04499816894531,
-        "y": 1152.205078125,
-        "wires": [
-            [
-                "wo2-ui-build-options"
-            ]
-        ]
-    },
-    {
-        "id": "wo2-ui-build-options",
-        "type": "function",
-        "z": "wo2-tab",
-        "name": "Build dropdown options (label=displayName)",
-        "func": "// Build ui-dropdown options from flow.watchout_mapping\n// Show ONLY displayName in the dropdown, but keep value = contentId.\n\nconst mapping = flow.get('watchout_mapping') || {};\n\nconst keys = Object.keys(mapping);\nkeys.sort((a, b) => {\n    const da = (mapping[a] && mapping[a].displayName) ? String(mapping[a].displayName) : String(a);\n    const db = (mapping[b] && mapping[b].displayName) ? String(mapping[b].displayName) : String(b);\n    return da.localeCompare(db);\n});\n\nconst options = keys.map(contentId => {\n    const entry = mapping[contentId] || {};\n    const displayName = entry.displayName ? String(entry.displayName) : String(contentId);\n    return { value: contentId, label: displayName };\n});\n\n// Preserve selection if possible\nconst current = flow.get('watchout_selected_contentId');\nlet selected = current;\nif (!selected || !Object.prototype.hasOwnProperty.call(mapping, selected)) {\n    selected = options.length ? options[0].value : '';\n}\nflow.set('watchout_selected_contentId', selected);\n\nmsg.options = options;\nmsg.payload = selected;\n\nnode.status({ fill: 'green', shape: 'dot', text: 'Options: ' + options.length });\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 530,
-        "y": 1120,
-        "wires": [
-            [
-                "wo2-ui-dropdown"
-            ]
-        ]
-    },
-    {
-        "id": "wo2-ui-dropdown",
-        "type": "ui-dropdown",
-        "z": "wo2-tab",
-        "group": "wo2-ui-timeline-controls-group",
-        "name": "Timeline dropdown",
-        "label": "Timeline",
-        "tooltip": "",
-        "order": 2,
-        "width": 6,
-        "height": 1,
-        "passthru": true,
-        "multiple": false,
-        "options": [],
+        "onceDelay": "1",
+        "topic": "daily",
         "payload": "",
-        "topic": "watchout_timeline",
-        "topicType": "str",
-        "className": "",
-        "x": 850,
-        "y": 1120,
-        "wires": [
-            [
-                "wo2-ui-store-selection"
-            ]
-        ]
-    },
-    {
-        "id": "wo2-ui-store-selection",
-        "type": "function",
-        "z": "wo2-tab",
-        "name": "Store selected contentId",
-        "func": "flow.set('watchout_selected_contentId', msg.payload);\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1090,
-        "y": 1120,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "wo2-ui-play",
-        "type": "ui-button",
-        "z": "wo2-tab",
-        "group": "wo2-ui-timeline-controls-group",
-        "name": "Play",
-        "label": "Play",
-        "order": 3,
-        "width": 2,
-        "height": 1,
-        "tooltip": "Start selected timeline",
-        "color": "#ffffff",
-        "bgcolor": "#2e7d32",
-        "className": "",
-        "icon": "mdi-play",
-        "payload": "start",
-        "payloadType": "str",
-        "topic": "watchout_cmd",
-        "topicType": "str",
-        "x": 83.04499816894531,
-        "y": 1232.205078125,
-        "wires": [
-            [
-                "wo2-ui-build-command"
-            ]
-        ]
-    },
-    {
-        "id": "wo2-ui-pause",
-        "type": "ui-button",
-        "z": "wo2-tab",
-        "group": "wo2-ui-timeline-controls-group",
-        "name": "Pause",
-        "label": "Pause",
-        "order": 4,
-        "width": 2,
-        "height": 1,
-        "tooltip": "Pause selected timeline",
-        "color": "#ffffff",
-        "bgcolor": "#ef6c00",
-        "className": "",
-        "icon": "mdi-pause",
-        "payload": "pause",
-        "payloadType": "str",
-        "topic": "watchout_cmd",
-        "topicType": "str",
-        "x": 83.04499816894531,
-        "y": 1292.205078125,
-        "wires": [
-            [
-                "wo2-ui-build-command"
-            ]
-        ]
-    },
-    {
-        "id": "wo2-ui-stop",
-        "type": "ui-button",
-        "z": "wo2-tab",
-        "group": "wo2-ui-timeline-controls-group",
-        "name": "Stop",
-        "label": "Stop",
-        "order": 5,
-        "width": 2,
-        "height": 1,
-        "tooltip": "Stop selected timeline",
-        "color": "#ffffff",
-        "bgcolor": "#c62828",
-        "className": "",
-        "icon": "mdi-stop",
-        "payload": "stop",
-        "payloadType": "str",
-        "topic": "watchout_cmd",
-        "topicType": "str",
-        "x": 83.04499816894531,
-        "y": 1352.205078125,
-        "wires": [
-            [
-                "wo2-ui-build-command"
-            ]
-        ]
-    },
-    {
-        "id": "wo2-ui-build-command",
-        "type": "function",
-        "z": "wo2-tab",
-        "name": "Build API payload → Link Out",
-        "func": "const command = msg.payload; // start|pause|stop\nconst contentId = flow.get('watchout_selected_contentId');\n\nif (!contentId) {\n    node.status({ fill: 'red', shape: 'ring', text: 'No timeline selected' });\n    return null;\n}\n\nmsg.payload = { command, contentId };\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 493.0449981689453,
-        "y": 1292.205078125,
-        "wires": [
-            [
-                "wo2-ui-link-out"
-            ]
-        ]
-    },
-    {
-        "id": "wo2-ui-link-out",
-        "type": "link out",
-        "z": "wo2-tab",
-        "name": "→ Prepare control request",
-        "mode": "link",
-        "links": [
-            "9fc262ddc940c877"
-        ],
-        "x": 673.0449981689453,
-        "y": 1292.205078125,
-        "wires": []
-    },
-    {
-        "id": "e4d5505b0654cfbb",
-        "type": "comment",
-        "z": "wo2-tab",
-        "name": "WO Dropdown Timeline Control",
-        "info": "Dropdown is populated from flow context `watchout_mapping`.\n\nMapping schema expected:\n  flow.watchout_mapping = { [contentId]: { displayName, watchoutId } }\n\nUI behavior:\n- Dropdown shows ONLY displayName.\n- Dropdown value remains `contentId` (so we can send {command, contentId}).\n- Play / Pause / Stop buttons emit msg.payload to a Link Out node:\n    { command: \"start\"|\"pause\"|\"stop\", contentId: \"show_1\" }\n\nAfter import:\n1) Open the UI Group node and select the Dashboard page/group you want.\n2) Wire the Link Out node to your existing \"Prepare control request\" function node.\n\nNote: This flow does NOT make any HTTP calls itself.",
+        "payloadType": "date",
         "x": 170,
-        "y": 1040,
-        "wires": []
-    },
-    {
-        "id": "wo-ndjson-ui-running",
-        "type": "ui-template",
-        "z": "wo2-tab",
-        "group": "wo-ndjson-ui-group-running",
-        "page": "",
-        "ui": "",
-        "name": "Running timelines list",
-        "order": 1,
-        "width": 6,
-        "height": 4,
-        "format": "<template>\n  <div style=\"padding:6px\">\n    <div v-if=\"!msg\" style=\"color:#aaa\">Waiting for state…</div>\n    <div v-else>\n      <div v-if=\"!msg.payload.timelines || msg.payload.timelines.length === 0\" style=\"color:#aaa\">\n        No running or paused timelines.\n      </div>\n\n      <div v-else>\n        <div\n          v-for=\"tl in msg.payload.timelines\"\n          :key=\"tl.id\"\n          style=\"padding:6px 8px; margin:6px 0; border:1px solid #333; border-radius:6px; background:#1b1b2e; color:#e0e0e0;\"\n        >\n          <div style=\"display:flex; justify-content:space-between; gap:10px; align-items:baseline;\">\n            <div style=\"font-weight:600;\">{{ tl.name }}</div>\n            <div style=\"font-family:monospace; color:#80cbc4;\">id={{ tl.id }}</div>\n          </div>\n\n          <div style=\"display:flex; justify-content:space-between; margin-top:2px; font-size:0.9em;\">\n            <div :style=\"{ color: tl.stateColor, fontWeight: 600 }\">{{ tl.stateLabel }}</div>\n            <div style=\"font-family:monospace; color:#bbb;\">t={{ tl.timeText }}</div>\n          </div>\n        </div>\n      </div>\n\n      <div style=\"margin-top:8px; font-size:0.85em; color:#aaa\">Updated: {{ msg.payload.ts }}</div>\n    </div>\n  </div>\n</template>",
-        "storeOutMessages": true,
-        "passthru": true,
-        "resendOnRefresh": true,
-        "templateScope": "local",
-        "className": "",
-        "x": 1200,
-        "y": 920,
+        "y": 140,
         "wires": [
             []
         ]
     },
     {
-        "id": "5a33eacf66a4c899",
-        "type": "function",
-        "z": "wo2-tab",
-        "name": "Wo poll to runing timelines",
-        "func": "// Adapter: GET /v0/state (poll) → UI payload for timelines list\n// Output payload shape expected by the UI template:\n//   { timelines: [{id,name,stateLabel,stateColor,timeText}], ts }\n\nconst state = (msg.payload && msg.payload.data) ? msg.payload.data : msg.payload;\nconst timelines = Array.isArray(state && state.timelines) ? state.timelines : [];\n\n// Mapping schema: { contentId: { displayName, watchoutId } }\nconst mapping = flow.get('watchout_mapping') || {};\n\n// Reverse lookup: watchoutId -> displayName\nconst idToName = {};\nfor (const contentId of Object.keys(mapping)) {\n    const entry = mapping[contentId];\n    if (entry && typeof entry === 'object' && entry.watchoutId != null) {\n        idToName[String(entry.watchoutId)] = entry.displayName || contentId;\n    }\n}\n\n// Derive run/pause/stop from poll fields\nfunction deriveState(tl) {\n    // Prefer NDJSON-style if it exists\n    if (tl.playbackStatus) {\n        const s = String(tl.playbackStatus).toLowerCase();\n        if (s === 'run') return 'run';\n        if (s === 'pause') return 'pause';\n        return 'stop';\n    }\n\n    if (tl.running === true) return 'run';\n\n    const tt = (tl.timelineTime !== undefined && tl.timelineTime !== null) ? Number(tl.timelineTime) : null;\n    // Your requirement: running=false but timeline still \"there\" => treat as paused\n    if (tl.running === false && tt !== null && !Number.isNaN(tt) && tt > 0) return 'pause';\n\n    return 'stop';\n}\n\nfunction formatMmSs(ms) {\n    if (ms === undefined || ms === null) return '--:--';\n    const n = Number(ms);\n    if (Number.isNaN(n) || n < 0) return '--:--';\n    const totalSeconds = Math.floor(n / 1000);\n    const mm = Math.floor(totalSeconds / 60);\n    const ss = totalSeconds % 60;\n    return String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0');\n}\n\nfunction stateMeta(state) {\n    if (state === 'run')  return { stateLabel: 'Running', stateColor: '#4caf50' }; // green\n    if (state === 'pause') return { stateLabel: 'Paused',  stateColor: '#ffeb3b' }; // yellow\n    return { stateLabel: 'Stopped', stateColor: '#9e9e9e' };\n}\n\nconst items = timelines.map(tl => {\n    const id = String(tl.id);\n    const state = deriveState(tl);\n    const meta = stateMeta(state);\n\n    return {\n        id,\n        name: tl.name || idToName[id] || ('Timeline ' + id),\n        state,                 // run|pause|stop (internal)\n        stateLabel: meta.stateLabel,\n        stateColor: meta.stateColor,\n        timeText: formatMmSs(tl.timelineTime)\n    };\n});\n\n// Show only Running + Paused (hide stopped)\nconst visible = items.filter(t => t.state === 'run' || t.state === 'pause');\n\nmsg.topic = 'watchout/timelines';\nmsg.payload = {\n    timelines: visible,\n    ts: new Date().toISOString()\n};\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 950,
-        "y": 920,
+        "id": "7efcae4f3d57f714",
+        "type": "ui-button",
+        "z": "c4c46c49b8c3c2b1",
+        "group": "dd705f78da42a9e3",
+        "name": "Refresh Monthly Times",
+        "label": "Refresh Monthly Times",
+        "order": 2,
+        "width": "3",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "monthly",
+        "topicType": "str",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 180,
+        "y": 100,
         "wires": [
             [
-                "wo-ndjson-ui-running"
-            ]
-        ]
-    },
-    {
-        "id": "90130b9791133b25",
-        "type": "delay",
-        "z": "wo2-tab",
-        "name": "",
-        "pauseType": "delay",
-        "timeout": "0.3",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
-        "outputs": 1,
-        "x": 220,
-        "y": 840,
-        "wires": [
-            [
-                "wo2-poll-fn"
+                "pt_build_url"
             ]
         ]
     }
