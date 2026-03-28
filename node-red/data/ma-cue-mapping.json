@@ -1,0 +1,101 @@
+{
+  "a1": {
+    "ambience_1": {
+      "displayName": "Ambience 1",
+      "type": "sequenceCue",
+      "cue": "1",
+      "notes": "",
+      "sequence": "1"
+    },
+    "stage_foh": {
+      "displayName": "Stage FOH",
+      "type": "sequenceCue",
+      "cue": "2",
+      "notes": "",
+      "sequence": "1"
+    },
+    "blackout": {
+      "displayName": "Blackout",
+      "type": "sequenceCue",
+      "cue": "4",
+      "notes": "",
+      "sequence": "1"
+    },
+    "the_amber_life": {
+      "displayName": "The Amber life",
+      "type": "sequenceCue",
+      "cue": "3",
+      "notes": "",
+      "sequence": "1"
+    },
+    "captain_hook": {
+      "displayName": "Captain hook",
+      "type": "sequenceCue",
+      "cue": "5",
+      "notes": "",
+      "sequence": "1"
+    },
+    "cue_1": {
+      "displayName": "Cue 1",
+      "type": "executorCue",
+      "cue": "3",
+      "notes": "",
+      "executor": "1.201"
+    }
+  },
+  "a2": {
+    "ambience_1": {
+      "displayName": "Ambience 1",
+      "type": "sequenceCue",
+      "cue": "1",
+      "notes": "",
+      "sequence": "2"
+    },
+    "ambience_2": {
+      "displayName": "Ambience 2",
+      "type": "sequenceCue",
+      "cue": "2",
+      "notes": "",
+      "sequence": "2"
+    }
+  },
+  "a3": {
+    "ambience_1": {
+      "displayName": "Ambience 1",
+      "type": "sequenceCue",
+      "cue": "1",
+      "notes": "",
+      "sequence": "3"
+    },
+    "ambience_2": {
+      "displayName": "Ambience 2",
+      "type": "sequenceCue",
+      "cue": "2",
+      "notes": "",
+      "sequence": "3"
+    }
+  },
+  "ls": {
+    "blue": {
+      "displayName": "Blue",
+      "type": "sequenceCue",
+      "cue": "1",
+      "notes": "",
+      "sequence": "4"
+    },
+    "now_suncream": {
+      "displayName": "Now Suncream",
+      "type": "sequenceCue",
+      "cue": "3",
+      "notes": "",
+      "sequence": "4"
+    },
+    "purplish": {
+      "displayName": "Purplish",
+      "type": "sequenceCue",
+      "cue": "2",
+      "notes": "",
+      "sequence": "4"
+    }
+  }
+}
