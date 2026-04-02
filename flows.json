@@ -229,6 +229,25 @@
         }
     },
     {
+        "id": "macm-theme",
+        "type": "ui-theme",
+        "name": "MA Cue Mapper Theme",
+        "colors": {
+            "surface": "#121212",
+            "primary": "#80cbc4",
+            "bgPage": "#0d0d1a",
+            "groupBg": "#1b1b2e",
+            "groupOutline": "#333344"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "6px"
+        }
+    },
+    {
         "id": "ma-d2-page",
         "type": "ui-page",
         "name": "MA Integration v0.1",
@@ -447,7 +466,7 @@
         "path": "/page1",
         "icon": "home",
         "layout": "notebook",
-        "theme": "macm-theme",
+        "theme": "9d013935d2e3f2be",
         "breakpoints": [
             {
                 "name": "Default",
@@ -826,32 +845,13 @@
         "disabled": false
     },
     {
-        "id": "macm-theme",
-        "type": "ui-theme",
-        "name": "MA Cue Mapper Theme",
-        "colors": {
-            "surface": "#121212",
-            "primary": "#80cbc4",
-            "bgPage": "#0d0d1a",
-            "groupBg": "#1b1b2e",
-            "groupOutline": "#333344"
-        },
-        "sizes": {
-            "density": "default",
-            "pagePadding": "12px",
-            "groupGap": "12px",
-            "groupBorderRadius": "4px",
-            "widgetGap": "6px"
-        }
-    },
-    {
         "id": "e587f861cc4bfdcb",
         "type": "ui-group",
         "name": "Dynamic Buttons",
         "page": "41344ce3bde093a7",
         "width": "12",
         "height": "18",
-        "order": -1,
+        "order": 1,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -6094,8 +6094,7 @@
         "y": 620,
         "wires": [
             [
-                "ma-udp-backup",
-                "ma-udp-primary"
+                "ma-udp-backup"
             ]
         ]
     },
@@ -7021,7 +7020,7 @@
         "page": "",
         "ui": "",
         "name": "Lighting Dynamic buttons",
-        "order": 0,
+        "order": 1,
         "width": 0,
         "height": 0,
         "head": "",
