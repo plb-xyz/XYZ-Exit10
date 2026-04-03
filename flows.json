@@ -444,7 +444,7 @@
         "path": "/page1",
         "icon": "home",
         "layout": "notebook",
-        "theme": "macm-theme",
+        "theme": "9d013935d2e3f2be",
         "breakpoints": [
             {
                 "name": "Default",
