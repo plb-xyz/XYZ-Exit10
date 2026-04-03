@@ -229,6 +229,25 @@
         }
     },
     {
+        "id": "macm-theme",
+        "type": "ui-theme",
+        "name": "MA Cue Mapper Theme",
+        "colors": {
+            "surface": "#121212",
+            "primary": "#80cbc4",
+            "bgPage": "#0d0d1a",
+            "groupBg": "#1b1b2e",
+            "groupOutline": "#333344"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "6px"
+        }
+    },
+    {
         "id": "ma-d2-page",
         "type": "ui-page",
         "name": "MA Integration v0.1",
@@ -824,25 +843,6 @@
         "className": "",
         "visible": true,
         "disabled": false
-    },
-    {
-        "id": "macm-theme",
-        "type": "ui-theme",
-        "name": "MA Cue Mapper Theme",
-        "colors": {
-            "surface": "#121212",
-            "primary": "#80cbc4",
-            "bgPage": "#0d0d1a",
-            "groupBg": "#1b1b2e",
-            "groupOutline": "#333344"
-        },
-        "sizes": {
-            "density": "default",
-            "pagePadding": "12px",
-            "groupGap": "12px",
-            "groupBorderRadius": "4px",
-            "widgetGap": "6px"
-        }
     },
     {
         "id": "e587f861cc4bfdcb",
@@ -5431,8 +5431,13 @@
         "type": "function",
         "z": "ma-tab",
         "name": "MA Init (load config + set globals)",
-        "func": "'use strict';\nvar fs   = require('fs');\nvar path = require('path');\nvar userDir = (typeof RED !== 'undefined' && RED.settings && RED.settings.userDir)\n    ? RED.settings.userDir : process.cwd();\n\nfunction findConfigPath(dir) {\n    var tried = [];\n    try {\n        var projDir = path.join(dir, 'projects');\n        var projects = fs.readdirSync(projDir);\n        for (var i = 0; i < projects.length; i++) {\n            var p = path.join(projDir, projects[i], 'node-red', 'config', 'ma-config.json');\n            tried.push(p);\n            if (fs.existsSync(p)) return { path: p, tried: tried };\n        }\n    } catch(e) {\n        if (e.code !== 'ENOENT' && e.code !== 'ENOTDIR') {\n            node.warn('[MA Init] projects dir scan: ' + e.message);\n        }\n    }\n    var p2 = path.join(dir, 'node-red', 'config', 'ma-config.json');\n    tried.push(p2);\n    if (fs.existsSync(p2)) return { path: p2, tried: tried };\n    var p3 = path.join(dir, 'config', 'ma-config.json');\n    tried.push(p3);\n    if (fs.existsSync(p3)) return { path: p3, tried: tried };\n    return { path: null, tried: tried };\n}\n\nvar found = findConfigPath(userDir);\nif (!found.path) {\n    node.error('[MA Init] ma-config.json not found. Tried: ' + found.tried.join(', '));\n    return { topic: 'ma/init/error', payload: { error: 'ma-config.json not found', attempted: found.tried } };\n}\nvar configPath = found.path;\nvar config;\ntry {\n    config = JSON.parse(fs.readFileSync(configPath, 'utf8'));\n} catch (err) {\n    node.error('[MA Init] Failed to read config from ' + configPath + ': ' + err.message);\n    return { topic: 'ma/init/error', payload: { error: err.message, path: configPath } };\n}\nglobal.set('ma_config', config);\nif (global.get('ma_owner') === undefined) {\n    global.set('ma_owner', null);\n    global.set('ma_owner_setBy', 'ma-init');\n}\nif (!global.get('ma_zones')) global.set('ma_zones', { a1: false, a2: false, a3: false, ls: false });\nif (global.get('ma_exec_cue') === undefined) global.set('ma_exec_cue', 1);\nif (global.get('ma_seq_id')   === undefined) global.set('ma_seq_id',   1);\nif (global.get('ma_seq_cue')  === undefined) global.set('ma_seq_cue',  1);\nvar owner = global.get('ma_owner');\nvar setBy = global.get('ma_owner_setBy');\nvar zones = Object.keys((config.zoneExecutor || {})).join(', ');\nnode.log('[MA Init] Config loaded from ' + configPath + '. Zones: ' + zones + '. Owner: ' + owner);\nreturn { topic: 'ma/init', payload: { config: config, owner: owner, setBy: setBy, message: 'MA config loaded. Zones: ' + zones + '. Owner: ' + owner } };",
+        "func": "'use strict';\n\n// Just ensure expected globals exist with safe defaults.\n\n// Optional: keep ma_config for future non-routing settings\nvar cfg = global.get('ma_config');\nif (!cfg || typeof cfg !== 'object' || Array.isArray(cfg)) cfg = {};\n\n// If you want a default executor page when user supplies \"201\" (not \"1.201\")\nif (cfg.defaultExecPage == null) cfg.defaultExecPage = 1;\n\nglobal.set('ma_config', cfg);\n\n// Owner tracking (even if you no longer enforce owner gating)\nif (global.get('ma_owner') === undefined) global.set('ma_owner', null);\nif (global.get('ma_owner_setBy') === undefined) global.set('ma_owner_setBy', 'ma-init');\n\n// If you still use these in the MA dashboard UI, keep them.\n// If not, you can remove these lines too.\nif (!global.get('ma_zones')) global.set('ma_zones', { a1: false, a2: false, a3: false, ls: false });\nif (global.get('ma_exec_cue') === undefined) global.set('ma_exec_cue', 1);\nif (global.get('ma_seq_id')   === undefined) global.set('ma_seq_id',   1);\nif (global.get('ma_seq_cue')  === undefined) global.set('ma_seq_cue',  1);\n\nreturn {\n  topic: 'ma/init',\n  payload: {\n    message: 'MA init OK (no file config; no zoneExecutor required)',\n    owner: global.get('ma_owner'),\n    config: global.get('ma_config')\n  }\n};",
         "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
         "x": 440,
         "y": 60,
         "wires": [
@@ -5567,7 +5572,7 @@
         "id": "ma-d2-owner-dbg",
         "type": "debug",
         "z": "ma-tab",
-        "name": "Owner status",
+        "name": "MA Status out",
         "active": true,
         "tosidebar": true,
         "console": false,
@@ -5576,8 +5581,8 @@
         "targetType": "msg",
         "statusVal": "payload.owner",
         "statusType": "auto",
-        "x": 740,
-        "y": 240,
+        "x": 960,
+        "y": 520,
         "wires": []
     },
     {
@@ -5837,34 +5842,17 @@
         "id": "ma-d2-exec-sent-dbg",
         "type": "debug",
         "z": "ma-tab",
-        "name": "Executor -> Sent",
+        "name": "MA cmd Out",
         "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": true,
         "complete": "payload",
         "targetType": "msg",
-        "statusVal": "",
+        "statusVal": "payload",
         "statusType": "auto",
-        "x": 970,
-        "y": 900,
-        "wires": []
-    },
-    {
-        "id": "ma-d2-exec-blkd-dbg",
-        "type": "debug",
-        "z": "ma-tab",
-        "name": "Executor -> Blocked",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": true,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 960,
-        "y": 960,
+        "x": 990,
+        "y": 760,
         "wires": []
     },
     {
@@ -5991,45 +5979,11 @@
         ]
     },
     {
-        "id": "ma-d2-seq-sent-dbg",
-        "type": "debug",
-        "z": "ma-tab",
-        "name": "Sequence -> Sent",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": true,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 790,
-        "y": 1200,
-        "wires": []
-    },
-    {
-        "id": "ma-d2-seq-blkd-dbg",
-        "type": "debug",
-        "z": "ma-tab",
-        "name": "Sequence -> Blocked",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": true,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 780,
-        "y": 1280,
-        "wires": []
-    },
-    {
         "id": "ma-control-fn",
         "type": "function",
         "z": "ma-tab",
         "name": "MA Control (gate + cmd builder)",
-        "func": "'use strict';\nvar input = msg.payload || {};\nvar action = input.action;\n\n// Owner gate: allow commands when owner is null (open gate) OR one of the allowed owners.\n// Any other non-null owner blocks all control actions.\nvar rawOwner = global.get('ma_owner');\nvar currentOwner = (rawOwner !== undefined) ? rawOwner : null;\n\nvar maConfig = global.get('ma_config') || {};\n\nfunction isAllowedOwner(owner) {\n    return owner === null || owner === 'watchout' || owner === 'nodered';\n}\n\nfunction sendCmd(cmdStr) {\n    node.send([{ topic: '/cmd', payload: cmdStr }, null]);\n}\nfunction sendStatus(topic, payload) {\n    node.send([null, { topic: topic, payload: payload }]);\n}\n\nfunction block() {\n    sendStatus('ma/blocked', {\n        action: action,\n        allowedOwners: ['null', 'watchout', 'nodered'],\n        currentOwner: currentOwner\n    });\n    return null;\n}\n\nif (action === 'setOwner') {\n    var newOwner = (input.owner != null && input.owner !== '') ? input.owner : null;\n    global.set('ma_owner', newOwner);\n    global.set('ma_owner_setBy', input.setBy || 'nodered-ui');\n    sendStatus('ma/owner', { action: 'setOwner', owner: newOwner, setBy: global.get('ma_owner_setBy') });\n    return null;\n}\n\nif (action === 'goExecutorCue') {\n    if (!isAllowedOwner(currentOwner)) return block();\n\n    var zoneExecutor = maConfig.zoneExecutor;\n    if (!zoneExecutor) {\n        sendStatus('ma/error', { error: 'global.ma_config.zoneExecutor not set — run init first' });\n        return null;\n    }\n\n    var zones = Array.isArray(input.zones) ? input.zones : [];\n    if (zones.length === 0) {\n        sendStatus('ma/error', { error: \"'zones' must be a non-empty array for goExecutorCue\" });\n        return null;\n    }\n    if (input.cue == null) {\n        sendStatus('ma/error', { error: \"'cue' is required for goExecutorCue\" });\n        return null;\n    }\n\n    var msgs = zones.map(function (zone) {\n        // zone can be a key (a1/a2/a3/ls) or a literal executor (e.g. \"2.201\")\n        // If zoneExecutor has a mapping, use it; otherwise treat zone as the executor.\n        var exec = (zoneExecutor[zone] !== undefined) ? String(zoneExecutor[zone]) : String(zone);\n        return { topic: '/cmd', payload: 'Go+ Executor ' + exec + ' Cue ' + input.cue };\n    });\n\n    node.send([msgs, null]);\n    return null;\n}\n\nif (action === 'goSequenceCue') {\n    if (!isAllowedOwner(currentOwner)) return block();\n\n    if (input.sequence == null) {\n        sendStatus('ma/error', { error: \"'sequence' is required for goSequenceCue\" });\n        return null;\n    }\n    if (input.cue == null) {\n        sendStatus('ma/error', { error: \"'cue' is required for goSequenceCue\" });\n        return null;\n    }\n\n    sendCmd('Go+ Sequence ' + input.sequence + ' Cue ' + input.cue);\n    return null;\n}\n\nsendStatus('ma/error', { error: \"Unknown action: '\" + action + \"'\" });\nreturn null;",
+        "func": "'use strict';\nvar input = msg.payload || {};\nvar action = input.action;\nvar rawOwner = global.get('ma_owner');\nvar currentOwner = (rawOwner !== undefined) ? rawOwner : null;\nvar maConfig = global.get('ma_config') || {};\n\nfunction sendCmd(cmdStr) {\n    node.send([{ topic: '/cmd', payload: cmdStr }, null]);\n}\nfunction sendStatus(topic, payload) {\n    node.send([null, { topic: topic, payload: payload }]);\n}\n\nif (action === 'setOwner') {\n    var newOwner = (input.owner != null && input.owner !== '') ? input.owner : null;\n    global.set('ma_owner', newOwner);\n    global.set('ma_owner_setBy', input.setBy || 'nodered-ui');\n    sendStatus('ma/owner', { action: 'setOwner', owner: newOwner, setBy: global.get('ma_owner_setBy') });\n    return null;\n}\n\n// --- goExecutorCue (Page/Executor formatting; no config required) ---\nif (action === 'goExecutorCue') {\n    var zones = Array.isArray(input.zones) ? input.zones : [];\n    if (zones.length === 0) {\n        sendStatus('ma/error', { error: \"'zones' must be a non-empty array for goExecutorCue\" });\n        return null;\n    }\n    if (input.cue == null) {\n        sendStatus('ma/error', { error: \"'cue' is required for goExecutorCue\" });\n        return null;\n    }\n\n    // zoneExecutor OPTIONAL (only used if caller sends \"a1\"/\"a2\"/etc)\n    var zoneExecutor = (maConfig && maConfig.zoneExecutor) ? maConfig.zoneExecutor : null;\n\n    function toPageExec(token) {\n        // token may be:\n        // - \"a1\" (zone id) -> resolved via zoneExecutor (if present)\n        // - \"1.201\" -> page 1 exec 201\n        // - \"201\" -> exec 201 (assume page 1)\n        var t = String(token);\n\n        if (zoneExecutor && zoneExecutor[t] !== undefined) {\n            t = String(zoneExecutor[t]);\n        }\n\n        // \"page.executor\" format\n        var m = /^(\\d+)\\.(\\d+)$/.exec(t);\n        if (m) return { page: m[1], exec: m[2] };\n\n        // Exec-only format -> default page 1\n        var m2 = /^(\\d+)$/.exec(t);\n        if (m2) return { page: '1', exec: m2[1] };\n\n        // Unknown format; return raw so you can see it in errors\n        return { page: null, exec: t };\n    }\n\n    var msgs = zones.map(function (zoneOrExec) {\n        var pe = toPageExec(zoneOrExec);\n\n        if (!pe.page) {\n            // Fallback: if parsing fails, emit old-style command (or emit an error)\n            // I'd rather error hard so it's obvious:\n            return { topic: '/cmd', payload: 'Go+ Executor ' + pe.exec + ' Cue ' + input.cue };\n        }\n\n        return {\n            topic: '/cmd',\n            payload: 'Go+ Page ' + pe.page + ' Executor ' + pe.exec + ' Cue ' + input.cue\n        };\n    });\n\n    node.send([msgs, null]);\n    return null;\n}\n\nif (action === 'goSequenceCue') {\n    // Owner gate REMOVED: allow from any source\n\n    if (input.sequence == null) {\n        sendStatus('ma/error', { error: \"'sequence' is required for goSequenceCue\" });\n        return null;\n    }\n    if (input.cue == null) {\n        sendStatus('ma/error', { error: \"'cue' is required for goSequenceCue\" });\n        return null;\n    }\n    sendCmd('Go+ Sequence ' + input.sequence + ' Cue ' + input.cue);\n    return null;\n}\n\nsendStatus('ma/error', { error: \"Unknown action: '\" + action + \"'\" });\nreturn null;",
         "outputs": 2,
         "timeout": "",
         "noerr": 0,
@@ -6041,13 +5995,10 @@
         "wires": [
             [
                 "ma-osc-node",
-                "ma-d2-exec-sent-dbg",
-                "ma-d2-seq-sent-dbg"
+                "ma-d2-exec-sent-dbg"
             ],
             [
-                "ma-d2-owner-dbg",
-                "ma-d2-exec-blkd-dbg",
-                "ma-d2-seq-blkd-dbg"
+                "ma-d2-owner-dbg"
             ]
         ]
     },
@@ -6056,7 +6007,7 @@
         "type": "udp out",
         "z": "ma-tab",
         "name": "",
-        "addr": "192.168.5.50",
+        "addr": "192.168.5.24",
         "iface": "",
         "port": "8000",
         "ipv": "udp4",
@@ -6072,7 +6023,7 @@
         "type": "udp out",
         "z": "ma-tab",
         "name": "RPU",
-        "addr": "192.168.5.24",
+        "addr": "",
         "iface": "",
         "port": "8000",
         "ipv": "udp4",
@@ -6094,7 +6045,7 @@
         "y": 620,
         "wires": [
             [
-                "ma-udp-backup"
+                "ma-udp-primary"
             ]
         ]
     },
@@ -6891,7 +6842,7 @@
         "type": "function",
         "z": "macm-tab",
         "name": "Resolve & fire cue",
-        "func": "'use strict';\nvar mapping = flow.get('ma_cue_mapping') || { a1: {}, a2: {}, a3: {}, ls: {} };\nvar data = msg.payload || {};\nvar space = data.space || msg.space;\nvar labelId = data.labelId;\n\n// Support external trigger: { space, label } — normalize label to labelId\nif (!labelId) {\n    var rawLabel = data.label || msg.label;\n    if (!rawLabel) {\n        node.warn('[MA Cue Mapper] Fire: no labelId or label provided');\n        return null;\n    }\n    // Normalize labelId (trim/lowercase/underscore/strip)\n    labelId = rawLabel.trim().toLowerCase()\n        .replace(/\\s+/g, '_')\n        .replace(/[^a-z0-9_]/g, '')\n        .replace(/_+/g, '_')\n        .replace(/^_+|_+$/g, '');\n}\n\nif (!['a1', 'a2', 'a3', 'ls'].includes(space)) {\n    node.warn('[MA Cue Mapper] Fire: invalid space: ' + space);\n    return null;\n}\n\nvar entry = (mapping[space] || {})[labelId];\nif (!entry) {\n    node.warn('[MA Cue Mapper] Fire: not found: ' + space + '/' + labelId);\n    msg.topic = 'ma/cue-map/error';\n    msg.payload = { error: 'Not found: \"' + labelId + '\" in ' + space };\n    return [null, msg];\n}\n\n// Build cue command payload (this is what MA Control expects)\nvar cuePayload;\nif (entry.type === 'sequenceCue') {\n    cuePayload = { action: 'goSequenceCue', sequence: entry.sequence, cue: entry.cue };\n} else if (entry.type === 'executorCue') {\n    cuePayload = { action: 'goExecutorCue', zones: [entry.executor], cue: entry.cue };\n} else {\n    node.warn('[MA Cue Mapper] Fire: unknown type: ' + entry.type);\n    return null;\n}\n\nvar info = entry.type === 'sequenceCue'\n    ? 'Go+ Sequence ' + entry.sequence + ' Cue ' + entry.cue\n    : 'Go+ Executor ' + entry.executor + ' Cue ' + entry.cue;\n\nnode.log('[MA Cue Mapper] Fire: ' + space + '/' + entry.displayName + ' → ' + info);\n\n// Output 1: two messages, in order, BOTH shaped exactly for MA Control\nvar out1 = [\n    { payload: { action: 'setOwner', owner: 'nodered', setBy: 'ma-cue-mapper' } },\n    { payload: cuePayload }\n];\n\n// Output 2: UI/status message only (safe to wire to dashboard/debug)\nvar out2 = {\n    topic: 'ma/cue-map/fire/ok',\n    payload: { space: space, labelId: labelId, info: info, command: cuePayload }\n};\n\nreturn [out1, out2];",
+        "func": "'use strict';\nvar mapping = flow.get('ma_cue_mapping') || { a1: {}, a2: {}, a3: {}, ls: {} };\nvar data = msg.payload || {};\nvar space = data.space || msg.space;\nvar labelId = data.labelId;\n\n// Support external trigger: { space, label } — normalize label to labelId\nif (!labelId) {\n    var rawLabel = data.label || msg.label;\n    if (!rawLabel) {\n        node.warn('[MA Cue Mapper] Fire: no labelId or label provided');\n        return null;\n    }\n    // Normalize labelId (trim/lowercase/underscore/strip)\n    labelId = rawLabel.trim().toLowerCase()\n        .replace(/\\s+/g, '_')\n        .replace(/[^a-z0-9_]/g, '')\n        .replace(/_+/g, '_')\n        .replace(/^_+|_+$/g, '');\n}\n\nif (!['a1', 'a2', 'a3', 'ls'].includes(space)) {\n    node.warn('[MA Cue Mapper] Fire: invalid space: ' + space);\n    return null;\n}\n\nvar entry = (mapping[space] || {})[labelId];\nif (!entry) {\n    node.warn('[MA Cue Mapper] Fire: not found: ' + space + '/' + labelId);\n    msg.topic = 'ma/cue-map/error';\n    msg.payload = { error: 'Not found: \"' + labelId + '\" in ' + space };\n    return [null, msg];\n}\n\n// Build cue command payload (this is what MA Control expects)\nvar cuePayload;\nif (entry.type === 'sequenceCue') {\n    cuePayload = { action: 'goSequenceCue', sequence: entry.sequence, cue: entry.cue };\n} else if (entry.type === 'executorCue') {\n    cuePayload = { action: 'goExecutorCue', zones: [entry.executor], cue: entry.cue };\n} else {\n    node.warn('[MA Cue Mapper] Fire: unknown type: ' + entry.type);\n    return null;\n}\n\nvar info = entry.type === 'sequenceCue'\n    ? 'Go+ Sequence ' + entry.sequence + ' Cue ' + entry.cue\n    : 'Go+ Executor ' + entry.executor + ' Cue ' + entry.cue;\n\nnode.log('[MA Cue Mapper] Fire: ' + space + '/' + entry.displayName + ' → ' + info);\n\n// Output 1: two messages, in order, BOTH shaped exactly for MA Control\nvar out1 = [\n    // { payload: { action: 'setOwner', owner: 'nodered', setBy: 'ma-cue-mapper' } },\n    { payload: cuePayload }\n];\n\n// Output 2: UI/status message only (safe to wire to dashboard/debug)\nvar out2 = {\n    topic: 'ma/cue-map/fire/ok',\n    payload: { space: space, labelId: labelId, info: info, command: cuePayload }\n};\n\nreturn [out1, out2];",
         "outputs": 2,
         "timeout": "",
         "noerr": 0,
@@ -6931,7 +6882,7 @@
         "type": "debug",
         "z": "macm-tab",
         "name": "Fire result",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
