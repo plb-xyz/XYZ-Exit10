@@ -47,7 +47,7 @@ The MA Cue Mapper lets operators define named cue labels (e.g. "Green Look") map
 
 ## Mapping Schema (`ma-cue-mapping.json`)
 
-Top-level keys are **space IDs** (`a1`, `a2`, `a3`, `ls`). Each space contains an object keyed by **`labelId`** (normalized from `displayName`).
+Top-level keys are **space IDs** (`a1`, `a2`, `a3`, `ls`, `cmd`, `mx`). Each space contains an object keyed by **`labelId`** (normalized from `displayName`).
 
 ```json
 {
@@ -64,35 +64,85 @@ Top-level keys are **space IDs** (`a1`, `a2`, `a3`, `ls`). Each space contains a
     "green_look": {
       "displayName": "Green Look",
       "type": "executorCue",
-      "executor": "2.201",
+      "executor": "1.201",
       "cue": "6",
       "notes": ""
     }
   },
   "a3": {},
-  "ls": {}
+  "ls": {},
+  "cmd": {
+    "full_show_start": {
+      "displayName": "Full Show Start",
+      "type": "command",
+      "commands": [
+        "Go+ Page 1 Executor 201 Cue 2",
+        "Go+ Sequence 5 Cue 1"
+      ],
+      "notes": "Fires two MA commands in order"
+    }
+  },
+  "mx": {
+    "reset_all": {
+      "displayName": "Reset All",
+      "type": "macro",
+      "macro": "42",
+      "notes": "Runs grandMA3 macro 42"
+    }
+  }
 }
 ```
 
 ### Space IDs
 
-| ID | Display name |
-|---|---|
-| `a1` | Atrium 1 |
-| `a2` | Atrium 2 |
-| `a3` | Atrium 3 |
-| `ls` | Landscape |
+| ID | Display name | Entry types allowed |
+|---|---|---|
+| `a1` | Atrium 1 | `sequenceCue`, `executorCue` |
+| `a2` | Atrium 2 | `sequenceCue`, `executorCue` |
+| `a3` | Atrium 3 | `sequenceCue`, `executorCue` |
+| `ls` | Landscape | `sequenceCue`, `executorCue` |
+| `cmd` | Commands | `command` |
+| `mx` | Macros | `macro` |
 
-### Entry fields
+### Entry fields — all types
 
 | Field | Type | Required | Description |
 |---|---|---:|---|
 | `displayName` | string | yes | Human-readable label (e.g. "Green Look") |
-| `type` | `"sequenceCue"` \| `"executorCue"` | yes | Command type |
-| `sequence` | string | if `sequenceCue` | MA sequence number |
-| `executor` | string | if `executorCue` | MA executor number (e.g. `"2.201"`) |
-| `cue` | string | yes | MA cue number |
+| `type` | string | yes | Command type — see below |
 | `notes` | string | no | Optional operator notes |
+
+### Entry fields — `sequenceCue`
+
+| Field | Type | Required | Description |
+|---|---|---:|---|
+| `sequence` | string | yes | MA sequence number |
+| `cue` | string | yes | MA cue number |
+
+### Entry fields — `executorCue`
+
+| Field | Type | Required | Description |
+|---|---|---:|---|
+| `executor` | string | yes | MA executor in `page.executor` format (e.g. `"1.201"` → Page 1 Executor 201) |
+| `cue` | string | yes | MA cue number |
+
+The executor value `"1.201"` is parsed as **Page 1, Executor 201**, producing: `Go+ Page 1 Executor 201 Cue <n>`.
+
+### Entry fields — `command`
+
+| Field | Type | Required | Description |
+|---|---|---:|---|
+| `commands` | `string[]` | yes | Array of raw MA command strings, emitted in order |
+
+Each string in `commands` is sent as-is as an MA `/cmd` OSC message. Example: `"Go+ Page 1 Executor 201 Cue 2"`.
+
+### Entry fields — `macro`
+
+| Field | Type | Required | Description |
+|---|---|---:|---|
+| `macro` | string | yes | grandMA3 macro number or name (e.g. `"42"` or `"MyMacro"`) |
+
+Produces the MA command: `Go+ Macro <macro>`.
 
 ### `labelId` normalization
 
@@ -174,16 +224,20 @@ Click the same header again to reverse the sort direction.
 
 ### Add/Edit form
 
-Click **+ Add Entry** or **Edit** on a row to open the form:
+Click **+ Add Entry** or **Edit** on a row to open the form. The available fields depend on the selected Space and Type:
 
 | Field | Notes |
 |---|---|
 | Label | Display name — becomes the `labelId` key |
-| Type | `Sequence Cue` or `Executor Cue` |
+| Type | Automatically constrained by Space: `Sequence Cue` / `Executor Cue` for Atriums/Landscape; `Command` for Commands space; `Macro` for Macros space |
 | Sequence # | Visible only for Sequence Cue |
-| Executor # | Visible only for Executor Cue (e.g. `2.201`) |
-| Cue # | Required for both types |
+| Executor # | Visible only for Executor Cue (e.g. `1.201` = Page 1 Executor 201) |
+| Cue # | Required for Sequence Cue and Executor Cue |
+| Commands | Visible only for Command type — multi-line textarea, one MA command per line |
+| Macro # or Name | Visible only for Macro type — number or name passed to `Go+ Macro <value>` |
 | Notes | Optional |
+
+The **Cue** column is hidden in the table when viewing Commands or Macros spaces.
 
 Click **Save** to write immediately. The table refreshes.
 
@@ -247,11 +301,37 @@ Valid examples:
 { "action": "goSequenceCue", "sequence": "2", "cue": "3" }
 ```
 
+Produces: `Go+ Sequence 2 Cue 3`
+
 ### Fire executor cue
 
 ```json
-{ "action": "goExecutorCue", "zones": ["2.201"], "cue": "6" }
+{ "action": "goExecutorCue", "zones": ["1.201"], "cue": "6" }
 ```
+
+Produces: `Go+ Page 1 Executor 201 Cue 6`
+
+The `zones` array value `"1.201"` is parsed as **page 1, executor 201** (`page.executor` format).
+A plain number like `"201"` defaults to page 1 (`Go+ Page 1 Executor 201 Cue 6`).
+No `zoneExecutor` config is required.
+
+### Fire raw MA commands (command type)
+
+```json
+{ "action": "goCmd", "commands": ["Go+ Page 1 Executor 201 Cue 2", "Go+ Sequence 5 Cue 1"] }
+```
+
+Each string in `commands` is emitted as a separate `/cmd` OSC message in order. A single-command shorthand is also accepted: `{ "action": "goCmd", "command": "Go+ Page 1 Executor 201 Cue 2" }`.
+
+### Fire a grandMA3 macro (macro type)
+
+```json
+{ "action": "goMacro", "macro": "42" }
+```
+
+Produces: `Go+ Macro 42`
+
+`macro` can be a number string (`"42"`) or a name string (`"MyMacro"`).
 
 #### Common mistake: wrapper objects
 
@@ -272,15 +352,7 @@ That wrapper is intended for UI feedback/debug only.
 
 ## What the flow sends to MA (Resolve & Fire behavior)
 
-When resolving a label and firing it, the mapper emits **two MA-control-compatible messages in order** to the MA Control pipeline:
-
-1) Owner claim:
-
-```json
-{ "action": "setOwner", "owner": "nodered", "setBy": "ma-cue-mapper" }
-```
-
-2) Cue command (one of):
+When resolving a label and firing it, the mapper emits one message to the MA Control pipeline:
 
 - Sequence cue:
   ```json
@@ -288,12 +360,18 @@ When resolving a label and firing it, the mapper emits **two MA-control-compatib
   ```
 - Executor cue:
   ```json
-  { "action": "goExecutorCue", "zones": ["2.201"], "cue": "6" }
+  { "action": "goExecutorCue", "zones": ["1.201"], "cue": "6" }
+  ```
+- Command type:
+  ```json
+  { "action": "goCmd", "commands": ["Go+ Page 1 Executor 201 Cue 2"] }
+  ```
+- Macro type:
+  ```json
+  { "action": "goMacro", "macro": "42" }
   ```
 
-> Owner note: the MA Control node’s gate policy determines which owners can send commands.
-> See [`MA-node-red-commands.md`](./MA-node-red-commands.md).
-
+> The `setOwner` claim before firing has been removed. MA Control no longer enforces owner gating — all actions are accepted from any source.
 ---
 
 ## Wiring to MA Control
