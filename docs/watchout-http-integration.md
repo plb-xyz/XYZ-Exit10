@@ -35,6 +35,9 @@ Persistence uses two JSON files:
 | Diff UI | Displays the diff to the operator with **[ Confirm & Save]** and **[ Cancel]** buttons |
 | Persistent Storage | Mapping is stored in both Node-RED flow context **and** the file system via Node-RED Read/Write file nodes (survives restarts) |
 | Timeline Control | `start` / `stop` / `pause` timelines via the stored mapping |
+| Jump to Time | Seek a timeline to a specific time position (ms) with optional playback state |
+| Jump to Cue | Jump a timeline to a named cue point with optional playback state |
+| Get Timeline Cues | Retrieve all cue points defined on a specific timeline |
 | Inputs (Variables) Control | `setVar` and `setVars` to update Watchout **Inputs** (called “Variables” in the Watchout UI) |
 | Cue Sets (Cue Group State) | Get and set cue-group-state by **ID** or **Name**, including multi-switch and reset-to-default |
 | Status Polling | Poll current system state via `GET /v0/state` (reliable) |
@@ -216,9 +219,13 @@ Each discovered timeline produces one entry in the mapping:
 }
 ```
 
-- **`contentId`** — normalized key used in Node-RED messages (e.g. `"show_1"`)
+- **`timelineId`** — the value used in Node-RED control messages (e.g. `"show_1"` or `"1"`); may be a mapping key (normalized name) or a raw numeric Watchout timeline ID
 - **`displayName`** — original Watchout timeline name; used for UI labels
 - **`watchoutId`** — numeric timeline ID used in Watchout REST calls
+
+> **Note:** In older messages the timeline key was named `contentId`. The field has been renamed
+> to `timelineId` in all control messages. For backward compatibility, the flow still accepts
+> messages where only `contentId` is present and `timelineId` is absent.
 
 ---
 
@@ -227,25 +234,59 @@ Each discovered timeline produces one entry in the mapping:
 Send a `POST` request to `/watchout/control` with a JSON body. The
 **Prepare control request** function node maps these commands to Watchout REST endpoints.
 
+> **Schema note (v0.3):** The timeline identifier field has been renamed from `contentId` to
+> `timelineId` in all control messages. For backward compatibility, messages that contain only
+> `contentId` (and no `timelineId`) continue to work.
+
 ### Timelines
 
 Start a timeline:
 ```json
-{ "command": "start", "contentId": "show_1" }
+{ "command": "start", "timelineId": "show_1" }
 ```
 → `POST /v0/play/{id}`
 
 Stop a timeline:
 ```json
-{ "command": "stop", "contentId": "show_1" }
+{ "command": "stop", "timelineId": "show_1" }
 ```
 → `POST /v0/stop/{id}`
 
 Pause a timeline:
 ```json
-{ "command": "pause", "contentId": "show_1" }
+{ "command": "pause", "timelineId": "show_1" }
 ```
 → `POST /v0/pause/{id}`
+
+Jump to a specific time position on a timeline:
+```json
+{ "command": "jumpToTime", "timelineId": "show_1", "milliseconds": 12345 }
+```
+→ `POST /v0/jump-to-time/{id}?time=12345`
+
+With optional state (pause or play after seek):
+```json
+{ "command": "jumpToTime", "timelineId": "show_1", "milliseconds": 12345, "state": "pause" }
+```
+→ `POST /v0/jump-to-time/{id}?time=12345&state=pause`
+
+Jump to a named cue point on a timeline:
+```json
+{ "command": "jumpToCue", "timelineId": "show_1", "cueId": "scene_2" }
+```
+→ `POST /v0/jump-to-cue/{id}/{cueId}`
+
+With optional state (pause or play after jump):
+```json
+{ "command": "jumpToCue", "timelineId": "show_1", "cueId": "scene_2", "state": "play" }
+```
+→ `POST /v0/jump-to-cue/{id}/{cueId}?state=play`
+
+Get all cue points defined on a timeline:
+```json
+{ "command": "getCues", "timelineId": "show_1" }
+```
+→ `GET /v0/cues/{id}`
 
 Play all timelines:
 ```json
@@ -331,9 +372,9 @@ The flow normalizes Watchout responses into a uniform JSON structure:
 {
   "success": true,
   "command": "start",
+  "timelineId": "1",
   "contentId": "show_1",
   "displayName": "Show 1",
-  "timelineId": "1",
   "statusCode": 200,
   "body": {}
 }
@@ -343,6 +384,7 @@ Cue group commands will include cue-related fields when available:
 - `groupId`, `variantId`
 - `groupName`, `variantName`
 - `states` (for multi-switch/reset)
+- `cueId` (for `jumpToCue`)
 
 ---
 
@@ -355,6 +397,7 @@ Cue group commands will include cue-related fields when available:
 | `watchout_pending` | object | Pending mapping awaiting operator confirmation |
 | `watchout_state` | object | Latest state from polling and/or streaming |
 | `watchout_sse_status` | string | `'connected'` \| `'disconnected'` \| `'error'` |
+| `watchout_selected_timelineId` | string | Mapping key of the currently selected timeline in the UI dropdown |
 
 ---
 
@@ -404,10 +447,14 @@ Depending on Node-RED version and environment, you may need a streaming-capable 
 | `POST` | `/v0/cue-group-state/by-name/<groupName>/<variantName>` | Cue group state — switch single variant by Name |
 | `POST` | `/v0/cue-group-state/by-id` | Cue group state — switch multiple variants by ID (object body) |
 | `POST` | `/v0/cue-group-state/by-name` | Cue group state — switch multiple variants by Name (object body; `{}` resets all to default) |
+| `POST` | `/v0/jump-to-time/{id}?time={ms}&state={s?}` | Seek a timeline to a time position (ms); optional `state`: `pause`\|`play` |
+| `POST` | `/v0/jump-to-cue/{id}/{cueId}?state={s?}` | Jump to a named cue point; optional `state`: `pause`\|`play` |
+| `GET` | `/v0/cues/{id}` | Get all cue points defined on a timeline |
 
 ---
 
 ## Roadmap
 
-- **v0.2** *(this version)* — Node-RED-based integration with timeline discovery + mapping persistence, timeline control, inputs control, cue sets control, and polling-based state monitoring (with optional streaming where supported)
-- **v0.3** *(future)* — ISAAC integration (Events & Playables → Show Controller decision tree)
+- **v0.2** — Node-RED-based integration with timeline discovery + mapping persistence, timeline control, inputs control, cue sets control, and polling-based state monitoring (with optional streaming where supported)
+- **v0.3** *(this version)* — Jump to Time, Jump to Cue, Get Timeline Cues commands; `contentId` field renamed to `timelineId` (with backward compatibility)
+- **v0.4** *(future)* — ISAAC integration (Events & Playables → Show Controller decision tree)
