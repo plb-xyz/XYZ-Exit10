@@ -158,6 +158,22 @@
     }
   ],
 
+  "payloadConventions": {
+    "specialContentSpacesField": {
+      "preferredName": "spaces",
+      "legacyName": "targets",
+      "note": "Use 'spaces' (array of space IDs) for ui/specialOnTopOn and ui/specialFullscreenOn payloads. The Decision Maker also accepts the legacy name 'targets' for backward compatibility during transition.",
+      "example": {
+        "topic": "ui/specialOnTopOn",
+        "payload": {
+          "spaces": ["a1"],
+          "contentId": "promo_overlay_16x9",
+          "audioMode": "duckBG"
+        }
+      }
+    }
+  },
+
   "policies": {
     "landscape": {
       "video": "NONE",
