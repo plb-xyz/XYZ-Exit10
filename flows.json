@@ -648,7 +648,7 @@
     "page": "e155175a9ba21767",
     "width": 6,
     "height": 4,
-    "order": 4,
+    "order": 5,
     "showTitle": true,
     "className": "",
     "visible": "true",
@@ -4097,7 +4097,7 @@
     "z": "wo2-tab",
     "g": "025439f9501b7114",
     "name": "Parse mapping",
-    "func": "// Parse timeline-mapping.json\nlet mapping = {};\ntry {\n    const raw = JSON.parse(msg.payload);\n    mapping = raw.mapping || raw || {};\n} catch(e) {\n    node.warn('[Watchout] timeline-mapping.json parse error, starting empty: ' + e.message);\n}\nflow.set('watchout_mapping', mapping);\nflow.set('watchout_pending', null);\nconst count = Object.keys(mapping).length;\nnode.status({ fill: 'green', shape: 'dot', text: 'Mapping loaded: ' + count + ' timelines' });\nreturn null;",
+    "func": "// Parse timeline-mapping.json (flat format: { timelineKey: { displayName, watchoutTimelineId, cues? } })\nlet mapping = {};\ntry {\n    const raw = JSON.parse(msg.payload);\n    mapping = raw || {};\n} catch(e) {\n    node.warn('[Watchout] timeline-mapping.json parse error, starting empty: ' + e.message);\n}\nflow.set('watchout_mapping', mapping);\nflow.set('watchout_pending', null);\nconst count = Object.keys(mapping).length;\nnode.status({ fill: 'green', shape: 'dot', text: 'Mapping loaded: ' + count + ' timelines' });\nreturn null;",
     "outputs": 1,
     "noerr": 0,
     "initialize": "",
@@ -4334,7 +4334,7 @@
     "type": "function",
     "z": "wo2-tab",
     "name": "Prepare control request",
-    "func": "// Validate input and build HTTP request for Watchout control.\n// Output 1: valid command  → HTTP Request node\n// Output 2: invalid command → error object (wire this to debug / ui toast)\n//\n// Expected input (msg.payload):\n//   Timelines:\n//     { command: \"start\"|\"stop\"|\"pause\", timelineId: \"show_1\" }\n//     { command: \"start\"|\"stop\"|\"pause\", contentId:  \"show_1\" }  // legacy – backward compat\n//     { command: \"playAll\" }\n//     { command: \"getState\" }\n//\n//   Jump to Time:\n//     { command: \"jumpToTime\", timelineId: \"show_1\", milliseconds: 12345, state?: \"pause\"|\"play\" }\n//\n//   Jump to Cue:\n//     { command: \"jumpToCue\", timelineId: \"show_1\", cueId: \"intro\", state?: \"pause\"|\"play\" }\n//\n//   Get Timeline Cues:\n//     { command: \"getCues\", timelineId: \"show_1\" }\n//\n//   Inputs (Watchout UI calls these \"Variables\"; HTTP API calls them \"Inputs\"):\n//     { command: \"setVar\",  varName: \"MyInput\", varValue: 0.5 }\n//     { command: \"setVars\", vars: [{key, value, duration?}, ...] }\n//\n//   Cue Group State (Cue Sets):\n//     { command: \"getCueGroupStatesById\" }\n//     { command: \"getCueGroupStatesByName\" }\n//     { command: \"setCueGroupVariantById\", groupId: \"1\", variantId: \"2\" }\n//     { command: \"setCueGroupVariantByName\", groupName: \"Group A\", variantName: \"Variant 1\" }\n//     { command: \"setCueGroupVariantsById\", states: { \"groupId1\": \"variantId1\", \"groupId2\": \"variantId2\" } }\n//     { command: \"setCueGroupVariantsByName\", states: { \"groupName1\": \"variantName1\", \"groupName2\": \"variantName2\" } }\n//       - Reset all to defaults: { command: \"setCueGroupVariantsByName\", states: {} }\n\nconst cfg = flow.get('watchout_config') || {};\nconst host = cfg.host || 'localhost';\nconst port = cfg.port || 3019;\nconst baseUrl = 'http://' + host + ':' + port;\n\nconst input = msg.payload || {};\nconst command = input.command;\n\nconst mapping = flow.get('watchout_mapping') || {};\n\n// Resolve a timelineId (or legacy contentId) to a numeric Watchout timeline ID.\n// Accepts:\n//   - A mapping key such as \"show_1\" → looks up mapping[key].watchoutId\n//   - A raw numeric string / number such as \"0\" or 2 → used directly\n// Mapping schema:\n//   mapping[contentId] = { displayName: string, watchoutId: string }\nfunction resolveTimelineInfo(rawId) {\n    if (rawId === undefined || rawId === null) {\n        return { timelineId: null, resolvedFrom: rawId, displayName: undefined };\n    }\n\n    if (Object.prototype.hasOwnProperty.call(mapping, rawId)) {\n        const entry = mapping[rawId];\n\n        // Defensive: allow old flat string mappings if they somehow still exist in memory\n        if (typeof entry === 'string' || typeof entry === 'number') {\n            return { timelineId: String(entry), resolvedFrom: rawId, displayName: undefined };\n        }\n\n        if (entry && typeof entry === 'object') {\n            const timelineId = (entry.watchoutId !== undefined && entry.watchoutId !== null)\n                ? String(entry.watchoutId)\n                : null;\n\n            const displayName = (entry.displayName !== undefined && entry.displayName !== null)\n                ? String(entry.displayName)\n                : undefined;\n\n            return { timelineId, resolvedFrom: rawId, displayName };\n        }\n\n        // Entry exists but is malformed\n        return { timelineId: null, resolvedFrom: rawId, displayName: undefined };\n    }\n\n    // Fallback: treat provided value as a raw timeline ID\n    return { timelineId: String(rawId), resolvedFrom: rawId, displayName: undefined };\n}\n\nfunction badRequest(errorText) {\n    const errMsg = {\n        statusCode: 400,\n        payload: {\n            success: false,\n            error: errorText\n        }\n    };\n    return [null, errMsg];\n}\n\n// Resolve timelineId from message, supporting both new (timelineId) and\n// legacy (contentId) field names for backward compatibility.\nfunction getTimelineIdFromInput() {\n    if (input.timelineId !== undefined && input.timelineId !== null && input.timelineId !== '') {\n        return input.timelineId;\n    }\n    if (input.contentId !== undefined && input.contentId !== null && input.contentId !== '') {\n        return input.contentId;\n    }\n    return undefined;\n}\n\nmsg._command = command;\nmsg.headers = { 'Content-Type': 'application/json' };\n\nswitch (command) {\n    // --------------------\n    // Timelines\n    // --------------------\n    case 'playAll': {\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/play';\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'start':\n    case 'stop':\n    case 'pause': {\n        const rawId = getTimelineIdFromInput();\n        if (rawId === undefined) {\n            return badRequest('Missing payload.timelineId for command: ' + command);\n        }\n\n        const info = resolveTimelineInfo(rawId);\n        if (!info.timelineId) {\n            return badRequest('Unable to resolve timelineId for: ' + rawId);\n        }\n\n        // Timeline metadata for downstream formatter\n        msg._timelineId = info.timelineId;\n        msg._contentId = info.resolvedFrom;\n        msg._displayName = info.displayName;\n\n        msg.method = 'POST';\n\n        const action = (command === 'start') ? 'play' : command; // start -> play\n        msg.url = baseUrl + '/v0/' + action + '/' + encodeURIComponent(info.timelineId);\n\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    // --------------------\n    // Jump to Time\n    // --------------------\n    case 'jumpToTime': {\n        const rawId = getTimelineIdFromInput();\n        if (rawId === undefined) {\n            return badRequest('Missing payload.timelineId for command: jumpToTime');\n        }\n        if (input.milliseconds === undefined || input.milliseconds === null) {\n            return badRequest('Missing payload.milliseconds for command: jumpToTime');\n        }\n\n        const info = resolveTimelineInfo(rawId);\n        if (!info.timelineId) {\n            return badRequest('Unable to resolve timelineId for: ' + rawId);\n        }\n\n        msg._timelineId = info.timelineId;\n        msg._contentId = info.resolvedFrom;\n        msg._displayName = info.displayName;\n\n        let qs = '?time=' + encodeURIComponent(String(input.milliseconds));\n        if (input.state !== undefined && input.state !== null && input.state !== '') {\n            qs += '&state=' + encodeURIComponent(String(input.state));\n        }\n\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/jump-to-time/' + encodeURIComponent(info.timelineId) + qs;\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    // --------------------\n    // Jump to Cue\n    // --------------------\n    case 'jumpToCue': {\n        const rawId = getTimelineIdFromInput();\n        if (rawId === undefined) {\n            return badRequest('Missing payload.timelineId for command: jumpToCue');\n        }\n        if (input.cueId === undefined || input.cueId === null || input.cueId === '') {\n            return badRequest('Missing payload.cueId for command: jumpToCue');\n        }\n\n        const info = resolveTimelineInfo(rawId);\n        if (!info.timelineId) {\n            return badRequest('Unable to resolve timelineId for: ' + rawId);\n        }\n\n        msg._timelineId = info.timelineId;\n        msg._contentId = info.resolvedFrom;\n        msg._displayName = info.displayName;\n        msg._cueId = String(input.cueId);\n\n        let qs = '';\n        if (input.state !== undefined && input.state !== null && input.state !== '') {\n            qs = '?state=' + encodeURIComponent(String(input.state));\n        }\n\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/jump-to-cue/' +\n            encodeURIComponent(info.timelineId) + '/' +\n            encodeURIComponent(String(input.cueId)) + qs;\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    // --------------------\n    // Get Timeline Cues\n    // --------------------\n    case 'getCues': {\n        const rawId = getTimelineIdFromInput();\n        if (rawId === undefined) {\n            return badRequest('Missing payload.timelineId for command: getCues');\n        }\n\n        const info = resolveTimelineInfo(rawId);\n        if (!info.timelineId) {\n            return badRequest('Unable to resolve timelineId for: ' + rawId);\n        }\n\n        msg._timelineId = info.timelineId;\n        msg._contentId = info.resolvedFrom;\n        msg._displayName = info.displayName;\n\n        msg.method = 'GET';\n        msg.url = baseUrl + '/v0/cues/' + encodeURIComponent(info.timelineId);\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    // --------------------\n    // Inputs (Variables)\n    // --------------------\n    case 'setVar': {\n        if (!input.varName) return badRequest('Missing payload.varName for command: setVar');\n        if (input.varValue === undefined) return badRequest('Missing payload.varValue for command: setVar');\n\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/input/' + encodeURIComponent(String(input.varName)) +\n            '?value=' + encodeURIComponent(String(input.varValue));\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'setVars': {\n        if (!Array.isArray(input.vars)) return badRequest('Missing payload.vars array for command: setVars');\n\n        // Validate each item minimally\n        for (let i = 0; i < input.vars.length; i++) {\n            const v = input.vars[i];\n            if (!v || typeof v !== 'object') return badRequest('setVars: vars[' + i + '] must be an object');\n            if (!('key' in v)) return badRequest('setVars: vars[' + i + '] missing \"key\"');\n            if (!('value' in v)) return badRequest('setVars: vars[' + i + '] missing \"value\"');\n            // duration is optional\n        }\n\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/inputs';\n        msg.payload = input.vars; // array of {key,value,duration?}\n        return [msg, null];\n    }\n\n    case 'getState': {\n        msg.method = 'GET';\n        msg.url = baseUrl + '/v0/state';\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    // --------------------\n    // Cue Sets / Cue Group State\n    // --------------------\n    case 'getCueGroupStatesById': {\n        msg.method = 'GET';\n        msg.url = baseUrl + '/v0/cue-group-state/by-id';\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'getCueGroupStatesByName': {\n        msg.method = 'GET';\n        msg.url = baseUrl + '/v0/cue-group-state/by-name';\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'setCueGroupVariantById': {\n        if (input.groupId === undefined || input.groupId === null || input.groupId === '') {\n            return badRequest('Missing payload.groupId for command: setCueGroupVariantById');\n        }\n        if (input.variantId === undefined || input.variantId === null || input.variantId === '') {\n            return badRequest('Missing payload.variantId for command: setCueGroupVariantById');\n        }\n\n        // Cue metadata for downstream formatter\n        msg._groupId = String(input.groupId);\n        msg._variantId = String(input.variantId);\n\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/cue-group-state/by-id/' +\n            encodeURIComponent(String(input.groupId)) + '/' +\n            encodeURIComponent(String(input.variantId));\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'setCueGroupVariantByName': {\n        if (!input.groupName) return badRequest('Missing payload.groupName for command: setCueGroupVariantByName');\n        if (!input.variantName) return badRequest('Missing payload.variantName for command: setCueGroupVariantByName');\n\n        // Cue metadata for downstream formatter\n        msg._groupName = String(input.groupName);\n        msg._variantName = String(input.variantName);\n\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/cue-group-state/by-name/' +\n            encodeURIComponent(String(input.groupName)) + '/' +\n            encodeURIComponent(String(input.variantName));\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'setCueGroupVariantsById': {\n        // states is an object: { \"groupId1\": \"variantId1\", ... }\n        const states = ('states' in input) ? input.states : input.payload;\n        if (states === undefined || states === null || typeof states !== 'object' || Array.isArray(states)) {\n            return badRequest('Missing payload.states object for command: setCueGroupVariantsById');\n        }\n\n        // Cue metadata for downstream formatter\n        msg._states = states;\n\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/cue-group-state/by-id';\n        msg.payload = states;\n        return [msg, null];\n    }\n\n    case 'setCueGroupVariantsByName': {\n        // states is an object: { \"groupName1\": \"variantName1\", ... } OR {} to reset to default\n        const states = ('states' in input) ? input.states : input.payload;\n        if (states === undefined || states === null || typeof states !== 'object' || Array.isArray(states)) {\n            return badRequest('Missing payload.states object for command: setCueGroupVariantsByName');\n        }\n\n        // Cue metadata for downstream formatter\n        msg._states = states;\n\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/cue-group-state/by-name';\n        msg.payload = states; // {} = reset all to default\n        return [msg, null];\n    }\n\n    default: {\n        return badRequest('Unknown command: ' + command);\n    }\n}",
+    "func": "// Validate input and build HTTP request for Watchout control.\n// Output 1: valid command  → HTTP Request node\n// Output 2: invalid command → error object (wire this to debug / ui toast)\n//\n// Expected input (msg.payload):\n//   Timelines:\n//     { command: \"start\"|\"stop\"|\"pause\", timelineKey: \"show_1\" }\n//     { command: \"playAll\" }\n//     { command: \"getState\" }\n//\n//   Jump to Time:\n//     { command: \"jumpToTime\", timelineKey: \"show_1\", milliseconds: 12345, state?: \"pause\"|\"play\" }\n//\n//   Jump to Cue:\n//     { command: \"jumpToCue\", timelineKey: \"show_1\", cueKey: \"shows\", state?: \"pause\"|\"play\" }\n//     Resolves timelineKey → watchoutTimelineId and cueKey → watchoutCueId from mapping.\n//\n//   Get Timeline Cues:\n//     { command: \"getCues\", timelineKey: \"show_1\" }\n//\n//   Inputs (Watchout UI calls these \"Variables\"; HTTP API calls them \"Inputs\"):\n//     { command: \"setVar\",  varName: \"MyInput\", varValue: 0.5 }\n//     { command: \"setVars\", vars: [{key, value, duration?}, ...] }\n//\n//   Cue Group State (Cue Sets):\n//     { command: \"getCueGroupStatesById\" }\n//     { command: \"getCueGroupStatesByName\" }\n//     { command: \"setCueGroupVariantById\", groupId: \"1\", variantId: \"2\" }\n//     { command: \"setCueGroupVariantByName\", groupName: \"Group A\", variantName: \"Variant 1\" }\n//     { command: \"setCueGroupVariantsById\", states: { \"groupId1\": \"variantId1\", ... } }\n//     { command: \"setCueGroupVariantsByName\", states: { \"groupName1\": \"variantName1\", ... } }\n//       - Reset all to defaults: { command: \"setCueGroupVariantsByName\", states: {} }\n\nconst cfg = flow.get('watchout_config') || {};\nconst host = cfg.host || 'localhost';\nconst port = cfg.port || 3019;\nconst baseUrl = 'http://' + host + ':' + port;\n\nconst input = msg.payload || {};\nconst command = input.command;\n\nconst mapping = flow.get('watchout_mapping') || {};\n\n// Resolve timelineKey → { watchoutTimelineId, displayName }\nfunction resolveTimeline(timelineKey) {\n    if (!timelineKey) return { watchoutTimelineId: null, displayName: undefined };\n    const entry = mapping[timelineKey];\n    if (!entry) return { watchoutTimelineId: null, displayName: undefined };\n    const watchoutTimelineId = (entry.watchoutTimelineId !== undefined && entry.watchoutTimelineId !== null)\n        ? String(entry.watchoutTimelineId)\n        : null;\n    const displayName = (entry.displayName !== undefined && entry.displayName !== null)\n        ? String(entry.displayName)\n        : undefined;\n    return { watchoutTimelineId, displayName };\n}\n\n// Resolve cueKey → watchoutCueId from mapping[timelineKey].cues\nfunction resolveCue(timelineKey, cueKey) {\n    if (!timelineKey || !cueKey) return null;\n    const entry = mapping[timelineKey];\n    if (!entry || !entry.cues) return null;\n    const cueEntry = entry.cues[cueKey];\n    if (!cueEntry) return null;\n    return (cueEntry.watchoutCueId !== undefined && cueEntry.watchoutCueId !== null)\n        ? String(cueEntry.watchoutCueId)\n        : null;\n}\n\nfunction badRequest(errorText) {\n    const errMsg = {\n        statusCode: 400,\n        payload: { success: false, error: errorText }\n    };\n    return [null, errMsg];\n}\n\nmsg._command = command;\nmsg.headers = { 'Content-Type': 'application/json' };\n\nswitch (command) {\n    // --------------------\n    // Timelines\n    // --------------------\n    case 'playAll': {\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/play';\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'start':\n    case 'stop':\n    case 'pause': {\n        const timelineKey = input.timelineKey;\n        if (!timelineKey) {\n            return badRequest('Missing payload.timelineKey for command: ' + command);\n        }\n        const resolved = resolveTimeline(timelineKey);\n        if (!resolved.watchoutTimelineId) {\n            return badRequest('Unable to resolve timelineKey \"' + timelineKey + '\" — run timeline discovery first');\n        }\n        msg._timelineKey = timelineKey;\n        msg._watchoutTimelineId = resolved.watchoutTimelineId;\n        msg._displayName = resolved.displayName;\n        msg.method = 'POST';\n        const action = (command === 'start') ? 'play' : command;\n        msg.url = baseUrl + '/v0/' + action + '/' + encodeURIComponent(resolved.watchoutTimelineId);\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    // --------------------\n    // Jump to Time\n    // --------------------\n    case 'jumpToTime': {\n        const timelineKey = input.timelineKey;\n        if (!timelineKey) {\n            return badRequest('Missing payload.timelineKey for command: jumpToTime');\n        }\n        if (input.milliseconds === undefined || input.milliseconds === null) {\n            return badRequest('Missing payload.milliseconds for command: jumpToTime');\n        }\n        const resolved = resolveTimeline(timelineKey);\n        if (!resolved.watchoutTimelineId) {\n            return badRequest('Unable to resolve timelineKey \"' + timelineKey + '\" — run timeline discovery first');\n        }\n        msg._timelineKey = timelineKey;\n        msg._watchoutTimelineId = resolved.watchoutTimelineId;\n        msg._displayName = resolved.displayName;\n        let qs = '?time=' + encodeURIComponent(String(input.milliseconds));\n        if (input.state !== undefined && input.state !== null && input.state !== '') {\n            qs += '&state=' + encodeURIComponent(String(input.state));\n        }\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/jump-to-time/' + encodeURIComponent(resolved.watchoutTimelineId) + qs;\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    // --------------------\n    // Jump to Cue\n    // --------------------\n    case 'jumpToCue': {\n        const timelineKey = input.timelineKey;\n        const cueKey = input.cueKey;\n        if (!timelineKey) {\n            return badRequest('Missing payload.timelineKey for command: jumpToCue');\n        }\n        if (!cueKey) {\n            return badRequest('Missing payload.cueKey for command: jumpToCue');\n        }\n        const resolved = resolveTimeline(timelineKey);\n        if (!resolved.watchoutTimelineId) {\n            return badRequest('Unable to resolve timelineKey \"' + timelineKey + '\" — run timeline discovery first');\n        }\n        const watchoutCueId = resolveCue(timelineKey, cueKey);\n        if (watchoutCueId === null) {\n            return badRequest('Unable to resolve cueKey \"' + cueKey + '\" on timeline \"' + timelineKey + '\" — run Confirm & Save to cache cues');\n        }\n        msg._timelineKey = timelineKey;\n        msg._watchoutTimelineId = resolved.watchoutTimelineId;\n        msg._displayName = resolved.displayName;\n        msg._cueKey = cueKey;\n        msg._watchoutCueId = watchoutCueId;\n        let qs = '';\n        if (input.state !== undefined && input.state !== null && input.state !== '') {\n            qs = '?state=' + encodeURIComponent(String(input.state));\n        }\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/jump-to-cue/' +\n            encodeURIComponent(resolved.watchoutTimelineId) + '/' +\n            encodeURIComponent(watchoutCueId) + qs;\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    // --------------------\n    // Get Timeline Cues\n    // --------------------\n    case 'getCues': {\n        const timelineKey = input.timelineKey;\n        if (!timelineKey) {\n            return badRequest('Missing payload.timelineKey for command: getCues');\n        }\n        const resolved = resolveTimeline(timelineKey);\n        if (!resolved.watchoutTimelineId) {\n            return badRequest('Unable to resolve timelineKey \"' + timelineKey + '\" — run timeline discovery first');\n        }\n        msg._timelineKey = timelineKey;\n        msg._watchoutTimelineId = resolved.watchoutTimelineId;\n        msg._displayName = resolved.displayName;\n        msg.method = 'GET';\n        msg.url = baseUrl + '/v0/cues/' + encodeURIComponent(resolved.watchoutTimelineId);\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    // --------------------\n    // Inputs (Variables)\n    // --------------------\n    case 'setVar': {\n        if (!input.varName) return badRequest('Missing payload.varName for command: setVar');\n        if (input.varValue === undefined) return badRequest('Missing payload.varValue for command: setVar');\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/input/' + encodeURIComponent(String(input.varName)) +\n            '?value=' + encodeURIComponent(String(input.varValue));\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'setVars': {\n        if (!Array.isArray(input.vars)) return badRequest('Missing payload.vars array for command: setVars');\n        for (let i = 0; i < input.vars.length; i++) {\n            const v = input.vars[i];\n            if (!v || typeof v !== 'object') return badRequest('setVars: vars[' + i + '] must be an object');\n            if (!('key' in v)) return badRequest('setVars: vars[' + i + '] missing \"key\"');\n            if (!('value' in v)) return badRequest('setVars: vars[' + i + '] missing \"value\"');\n        }\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/inputs';\n        msg.payload = input.vars;\n        return [msg, null];\n    }\n\n    case 'getState': {\n        msg.method = 'GET';\n        msg.url = baseUrl + '/v0/state';\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    // --------------------\n    // Cue Sets / Cue Group State\n    // --------------------\n    case 'getCueGroupStatesById': {\n        msg.method = 'GET';\n        msg.url = baseUrl + '/v0/cue-group-state/by-id';\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'getCueGroupStatesByName': {\n        msg.method = 'GET';\n        msg.url = baseUrl + '/v0/cue-group-state/by-name';\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'setCueGroupVariantById': {\n        if (input.groupId === undefined || input.groupId === null || input.groupId === '') {\n            return badRequest('Missing payload.groupId for command: setCueGroupVariantById');\n        }\n        if (input.variantId === undefined || input.variantId === null || input.variantId === '') {\n            return badRequest('Missing payload.variantId for command: setCueGroupVariantById');\n        }\n        msg._groupId = String(input.groupId);\n        msg._variantId = String(input.variantId);\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/cue-group-state/by-id/' +\n            encodeURIComponent(String(input.groupId)) + '/' +\n            encodeURIComponent(String(input.variantId));\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'setCueGroupVariantByName': {\n        if (!input.groupName) return badRequest('Missing payload.groupName for command: setCueGroupVariantByName');\n        if (!input.variantName) return badRequest('Missing payload.variantName for command: setCueGroupVariantByName');\n        msg._groupName = String(input.groupName);\n        msg._variantName = String(input.variantName);\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/cue-group-state/by-name/' +\n            encodeURIComponent(String(input.groupName)) + '/' +\n            encodeURIComponent(String(input.variantName));\n        msg.payload = null;\n        return [msg, null];\n    }\n\n    case 'setCueGroupVariantsById': {\n        const states = ('states' in input) ? input.states : input.payload;\n        if (states === undefined || states === null || typeof states !== 'object' || Array.isArray(states)) {\n            return badRequest('Missing payload.states object for command: setCueGroupVariantsById');\n        }\n        msg._states = states;\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/cue-group-state/by-id';\n        msg.payload = states;\n        return [msg, null];\n    }\n\n    case 'setCueGroupVariantsByName': {\n        const states = ('states' in input) ? input.states : input.payload;\n        if (states === undefined || states === null || typeof states !== 'object' || Array.isArray(states)) {\n            return badRequest('Missing payload.states object for command: setCueGroupVariantsByName');\n        }\n        msg._states = states;\n        msg.method = 'POST';\n        msg.url = baseUrl + '/v0/cue-group-state/by-name';\n        msg.payload = states;\n        return [msg, null];\n    }\n\n    default:\n        return badRequest('Unknown command: ' + command);\n}",
     "outputs": 2,
     "timeout": "",
     "noerr": 0,
@@ -4381,7 +4381,7 @@
     "type": "function",
     "z": "wo2-tab",
     "name": "Format control response",
-    "func": "// Normalize the Watchout API response into a uniform JSON object\n\nconst statusCode = (msg.statusCode !== undefined && msg.statusCode !== null) ? msg.statusCode : 200;\n\n// Fields set by \"Prepare control request\"\nconst command     = msg._command;\n\nconst timelineId  = msg._timelineId;\nconst contentId   = msg._contentId;\nconst displayName = msg._displayName;\nconst cueId       = msg._cueId;\n\n// Cue group state fields (optional — set upstream if you want richer echo)\nconst groupId     = msg._groupId;\nconst variantId   = msg._variantId;\nconst groupName   = msg._groupName;\nconst variantName = msg._variantName;\nconst states      = msg._states;\n\n// Build response object, omitting undefined fields\nconst out = {\n    success:    statusCode < 300,\n    command:    command,\n    statusCode: statusCode,\n    body:       msg.payload\n};\n\nif (timelineId !== undefined) out.timelineId = timelineId;\nif (contentId !== undefined) out.contentId = contentId;\nif (displayName !== undefined) out.displayName = displayName;\nif (cueId !== undefined) out.cueId = cueId;\n\nif (groupId !== undefined) out.groupId = groupId;\nif (variantId !== undefined) out.variantId = variantId;\nif (groupName !== undefined) out.groupName = groupName;\nif (variantName !== undefined) out.variantName = variantName;\nif (states !== undefined) out.states = states;\n\n// Keep same behavior: payload is JSON string for HTTP Response node\nmsg.payload = JSON.stringify(out);\n\nmsg.statusCode = 200;\nmsg.headers = { 'Content-Type': 'application/json' };\nreturn msg;",
+    "func": "// Normalize the Watchout API response into a uniform JSON object\n\nconst statusCode = (msg.statusCode !== undefined && msg.statusCode !== null) ? msg.statusCode : 200;\n\nconst command            = msg._command;\nconst timelineKey        = msg._timelineKey;\nconst watchoutTimelineId = msg._watchoutTimelineId;\nconst displayName        = msg._displayName;\nconst cueKey             = msg._cueKey;\nconst watchoutCueId      = msg._watchoutCueId;\n\n// Cue group state fields (optional)\nconst groupId     = msg._groupId;\nconst variantId   = msg._variantId;\nconst groupName   = msg._groupName;\nconst variantName = msg._variantName;\nconst states      = msg._states;\n\nconst out = {\n    success:    statusCode < 300,\n    command:    command,\n    statusCode: statusCode,\n    body:       msg.payload\n};\n\nif (timelineKey !== undefined) out.timelineKey = timelineKey;\nif (watchoutTimelineId !== undefined) out.watchoutTimelineId = watchoutTimelineId;\nif (displayName !== undefined) out.displayName = displayName;\nif (cueKey !== undefined) out.cueKey = cueKey;\nif (watchoutCueId !== undefined) out.watchoutCueId = watchoutCueId;\n\nif (groupId !== undefined) out.groupId = groupId;\nif (variantId !== undefined) out.variantId = variantId;\nif (groupName !== undefined) out.groupName = groupName;\nif (variantName !== undefined) out.variantName = variantName;\nif (states !== undefined) out.states = states;\n\nmsg.payload = JSON.stringify(out);\nmsg.statusCode = 200;\nmsg.headers = { 'Content-Type': 'application/json' };\nreturn msg;",
     "outputs": 1,
     "timeout": "",
     "noerr": 0,
@@ -4428,7 +4428,7 @@
     "once": false,
     "onceDelay": 0.1,
     "topic": "",
-    "payload": "{ \"command\": \"start\", \"contentId\": \"show_2\" }",
+    "payload": "{ \"command\": \"start\", \"timelineKey\": \"show_2\" }",
     "payloadType": "json",
     "x": 170,
     "y": 780,
@@ -4529,7 +4529,7 @@
     "type": "function",
     "z": "wo2-tab",
     "name": "Build dropdown options (label=displayName)",
-    "func": "// Build ui-dropdown options from flow.watchout_mapping\n// Show ONLY displayName in the dropdown, but keep value = the mapping key (contentId).\n\nconst mapping = flow.get('watchout_mapping') || {};\n\nconst keys = Object.keys(mapping);\nkeys.sort((a, b) => {\n    const da = (mapping[a] && mapping[a].displayName) ? String(mapping[a].displayName) : String(a);\n    const db = (mapping[b] && mapping[b].displayName) ? String(mapping[b].displayName) : String(b);\n    return da.localeCompare(db);\n});\n\nconst options = keys.map(key => {\n    const entry = mapping[key] || {};\n    const displayName = entry.displayName ? String(entry.displayName) : String(key);\n    return { value: key, label: displayName };\n});\n\n// Preserve selection if possible\nconst current = flow.get('watchout_selected_timelineId');\nlet selected = current;\nif (!selected || !Object.prototype.hasOwnProperty.call(mapping, selected)) {\n    selected = options.length ? options[0].value : '';\n}\nflow.set('watchout_selected_timelineId', selected);\n\nmsg.options = options;\nmsg.payload = selected;\n\nnode.status({ fill: 'green', shape: 'dot', text: 'Options: ' + options.length });\nreturn msg;",
+    "func": "// Build ui-dropdown options from flow.watchout_mapping\n// Show ONLY displayName in the dropdown, but keep value = the mapping key (timelineKey).\n\nconst mapping = flow.get('watchout_mapping') || {};\n\nconst keys = Object.keys(mapping);\nkeys.sort((a, b) => {\n    const da = (mapping[a] && mapping[a].displayName) ? String(mapping[a].displayName) : String(a);\n    const db = (mapping[b] && mapping[b].displayName) ? String(mapping[b].displayName) : String(b);\n    return da.localeCompare(db);\n});\n\nconst options = keys.map(key => {\n    const entry = mapping[key] || {};\n    const displayName = entry.displayName ? String(entry.displayName) : String(key);\n    return { value: key, label: displayName };\n});\n\n// Preserve selection if possible\nconst current = flow.get('watchout_selected_timelineKey');\nlet selected = current;\nif (!selected || !Object.prototype.hasOwnProperty.call(mapping, selected)) {\n    selected = options.length ? options[0].value : '';\n}\nflow.set('watchout_selected_timelineKey', selected);\n\nmsg.options = options;\nmsg.payload = selected;\n\nnode.status({ fill: 'green', shape: 'dot', text: 'Options: ' + options.length });\nreturn msg;",
     "outputs": 1,
     "timeout": 0,
     "noerr": 0,
@@ -4575,7 +4575,7 @@
     "type": "function",
     "z": "wo2-tab",
     "name": "Store selected timelineId",
-    "func": "// Store selected timeline ID (mapping key / contentId) for use by UI buttons.\n// Variable renamed from watchout_selected_contentId to watchout_selected_timelineId\n// for consistency with the timelineId field in control messages.\nflow.set('watchout_selected_timelineId', msg.payload);\nreturn msg;",
+    "func": "// Store selected timelineKey (normalized timeline name) for use by UI buttons.\nflow.set('watchout_selected_timelineKey', msg.payload);\nreturn msg;",
     "outputs": 1,
     "timeout": 0,
     "noerr": 0,
@@ -4585,7 +4585,9 @@
     "x": 1130,
     "y": 1320,
     "wires": [
-      []
+      [
+        "wo2-ui-build-cue-options"
+      ]
     ]
   },
   {
@@ -4674,7 +4676,7 @@
     "type": "function",
     "z": "wo2-tab",
     "name": "Build API payload → Link Out",
-    "func": "const command = msg.payload; // start|pause|stop\nconst timelineId = flow.get('watchout_selected_timelineId');\n\nif (!timelineId) {\n    node.status({ fill: 'red', shape: 'ring', text: 'No timeline selected' });\n    return null;\n}\n\nmsg.payload = { command, timelineId };\nreturn msg;",
+    "func": "const command = msg.payload; // start|pause|stop\nconst timelineKey = flow.get('watchout_selected_timelineKey');\n\nif (!timelineKey) {\n    node.status({ fill: 'red', shape: 'ring', text: 'No timeline selected' });\n    return null;\n}\n\nmsg.payload = { command, timelineKey };\nreturn msg;",
     "outputs": 1,
     "timeout": 0,
     "noerr": 0,
@@ -4954,7 +4956,7 @@
     "z": "wo2-tab",
     "g": "f34ab81391d45829",
     "name": "Prepare mapping write",
-    "func": "// Prepare mapping JSON for file write\nconst pending = flow.get('watchout_pending');\nif (!pending) {\n    node.send({ payload: { status: 'nothing_pending' }, topic: 'watchout/confirm' });\n    return null;\n}\n\nflow.set('watchout_mapping', pending);\nflow.set('watchout_pending', null);\n\nconst cfg = flow.get('watchout_config') || {};\nconst savedAt = new Date().toISOString();\n\nmsg.filename = cfg.mappingFile || '/data/projects/XYZ-Exit10/node-red/data/timeline-mapping.json';\nmsg.payload  = JSON.stringify({ mapping: pending, lastSaved: savedAt }, null, 2);\nmsg._pendingMapping = pending;\nmsg._savedAt = savedAt;\nreturn msg;",
+    "func": "// Prepare mapping JSON for initial file write (without cues).\n// Cues will be fetched and added to the mapping in a subsequent step.\nconst pending = flow.get('watchout_pending');\nif (!pending) {\n    node.send({ payload: { status: 'nothing_pending' }, topic: 'watchout/confirm' });\n    return null;\n}\n\nflow.set('watchout_mapping', pending);\nflow.set('watchout_pending', null);\n\nconst cfg = flow.get('watchout_config') || {};\n\nmsg.filename = cfg.mappingFile || '/projects/XYZ-Exit10/node-red/data/timeline-mapping.json';\nmsg.payload  = JSON.stringify(pending, null, 2);\nreturn msg;",
     "outputs": 1,
     "timeout": "",
     "noerr": 0,
@@ -4985,7 +4987,7 @@
     "y": 500,
     "wires": [
       [
-        "wo2-confirm-done-fn"
+        "wo2-start-cue-fn"
       ]
     ]
   },
@@ -4995,7 +4997,7 @@
     "z": "wo2-tab",
     "g": "f34ab81391d45829",
     "name": "Confirm done",
-    "func": "// Confirm & Save completed\nconst mapping = msg._pendingMapping || flow.get('watchout_mapping') || {};\nnode.status({ fill: 'green', shape: 'dot', text: 'Saved: ' + Object.keys(mapping).length + ' timelines' });\nnode.send({\n    payload: {\n        status:  'saved',\n        mapping: mapping,\n        savedAt: msg._savedAt || new Date().toISOString()\n    },\n    topic: 'watchout/confirm'\n});\nreturn null;",
+    "func": "// Confirm & Save completed: mapping (with cues) has been persisted.\nconst mapping = flow.get('watchout_mapping') || {};\nconst count = Object.keys(mapping).length;\nnode.status({ fill: 'green', shape: 'dot', text: 'Saved: ' + count + ' timelines (with cues)' });\nnode.send({\n    payload: {\n        status:  'saved',\n        mapping: mapping,\n        savedAt: msg._savedAt || new Date().toISOString()\n    },\n    topic: 'watchout/confirm'\n});\nreturn null;",
     "outputs": 1,
     "noerr": 0,
     "initialize": "",
@@ -5102,7 +5104,7 @@
     "z": "wo2-tab",
     "g": "f34ab81391d45829",
     "name": "Parse timelines response",
-    "func": "// Parse GET /v0/timelines response and build diff\n\nif (msg.statusCode !== 200) {\n    msg.payload = { status: 'error', error: 'Watchout returned HTTP ' + (msg.statusCode || 'unknown') };\n    return msg;\n}\n\nfunction parseTimelineName(name) {\n    if (!name || name.startsWith('_')) return null;\n    return name.trim().toLowerCase().replace(/\\s+/g, '_').replace(/[^a-z0-9_]/g, '');\n}\n\nfunction compareMapping(oldMap, newMap) {\n    const oldKeys = Object.keys(oldMap);\n    const newKeys = Object.keys(newMap);\n    return {\n        removed: oldKeys.filter(k => !(k in newMap)),\n        added: newKeys.filter(k => !(k in oldMap)),\n        unchanged: oldKeys.filter(k => (k in newMap) && String(oldMap[k]?.watchoutId) === String(newMap[k]?.watchoutId)),\n        changed: oldKeys.filter(k => (k in newMap) && String(oldMap[k]?.watchoutId) !== String(newMap[k]?.watchoutId)),\n    };\n}\n\nfunction formatDiff(diff) {\n    const lines = [];\n    diff.removed.forEach(n => lines.push(\"REMOVED  : Timeline '\" + n + \"' no longer exists\"));\n    diff.added.forEach(n => lines.push(\"ADDED    : New timeline '\" + n + \"' discovered\"));\n    diff.changed.forEach(n => lines.push(\"CHANGED  : Timeline '\" + n + \"' ID has changed\"));\n    diff.unchanged.forEach(n => lines.push(\"OK       : '\" + n + \"'\"));\n    return lines;\n}\n\nconst timelines = Array.isArray(msg.payload) ? msg.payload : [];\n\nconst newMapping = {};\ntimelines.forEach(tl => {\n    const contentId = parseTimelineName(tl.name);\n    if (!contentId) return;\n\n    newMapping[contentId] = {\n        displayName: tl.name,\n        watchoutId: String(tl.id)\n    };\n});\n\nconst storedMapping = flow.get('watchout_mapping') || {};\nconst diff = compareMapping(storedMapping, newMapping);\nconst diffLines = formatDiff(diff);\n\nflow.set('watchout_pending', newMapping);\n\nconst count = Object.keys(newMapping).length;\nnode.status({ fill: 'green', shape: 'dot', text: 'Discovered: ' + count + ' timelines' });\n\nmsg.payload = { status: 'discovered', count, diffLines, newMapping, diff };\nreturn msg;",
+    "func": "// Parse GET /v0/timelines response and build diff\n\nif (msg.statusCode !== 200) {\n    msg.payload = { status: 'error', error: 'Watchout returned HTTP ' + (msg.statusCode || 'unknown') };\n    return msg;\n}\n\nfunction parseTimelineName(name) {\n    if (!name || name.startsWith('_')) return null;\n    return name.trim().toLowerCase().replace(/\\s+/g, '_').replace(/[^a-z0-9_]/g, '');\n}\n\nfunction compareMapping(oldMap, newMap) {\n    const oldKeys = Object.keys(oldMap);\n    const newKeys = Object.keys(newMap);\n    return {\n        removed: oldKeys.filter(k => !(k in newMap)),\n        added: newKeys.filter(k => !(k in oldMap)),\n        unchanged: oldKeys.filter(k => (k in newMap) && String(oldMap[k]?.watchoutTimelineId) === String(newMap[k]?.watchoutTimelineId)),\n        changed: oldKeys.filter(k => (k in newMap) && String(oldMap[k]?.watchoutTimelineId) !== String(newMap[k]?.watchoutTimelineId)),\n    };\n}\n\nfunction formatDiff(diff) {\n    const lines = [];\n    diff.removed.forEach(n => lines.push(\"REMOVED  : Timeline '\" + n + \"' no longer exists\"));\n    diff.added.forEach(n => lines.push(\"ADDED    : New timeline '\" + n + \"' discovered\"));\n    diff.changed.forEach(n => lines.push(\"CHANGED  : Timeline '\" + n + \"' ID has changed\"));\n    diff.unchanged.forEach(n => lines.push(\"OK       : '\" + n + \"'\"));\n    return lines;\n}\n\nconst timelines = Array.isArray(msg.payload) ? msg.payload : [];\n\nconst newMapping = {};\ntimelines.forEach(tl => {\n    const timelineKey = parseTimelineName(tl.name);\n    if (!timelineKey) return;\n\n    newMapping[timelineKey] = {\n        displayName: tl.name,\n        watchoutTimelineId: String(tl.id)\n    };\n});\n\nconst storedMapping = flow.get('watchout_mapping') || {};\nconst diff = compareMapping(storedMapping, newMapping);\nconst diffLines = formatDiff(diff);\n\nflow.set('watchout_pending', newMapping);\n\nconst count = Object.keys(newMapping).length;\nnode.status({ fill: 'green', shape: 'dot', text: 'Discovered: ' + count + ' timelines' });\n\nmsg.payload = { status: 'discovered', count, diffLines, newMapping, diff };\nreturn msg;",
     "outputs": 1,
     "timeout": "",
     "noerr": 0,
@@ -6547,6 +6549,255 @@
     "y": 180,
     "wires": [
       []
+    ]
+  },
+  {
+    "id": "wo2-start-cue-fn",
+    "type": "function",
+    "z": "wo2-tab",
+    "g": "f34ab81391d45829",
+    "name": "Start cue fetch loop",
+    "func": "// After initial mapping write: start sequential cue fetch for all timelines.\n// Output 1: first cue fetch request → HTTP node\n// Output 2: no timelines / skip → final file write\n\nconst mapping = flow.get('watchout_mapping') || {};\nconst cfg = flow.get('watchout_config') || {};\nconst baseUrl = 'http://' + (cfg.host || 'localhost') + ':' + (cfg.port || 3019);\n\nconst queue = Object.keys(mapping)\n    .filter(key => mapping[key] && mapping[key].watchoutTimelineId)\n    .map(key => ({ timelineKey: key, watchoutTimelineId: mapping[key].watchoutTimelineId }));\n\nflow.set('watchout_cue_queue', queue);\nflow.set('watchout_cue_index', 0);\n\nif (queue.length === 0) {\n    // No timelines to fetch cues for — write current mapping as-is\n    msg.filename = cfg.mappingFile || '/projects/XYZ-Exit10/node-red/data/timeline-mapping.json';\n    msg.payload = JSON.stringify(mapping, null, 2);\n    msg._savedAt = new Date().toISOString();\n    return [null, msg];\n}\n\nconst first = queue[0];\nmsg.method = 'GET';\nmsg.url = baseUrl + '/v0/cues/' + encodeURIComponent(first.watchoutTimelineId);\nmsg._fetchTimelineKey = first.timelineKey;\nmsg.payload = null;\nreturn [msg, null];",
+    "outputs": 2,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 1370,
+    "y": 500,
+    "wires": [
+      [
+        "wo2-cue-fetch-http"
+      ],
+      [
+        "wo2-write-final-map-file"
+      ]
+    ]
+  },
+  {
+    "id": "wo2-cue-fetch-http",
+    "type": "http request",
+    "z": "wo2-tab",
+    "g": "f34ab81391d45829",
+    "name": "GET /v0/cues/{id}",
+    "method": "use",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "insecureHTTPParser": false,
+    "authType": "",
+    "senderr": false,
+    "headers": [],
+    "x": 1580,
+    "y": 460,
+    "wires": [
+      [
+        "wo2-store-cue-fn"
+      ]
+    ]
+  },
+  {
+    "id": "wo2-store-cue-fn",
+    "type": "function",
+    "z": "wo2-tab",
+    "g": "f34ab81391d45829",
+    "name": "Store cue result + advance loop",
+    "func": "// Store cue result for the current timeline, then advance the loop.\n// Output 1: next fetch request → HTTP node (loop)\n// Output 2: all timelines processed → final file write\n\nconst timelineKey = msg._fetchTimelineKey;\nconst statusCode  = msg.statusCode || 200;\n\nconst mapping = flow.get('watchout_mapping') || {};\nconst cfg     = flow.get('watchout_config') || {};\nconst baseUrl = 'http://' + (cfg.host || 'localhost') + ':' + (cfg.port || 3019);\n\n// Normalize cue name → cueKey (same rules as timeline names)\nfunction normalizeName(name) {\n    if (!name || String(name).startsWith('_')) return null;\n    const key = String(name).trim().toLowerCase().replace(/\\s+/g, '_').replace(/[^a-z0-9_]/g, '');\n    return key || null;\n}\n\nif (timelineKey && statusCode < 300) {\n    const cueList = Array.isArray(msg.payload) ? msg.payload : [];\n    const cues = {};\n    cueList.forEach(c => {\n        const cueKey = normalizeName(c.name);\n        if (!cueKey) return; // skip cues with null or invalid names\n        cues[cueKey] = {\n            displayName: c.name,\n            watchoutCueId: String(c.id)\n        };\n    });\n    if (mapping[timelineKey]) {\n        mapping[timelineKey].cues = cues;\n    }\n    flow.set('watchout_mapping', mapping);\n}\n\n// Advance queue\nconst queue = flow.get('watchout_cue_queue') || [];\nlet idx = (flow.get('watchout_cue_index') || 0) + 1;\nflow.set('watchout_cue_index', idx);\n\nif (idx < queue.length) {\n    // More timelines to fetch\n    const next = queue[idx];\n    msg.method = 'GET';\n    msg.url = baseUrl + '/v0/cues/' + encodeURIComponent(next.watchoutTimelineId);\n    msg._fetchTimelineKey = next.timelineKey;\n    msg.payload = null;\n    return [msg, null]; // loop back to HTTP node\n}\n\n// All done — write final mapping with cues\nmsg.filename = cfg.mappingFile || '/projects/XYZ-Exit10/node-red/data/timeline-mapping.json';\nmsg.payload  = JSON.stringify(mapping, null, 2);\nmsg._savedAt = new Date().toISOString();\nreturn [null, msg]; // to file write",
+    "outputs": 2,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 1810,
+    "y": 460,
+    "wires": [
+      [
+        "wo2-cue-fetch-http"
+      ],
+      [
+        "wo2-write-final-map-file"
+      ]
+    ]
+  },
+  {
+    "id": "wo2-write-final-map-file",
+    "type": "file",
+    "z": "wo2-tab",
+    "g": "f34ab81391d45829",
+    "name": "Write timeline-mapping.json (with cues)",
+    "filename": "filename",
+    "filenameType": "msg",
+    "appendNewline": false,
+    "createDir": true,
+    "overwriteFile": "true",
+    "encoding": "utf8",
+    "x": 2050,
+    "y": 460,
+    "wires": [
+      [
+        "wo2-confirm-done-fn"
+      ]
+    ]
+  },
+  {
+    "id": "wo2-ui-cue-group",
+    "type": "ui-group",
+    "name": "Cue Controls",
+    "page": "e155175a9ba21767",
+    "width": 6,
+    "height": 2,
+    "order": 4,
+    "showTitle": true,
+    "className": "",
+    "visible": "true",
+    "disabled": "false",
+    "groupType": "default"
+  },
+  {
+    "id": "wo2-ui-build-cue-options",
+    "type": "function",
+    "z": "wo2-tab",
+    "name": "Build cue options for selected timeline",
+    "func": "// Build ui-dropdown options for the cues of the currently selected timeline.\n// Triggered when the timeline selection changes or the mapping refreshes.\n\nconst mapping = flow.get('watchout_mapping') || {};\nconst timelineKey = flow.get('watchout_selected_timelineKey') || '';\n\nconst entry = mapping[timelineKey] || {};\nconst cues  = entry.cues || {};\n\nconst keys = Object.keys(cues).sort((a, b) => {\n    const da = cues[a] && cues[a].displayName ? String(cues[a].displayName) : a;\n    const db = cues[b] && cues[b].displayName ? String(cues[b].displayName) : b;\n    return da.localeCompare(db);\n});\n\nlet options;\nlet selected;\n\nif (keys.length === 0) {\n    options  = [{ value: '', label: timelineKey ? 'No cues (run Confirm & Save)' : 'Select a timeline first' }];\n    selected = '';\n} else {\n    options  = keys.map(key => ({\n        value: key,\n        label: (cues[key].displayName || key) + ' [id ' + cues[key].watchoutCueId + ']'\n    }));\n    // Keep previous selection when possible\n    const prev = flow.get('watchout_selected_cueKey');\n    selected = (prev && cues[prev]) ? prev : options[0].value;\n}\n\nflow.set('watchout_selected_cueKey', selected);\n\nmsg.options  = options;\nmsg.payload  = selected;\n\nnode.status({ fill: keys.length ? 'green' : 'grey', shape: 'dot',\n              text: timelineKey ? (keys.length + ' cues for ' + timelineKey) : 'no timeline' });\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 310,
+    "y": 1700,
+    "wires": [
+      [
+        "wo2-ui-cue-dropdown"
+      ]
+    ]
+  },
+  {
+    "id": "wo2-ui-cue-dropdown",
+    "type": "ui-dropdown",
+    "z": "wo2-tab",
+    "group": "wo2-ui-cue-group",
+    "name": "Cue dropdown",
+    "label": "Cue",
+    "tooltip": "Select a cue point on the active timeline",
+    "order": 1,
+    "width": 6,
+    "height": 1,
+    "passthru": true,
+    "multiple": false,
+    "options": [],
+    "payload": "",
+    "topic": "watchout_cue",
+    "topicType": "str",
+    "className": "",
+    "x": 590,
+    "y": 1700,
+    "wires": [
+      [
+        "wo2-ui-cue-store-selection"
+      ]
+    ]
+  },
+  {
+    "id": "wo2-ui-cue-store-selection",
+    "type": "function",
+    "z": "wo2-tab",
+    "name": "Store selected cueKey",
+    "func": "// Store the selected cueKey for use by the Goto buttons.\nflow.set('watchout_selected_cueKey', msg.payload);\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 810,
+    "y": 1700,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "wo2-ui-goto-btn",
+    "type": "ui-button",
+    "z": "wo2-tab",
+    "group": "wo2-ui-cue-group",
+    "name": "Goto",
+    "label": "Goto",
+    "order": 2,
+    "width": 3,
+    "height": 1,
+    "tooltip": "Jump to selected cue (paused)",
+    "color": "#ffffff",
+    "bgcolor": "#1565c0",
+    "className": "",
+    "icon": "mdi-target",
+    "iconPosition": "left",
+    "payload": "goto",
+    "payloadType": "str",
+    "topic": "watchout_cue_cmd",
+    "topicType": "str",
+    "enableClick": true,
+    "x": 130,
+    "y": 1760,
+    "wires": [
+      [
+        "wo2-ui-build-cue-command"
+      ]
+    ]
+  },
+  {
+    "id": "wo2-ui-goto-play-btn",
+    "type": "ui-button",
+    "z": "wo2-tab",
+    "group": "wo2-ui-cue-group",
+    "name": "Goto & Play",
+    "label": "Goto & Play",
+    "order": 3,
+    "width": 3,
+    "height": 1,
+    "tooltip": "Jump to selected cue and play",
+    "color": "#ffffff",
+    "bgcolor": "#2e7d32",
+    "className": "",
+    "icon": "mdi-play-box",
+    "iconPosition": "left",
+    "payload": "gotoPlay",
+    "payloadType": "str",
+    "topic": "watchout_cue_cmd",
+    "topicType": "str",
+    "enableClick": true,
+    "x": 130,
+    "y": 1820,
+    "wires": [
+      [
+        "wo2-ui-build-cue-command"
+      ]
+    ]
+  },
+  {
+    "id": "wo2-ui-build-cue-command",
+    "type": "function",
+    "z": "wo2-tab",
+    "name": "Build jumpToCue command",
+    "func": "// Build a jumpToCue control payload from the currently selected timeline + cue.\n// msg.payload: \"goto\" (paused) or \"gotoPlay\" (with state=play)\n\nconst action      = msg.payload;\nconst timelineKey = flow.get('watchout_selected_timelineKey');\nconst cueKey      = flow.get('watchout_selected_cueKey');\n\nif (!timelineKey) {\n    node.status({ fill: 'red', shape: 'ring', text: 'No timeline selected' });\n    return null;\n}\nif (!cueKey) {\n    node.status({ fill: 'red', shape: 'ring', text: 'No cue selected' });\n    return null;\n}\n\nconst cmd = { command: 'jumpToCue', timelineKey, cueKey };\nif (action === 'gotoPlay') {\n    cmd.state = 'play';\n}\n\nnode.status({ fill: 'blue', shape: 'dot', text: action + ' ' + timelineKey + '/' + cueKey });\n\nmsg.payload = cmd;\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 370,
+    "y": 1790,
+    "wires": [
+      [
+        "wo2-ui-link-out"
+      ]
     ]
   }
 ]

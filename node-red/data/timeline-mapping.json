@@ -1,65 +1,77 @@
 {
-  "mapping": {
-    "main_timeline": {
-      "displayName": "Main Timeline",
-      "watchoutId": "0"
-    },
-    "show_1": {
-      "displayName": "Show 1",
-      "watchoutId": "1"
-    },
-    "special_overlay_1": {
-      "displayName": "Special Overlay 1",
-      "watchoutId": "2"
-    },
-    "ambience_a1": {
-      "displayName": "Ambience A1",
-      "watchoutId": "3"
-    },
-    "ambience_2": {
-      "displayName": "Ambience 2",
-      "watchoutId": "4"
-    },
-    "transition_1_a2": {
-      "displayName": "Transition 1 A2",
-      "watchoutId": "5"
-    },
-    "special_overlay_2": {
-      "displayName": "Special Overlay 2",
-      "watchoutId": "6"
-    },
-    "bg_music_1": {
-      "displayName": "BG Music 1",
-      "watchoutId": "7"
-    },
-    "bg_music_2": {
-      "displayName": "BG Music 2",
-      "watchoutId": "8"
-    },
-    "show_2": {
-      "displayName": "Show 2",
-      "watchoutId": "9"
-    },
-    "show_3": {
-      "displayName": "Show 3",
-      "watchoutId": "10"
-    },
-    "show_4": {
-      "displayName": "Show 4",
-      "watchoutId": "11"
-    },
-    "transition_1_a1": {
-      "displayName": "Transition 1 A1",
-      "watchoutId": "12"
-    },
-    "spcial_3": {
-      "displayName": "Spcial 3",
-      "watchoutId": "13"
-    },
-    "transition_1_a3": {
-      "displayName": "Transition 1 A3",
-      "watchoutId": "14"
-    }
+  "main_timeline": {
+    "displayName": "Main Timeline",
+    "watchoutTimelineId": "0",
+    "cues": {}
   },
-  "lastSaved": "2026-04-03T20:30:49.730Z"
+  "show_1": {
+    "displayName": "Show 1",
+    "watchoutTimelineId": "1",
+    "cues": {}
+  },
+  "special_overlay_1": {
+    "displayName": "Special Overlay 1",
+    "watchoutTimelineId": "2",
+    "cues": {}
+  },
+  "ambience_a1": {
+    "displayName": "Ambience A1",
+    "watchoutTimelineId": "3",
+    "cues": {}
+  },
+  "ambience_2": {
+    "displayName": "Ambience 2",
+    "watchoutTimelineId": "4",
+    "cues": {}
+  },
+  "transition_1_a2": {
+    "displayName": "Transition 1 A2",
+    "watchoutTimelineId": "5",
+    "cues": {}
+  },
+  "special_overlay_2": {
+    "displayName": "Special Overlay 2",
+    "watchoutTimelineId": "6",
+    "cues": {}
+  },
+  "bg_music_1": {
+    "displayName": "BG Music 1",
+    "watchoutTimelineId": "7",
+    "cues": {}
+  },
+  "bg_music_2": {
+    "displayName": "BG Music 2",
+    "watchoutTimelineId": "8",
+    "cues": {}
+  },
+  "show_2": {
+    "displayName": "Show 2",
+    "watchoutTimelineId": "9",
+    "cues": {}
+  },
+  "show_3": {
+    "displayName": "Show 3",
+    "watchoutTimelineId": "10",
+    "cues": {}
+  },
+  "show_4": {
+    "displayName": "Show 4",
+    "watchoutTimelineId": "11",
+    "cues": {}
+  },
+  "transition_1_a1": {
+    "displayName": "Transition 1 A1",
+    "watchoutTimelineId": "12",
+    "cues": {}
+  },
+  "spcial_3": {
+    "displayName": "Spcial 3",
+    "watchoutTimelineId": "13",
+    "cues": {}
+  },
+  "transition_1_a3": {
+    "displayName": "Transition 1 A3",
+    "watchoutTimelineId": "14",
+    "cues": {}
+  }
 }
