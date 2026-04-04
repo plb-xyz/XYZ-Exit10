@@ -1,4 +1,4 @@
-# Watchout 7 HTTP Integration — Node-RED (v0.2)
+# Watchout 7 HTTP Integration — Node-RED (v0.4)
 
 ## Overview
 
@@ -9,7 +9,7 @@ modules are required.
 Persistence uses two JSON files:
 
 - `watchout-config.json` — host, port, and file paths
-- `timeline-mapping.json` — the active `contentId → { displayName, watchoutId }` mapping
+- `timeline-mapping.json` — the active `timelineKey → { displayName, watchoutTimelineId, cues? }` mapping
 
 **Default port:** `3019`
 
@@ -34,11 +34,12 @@ Persistence uses two JSON files:
 | Change Detection | Compares old vs new mapping — shows removed REMOVED, added ADDED, changed CHANGED, and unchanged OK timelines |
 | Diff UI | Displays the diff to the operator with **[ Confirm & Save]** and **[ Cancel]** buttons |
 | Persistent Storage | Mapping is stored in both Node-RED flow context **and** the file system via Node-RED Read/Write file nodes (survives restarts) |
+| Cue Caching on Confirm | On **Confirm & Save**, cues are auto-fetched for every timeline and stored in the mapping |
 | Timeline Control | `start` / `stop` / `pause` timelines via the stored mapping |
 | Jump to Time | Seek a timeline to a specific time position (ms) with optional playback state |
-| Jump to Cue | Jump a timeline to a named cue point with optional playback state |
+| Jump to Cue | Jump a timeline to a named cue point — resolved by name to a numeric Watchout cue ID |
 | Get Timeline Cues | Retrieve all cue points defined on a specific timeline |
-| Inputs (Variables) Control | `setVar` and `setVars` to update Watchout **Inputs** (called “Variables” in the Watchout UI) |
+| Inputs (Variables) Control | `setVar` and `setVars` to update Watchout **Inputs** (called "Variables" in the Watchout UI) |
 | Cue Sets (Cue Group State) | Get and set cue-group-state by **ID** or **Name**, including multi-switch and reset-to-default |
 | Status Polling | Poll current system state via `GET /v0/state` (reliable) |
 | Fast UI Updates | Optional: trigger a one-shot `GET /v0/state` shortly after sending any control command |
@@ -178,7 +179,7 @@ Operator opens Node-RED dashboard → "Watchout" tab
 2.  Node-RED calls  GET /v0/timelines  from Watchout (port 3019)
         │
         ▼
-3.  Response parsed → new contentId → { displayName, watchoutId } mapping built
+3.  Response parsed → new timelineKey → { displayName, watchoutTimelineId } mapping built
         │
         ▼
 4.  New mapping compared to stored mapping
@@ -192,16 +193,21 @@ Operator opens Node-RED dashboard → "Watchout" tab
 5.  Diff UI displayed
         │
         ├─ [ Cancel]          → pending mapping cleared, nothing saved
-        └─ [ Confirm & Save]  → mapping written to flow context
-                                  + written to timeline-mapping.json
-                                    via Node-RED Write file node
+        └─ [ Confirm & Save]  → initial mapping written to file + flow context
+                                  then for each timeline:
+                                    GET /v0/cues/{watchoutTimelineId}
+                                    → cues normalized and stored per timeline
+                                  final mapping (with cues) written to timeline-mapping.json
 ```
 
 ---
 
-## Timeline Name → Content ID Convention
+## Timeline and Cue Naming Convention
 
-Watchout timeline names are converted to **content IDs** using these rules:
+### Timeline names → `timelineKey`
+
+Watchout timeline names are converted to **timeline keys** (normalized names used
+in Node-RED control messages) using these rules:
 
 | Rule | Example input | Output |
 |------|--------------|--------|
@@ -210,22 +216,44 @@ Watchout timeline names are converted to **content IDs** using these rules:
 | Spaces → underscores | `Ambience Scene 2` | `ambience_scene_2` |
 | Non-alphanumeric chars removed | `Show (Main)` | `show_main` |
 
-Each discovered timeline produces one entry in the mapping:
+### Cue names → `cueKey`
+
+The same normalization rules apply to cue names. Cues with `name: null` from
+Watchout are skipped (they cannot form a valid key).
+
+### Mapping file format (`timeline-mapping.json`)
 
 ```json
 {
-  "show_1":    { "displayName": "Show 1",    "watchoutId": "1" },
-  "ambience_1": { "displayName": "Ambience 1", "watchoutId": "3" }
+  "main_timeline": {
+    "displayName": "Main Timeline",
+    "watchoutTimelineId": "0",
+    "cues": {
+      "shows":            { "displayName": "Shows",            "watchoutCueId": "0" },
+      "start_transition": { "displayName": "Start Transition", "watchoutCueId": "1" },
+      "tcp_out":          { "displayName": "TCP out",          "watchoutCueId": "3" },
+      "marker_1":         { "displayName": "marker 1",         "watchoutCueId": "4" }
+    }
+  },
+  "show_1": {
+    "displayName": "Show 1",
+    "watchoutTimelineId": "1",
+    "cues": {}
+  }
 }
 ```
 
-- **`timelineId`** — the value used in Node-RED control messages (e.g. `"show_1"` or `"1"`); may be a mapping key (normalized name) or a raw numeric Watchout timeline ID
-- **`displayName`** — original Watchout timeline name; used for UI labels
-- **`watchoutId`** — numeric timeline ID used in Watchout REST calls
+Fields:
+- **`timelineKey`** — top-level key; the normalized timeline name used in Node-RED control messages (e.g. `"show_1"`)
+- **`displayName`** — original Watchout name; used for UI labels
+- **`watchoutTimelineId`** — numeric Watchout timeline ID used in REST calls (e.g. `"0"`)
+- **`cues`** — optional map of `cueKey → { displayName, watchoutCueId }`; populated automatically on **Confirm & Save**
+- **`cueKey`** — normalized cue name (e.g. `"shows"`, `"start_transition"`)
+- **`watchoutCueId`** — numeric Watchout cue ID used in REST calls (e.g. `"0"`)
 
-> **Note:** In older messages the timeline key was named `contentId`. The field has been renamed
-> to `timelineId` in all control messages. For backward compatibility, the flow still accepts
-> messages where only `contentId` is present and `timelineId` is absent.
+> Cues are fetched and cached automatically when the operator clicks **Confirm & Save**
+> during timeline discovery. After confirmation, `jumpToCue` commands can resolve
+> cues by name without any additional setup.
 
 ---
 
@@ -234,59 +262,60 @@ Each discovered timeline produces one entry in the mapping:
 Send a `POST` request to `/watchout/control` with a JSON body. The
 **Prepare control request** function node maps these commands to Watchout REST endpoints.
 
-> **Schema note (v0.3):** The timeline identifier field has been renamed from `contentId` to
-> `timelineId` in all control messages. For backward compatibility, messages that contain only
-> `contentId` (and no `timelineId`) continue to work.
+All timeline commands accept `timelineKey` (normalized timeline name).  
+Cue commands additionally accept `cueKey` (normalized cue name), which is resolved
+to the numeric `watchoutCueId` from the cached mapping.
 
 ### Timelines
 
 Start a timeline:
 ```json
-{ "command": "start", "timelineId": "show_1" }
+{ "command": "start", "timelineKey": "show_1" }
 ```
-→ `POST /v0/play/{id}`
+→ `POST /v0/play/{watchoutTimelineId}`
 
 Stop a timeline:
 ```json
-{ "command": "stop", "timelineId": "show_1" }
+{ "command": "stop", "timelineKey": "show_1" }
 ```
-→ `POST /v0/stop/{id}`
+→ `POST /v0/stop/{watchoutTimelineId}`
 
 Pause a timeline:
 ```json
-{ "command": "pause", "timelineId": "show_1" }
+{ "command": "pause", "timelineKey": "show_1" }
 ```
-→ `POST /v0/pause/{id}`
+→ `POST /v0/pause/{watchoutTimelineId}`
 
 Jump to a specific time position on a timeline:
 ```json
-{ "command": "jumpToTime", "timelineId": "show_1", "milliseconds": 12345 }
+{ "command": "jumpToTime", "timelineKey": "show_1", "milliseconds": 12345 }
 ```
-→ `POST /v0/jump-to-time/{id}?time=12345`
+→ `POST /v0/jump-to-time/{watchoutTimelineId}?time=12345`
 
 With optional state (pause or play after seek):
 ```json
-{ "command": "jumpToTime", "timelineId": "show_1", "milliseconds": 12345, "state": "pause" }
+{ "command": "jumpToTime", "timelineKey": "show_1", "milliseconds": 12345, "state": "pause" }
 ```
-→ `POST /v0/jump-to-time/{id}?time=12345&state=pause`
+→ `POST /v0/jump-to-time/{watchoutTimelineId}?time=12345&state=pause`
 
 Jump to a named cue point on a timeline:
 ```json
-{ "command": "jumpToCue", "timelineId": "show_1", "cueId": "scene_2" }
+{ "command": "jumpToCue", "timelineKey": "main_timeline", "cueKey": "shows" }
 ```
-→ `POST /v0/jump-to-cue/{id}/{cueId}`
+→ `POST /v0/jump-to-cue/{watchoutTimelineId}/{watchoutCueId}`  
+(e.g. `POST /v0/jump-to-cue/0/0` — both IDs are numeric)
 
 With optional state (pause or play after jump):
 ```json
-{ "command": "jumpToCue", "timelineId": "show_1", "cueId": "scene_2", "state": "play" }
+{ "command": "jumpToCue", "timelineKey": "main_timeline", "cueKey": "shows", "state": "play" }
 ```
-→ `POST /v0/jump-to-cue/{id}/{cueId}?state=play`
+→ `POST /v0/jump-to-cue/{watchoutTimelineId}/{watchoutCueId}?state=play`
 
 Get all cue points defined on a timeline:
 ```json
-{ "command": "getCues", "timelineId": "show_1" }
+{ "command": "getCues", "timelineKey": "show_1" }
 ```
-→ `GET /v0/cues/{id}`
+→ `GET /v0/cues/{watchoutTimelineId}`
 
 Play all timelines:
 ```json
@@ -372,9 +401,24 @@ The flow normalizes Watchout responses into a uniform JSON structure:
 {
   "success": true,
   "command": "start",
-  "timelineId": "1",
-  "contentId": "show_1",
+  "timelineKey": "show_1",
+  "watchoutTimelineId": "1",
   "displayName": "Show 1",
+  "statusCode": 200,
+  "body": {}
+}
+```
+
+For cue commands (`jumpToCue`), the response additionally includes:
+```json
+{
+  "success": true,
+  "command": "jumpToCue",
+  "timelineKey": "main_timeline",
+  "watchoutTimelineId": "0",
+  "displayName": "Main Timeline",
+  "cueKey": "shows",
+  "watchoutCueId": "0",
   "statusCode": 200,
   "body": {}
 }
@@ -384,7 +428,6 @@ Cue group commands will include cue-related fields when available:
 - `groupId`, `variantId`
 - `groupName`, `variantName`
 - `states` (for multi-switch/reset)
-- `cueId` (for `jumpToCue`)
 
 ---
 
@@ -393,11 +436,13 @@ Cue group commands will include cue-related fields when available:
 | Variable | Type | Description |
 |----------|------|-------------|
 | `watchout_config` | object | `{ host, port, mappingFile }` |
-| `watchout_mapping` | object | Active `{ contentId: { displayName, watchoutId } }` mapping |
+| `watchout_mapping` | object | Active `{ timelineKey: { displayName, watchoutTimelineId, cues? } }` mapping |
 | `watchout_pending` | object | Pending mapping awaiting operator confirmation |
 | `watchout_state` | object | Latest state from polling and/or streaming |
 | `watchout_sse_status` | string | `'connected'` \| `'disconnected'` \| `'error'` |
-| `watchout_selected_timelineId` | string | Mapping key of the currently selected timeline in the UI dropdown |
+| `watchout_selected_timelineKey` | string | `timelineKey` of the currently selected timeline in the UI dropdown |
+| `watchout_cue_queue` | array | Internal: queue of `{timelineKey, watchoutTimelineId}` being processed during cue fetch |
+| `watchout_cue_index` | number | Internal: current position in the cue fetch queue |
 
 ---
 
@@ -432,9 +477,9 @@ Depending on Node-RED version and environment, you may need a streaming-capable 
 |--------|------|-------------|
 | `GET` | `/v0/timelines` | List all timelines |
 | `POST` | `/v0/play` | Play all timelines |
-| `POST` | `/v0/play/{id}` | Start / resume a timeline by ID |
-| `POST` | `/v0/pause/{id}` | Pause a timeline by ID |
-| `POST` | `/v0/stop/{id}` | Stop a timeline by ID |
+| `POST` | `/v0/play/{id}` | Start / resume a timeline by numeric ID |
+| `POST` | `/v0/pause/{id}` | Pause a timeline by numeric ID |
+| `POST` | `/v0/stop/{id}` | Stop a timeline by numeric ID |
 | `GET` | `/v0/inputs` | List all inputs and their current values |
 | `POST` | `/v0/inputs` | Set multiple inputs — body: `[{key, value, duration?}]` |
 | `POST` | `/v0/input/{key}?value={v}` | Set a single input by key |
@@ -448,13 +493,13 @@ Depending on Node-RED version and environment, you may need a streaming-capable 
 | `POST` | `/v0/cue-group-state/by-id` | Cue group state — switch multiple variants by ID (object body) |
 | `POST` | `/v0/cue-group-state/by-name` | Cue group state — switch multiple variants by Name (object body; `{}` resets all to default) |
 | `POST` | `/v0/jump-to-time/{id}?time={ms}&state={s?}` | Seek a timeline to a time position (ms); optional `state`: `pause`\|`play` |
-| `POST` | `/v0/jump-to-cue/{id}/{cueId}?state={s?}` | Jump to a named cue point; optional `state`: `pause`\|`play` |
-| `GET` | `/v0/cues/{id}` | Get all cue points defined on a timeline |
+| `POST` | `/v0/jump-to-cue/{id}/{cueId}?state={s?}` | Jump to a cue point by numeric cue ID; optional `state`: `pause`\|`play` |
+| `GET` | `/v0/cues/{id}` | Get all cue points defined on a timeline (by numeric timeline ID) |
 
 ---
 
 ## Roadmap
 
 - **v0.2** — Node-RED-based integration with timeline discovery + mapping persistence, timeline control, inputs control, cue sets control, and polling-based state monitoring (with optional streaming where supported)
-- **v0.3** *(this version)* — Jump to Time, Jump to Cue, Get Timeline Cues commands; `contentId` field renamed to `timelineId` (with backward compatibility)
-- **v0.4** *(future)* — ISAAC integration (Events & Playables → Show Controller decision tree)
+- **v0.4** *(this version)* — Schema redesign: `timelineKey`/`cueKey` for named resolution, `watchoutTimelineId`/`watchoutCueId` for numeric Watchout IDs; automatic cue caching on Confirm & Save; `jumpToCue` resolves cue names to numeric IDs
+- **v0.5** *(future)* — ISAAC integration (Events & Playables → Show Controller decision tree)
