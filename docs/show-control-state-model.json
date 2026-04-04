@@ -1,0 +1,177 @@
+{
+  "version": "1.3",
+  "globalModes": ["INITIALIZING", "NORMAL", "SHOW", "FAULT"],
+
+  "context": {
+    "mode": "INITIALIZING",
+
+    "schedulerEnabled": false,
+
+    "prayer": {
+      "active": false,
+      "endsAt": null,
+      "volumeDeltaDb": -10,
+      "pendingShow": null
+    },
+
+    "show": {
+      "active": false,
+      "showId": null,
+      "requestedBy": null,
+      "requestedAt": null
+    },
+
+    "event": {
+      "active": false,
+      "type": "NONE",
+      "scope": null,
+      "presetId": null,
+      "startedAt": null,
+      "requestedBy": null
+    },
+
+    "spaces": {
+      "a1": {
+        "capabilities": { "hasVideo": true },
+        "background": { "type": "AMBIENCE", "contentId": null },
+        "special": {
+          "onTop": { "active": false, "contentId": null, "audioMode": "none" },
+          "fullscreen": {
+            "active": false,
+            "contentId": null,
+            "audioMode": "none",
+            "includes": { "ribbon": true, "column": true, "sphere": false }
+          }
+        }
+      },
+      "a2": {
+        "capabilities": { "hasVideo": true },
+        "background": { "type": "AMBIENCE", "contentId": null },
+        "special": {
+          "onTop": { "active": false, "contentId": null, "audioMode": "none" },
+          "fullscreen": {
+            "active": false,
+            "contentId": null,
+            "audioMode": "none",
+            "includes": { "ribbon": true, "column": true, "sphere": false }
+          }
+        }
+      },
+      "a3": {
+        "capabilities": { "hasVideo": true },
+        "background": { "type": "AMBIENCE", "contentId": null },
+        "special": {
+          "onTop": { "active": false, "contentId": null, "audioMode": "none" },
+          "fullscreen": {
+            "active": false,
+            "contentId": null,
+            "audioMode": "none",
+            "includes": { "ribbon": true, "column": true, "sphere": false }
+          }
+        }
+      },
+      "ls": {
+        "capabilities": { "hasVideo": false },
+        "background": { "type": "AUDIO_LIGHTING_ONLY" },
+        "special": {
+          "onTop": { "active": false, "contentId": null, "audioMode": "none" },
+          "fullscreen": {
+            "active": false,
+            "contentId": null,
+            "audioMode": "none",
+            "includes": { "ribbon": false, "column": false, "sphere": false }
+          }
+        }
+      }
+    }
+  },
+
+  "subModes": {
+    "NORMAL": {
+      "event": ["NONE", "SIMPLE", "COMPLEX"],
+      "spaceLayering": ["BACKGROUND", "SPECIAL_ON_TOP", "SPECIAL_FULLSCREEN"],
+      "notes": [
+        "Ambiences are per-space background content (A1/A2/A3 video+audio+lighting; LS audio+lighting only).",
+        "Events are sub-mode overrides inside NORMAL; scheduler is disabled during events.",
+        "Simple events may be audio+lighting only (video stays as ambience unless explicitly overridden).",
+        "Complex events may include space takeover (video+audio+lighting) and live operation."
+      ]
+    },
+    "SHOW": {
+      "notes": [
+        "Show is global (all spaces), timecode-synced, controls external systems.",
+        "No show may start during prayer.active=true.",
+        "If prayer becomes active while SHOW is running: abort immediately with fade-out, then return to NORMAL."
+      ]
+    }
+  },
+
+  "inputs": {
+    "system": ["sys/ready", "sys/fault", "sys/resetFault"],
+
+    "ui": [
+      "ui/startShow",
+      "ui/abortShow",
+
+      "ui/setAmbience",
+      "ui/clearAmbience",
+
+      "ui/startEventSimple",
+      "ui/startEventComplex",
+      "ui/endEvent",
+
+      "ui/specialFullscreenOn",
+      "ui/specialFullscreenOff",
+      "ui/specialOnTopOn",
+      "ui/specialOnTopOff"
+    ],
+
+    "scheduler_future": [
+      "sched/startShow",
+      "sched/startEventSimple",
+      "sched/startEventComplex",
+      "sched/setAmbience"
+    ],
+
+    "prayer": ["prayer/active", "prayer/inactive"],
+
+    "feedback": ["wo/state", "ma/status", "qsys/status"]
+  },
+
+  "guards": [
+    {
+      "id": "block-show-during-prayer",
+      "when": "startShow",
+      "allow": "context.prayer.active == false"
+    },
+    {
+      "id": "block-show-during-event",
+      "when": "startShow",
+      "allow": "context.event.active == false"
+    }
+  ],
+
+  "derived": [
+    {
+      "id": "schedulerEnabled-default",
+      "compute": "context.schedulerEnabled = (context.mode == 'NORMAL' && context.event.active == false && context.prayer.active == false)"
+    }
+  ],
+
+  "policies": {
+    "landscape": {
+      "video": "NONE",
+      "audioLightingOnly": true,
+      "notes": [
+        "Do not send Watchout video timeline commands for LS.",
+        "LS can still participate in SHOW audio and lighting behavior (project policy)."
+      ]
+    },
+    "prayer": {
+      "showDuringPrayer": "BLOCK_AND_POSTPONE",
+      "postponeOffsetMs": 60000,
+      "showIfPrayerStartsMidShow": "ABORT_IMMEDIATELY_WITH_FADE_OUT",
+      "volumeControl": "QSYS_GLOBAL_TRIM_DB"
+    }
+  }
+}
