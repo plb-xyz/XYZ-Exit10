@@ -36,6 +36,7 @@ Persistence uses two JSON files:
 | Persistent Storage | Mapping is stored in both Node-RED flow context **and** the file system via Node-RED Read/Write file nodes (survives restarts) |
 | Cue Caching on Confirm | On **Confirm & Save**, cues are auto-fetched for every timeline and stored in the mapping |
 | Timeline Control | `start` / `stop` / `pause` timelines via the stored mapping |
+| Dashboard Cue Controls | **Cue Controls** UI group: per-timeline cue dropdown with **Goto** (pause-at-cue) and **Goto & Play** buttons |
 | Jump to Time | Seek a timeline to a specific time position (ms) with optional playback state |
 | Jump to Cue | Jump a timeline to a named cue point — resolved by name to a numeric Watchout cue ID |
 | Get Timeline Cues | Retrieve all cue points defined on a specific timeline |
@@ -254,6 +255,26 @@ Fields:
 > Cues are fetched and cached automatically when the operator clicks **Confirm & Save**
 > during timeline discovery. After confirmation, `jumpToCue` commands can resolve
 > cues by name without any additional setup.
+
+---
+
+## Dashboard UI — Cue Controls
+
+The **Watchout** dashboard page contains a **Cue Controls** group (below Timeline Controls)
+with per-timeline cue recall:
+
+| UI Element | Description |
+|------------|-------------|
+| **Cue** dropdown | Lists all cached cues for the currently selected timeline. Each option shows the display name and numeric Watchout cue ID. Updates automatically when the timeline selection changes. Displays *"No cues (run Confirm & Save)"* when cues have not been fetched yet. |
+| **Goto** button | Sends `jumpToCue` to the selected cue (no `state` — Watchout defaults to paused-at-cue). |
+| **Goto & Play** button | Sends `jumpToCue` with `state: "play"` — jumps to the cue and immediately resumes playback. |
+
+**Typical operator workflow:**
+
+1. Re-discover Timelines → Confirm & Save (this fetches and caches cues for all timelines)
+2. Select a timeline in the **Timeline Controls** dropdown
+3. The **Cue Controls** cue dropdown auto-populates with that timeline's named cues
+4. Select a cue, then click **Goto** or **Goto & Play**
 
 ---
 

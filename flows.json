@@ -648,7 +648,7 @@
     "page": "e155175a9ba21767",
     "width": 6,
     "height": 4,
-    "order": 4,
+    "order": 5,
     "showTitle": true,
     "className": "",
     "visible": "true",
@@ -4585,7 +4585,9 @@
     "x": 1130,
     "y": 1320,
     "wires": [
-      []
+      [
+        "wo2-ui-build-cue-options"
+      ]
     ]
   },
   {
@@ -4954,7 +4956,7 @@
     "z": "wo2-tab",
     "g": "f34ab81391d45829",
     "name": "Prepare mapping write",
-    "func": "// Prepare mapping JSON for initial file write (without cues).\n// Cues will be fetched and added to the mapping in a subsequent step.\nconst pending = flow.get('watchout_pending');\nif (!pending) {\n    node.send({ payload: { status: 'nothing_pending' }, topic: 'watchout/confirm' });\n    return null;\n}\n\nflow.set('watchout_mapping', pending);\nflow.set('watchout_pending', null);\n\nconst cfg = flow.get('watchout_config') || {};\n\nmsg.filename = cfg.mappingFile || '/data/timeline-mapping.json';\nmsg.payload  = JSON.stringify(pending, null, 2);\nreturn msg;",
+    "func": "// Prepare mapping JSON for initial file write (without cues).\n// Cues will be fetched and added to the mapping in a subsequent step.\nconst pending = flow.get('watchout_pending');\nif (!pending) {\n    node.send({ payload: { status: 'nothing_pending' }, topic: 'watchout/confirm' });\n    return null;\n}\n\nflow.set('watchout_mapping', pending);\nflow.set('watchout_pending', null);\n\nconst cfg = flow.get('watchout_config') || {};\n\nmsg.filename = cfg.mappingFile || '/projects/XYZ-Exit10/node-red/data/timeline-mapping.json';\nmsg.payload  = JSON.stringify(pending, null, 2);\nreturn msg;",
     "outputs": 1,
     "timeout": "",
     "noerr": 0,
@@ -6555,7 +6557,7 @@
     "z": "wo2-tab",
     "g": "f34ab81391d45829",
     "name": "Start cue fetch loop",
-    "func": "// After initial mapping write: start sequential cue fetch for all timelines.\n// Output 1: first cue fetch request → HTTP node\n// Output 2: no timelines / skip → final file write\n\nconst mapping = flow.get('watchout_mapping') || {};\nconst cfg = flow.get('watchout_config') || {};\nconst baseUrl = 'http://' + (cfg.host || 'localhost') + ':' + (cfg.port || 3019);\n\nconst queue = Object.keys(mapping)\n    .filter(key => mapping[key] && mapping[key].watchoutTimelineId)\n    .map(key => ({ timelineKey: key, watchoutTimelineId: mapping[key].watchoutTimelineId }));\n\nflow.set('watchout_cue_queue', queue);\nflow.set('watchout_cue_index', 0);\n\nif (queue.length === 0) {\n    // No timelines to fetch cues for — write current mapping as-is\n    msg.filename = cfg.mappingFile || '/data/timeline-mapping.json';\n    msg.payload = JSON.stringify(mapping, null, 2);\n    msg._savedAt = new Date().toISOString();\n    return [null, msg];\n}\n\nconst first = queue[0];\nmsg.method = 'GET';\nmsg.url = baseUrl + '/v0/cues/' + encodeURIComponent(first.watchoutTimelineId);\nmsg._fetchTimelineKey = first.timelineKey;\nmsg.payload = null;\nreturn [msg, null];",
+    "func": "// After initial mapping write: start sequential cue fetch for all timelines.\n// Output 1: first cue fetch request → HTTP node\n// Output 2: no timelines / skip → final file write\n\nconst mapping = flow.get('watchout_mapping') || {};\nconst cfg = flow.get('watchout_config') || {};\nconst baseUrl = 'http://' + (cfg.host || 'localhost') + ':' + (cfg.port || 3019);\n\nconst queue = Object.keys(mapping)\n    .filter(key => mapping[key] && mapping[key].watchoutTimelineId)\n    .map(key => ({ timelineKey: key, watchoutTimelineId: mapping[key].watchoutTimelineId }));\n\nflow.set('watchout_cue_queue', queue);\nflow.set('watchout_cue_index', 0);\n\nif (queue.length === 0) {\n    // No timelines to fetch cues for — write current mapping as-is\n    msg.filename = cfg.mappingFile || '/projects/XYZ-Exit10/node-red/data/timeline-mapping.json';\n    msg.payload = JSON.stringify(mapping, null, 2);\n    msg._savedAt = new Date().toISOString();\n    return [null, msg];\n}\n\nconst first = queue[0];\nmsg.method = 'GET';\nmsg.url = baseUrl + '/v0/cues/' + encodeURIComponent(first.watchoutTimelineId);\nmsg._fetchTimelineKey = first.timelineKey;\nmsg.payload = null;\nreturn [msg, null];",
     "outputs": 2,
     "timeout": 0,
     "noerr": 0,
@@ -6604,7 +6606,7 @@
     "z": "wo2-tab",
     "g": "f34ab81391d45829",
     "name": "Store cue result + advance loop",
-    "func": "// Store cue result for the current timeline, then advance the loop.\n// Output 1: next fetch request → HTTP node (loop)\n// Output 2: all timelines processed → final file write\n\nconst timelineKey = msg._fetchTimelineKey;\nconst statusCode  = msg.statusCode || 200;\n\nconst mapping = flow.get('watchout_mapping') || {};\nconst cfg     = flow.get('watchout_config') || {};\nconst baseUrl = 'http://' + (cfg.host || 'localhost') + ':' + (cfg.port || 3019);\n\n// Normalize cue name → cueKey (same rules as timeline names)\nfunction normalizeName(name) {\n    if (!name || String(name).startsWith('_')) return null;\n    const key = String(name).trim().toLowerCase().replace(/\\s+/g, '_').replace(/[^a-z0-9_]/g, '');\n    return key || null;\n}\n\nif (timelineKey && statusCode < 300) {\n    const cueList = Array.isArray(msg.payload) ? msg.payload : [];\n    const cues = {};\n    cueList.forEach(c => {\n        const cueKey = normalizeName(c.name);\n        if (!cueKey) return; // skip cues with null or invalid names\n        cues[cueKey] = {\n            displayName: c.name,\n            watchoutCueId: String(c.id)\n        };\n    });\n    if (mapping[timelineKey]) {\n        mapping[timelineKey].cues = cues;\n    }\n    flow.set('watchout_mapping', mapping);\n}\n\n// Advance queue\nconst queue = flow.get('watchout_cue_queue') || [];\nlet idx = (flow.get('watchout_cue_index') || 0) + 1;\nflow.set('watchout_cue_index', idx);\n\nif (idx < queue.length) {\n    // More timelines to fetch\n    const next = queue[idx];\n    msg.method = 'GET';\n    msg.url = baseUrl + '/v0/cues/' + encodeURIComponent(next.watchoutTimelineId);\n    msg._fetchTimelineKey = next.timelineKey;\n    msg.payload = null;\n    return [msg, null]; // loop back to HTTP node\n}\n\n// All done — write final mapping with cues\nmsg.filename = cfg.mappingFile || '/data/timeline-mapping.json';\nmsg.payload  = JSON.stringify(mapping, null, 2);\nmsg._savedAt = new Date().toISOString();\nreturn [null, msg]; // to file write",
+    "func": "// Store cue result for the current timeline, then advance the loop.\n// Output 1: next fetch request → HTTP node (loop)\n// Output 2: all timelines processed → final file write\n\nconst timelineKey = msg._fetchTimelineKey;\nconst statusCode  = msg.statusCode || 200;\n\nconst mapping = flow.get('watchout_mapping') || {};\nconst cfg     = flow.get('watchout_config') || {};\nconst baseUrl = 'http://' + (cfg.host || 'localhost') + ':' + (cfg.port || 3019);\n\n// Normalize cue name → cueKey (same rules as timeline names)\nfunction normalizeName(name) {\n    if (!name || String(name).startsWith('_')) return null;\n    const key = String(name).trim().toLowerCase().replace(/\\s+/g, '_').replace(/[^a-z0-9_]/g, '');\n    return key || null;\n}\n\nif (timelineKey && statusCode < 300) {\n    const cueList = Array.isArray(msg.payload) ? msg.payload : [];\n    const cues = {};\n    cueList.forEach(c => {\n        const cueKey = normalizeName(c.name);\n        if (!cueKey) return; // skip cues with null or invalid names\n        cues[cueKey] = {\n            displayName: c.name,\n            watchoutCueId: String(c.id)\n        };\n    });\n    if (mapping[timelineKey]) {\n        mapping[timelineKey].cues = cues;\n    }\n    flow.set('watchout_mapping', mapping);\n}\n\n// Advance queue\nconst queue = flow.get('watchout_cue_queue') || [];\nlet idx = (flow.get('watchout_cue_index') || 0) + 1;\nflow.set('watchout_cue_index', idx);\n\nif (idx < queue.length) {\n    // More timelines to fetch\n    const next = queue[idx];\n    msg.method = 'GET';\n    msg.url = baseUrl + '/v0/cues/' + encodeURIComponent(next.watchoutTimelineId);\n    msg._fetchTimelineKey = next.timelineKey;\n    msg.payload = null;\n    return [msg, null]; // loop back to HTTP node\n}\n\n// All done — write final mapping with cues\nmsg.filename = cfg.mappingFile || '/projects/XYZ-Exit10/node-red/data/timeline-mapping.json';\nmsg.payload  = JSON.stringify(mapping, null, 2);\nmsg._savedAt = new Date().toISOString();\nreturn [null, msg]; // to file write",
     "outputs": 2,
     "timeout": 0,
     "noerr": 0,
@@ -6639,6 +6641,162 @@
     "wires": [
       [
         "wo2-confirm-done-fn"
+      ]
+    ]
+  },
+  {
+    "id": "wo2-ui-cue-group",
+    "type": "ui-group",
+    "name": "Cue Controls",
+    "page": "e155175a9ba21767",
+    "width": 6,
+    "height": 2,
+    "order": 4,
+    "showTitle": true,
+    "className": "",
+    "visible": "true",
+    "disabled": "false",
+    "groupType": "default"
+  },
+  {
+    "id": "wo2-ui-build-cue-options",
+    "type": "function",
+    "z": "wo2-tab",
+    "name": "Build cue options for selected timeline",
+    "func": "// Build ui-dropdown options for the cues of the currently selected timeline.\n// Triggered when the timeline selection changes or the mapping refreshes.\n\nconst mapping = flow.get('watchout_mapping') || {};\nconst timelineKey = flow.get('watchout_selected_timelineKey') || '';\n\nconst entry = mapping[timelineKey] || {};\nconst cues  = entry.cues || {};\n\nconst keys = Object.keys(cues).sort((a, b) => {\n    const da = cues[a] && cues[a].displayName ? String(cues[a].displayName) : a;\n    const db = cues[b] && cues[b].displayName ? String(cues[b].displayName) : b;\n    return da.localeCompare(db);\n});\n\nlet options;\nlet selected;\n\nif (keys.length === 0) {\n    options  = [{ value: '', label: timelineKey ? 'No cues (run Confirm & Save)' : 'Select a timeline first' }];\n    selected = '';\n} else {\n    options  = keys.map(key => ({\n        value: key,\n        label: (cues[key].displayName || key) + ' [id ' + cues[key].watchoutCueId + ']'\n    }));\n    // Keep previous selection when possible\n    const prev = flow.get('watchout_selected_cueKey');\n    selected = (prev && cues[prev]) ? prev : options[0].value;\n}\n\nflow.set('watchout_selected_cueKey', selected);\n\nmsg.options  = options;\nmsg.payload  = selected;\n\nnode.status({ fill: keys.length ? 'green' : 'grey', shape: 'dot',\n              text: timelineKey ? (keys.length + ' cues for ' + timelineKey) : 'no timeline' });\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 310,
+    "y": 1700,
+    "wires": [
+      [
+        "wo2-ui-cue-dropdown"
+      ]
+    ]
+  },
+  {
+    "id": "wo2-ui-cue-dropdown",
+    "type": "ui-dropdown",
+    "z": "wo2-tab",
+    "group": "wo2-ui-cue-group",
+    "name": "Cue dropdown",
+    "label": "Cue",
+    "tooltip": "Select a cue point on the active timeline",
+    "order": 1,
+    "width": 6,
+    "height": 1,
+    "passthru": true,
+    "multiple": false,
+    "options": [],
+    "payload": "",
+    "topic": "watchout_cue",
+    "topicType": "str",
+    "className": "",
+    "x": 590,
+    "y": 1700,
+    "wires": [
+      [
+        "wo2-ui-cue-store-selection"
+      ]
+    ]
+  },
+  {
+    "id": "wo2-ui-cue-store-selection",
+    "type": "function",
+    "z": "wo2-tab",
+    "name": "Store selected cueKey",
+    "func": "// Store the selected cueKey for use by the Goto buttons.\nflow.set('watchout_selected_cueKey', msg.payload);\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 810,
+    "y": 1700,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "wo2-ui-goto-btn",
+    "type": "ui-button",
+    "z": "wo2-tab",
+    "group": "wo2-ui-cue-group",
+    "name": "Goto",
+    "label": "Goto",
+    "order": 2,
+    "width": 3,
+    "height": 1,
+    "tooltip": "Jump to selected cue (paused)",
+    "color": "#ffffff",
+    "bgcolor": "#1565c0",
+    "className": "",
+    "icon": "mdi-target",
+    "iconPosition": "left",
+    "payload": "goto",
+    "payloadType": "str",
+    "topic": "watchout_cue_cmd",
+    "topicType": "str",
+    "enableClick": true,
+    "x": 130,
+    "y": 1760,
+    "wires": [
+      [
+        "wo2-ui-build-cue-command"
+      ]
+    ]
+  },
+  {
+    "id": "wo2-ui-goto-play-btn",
+    "type": "ui-button",
+    "z": "wo2-tab",
+    "group": "wo2-ui-cue-group",
+    "name": "Goto & Play",
+    "label": "Goto & Play",
+    "order": 3,
+    "width": 3,
+    "height": 1,
+    "tooltip": "Jump to selected cue and play",
+    "color": "#ffffff",
+    "bgcolor": "#2e7d32",
+    "className": "",
+    "icon": "mdi-play-box",
+    "iconPosition": "left",
+    "payload": "gotoPlay",
+    "payloadType": "str",
+    "topic": "watchout_cue_cmd",
+    "topicType": "str",
+    "enableClick": true,
+    "x": 130,
+    "y": 1820,
+    "wires": [
+      [
+        "wo2-ui-build-cue-command"
+      ]
+    ]
+  },
+  {
+    "id": "wo2-ui-build-cue-command",
+    "type": "function",
+    "z": "wo2-tab",
+    "name": "Build jumpToCue command",
+    "func": "// Build a jumpToCue control payload from the currently selected timeline + cue.\n// msg.payload: \"goto\" (paused) or \"gotoPlay\" (with state=play)\n\nconst action      = msg.payload;\nconst timelineKey = flow.get('watchout_selected_timelineKey');\nconst cueKey      = flow.get('watchout_selected_cueKey');\n\nif (!timelineKey) {\n    node.status({ fill: 'red', shape: 'ring', text: 'No timeline selected' });\n    return null;\n}\nif (!cueKey) {\n    node.status({ fill: 'red', shape: 'ring', text: 'No cue selected' });\n    return null;\n}\n\nconst cmd = { command: 'jumpToCue', timelineKey, cueKey };\nif (action === 'gotoPlay') {\n    cmd.state = 'play';\n}\n\nnode.status({ fill: 'blue', shape: 'dot', text: action + ' ' + timelineKey + '/' + cueKey });\n\nmsg.payload = cmd;\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 370,
+    "y": 1790,
+    "wires": [
+      [
+        "wo2-ui-link-out"
       ]
     ]
   }
