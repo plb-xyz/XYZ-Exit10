@@ -63,16 +63,16 @@
     "ambience_1": {
       "displayName": "Ambience 1",
       "type": "sequenceCue",
-      "cue": "1",
       "notes": "",
-      "sequence": "3"
+      "sequence": "3",
+      "cue": "1"
     },
     "ambience_2": {
       "displayName": "Ambience 2",
       "type": "sequenceCue",
-      "cue": "2",
       "notes": "",
-      "sequence": "3"
+      "sequence": "3",
+      "cue": "2"
     }
   },
   "ls": {
@@ -98,6 +98,30 @@
       "sequence": "4"
     }
   },
-  "cmd": {},
-  "mx": {}
+  "cmd": {
+    "goto_cue_2": {
+      "displayName": "Goto Cue 2",
+      "type": "command",
+      "notes": "",
+      "commands": [
+        "Goto Cue 2"
+      ]
+    },
+    "1_at_50": {
+      "displayName": "1 at 50",
+      "type": "command",
+      "notes": "",
+      "commands": [
+        "Fixture 1 at 50"
+      ]
+    }
+  },
+  "mx": {
+    "first_macro_call": {
+      "displayName": "First Macro call",
+      "type": "macro",
+      "notes": "",
+      "macro": "1"
+    }
+  }
 }

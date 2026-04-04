@@ -25,29 +25,14 @@
     {
         "id": "ma-tab",
         "type": "tab",
-        "label": "MA Integration v0.1",
+        "label": "MA Comm",
         "disabled": false,
         "info": "grandMA3 OSC integration test flow — FlowFuse Dashboard 2.0. Owner gate, multi-zone executor cue (a1/a2/a3/ls with All-zones sync), and sequence cue controls."
     },
     {
-        "id": "7b0b7f3f4a6f4a1d",
-        "type": "tab",
-        "label": "D2 Confirm Cancel Modal",
-        "disabled": false,
-        "info": ""
-    },
-    {
-        "id": "68070fdec3517672",
-        "type": "tab",
-        "label": "Lighting",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
         "id": "c4c46c49b8c3c2b1",
         "type": "tab",
-        "label": "Prayer Times (Riyadh) - Umm al-Qura",
+        "label": "Prayer Times (Riyadh)",
         "disabled": false,
         "info": ""
     },
@@ -57,6 +42,14 @@
         "label": "MA Cue Mapper",
         "disabled": false,
         "info": "MA Cue Mapper v0.2 — maps friendly labels to MA cues per space.\nFile scheme: /config/ma-cue-mapper-config.json + /data/ma-cue-mapping.json",
+        "env": []
+    },
+    {
+        "id": "7c79f974a0ca6a3b",
+        "type": "tab",
+        "label": "Orchestration",
+        "disabled": false,
+        "info": "",
         "env": []
     },
     {
@@ -246,67 +239,6 @@
             "groupBorderRadius": "4px",
             "widgetGap": "6px"
         }
-    },
-    {
-        "id": "ma-d2-page",
-        "type": "ui-page",
-        "name": "MA Integration v0.1",
-        "ui": "f34314dbb36334ec",
-        "path": "/ma",
-        "icon": "mdi-floor-lamp",
-        "layout": "notebook",
-        "theme": "macm-theme",
-        "breakpoints": [
-            {
-                "name": "Default",
-                "px": "0",
-                "cols": "3"
-            },
-            {
-                "name": "Tablet",
-                "px": "576",
-                "cols": "6"
-            },
-            {
-                "name": "Small Desktop",
-                "px": "768",
-                "cols": "9"
-            },
-            {
-                "name": "Desktop",
-                "px": "1024",
-                "cols": "12"
-            }
-        ],
-        "order": 4,
-        "className": "",
-        "visible": true,
-        "disabled": false
-    },
-    {
-        "id": "ma-d2-owner-grp",
-        "type": "ui-group",
-        "name": "Owner Control",
-        "page": "ma-d2-page",
-        "width": 6,
-        "height": 1,
-        "order": 1,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
-        "id": "ma-d2-seq-grp",
-        "type": "ui-group",
-        "name": "Sequence Cue",
-        "page": "ma-d2-page",
-        "width": 6,
-        "height": 1,
-        "order": 2,
-        "showTitle": true,
-        "className": ""
     },
     {
         "id": "73c2ce73a1d6ef7e",
@@ -545,7 +477,7 @@
                 "cols": "12"
             }
         ],
-        "order": 5,
+        "order": 4,
         "className": "",
         "visible": "true",
         "disabled": "false"
@@ -609,7 +541,7 @@
                 "cols": "12"
             }
         ],
-        "order": 7,
+        "order": 6,
         "className": "",
         "visible": "true",
         "disabled": "false"
@@ -754,7 +686,7 @@
                 "cols": "12"
             }
         ],
-        "order": 6,
+        "order": 5,
         "className": "",
         "visible": "true",
         "disabled": "false"
@@ -804,7 +736,7 @@
                 "cols": "12"
             }
         ],
-        "order": 8,
+        "order": 7,
         "className": "",
         "visible": "true",
         "disabled": "false"
@@ -1078,7 +1010,7 @@
         "name": "Decode OSC",
         "path": "",
         "metadata": true,
-        "x": 330,
+        "x": 320,
         "y": 100,
         "wires": [
             [
@@ -5409,7 +5341,7 @@
         "type": "function",
         "z": "ma-tab",
         "name": "MA Init (load config + set globals)",
-        "func": "'use strict';\n\n// Just ensure expected globals exist with safe defaults.\n\n// Optional: keep ma_config for future non-routing settings\nvar cfg = global.get('ma_config');\nif (!cfg || typeof cfg !== 'object' || Array.isArray(cfg)) cfg = {};\n\n// If you want a default executor page when user supplies \"201\" (not \"1.201\")\nif (cfg.defaultExecPage == null) cfg.defaultExecPage = 1;\n\nglobal.set('ma_config', cfg);\n\n// Owner tracking (even if you no longer enforce owner gating)\nif (global.get('ma_owner') === undefined) global.set('ma_owner', null);\nif (global.get('ma_owner_setBy') === undefined) global.set('ma_owner_setBy', 'ma-init');\n\n// If you still use these in the MA dashboard UI, keep them.\n// If not, you can remove these lines too.\nif (!global.get('ma_zones')) global.set('ma_zones', { a1: false, a2: false, a3: false, ls: false });\nif (global.get('ma_exec_cue') === undefined) global.set('ma_exec_cue', 1);\nif (global.get('ma_seq_id')   === undefined) global.set('ma_seq_id',   1);\nif (global.get('ma_seq_cue')  === undefined) global.set('ma_seq_cue',  1);\n\nreturn {\n  topic: 'ma/init',\n  payload: {\n    message: 'MA init OK (no file config; no zoneExecutor required)',\n    owner: global.get('ma_owner'),\n    config: global.get('ma_config')\n  }\n};",
+        "func": "'use strict';\n\n// Just ensure expected globals exist with safe defaults.\n\n// Optional: keep ma_config for future non-routing settings\nvar cfg = global.get('ma_config');\nif (!cfg || typeof cfg !== 'object' || Array.isArray(cfg)) cfg = {};\n\n// If you want a default executor page when user supplies \"201\" (not \"1.201\")\nif (cfg.defaultExecPage == null) cfg.defaultExecPage = 1;\n\nglobal.set('ma_config', cfg);\n\n// Owner tracking (even if you no longer enforce owner gating)\nif (global.get('ma_owner') === undefined) global.set('ma_owner', null);\nif (global.get('ma_owner_setBy') === undefined) global.set('ma_owner_setBy', 'ma-init');\n\nreturn {\n  topic: 'ma/init',\n  payload: {\n    message: 'MA init OK (no file config; no zoneExecutor required)',\n    owner: global.get('ma_owner'),\n    config: global.get('ma_config')\n  }\n};",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -5421,128 +5353,6 @@
         "wires": [
             [
                 "ma-d2-owner-dbg"
-            ]
-        ]
-    },
-    {
-        "id": "ma-d2-btn-nodered",
-        "type": "ui-button",
-        "z": "ma-tab",
-        "group": "ma-d2-owner-grp",
-        "name": "Set owner: nodered",
-        "label": "Own: nodered",
-        "order": 1,
-        "width": "3",
-        "height": "1",
-        "emulateClick": false,
-        "tooltip": "Claim MA owner as 'nodered' — UI commands execute; watchout commands blocked",
-        "color": "",
-        "bgcolor": "#1565c0",
-        "className": "",
-        "icon": "",
-        "iconPosition": "left",
-        "payload": "nodered",
-        "payloadType": "str",
-        "topic": "ma/setOwner",
-        "topicType": "str",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "pointerdownPayload": "",
-        "pointerdownPayloadType": "str",
-        "enablePointerup": false,
-        "pointerupPayload": "",
-        "pointerupPayloadType": "str",
-        "x": 160,
-        "y": 160,
-        "wires": [
-            [
-                "ma-d2-set-owner-fn"
-            ]
-        ]
-    },
-    {
-        "id": "ma-d2-btn-watchout",
-        "type": "ui-button",
-        "z": "ma-tab",
-        "group": "ma-d2-owner-grp",
-        "name": "Set owner: watchout",
-        "label": "Own: watchout",
-        "order": 2,
-        "width": "3",
-        "height": "1",
-        "tooltip": "Claim MA owner as 'watchout' — UI commands are blocked until cleared",
-        "color": "",
-        "bgcolor": "#e65100",
-        "className": "",
-        "icon": "",
-        "iconPosition": "left",
-        "payload": "watchout",
-        "payloadType": "str",
-        "topic": "ma/setOwner",
-        "topicType": "str",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "enablePointerup": false,
-        "x": 160,
-        "y": 240,
-        "wires": [
-            [
-                "ma-d2-set-owner-fn"
-            ]
-        ]
-    },
-    {
-        "id": "ma-d2-btn-clear",
-        "type": "ui-button",
-        "z": "ma-tab",
-        "group": "ma-d2-owner-grp",
-        "name": "Clear owner",
-        "label": "Clear owner",
-        "order": 3,
-        "width": "3",
-        "height": "1",
-        "tooltip": "Release MA owner gate — any caller can send commands",
-        "color": "",
-        "bgcolor": "#616161",
-        "className": "",
-        "icon": "",
-        "iconPosition": "left",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "ma/setOwner",
-        "topicType": "str",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "enablePointerup": false,
-        "x": 150,
-        "y": 320,
-        "wires": [
-            [
-                "ma-d2-set-owner-fn"
-            ]
-        ]
-    },
-    {
-        "id": "ma-d2-set-owner-fn",
-        "type": "function",
-        "z": "ma-tab",
-        "name": "Set ma.owner",
-        "func": "'use strict';\nvar owner = (msg.payload === '' || msg.payload == null) ? null : msg.payload;\nmsg.payload = { action: 'setOwner', owner: owner, setBy: 'nodered-ui' };\nreturn msg;",
-        "outputs": 1,
-        "x": 420,
-        "y": 240,
-        "wires": [
-            [
-                "ma-control-fn"
             ]
         ]
     },
@@ -5559,8 +5369,8 @@
         "targetType": "msg",
         "statusVal": "payload.owner",
         "statusType": "auto",
-        "x": 960,
-        "y": 520,
+        "x": 760,
+        "y": 60,
         "wires": []
     },
     {
@@ -5576,132 +5386,9 @@
         "targetType": "msg",
         "statusVal": "payload",
         "statusType": "auto",
-        "x": 990,
-        "y": 760,
+        "x": 750,
+        "y": 140,
         "wires": []
-    },
-    {
-        "id": "ma-d2-seq-id-num",
-        "type": "ui-number-input",
-        "z": "ma-tab",
-        "group": "ma-d2-seq-grp",
-        "name": "Sequence ID",
-        "label": "Sequence #",
-        "order": 1,
-        "width": "3",
-        "height": "1",
-        "topic": "ma/seqId",
-        "topicType": "str",
-        "min": 1,
-        "max": 9999,
-        "step": 1,
-        "tooltip": "MA sequence ID",
-        "passthru": true,
-        "className": "",
-        "x": 130,
-        "y": 600,
-        "wires": [
-            [
-                "ma-d2-store-seq-id-fn"
-            ]
-        ]
-    },
-    {
-        "id": "ma-d2-store-seq-id-fn",
-        "type": "function",
-        "z": "ma-tab",
-        "name": "Store seq id",
-        "func": "global.set('ma_seq_id', msg.payload);\nreturn null;",
-        "outputs": 0,
-        "x": 390,
-        "y": 600,
-        "wires": []
-    },
-    {
-        "id": "ma-d2-seq-cue-num",
-        "type": "ui-number-input",
-        "z": "ma-tab",
-        "group": "ma-d2-seq-grp",
-        "name": "Sequence cue number",
-        "label": "Cue #",
-        "order": 2,
-        "width": "3",
-        "height": "1",
-        "topic": "ma/seqCue",
-        "topicType": "str",
-        "min": 1,
-        "max": 9999,
-        "step": 1,
-        "tooltip": "Sequence cue number to jump to",
-        "passthru": true,
-        "className": "",
-        "x": 140,
-        "y": 680,
-        "wires": [
-            [
-                "ma-d2-store-seq-cue-fn"
-            ]
-        ]
-    },
-    {
-        "id": "ma-d2-store-seq-cue-fn",
-        "type": "function",
-        "z": "ma-tab",
-        "name": "Store seq cue",
-        "func": "global.set('ma_seq_cue', msg.payload);\nreturn null;",
-        "outputs": 0,
-        "x": 400,
-        "y": 680,
-        "wires": []
-    },
-    {
-        "id": "ma-d2-seq-btn",
-        "type": "ui-button",
-        "z": "ma-tab",
-        "group": "ma-d2-seq-grp",
-        "name": "Go Sequence Cue",
-        "label": "▶ Go Sequence Cue",
-        "order": 3,
-        "width": "3",
-        "height": "1",
-        "tooltip": "Send: Go+ Sequence <id> Cue <cue#>",
-        "color": "",
-        "bgcolor": "#1565c0",
-        "className": "",
-        "icon": "",
-        "iconPosition": "left",
-        "payload": "go",
-        "payloadType": "str",
-        "topic": "ma/goSequenceCue",
-        "topicType": "str",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "enablePointerup": false,
-        "x": 130,
-        "y": 760,
-        "wires": [
-            [
-                "ma-d2-seq-cue-fn"
-            ]
-        ]
-    },
-    {
-        "id": "ma-d2-seq-cue-fn",
-        "type": "function",
-        "z": "ma-tab",
-        "name": "goSequenceCue",
-        "func": "'use strict';\nvar seq = global.get('ma_seq_id');\nif (seq == null) seq = 1;\nvar cue = global.get('ma_seq_cue');\nif (cue == null) cue = 1;\nmsg.payload = { action: 'goSequenceCue', sequence: seq, cue: cue };\nreturn msg;",
-        "outputs": 1,
-        "x": 390,
-        "y": 760,
-        "wires": [
-            [
-                "ma-control-fn"
-            ]
-        ]
     },
     {
         "id": "ma-control-fn",
@@ -5715,8 +5402,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 700,
-        "y": 620,
+        "x": 420,
+        "y": 220,
         "wires": [
             [
                 "ma-osc-node",
@@ -5739,8 +5426,8 @@
         "outport": "",
         "base64": false,
         "multicast": "false",
-        "x": 1180,
-        "y": 580,
+        "x": 900,
+        "y": 200,
         "wires": []
     },
     {
@@ -5755,8 +5442,8 @@
         "outport": "",
         "base64": false,
         "multicast": "false",
-        "x": 1120,
-        "y": 660,
+        "x": 850,
+        "y": 260,
         "wires": []
     },
     {
@@ -5766,8 +5453,8 @@
         "name": "",
         "path": "",
         "metadata": false,
-        "x": 960,
-        "y": 620,
+        "x": 690,
+        "y": 220,
         "wires": [
             [
                 "ma-udp-primary"
@@ -5782,8 +5469,8 @@
         "links": [
             "9449d2f86702cc59"
         ],
-        "x": 485,
-        "y": 500,
+        "x": 235,
+        "y": 220,
         "wires": [
             [
                 "ma-control-fn"
@@ -6807,5 +6494,59 @@
         "x": 875,
         "y": 620,
         "wires": []
+    },
+    {
+        "id": "abc7f2a8ee044ef2",
+        "type": "function",
+        "z": "7c79f974a0ca6a3b",
+        "name": "Action Map",
+        "func": "// Example in a Node-RED function node\nconst actionMap = {\n    \"show_1\": [\n        { type: \"watchout.timeline\", action: \"start\", id: \"show_1\" },\n        { type: \"watchout\", command: \"startTimeline\", timelineId: \"show_1\" },\n        { type: \"watchout\", command: \"fireCue\", timelineId: \"show_1\", cueId: \"cue_special\" },\n        { type: \"ma.cue\", action: \"go\", cue: \"show_1_start\" },\n        { type: \"ma.macro\", macro: \"FX_SHOT\", params: { speed: 100 } },\n        { type: \"qsys\", command: \"recall_scene\", scene: \"Show1\" },\n        { type: \"pharos\", command: \"trigger\", triggerId: \"show1_start\" },\n        { type: \"pharos\", system: \"main\", command: \"trigger\", triggerId: \"main_scene_1\" },\n        { type: \"pharos\", system: \"fountain\", command: \"setPreset\", preset: \"welcome\" }\n    ],\n    \"ambience_1\": [\n        { type: \"watchout.timeline\", action: \"start\", id: \"ambience_1\" },\n        { type: \"ma.cue\", action: \"go\", cue: \"ambience_1\" },\n        { type: \"qsys\", command: \"set_bgm_loop\", loop: \"Amb1_BG\" }\n    ]\n    // ...more shows/ambiances\n};\n\nmsg.actions = actionMap[msg.payload.contentId]; // contentId from trigger\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8ac34a9c598d37b5",
+        "type": "function",
+        "z": "7c79f974a0ca6a3b",
+        "name": "Director (executor)",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "304f9ccc1a663964",
+        "type": "function",
+        "z": "7c79f974a0ca6a3b",
+        "name": "State Machine & Rules",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 180,
+        "wires": [
+            []
+        ]
     }
 ]
