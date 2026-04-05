@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-us" xml:lang="en-us" data-mc-search-type="Stem" data-mc-help-system-file-name="Index.xml" data-mc-path-to-help-system="../../../" data-mc-toc-path="[%=System.LinkedTitle%]|[%=System.LinkedTitle%]|[%=System.LinkedTitle%]" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="true" data-mc-in-preview-mode="false">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>QRC Commands</title>
+        <!-- Google tag (gtag.js) -->
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" type="text/css" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" type="text/css" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" type="text/css" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" type="text/css" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" type="text/css" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" type="text/css" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Print.css" rel="stylesheet" type="text/css" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/DesignerStyles.css" rel="stylesheet" type="text/css" />
+        <link href="../../Resources/TableStyles/Shaded_Rows.css" rel="stylesheet" data-mc-stylesheet-type="table" />
+        <link href="../../Resources/TableStyles/Basic.css" rel="stylesheet" data-mc-stylesheet-type="table" />
+        <script src="../../../Resources/Scripts/jquery.min.js" type="text/javascript">
+        </script>
+        <script src="../../../Resources/Scripts/purify.min.js" type="text/javascript" defer="defer">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js" type="text/javascript" defer="defer">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js" type="text/javascript" defer="defer">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js" type="text/javascript" defer="defer">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js" type="text/javascript" defer="defer">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js" type="text/javascript" defer="defer">
+        </script>
+        <script src="https://www.googletagmanager.com/gtag/js?id=G-WSPKF60K0Z">
+        </script>
+        <script>/* <![CDATA[ */
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+ 
+			gtag('config', 'G-WSPKF60K0Z');
+		/* ]]> */</script>
+    </head>
+    <body>
+        <p class="MCWebHelpFramesetLink MCWebHelpFramesetLinkTop"><a href="../../../Index.htm#External_Control_APIs/QRC/QRC_Commands.htm">Open topic with navigation</a>
+        </p>
+        <div class="nocontent">
+            <div class="MCBreadcrumbsBox_0 breadcrumbs" role="navigation" aria-label="Breadcrumbs" data-mc-breadcrumbs-divider=" &gt; " data-mc-breadcrumbs-count="5" data-mc-toc="True"><span class="MCBreadcrumbsPrefix">You are here: </span>
+            </div>
+        </div>
+        <div role="main" id="mc-main-content">
+            <h1 data-mc-autonum=""><span class="autonumber"><span></span></span>QRC Commands</h1>
+            <p>QRC is a Unicode-based TCP/IP control protocol. The client connects to the Q-SYS Core (or emulator) on port 1710 and sends JSON RPC 2.0 null-terminated commands. </p>
+            <p class="note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>For the JSON-RPC&#160;2.0 Specification, visit <a href="http://www.jsonrpc.org/specification" target="_blank">jsonrpc.org</a>.</p>
+            <p class="tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>In all QRC&#160;commands, <code>id</code> acts as an identifier and allows for the sender to match the response with the command. The <code>id</code> will be copied and returned to the sender in the response. The <code>id</code> field must be a number and you can use whatever value you want. </p>
+            <div class="DropDownList">
+                <div class="MCDropDown MCDropDown_Closed dropDown dropDownHeading"><span class="MCDropDownHead dropDownHead"><a class="MCDropDownHotSpot dropDownHotspot dropDownHotspotHeading MCDropDownHotSpot_ MCDropDownHotSpot_Heading MCHotSpotImage" href="javascript:void(0)" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="11" width="16" alt="Closed" data-mc-alt2="Open" />Formatting Requirements</a></span>
+                    <div class="MCDropDownBody dropDownBody">
+                        <p>Every QRC command must meet both of the following requirements:</p>
+                        <ol>
+                            <li value="1">It must be a command from the supported commands listed below.</li>
+                            <li value="2">Each command must be terminated in a null.</li>
+                        </ol>
+                        <p>For the first requirement, you can find the full list of supported QRC commands below.</p>
+                        <p>For the second, a zero character following the escape character should be used for the null, as shown <a href="https://support.qsys.com/application-notes/how-to-|-formatting-a-qrc-command/version/1?kb_language=en_US" target="_blank">here</a>.</p>
+                    </div>
+                </div>
+                <div class="MCDropDown MCDropDown_Closed dropDown dropDownHeading"><span class="MCDropDownHead dropDownHead"><a class="MCDropDownHotSpot dropDownHotspot dropDownHotspotHeading MCDropDownHotSpot_ MCDropDownHotSpot_Heading MCHotSpotImage" href="javascript:void(0)" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="11" width="16" alt="Closed" data-mc-alt2="Open" />Connection Methods</a><p class="DropDownHead">Use these methods to log on to the Q-SYS Core processor via the QRC protocol and maintain the socket connection.</p><p class="note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>User credentials must first be created in <a href="../../Administrator/Users.htm" target="_blank" class="MCXref xref">Users (Administrator)</a></p></span>
+                    <div class="MCDropDownBody dropDownBody">
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Logon</a><p class="DropDownHead">Logs on to the system.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>User</code>, <code>Password</code></p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>:<span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>:<span style="color: #df5000; ">"Logon"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>:{<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"User"</span>:<span style="color: #df5000; ">"username"</span>,<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Password"</span>:<span style="color: #df5000; ">"1234"</span><br />&#160;&#160;}<br />}</code></pre>
+                                    </div>
+                                </div>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Response</h3><pre class="Lua_Debug_Output">{
+  "jsonrpc": "2.0",
+  "id" : &lt;id_send_with_command&gt;,								
+  "error" : &lt;error if command failed&gt;,								
+  "response" : &lt;response if command succeeded&gt;, 								
+}								
+</pre>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />NoOp</a><p class="DropDownHead">This is a simple, "do nothing" method for making sure that the socket remains open.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p>None.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>:<span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>:<span style="color: #df5000; ">"NoOp"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>:{<br />&#160;&#160;}<br />}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="MCDropDown MCDropDown_Closed dropDown dropDownHeading"><span class="MCDropDownHead dropDownHead"><a class="MCDropDownHotSpot dropDownHotspot dropDownHotspotHeading MCDropDownHotSpot_ MCDropDownHotSpot_Heading MCHotSpotImage" href="javascript:void(0)" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="11" width="16" alt="Closed" data-mc-alt2="Open" />Status Methods</a><p class="DropDownHead">Use these methods to obtain the status of the Q-SYS Core.</p></span>
+                    <div class="MCDropDownBody dropDownBody">
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" /></a><a name="EngineStatus"></a><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_" aria-expanded="false">EngineStatus</a></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <p class="DropDownHead">This method is automatically deployed to return the status of the Q-SYS Core whenever a client connects to the QRC port or the status changes.</p>
+                                <p class="note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When the connection is open and there is a status change on any device in the inventory, an unsolicited EngineStatus message will be sent. </p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>State</code> :&#160;One of the following strings – "Idle", "Active", "Standby".</p>
+                                <p><code>DesignName</code> :&#160;Name of the currently running design.</p>
+                                <p><code>DesignCode</code> : GUID&#160;of the currently running design.</p>
+                                <p><code>IsRedundant</code> :&#160;True if the design is configured to be a redundant design.</p>
+                                <p><code>IsEmulator</code> :&#160;True if the design is currently running in the emulator.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>:<span style="color: #df5000; ">"2.0"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>:<span style="color: #df5000; ">"EngineStatus"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>:{<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"State"</span>:<span style="color: #df5000; ">"Active"</span>,&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"DesignName"</span>:<span style="color: #df5000; ">"MyDesign"</span>,&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"DesignCode"</span>:<span style="color: #df5000; ">"qALFilm6IcCo"</span>,&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"IsRedundant"</span>:<span style="color: #0086b3; ">false</span>,&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"IsEmulator"</span>:<span style="color: #0086b3; ">true</span><br />&#160;&#160;}<br />}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />StatusGet</a><p class="DropDownHead">Manually request the current status. Returns the EngineStatus of the Q-SYS&#160;Core.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p>NA</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Response Results</h3>
+                                <p><code>Platform</code> :&#160;The Q-SYS Core model.</p>
+                                <p><code>State</code> :&#160;One of the following strings – "Idle", "Active", "Standby".</p>
+                                <p><code>DesignName</code> :&#160;Name of the currently running design.</p>
+                                <p><code>DesignCode</code> : GUID&#160;of the currently running design.</p>
+                                <p><code>IsRedundant</code> :&#160;True if the design is configured to be a redundant design.</p>
+                                <p><code>IsEmulator</code> :&#160;True if the design is currently running in the emulator.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"StatusGet"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span>,<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: <span style="color: #008080; ">0</span><br />}</code></pre>
+                                    </div>
+                                </div>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Response</h3><pre class="Lua_Debug_Output">{
+  "jsonrpc":"2.0", 
+  "id":1234
+  "result":{ 
+    "Platform":"Core 510i", 
+    "State":"Active",
+    "DesignName":"SAF‐MainPA", 
+    "DesignCode":"qALFilm6IcAz", 
+    "IsRedundant":false, 
+    "IsEmulator":true, 
+    "Status":{
+      "Code":0 
+      "String":"OK"
+    }
+  }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="MCDropDown MCDropDown_Closed dropDown dropDownHeading"><span class="MCDropDownHead dropDownHead"><a class="MCDropDownHotSpot dropDownHotspot dropDownHotspotHeading MCDropDownHotSpot_ MCDropDownHotSpot_Heading MCHotSpotImage" href="javascript:void(0)" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="11" width="16" alt="Closed" data-mc-alt2="Open" />Control Methods</a><p class="DropDownHead">Use these methods to get and set Named Control values.</p></span>
+                    <div class="MCDropDownBody dropDownBody">
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Control.Get</a><p class="DropDownHead">Specify an array of Named Control strings, receive an array of control values.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p>Array of Named Control strings, e.g.:</p>
+                                <p class="Code1">["<i>Named_Control_Name</i>", "<i>Named_Control_Name</i>"]</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Response</h3>
+                                <p><code>Name</code> :&#160;Name of the control, relative to the component.</p>
+                                <p><code>Value</code> :&#160;The value of the control. This can be a number, string, or boolean.</p>
+                                <p><code>String</code> :&#160;String representation of the control.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example 1:&#160;Single Named Control</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"Control.Get"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: [<span style="color: #df5000; ">"MainGain"</span>]<br />}</code></pre>
+                                    </div>
+                                </div>
+                                <h4>Response</h4><pre class="Lua_Debug_Output">{
+  "jsonrpc": "2.0",
+  "id": 1234,
+  "result": [
+    {
+      "Name": "MainGain", 
+      "Value": ‐12
+    }
+  ]
+}</pre>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example 2: Multiple Named Controls</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>:&#160;&#160;<span style="color: #df5000; ">"Control.Get"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: [<span style="color: #df5000; ">"MainGain"</span>, <span style="color: #df5000; ">"MainMute"</span>]<br />}</code></pre>
+                                    </div>
+                                </div>
+                                <h4>Response</h4><pre class="Lua_Debug_Output">{
+  "jsonrpc": "2.0",
+  "id": 1234,
+  "result": [
+    {
+      "Name": "MainGain", 
+      "Value": ‐12 
+      "String" : "‐12.0dB"
+    },
+    {
+      "Name": "MainMute", 
+      "Value": false, 
+      "String" : "Unmuted"
+    }
+  ]
+}</pre>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Control.Set</a><p class="DropDownHead">Set a control's value. Specify a single control name, value, and optional ramp time.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;Name of the control, relative to the component.</p>
+                                <p><code>Value</code> :&#160;The value of the control. This can be a number, string, or boolean.</p>
+                                <p><code>Ramp</code> :&#160;(Optional) The ramp time used to set the control.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"Control.Set"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"MainGain"</span>,&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Value"</span>: ‐<span style="color: #008080; ">12</span><br />&#160;&#160;}<br />}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="MCDropDown MCDropDown_Closed dropDown dropDownHeading"><span class="MCDropDownHead dropDownHead"><a class="MCDropDownHotSpot dropDownHotspot dropDownHotspotHeading MCDropDownHotSpot_ MCDropDownHotSpot_Heading MCHotSpotImage" href="javascript:void(0)" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="11" width="16" alt="Closed" data-mc-alt2="Open" />Component Control Methods</a><p class="DropDownHead">Use these methods to get and set controls within Named Components, or obtain a list of all Named Components in a design.</p></span>
+                    <div class="MCDropDownBody dropDownBody">
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Component.Get</a><p class="DropDownHead">Returns the values of one or more specified controls within a specified Named Component.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;The name of the named component.</p>
+                                <p><code>Controls</code> :&#160;An array of control values.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"Component.Get"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"My APM"</span>,<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Controls"</span>: [<br />&#160;&#160;&#160;&#160;&#160;&#160;{ <span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"ent.xfade.gain"</span> }<br />&#160;&#160;&#160;&#160;]<br />&#160;&#160;}<br />}</code></pre>
+                                    </div>
+                                </div>
+                                <h4>Response</h4><pre class="Lua_Debug_Output">{
+  "jsonrpc": "2.0", 
+  "result": {
+    "Name": "My APM",
+    "Controls": [
+    {
+      "Name": "ent.xfade.gain", 
+      "Value": ‐100.0,
+      "String": "‐100.0dB" 
+      "Position": 0
+    }
+    ]
+  }
+}					</pre>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Component.GetControls</a><p class="DropDownHead">Returns a table of all controls and their values in a specified Named Component.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;The name of the named component.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span>,<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"Component.GetControls"</span>,<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"MyGain"</span><br />&#160;&#160;&#160;&#160;}<br />}</code></pre>
+                                    </div>
+                                </div>
+                                <h4>Response</h4><pre class="Lua_Debug_Output">{
+ "jsonrpc": "2.0",
+ "result": {
+   "Name": "MyGain",
+   "Controls": [
+     {
+       "Name": "bypass",
+       "Type": "Boolean",
+       "Value": false,
+       "String": "no",
+       "Position": 0.0,
+       "Direction": "Read/Write"
+	 },
+	 {
+	   "Name": "gain",
+	   "Type": "Float",
+	   "Value": 0.0,
+	   "ValueMin": -100.0,
+	   "ValueMax": 20.0,
+	   "StringMin": "-100dB",
+	   "StringMax": "20.0dB",
+	   "String": "0dB",
+	   "Position": 0.83333331,
+	   "Direction": "Read/Write"
+	 },
+	 {
+	   "Name": "invert",
+	   "Type": "Boolean",
+	   "Value": false,
+	   "String": "normal",
+	   "Position": 0.0,
+	   "Direction": "Read/Write"
+	 },
+	 {
+	   "Name": "mute",
+	   "Type": "Boolean",
+	   "Value": false,
+	   "String": "unmuted",
+	   "Position": 0.0,
+	   "Direction": "Read/Write"
+	 }
+   ]
+ },
+ "id": 1234
+}</pre>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Component.Set</a><p class="DropDownHead">Set one or more controls for a single named component. Returns a list of unknown controls after processing.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;The name of the named component.</p>
+                                <p><code>Controls</code> :&#160;An array of control values.</p>
+                                <p data-mc-conditions="Primary.Mainline-Add"><code>ResponseValues</code> :&#160;(optional). Can be set to either <code>true</code> or <code>false</code>. When set to <code>true</code>, the response will return the new Values of the controls.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example 1: Set a single control</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"Component.Set"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"My APM"</span>,<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Controls"</span>: [<br />&#160;&#160;&#160;&#160;&#160;&#160;{<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"ent.xfade.gain"</span>,&#160;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Value"</span>: ‐<span style="color: #008080; ">100.0</span>,<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Ramp"</span>: <span style="color: #008080; ">2.0</span><br />&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;]<br />&#160;&#160;}<br />}<br /></code></pre>
+                                    </div>
+                                </div>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example 2: Set multiple controls</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"Component.Set"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"My APM"</span>,<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Controls"</span>: [<br />&#160;&#160;&#160;&#160;&#160;&#160;{<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"ent.xfade.gain"</span>,&#160;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Value"</span>: ‐<span style="color: #008080; ">100.0</span>,<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Ramp"</span>: <span style="color: #008080; ">2.0</span><br />&#160;&#160;&#160;&#160;&#160;&#160;},<br />&#160;&#160;&#160;&#160;&#160;&#160;{<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"bgm.xfade.gain"</span>,&#160;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Value"</span>: <span style="color: #008080; ">0.0</span>,<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Ramp"</span>: <span style="color: #008080; ">1.0</span><br />&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;]<br />&#160;&#160;}<br />}</code></pre>
+                                    </div>
+                                </div>
+                                <h3 data-mc-autonum="" data-mc-conditions="Primary.Mainline-Add"><span class="autonumber"><span></span></span>Example 3:&#160;Setting <code>ResponseValues</code> to <code>True</code></h3>
+                                <div class="codeSnippet" data-mc-conditions="Primary.Mainline-Add"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>=&gt; {<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"Component.Set"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"Gain"</span>,<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"ResponseValues"</span>: <span style="color: #0086b3; ">true</span>,<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Controls"</span>: [<br />&#160;&#160;&#160;&#160;&#160;&#160;{<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"gain"</span>,<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Value"</span>: <span style="color: #008080; ">-10</span>,<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Ramp"</span>: <span style="color: #008080; ">0</span><br />&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;]<br />&#160;&#160;},<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">101</span><br />}<br /><br />&lt;= {<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"result"</span>: [<br />&#160;&#160;&#160;&#160;{<br />&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Component"</span>: <span style="color: #df5000; ">"Gain"</span>,<br />&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"gain"</span>,<br />&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"String"</span>: <span style="color: #df5000; ">"-10.0dB"</span>,<br />&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Value"</span>: <span style="color: #008080; ">-10</span>,<br />&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Position"</span>: <span style="color: #008080; ">0.75</span><br />&#160;&#160;&#160;&#160;}<br />&#160;&#160;],<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">101</span><br />}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Component.GetComponents</a><p class="DropDownHead">Get a list of all named components in a design, along with their type and properties.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p>NA</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"Component.GetComponents"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: <span style="color: #df5000; ">"test"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span><br />}</code></pre>
+                                    </div>
+                                </div>
+                                <h4>Response</h4><pre class="Lua_Debug_Output">{
+ "jsonrpc": "2.0", 
+ "result": [
+   {
+    "ID": "MyGain",
+    "Name": "MyGain", 
+    "Type": "gain", 
+    "Properties": [
+      {
+       "Name": "max_gain",
+       "Value": 20,
+       "PrettyName": "Max Gain (dB)"
+      },
+      {
+       "Name": "min_gain",
+       "Value": "-100",
+       "Pretty Name": Min Gain (dB)"
+      },
+      {
+       "Name": "enable_stepper",
+       "Value": "False",
+       "PrettyName": "Enable Ramp Controls"
+      },
+      {
+       "Name": "num_steps",
+       "Value": "8",
+       "PrettyName": "Number of Steps"
+      },
+      {
+       "Name": "multi_channel_count",
+       "Value": "8",
+       "PrettyName": "Count"
+      }
+    ],
+    "Controls": null,
+    "ControlSource": 2
+   }
+  ],
+  "id": 1234
+}</pre>
+                                <p>The table contains the following fields:</p>
+                                <h4 class="BridgeHead">Name</h4>
+                                <p>The Code Name of the Named Component.</p>
+                                <h4 class="BridgeHead">ID</h4>
+                                <p>This also contains the Code Name of the Named Components returned by <code>Component.GetComponents()</code>, <code>Name</code> and <code>ID</code> are in this context,  identical. Both fields do not imply different behavior.</p>
+                                <h4 class="BridgeHead">Type</h4>
+                                <p>A string that identifies the component's class / type. Instances of the same component class  share the same <code>Type</code> value. The exact format of this string may vary depending on where the component comes from—built-in, plugin, extension.</p>
+                                <h4 class="BridgeHead">ControlSource</h4>
+                                <p>This field is primarily used for internal diagnostics and not needed in scripts.</p>
+                                <h4 class="BridgeHead">Controls</h4>
+                                <p>Not usable by Lua scripts.</p>
+                                <h4 class="BridgeHead">Properties</h4>
+                                <p>Table of properties of the named component that are set in Designer at design time. Values can be read, but not changed by a script.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="MCDropDown MCDropDown_Closed dropDown dropDownHeading"><span class="MCDropDownHead dropDownHead"><a class="MCDropDownHotSpot dropDownHotspot dropDownHotspotHeading MCDropDownHotSpot_ MCDropDownHotSpot_Heading MCHotSpotImage" href="javascript:void(0)" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="11" width="16" alt="Closed" data-mc-alt2="Open" />Change Group Methods</a><p class="DropDownHead">Use these methods to create, manipulate, and poll change groups.</p></span>
+                    <div class="MCDropDownBody dropDownBody">
+                        <p class="note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>There is a maximum limit of four change groups, but there is no restriction on the number of controls within a change group</p>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />ChangeGroup.AddControl</a><p class="DropDownHead">Create a change group and/or add controls to a change group via Named Controls.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Id</code> :&#160;Change group ID.</p>
+                                <p><code>Controls</code> :&#160;Array of control names.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"ChangeGroup.AddControl"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Id"</span>: <span style="color: #df5000; ">"my change group"</span>,&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Controls"</span> : [<br />&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"some control"</span>, <span style="color: #df5000; ">"another control"</span><br />&#160;&#160;&#160;&#160;]<br />&#160;&#160;}<br />}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />ChangeGroup.AddComponentControl</a><p class="DropDownHead">Create a change group and/or add controls to a change group via a Named Component.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Id</code> :&#160;Change group ID.</p>
+                                <p><code>Component</code> :&#160;Named Component name and array of controls.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"ChangeGroup.AddComponentControl"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Id"</span>: <span style="color: #df5000; ">"my change group"</span>,&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Component"</span> : {<br />&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"My Component"</span>,&#160;<br />&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Controls"</span>: [<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;{ <span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"gain"</span> },<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;{ <span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"mute"</span> }<br />&#160;&#160;&#160;&#160;&#160;&#160;]<br />&#160;&#160;&#160;&#160;}<br />&#160;&#160;}<br />}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />ChangeGroup.Remove</a><p class="DropDownHead">Remove controls from a change group via Named Controls. Returns a list of unknown controls after processing.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Id</code> :&#160;Change group ID.</p>
+                                <p><code>Controls</code> :&#160;Array of control names.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"ChangeGroup.Remove"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Id"</span>: <span style="color: #df5000; ">"my change group"</span>&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Controls"</span> : [<br />&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"some control"</span><br />&#160;&#160;&#160;&#160;]<br />&#160;&#160;}<br />}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />ChangeGroup.Poll</a><p class="DropDownHead">Poll a change group.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Id</code> :&#160;Change group ID.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"ChangeGroup.Poll"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Id"</span>: <span style="color: #df5000; ">"my change group"</span><br />&#160;&#160;}<br />}</code></pre>
+                                    </div>
+                                </div>
+                                <h4>Response</h4><pre class="Lua_Debug_Output">{
+  "jsonrpc": "2.0",
+  "id": 1234,
+  "result": {
+    "Id": "my change group", 
+    "Changes": [
+      { // Named control return value 
+      "Name": "some control", 
+      "Value": ‐12
+      "String": "‐12dB"
+      },
+      { // Named component return value 
+      "Component": "My Component", 
+      "Name": "gain",
+      "Value": ‐12 
+      "String": "‐12dB"
+      }
+    ]
+  }
+}
+</pre>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />ChangeGroup.Destroy</a><p class="DropDownHead">Destroy a change group.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Id</code> :&#160;Change group ID.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"ChangeGroup.Destroy"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Id"</span>: <span style="color: #df5000; ">"my change group"</span><br />&#160;&#160;}<br />}<br /></code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />ChangeGroup.Invalidate</a><p class="DropDownHead">Invalidates a change group, which causes all controls to be resent.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Id</code> :&#160;Change group ID.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"ChangeGroup.Invalidate"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Id"</span>: <span style="color: #df5000; ">"my change group"</span><br />&#160;&#160;}<br />}<br /></code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />ChangeGroup.Clear</a><p class="DropDownHead">Clears a change group, which removes all controls.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Id</code> :&#160;Change group ID.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"ChangeGroup.Clear"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Id"</span>: <span style="color: #df5000; ">"my change group"</span><br />&#160;&#160;}<br />}<br /></code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />ChangeGroup.AutoPoll</a><p class="DropDownHead">Set up automatic polling.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Id</code> :&#160;Change group ID.</p>
+                                <p><code>Rate</code> :&#160;The polling interval, in seconds.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <p>Configure automatic polling to receive a response every 5 seconds:</p>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"ChangeGroup.AutoPoll"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Id"</span>: <span style="color: #df5000; ">"my change group"</span>,&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Rate"</span>: <span style="color: #008080; ">5</span><br />&#160;&#160;}<br />}<br /></code></pre>
+                                    </div>
+                                </div>
+                                <h4>Response</h4><pre class="Lua_Debug_Output">{
+  "jsonrpc": "2.0",
+  "id": 1234,
+  "result": {
+    "Id": "my change group", 
+    "Changes": [
+      { // Named control return value 
+        "Name": "some control", 
+        "Value": ‐12
+        "String": "‐12dB"
+      },
+      { // Named component return value 
+        "Component": "My Component", 
+        "Name": "gain",
+        "Value": ‐12 
+        "String": "‐12dB"
+      }
+    ]
+  }
+}
+</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="MCDropDown MCDropDown_Closed dropDown dropDownHeading"><span class="MCDropDownHead dropDownHead"><a class="MCDropDownHotSpot dropDownHotspot dropDownHotspotHeading MCDropDownHotSpot_ MCDropDownHotSpot_Heading MCHotSpotImage" href="javascript:void(0)" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="11" width="16" alt="Closed" data-mc-alt2="Open" />Mixer Control Methods</a><p class="DropDownHead">Use the mixer control API methods to set mixer input and output parameters.</p></span>
+                    <div class="MCDropDownBody dropDownBody">
+                        <h3 data-mc-autonum=""><span class="autonumber"><span></span></span><a name="Input"></a>String Syntax</h3>
+                        <p>The mixer control API uses a string specification to determine to which inputs and outputs to apply changes. The syntax supports space- or comma-separated numbers, ranges of numbers, all numbers (*), and negation of a selection with the ! operator. For example:</p>
+                        <table style="mc-table-style: url('../../Resources/TableStyles/Basic.css');" class="TableStyle-Basic2" cellspacing="0">
+                            <col class="TableStyle-Basic2-Column-Column1" />
+                            <col class="TableStyle-Basic2-Column-Column1" />
+                            <tbody>
+                                <tr class="TableStyle-Basic2-Body-Body1">
+                                    <td class="TableStyle-Basic2-BodyE-Column1-Body1">
+                                        <p class="Code1">*</p>
+                                    </td>
+                                    <td class="TableStyle-Basic2-BodyD-Column1-Body1">
+                                        <p>everything</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Basic2-Body-Body1">
+                                    <td class="TableStyle-Basic2-BodyE-Column1-Body1">
+                                        <p class="Code1">1 2 3</p>
+                                    </td>
+                                    <td class="TableStyle-Basic2-BodyD-Column1-Body1">
+                                        <p>channels 1, 2, 3</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Basic2-Body-Body1">
+                                    <td class="TableStyle-Basic2-BodyE-Column1-Body1">
+                                        <p class="Code1">1-6</p>
+                                    </td>
+                                    <td class="TableStyle-Basic2-BodyD-Column1-Body1">
+                                        <p>channels 1 through 6</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Basic2-Body-Body1">
+                                    <td class="TableStyle-Basic2-BodyE-Column1-Body1">
+                                        <p class="Code1">1-6 9</p>
+                                    </td>
+                                    <td class="TableStyle-Basic2-BodyD-Column1-Body1">
+                                        <p>channels 1 through 6 and 9</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Basic2-Body-Body1">
+                                    <td class="TableStyle-Basic2-BodyE-Column1-Body1">
+                                        <p class="Code1">1-3 5-9</p>
+                                    </td>
+                                    <td class="TableStyle-Basic2-BodyD-Column1-Body1">
+                                        <p>channels 1 through 3 and 5
+								through 9</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Basic2-Body-Body1">
+                                    <td class="TableStyle-Basic2-BodyE-Column1-Body1">
+                                        <p class="Code1">1-8 !3</p>
+                                    </td>
+                                    <td class="TableStyle-Basic2-BodyD-Column1-Body1">
+                                        <p>channels 1 through 8
+								except 3</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Basic2-Body-Body1">
+                                    <td class="TableStyle-Basic2-BodyB-Column1-Body1">
+                                        <p class="Code1">* !3-5</p>
+                                    </td>
+                                    <td class="TableStyle-Basic2-BodyA-Column1-Body1">
+                                        <p>everything but 3 through 5</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Methods</h3>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Mixer.SetCrossPointGain</a><p class="DropDownHead">Set the crosspoint gain value for specified mixer inputs and outputs  over an optional ramp time.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;Name of the mixer.</p>
+                                <p><code>Inputs</code> :&#160;String specification of mixer inputs. See <a href="#Input" class="MCXref xref">String Syntax</a>.</p>
+                                <p><code>Outputs</code> :&#160;String specification of mixer outputs. See <a href="#Input" class="MCXref xref">String Syntax</a>.</p>
+                                <p><code>Value</code> :&#160;The gain value to set.</p>
+                                <p><code>Ramp</code> :&#160;Ramp time to use for setting the gain value.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <p>Set all crosspoints on a mixer to -100dB over 5 seconds.</p>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"Mixer.SetCrossPointGain"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span>,<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"Parade"</span>,<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Inputs"</span>: <span style="color: #df5000; ">"*"</span>,<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Outputs"</span>: <span style="color: #df5000; ">"*"</span>,<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Value"</span>: ‐<span style="color: #008080; ">100.0</span>,<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Ramp"</span>: <span style="color: #008080; ">5.0</span><br />&#160;&#160;}<br />}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Mixer.SetCrossPointDelay</a><p class="DropDownHead">Set the crosspoint delay value for specified mixer inputs and outputs  over an optional ramp time.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;Name of the mixer.</p>
+                                <p><code>Inputs</code> :&#160;String specification of mixer inputs. See <a href="#Input" class="MCXref xref">String Syntax</a>.</p>
+                                <p><code>Outputs</code> :&#160;String specification of mixer outputs. See <a href="#Input" class="MCXref xref">String Syntax</a>.</p>
+                                <p><code>Value</code> :&#160;The delay value to set.</p>
+                                <p><code>Ramp</code> :&#160;Ramp time to use for setting the delay value.</p>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Mixer.SetCrossPointMute</a><p class="DropDownHead">Enable or disable crosspoint muting for specified mixer inputs and outputs.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;Name of the mixer.</p>
+                                <p><code>Inputs</code> :&#160;String specification of mixer inputs. See <a href="#Input" class="MCXref xref">String Syntax</a>.</p>
+                                <p><code>Outputs</code> :&#160;String specification of mixer outputs. See <a href="#Input" class="MCXref xref">String Syntax</a>.</p>
+                                <p><code>Value</code> :&#160;The boolean mute value to set.</p>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Mixer.SetCrossPointSolo</a><p class="DropDownHead">Enable or disable crosspoint solo for specified mixer inputs and outputs.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;Name of the mixer.</p>
+                                <p><code>Inputs</code> :&#160;String specification of mixer inputs. See <a href="#Input" class="MCXref xref">String Syntax</a>.</p>
+                                <p><code>Outputs</code> :&#160;String specification of mixer outputs. See <a href="#Input" class="MCXref xref">String Syntax</a>.</p>
+                                <p><code>Value</code> :&#160;The boolean solo value to set.</p>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Mixer.SetInputGain</a><p class="DropDownHead">Set the gain value for specified mixer inputs over an optional ramp time.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;Name of the mixer.</p>
+                                <p><code>Inputs</code> :&#160;String specification of mixer inputs. See <a href="#Input" class="MCXref xref">String Syntax</a>.</p>
+                                <p><code>Value</code> :&#160;The input gain value to set.</p>
+                                <p><code>Ramp</code> :&#160;Ramp time to use for setting the input gain value.</p>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Mixer.SetInputMute</a><p class="DropDownHead">Enable or disable muting for specified mixer inputs.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;Name of the mixer.</p>
+                                <p><code>Inputs</code> :&#160;String specification of mixer inputs. See <a href="#Input" class="MCXref xref">String Syntax</a>.</p>
+                                <p><code>Value</code> :&#160;The boolean input mute value to set.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <p>Mute inputs 4-6:</p>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"Mixer.SetInputMute"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"Parade"</span>,&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Inputs"</span>: <span style="color: #df5000; ">"4‐6"</span>,&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Value"</span>: <span style="color: #0086b3; ">true</span>,<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Ramp"</span>: <span style="color: #008080; ">0.0</span><br />&#160;&#160;},<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span><br />}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Mixer.SetInputSolo</a><p class="DropDownHead">Enable or disable solo for specified mixer inputs.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;Name of the mixer.</p>
+                                <p><code>Inputs</code> :&#160;String specification of mixer inputs. See <a href="#Input" class="MCXref xref">String Syntax</a>.</p>
+                                <p><code>Value</code> :&#160;The boolean input solo value to set.</p>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Mixer.SetOutputGain</a><p class="DropDownHead">Set the gain value for specified mixer outputs over an optional ramp time.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;Name of the mixer.</p>
+                                <p><code>Outputs</code> :&#160;String specification of mixer outputs. See <a href="#Input" class="MCXref xref">String Syntax</a>.</p>
+                                <p><code>Value</code> :&#160;The output gain value to set.</p>
+                                <p><code>Ramp</code> :&#160;Ramp time to use for setting the output gain value.</p>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Mixer.SetOutputMute</a><p class="DropDownHead">Enable or disable muting for specified mixer outputs.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;Name of the mixer.</p>
+                                <p><code>Outputs</code> :&#160;String specification of mixer outputs. See <a href="#Input" class="MCXref xref">String Syntax</a>.</p>
+                                <p><code>Value</code> :&#160;The boolean output mute value to set.</p>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Mixer.SetCueMute</a><p class="DropDownHead">Enable or disable muting for specified mixer cues.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;Name of the mixer.</p>
+                                <p><code>Cues</code> :&#160;String specification of mixer cues.</p>
+                                <p><code>Value</code> :&#160;The boolean cue mute value to set.</p>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Mixer.SetCueGain</a><p class="DropDownHead">Set the gain value for specified mixer cues over an optional ramp time.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;Name of the mixer.</p>
+                                <p><code>Cues</code> :&#160;String specification of mixer cues.</p>
+                                <p><code>Value</code> :&#160;The  cue gain value to set.</p>
+                                <p><code>Ramp</code> :&#160;Ramp time to use for setting the cue gain value.</p>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Mixer.SetInputCueEnable</a><p class="DropDownHead">Enable or disable cues for specified mixer inputs.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;Name of the mixer.</p>
+                                <p><code>Cues</code> :&#160;String specification of mixer cues.</p>
+                                <p><code>Inputs</code> :&#160;String specification of mixer inputs. See <a href="#Input" class="MCXref xref">String Syntax</a>.</p>
+                                <p><code>Value</code> :&#160;The  boolean cue enable value to set.</p>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Mixer.SetInputCueAfl</a><p class="DropDownHead">Enable or disable cue AFL (After Fader Level) for specified mixer inputs.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;Name of the mixer.</p>
+                                <p><code>Cues</code> :&#160;String specification of mixer cues.</p>
+                                <p><code>Inputs</code> :&#160;String specification of mixer inputs. See <a href="#Input" class="MCXref xref">String Syntax</a>.</p>
+                                <p><code>Value</code> :&#160;The  boolean cue AFL value to set.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="MCDropDown MCDropDown_Closed dropDown dropDownHeading"><span class="MCDropDownHead dropDownHead"><a name="Loop"></a><a class="MCDropDownHotSpot dropDownHotspot dropDownHotspotHeading MCDropDownHotSpot_ MCDropDownHotSpot_Heading MCHotSpotImage" href="javascript:void(0)" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="11" width="16" alt="Closed" data-mc-alt2="Open" />Loop Player Control Methods</a><p> Use the Loop Player control API methods to queue up file playback into a named Loop Player.</p><p class="note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In all Loop Player commands, there is a <code>Log</code> option that allows you to set it to <code>true</code> or <code>false</code>. This option enables Event Log logging for the command.</p></span>
+                    <div class="MCDropDownBody dropDownBody">
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />LoopPlayer.Start</a><p class="DropDownHead">Start audio playback.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;The name of the Loop Player.</p>
+                                <p><code>StartTime</code> :&#160;The time of day, in seconds, to start the job.</p>
+                                <p><code>Files</code> :&#160;Array of file specifications, including:</p>
+                                <p class="P1" data-mc-autonum=""><span class="autonumber"><span></span></span><code>Name</code> :&#160;Name of the file to play.</p>
+                                <p class="P1" data-mc-autonum=""><span class="autonumber"><span></span></span><code>Mode</code> :&#160;mono | stereo</p>
+                                <p class="P1" data-mc-autonum=""><span class="autonumber"><span></span></span><code>Output</code> :&#160;The Loop Player output number for playback.</p>
+                                <p><code>Loop</code> :&#160;If true, file playback loops.</p>
+                                <p><code>RefID</code>:&#160;If provided, a notification will be sent when a job has failed in some way. The error will be visible in the <a href="../../Core_Manager/Event_Log.htm" class="MCXref xref">Event Log</a> to make sense of what job failed. Additionally, the error will also be shown in the <a href="QRC_Overview.htm" class="MCXref xref">Q-SYS Remote Control Protocol (QRC)</a>.</p>
+                                <p><code>Seek</code> :&#160;The optional time, in seconds, to seek into each file before playback.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span> LoopPlayer.Start Example </h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"LoopPlayer.Start"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Files"</span>: [<br />&#160;&#160;&#160;&#160;&#160;&#160;{<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"Audio/mainloop.wav"</span>,&#160;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Mode"</span>: <span style="color: #df5000; ">"mono"</span>,<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Output"</span>: <span style="color: #008080; ">1</span><br />&#160;&#160;&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;],<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"test"</span>,&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"StartTime"</span>: <span style="color: #008080; ">62600</span>,&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Loop"</span>: <span style="color: #0086b3; ">false</span>,&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Log"</span>: <span style="color: #0086b3; ">true</span><br />&#160;&#160;},<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span><br />}</code></pre>
+                                    </div>
+                                </div>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>LoopPlayer.Error Example </h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"LoopPlayer.Error"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Error"</span>: <span style="color: #df5000; ">"JobInPast"</span>,&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"RefId"</span>: &lt;Insert_id_from_LoopPlayer&gt;,&#160;<br />&#160;&#160;}<br />}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />LoopPlayer.Stop</a><p class="DropDownHead">Stop audio playback for specified outputs.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;The name of the Loop Player.</p>
+                                <p><code>Outputs</code> :&#160;The Loop Player output numbers for which to stop playback.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"LoopPlayer.Stop"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"test"</span>,<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Outputs"</span>: [ <span style="color: #008080; ">1</span>, <span style="color: #008080; ">3</span>, <span style="color: #008080; ">4</span> ],&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Log"</span>: <span style="color: #0086b3; ">true</span><br />&#160;&#160;},<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span><br />}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />LoopPlayer.Cancel</a><p class="DropDownHead">Cancel audio playback for specified outputs.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;The name of the Loop Player.</p>
+                                <p><code>Outputs</code> :&#160;The Loop Player output numbers for which to stop playback.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"LoopPlayer.Cancel"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"test"</span>,<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Outputs"</span>: [ <span style="color: #008080; ">1</span>, <span style="color: #008080; ">3</span>, <span style="color: #008080; ">4</span> ],&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Log"</span>: <span style="color: #0086b3; ">true</span><br />&#160;&#160;},<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span><br />}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="MCDropDown MCDropDown_Closed dropDown dropDownHeading"><span class="MCDropDownHead dropDownHead"><a class="MCDropDownHotSpot dropDownHotspot dropDownHotspotHeading MCDropDownHotSpot_ MCDropDownHotSpot_Heading MCHotSpotImage" href="javascript:void(0)" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="11" width="16" alt="Closed" data-mc-alt2="Open" />Snapshot Methods</a><p class="DropDownHead">Use these methods to load and save snapshots.</p></span>
+                    <div class="MCDropDownBody dropDownBody">
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Snapshot.Load</a><p class="DropDownHead">Load control settings from a specified snapshot bank and number with an optional ramp time.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;String. The name of the snapshot bank from which to load the snapshot. This is the name given to the bank when it was created in Q-SYS Designer Software.</p>
+                                <p><code>Bank</code> : Integer. Identifies a snapshot within a snapshot bank. The range is 1 to the number of snapshots in the bank, inclusive.</p>
+                                <p><code>Ramp</code> : Double. Optional argument, in seconds, for specifying the ramp time when loading the snapshot.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <p>From a snapshot bank called "MySpecialBank", load control settings from snapshot # 7 with a ramp time of 8.5 seconds...</p>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"Snapshot.Load"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"MySpecialBank"</span>,<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Bank"</span>: <span style="color: #008080; ">7</span>,&#160;<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Ramp"</span>: <span style="color: #008080; ">8.5</span><br />&#160;&#160;},<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span><br />}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="MCDropDown MCDropDown_Closed dropDown"><span class="MCDropDownHead dropDownHead"><a href="javascript:void(0)" class="MCDropDownHotSpot dropDownHotspot MCDropDownHotSpot_ MCHotSpotImage" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="7" width="16" alt="Closed" data-mc-alt2="Open" />Snapshot.Save</a><p class="DropDownHead">Save control settings to a specified snapshot bank and number.</p></span>
+                            <div class="MCDropDownBody dropDownBody">
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Parameters</h3>
+                                <p><code>Name</code> :&#160;String. The name of the snapshot bank to which to save the snapshot. This is the name given to the bank when it was created in Q-SYS Designer Software.</p>
+                                <p><code>Bank</code> :&#160; Integer. Identifies a snapshot within a snapshot bank. The range is 1 to the number of snapshots in the bank, inclusive.</p>
+                                <h3 data-mc-autonum=""><span class="autonumber"><span></span></span>Example</h3>
+                                <p>Save control settings to a snapshot bank called "MyVerySpecialBank" to snapshot # 4.</p>
+                                <div class="codeSnippet"><a class="codeSnippetCopyButton" role="button" href="javascript:void(0);">Copy</a>
+                                    <div style="mc-code-lang: Lua;" class="codeSnippetBody" data-mc-continue="False" data-mc-line-number-start="1" data-mc-use-line-numbers="False"><pre><code>{<br />&#160;&#160;<span style="color: #df5000; ">"jsonrpc"</span>: <span style="color: #df5000; ">"2.0"</span>,<br />&#160;&#160;<span style="color: #df5000; ">"method"</span>: <span style="color: #df5000; ">"Snapshot.Save"</span>,&#160;<br />&#160;&#160;<span style="color: #df5000; ">"params"</span>: {<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Name"</span>: <span style="color: #df5000; ">"MyVerySpecialBank"</span>,<br />&#160;&#160;&#160;&#160;<span style="color: #df5000; ">"Bank"</span>: <span style="color: #008080; ">4</span>,&#160;<br />&#160;&#160;},<br />&#160;&#160;<span style="color: #df5000; ">"id"</span>: <span style="color: #008080; ">1234</span><br />}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="MCDropDown MCDropDown_Closed dropDown dropDownHeading"><span class="MCDropDownHead dropDownHead"><a class="MCDropDownHotSpot dropDownHotspot dropDownHotspotHeading MCDropDownHotSpot_ MCDropDownHotSpot_Heading MCHotSpotImage" href="javascript:void(0)" aria-expanded="false"><img class="MCDropDown_Image_Icon" src="../../../Skins/Default/Stylesheets/Images/transparent.gif" height="11" width="16" alt="Closed" data-mc-alt2="Open" />Error Code Reference</a><p class="DropDownHead">These codes can be returned as the code value in a JSON-RPC error object.</p></span>
+                    <div class="MCDropDownBody dropDownBody">
+                        <table style="mc-table-style: url('../../Resources/TableStyles/Shaded_Rows.css');" class="TableStyle-Shaded_Rows" cellspacing="0">
+                            <col class="TableStyle-Shaded_Rows-Column-Column1" />
+                            <col class="TableStyle-Shaded_Rows-Column-Column1" />
+                            <thead>
+                                <tr class="TableStyle-Shaded_Rows-Head-Header1">
+                                    <th class="TableStyle-Shaded_Rows-HeadE-Column1-Header1" style="text-align: center;">Code</th>
+                                    <th class="TableStyle-Shaded_Rows-HeadD-Column1-Header1">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="TableStyle-Shaded_Rows-Body-Body1">
+                                    <td class="TableStyle-Shaded_Rows-BodyE-Column1-Body1" style="text-align: center;">
+                                        <p class="Code1">-32700</p>
+                                    </td>
+                                    <td class="TableStyle-Shaded_Rows-BodyD-Column1-Body1">
+                                        <p>Parse error. Invalid JSON
+ was received by the server.</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Shaded_Rows-Body-Body2">
+                                    <td class="TableStyle-Shaded_Rows-BodyE-Column1-Body2" style="text-align: center;">
+                                        <p class="Code1">-32600</p>
+                                    </td>
+                                    <td class="TableStyle-Shaded_Rows-BodyD-Column1-Body2">
+                                        <p>Invalid request. The JSON
+ sent is not a valid Request object.</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Shaded_Rows-Body-Body1">
+                                    <td class="TableStyle-Shaded_Rows-BodyE-Column1-Body1" style="text-align: center;">
+                                        <p class="Code1">-32601</p>
+                                    </td>
+                                    <td class="TableStyle-Shaded_Rows-BodyD-Column1-Body1">
+                                        <p>Method not found.</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Shaded_Rows-Body-Body2">
+                                    <td class="TableStyle-Shaded_Rows-BodyE-Column1-Body2" style="text-align: center;">
+                                        <p class="Code1">-32602</p>
+                                    </td>
+                                    <td class="TableStyle-Shaded_Rows-BodyD-Column1-Body2">
+                                        <p>Invalid params.</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Shaded_Rows-Body-Body1">
+                                    <td class="TableStyle-Shaded_Rows-BodyE-Column1-Body1" style="text-align: center;">
+                                        <p class="Code1">-32603</p>
+                                    </td>
+                                    <td class="TableStyle-Shaded_Rows-BodyD-Column1-Body1">
+                                        <p>Server error.</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Shaded_Rows-Body-Body2">
+                                    <td class="TableStyle-Shaded_Rows-BodyE-Column1-Body2" style="text-align: center;">
+                                        <p class="Code1">-32604</p>
+                                    </td>
+                                    <td class="TableStyle-Shaded_Rows-BodyD-Column1-Body2">
+                                        <p>Core is on Standby. This code is returned when a QRC command is received while the Core is not the active Core in a redundant Core configuration.</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Shaded_Rows-Body-Body1">
+                                    <td class="TableStyle-Shaded_Rows-BodyE-Column1-Body1" style="text-align: center;">
+                                        <p class="Code1">2</p>
+                                    </td>
+                                    <td class="TableStyle-Shaded_Rows-BodyD-Column1-Body1">
+                                        <p>Invalid Page Request ID</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Shaded_Rows-Body-Body2">
+                                    <td class="TableStyle-Shaded_Rows-BodyE-Column1-Body2" style="text-align: center;">
+                                        <p class="Code1">3</p>
+                                    </td>
+                                    <td class="TableStyle-Shaded_Rows-BodyD-Column1-Body2">
+                                        <p>Bad Page Request - could
+ not create the requested Page Request</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Shaded_Rows-Body-Body1">
+                                    <td class="TableStyle-Shaded_Rows-BodyE-Column1-Body1" style="text-align: center;">
+                                        <p class="Code1">4</p>
+                                    </td>
+                                    <td class="TableStyle-Shaded_Rows-BodyD-Column1-Body1">
+                                        <p>Missing file</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Shaded_Rows-Body-Body2">
+                                    <td class="TableStyle-Shaded_Rows-BodyE-Column1-Body2" style="text-align: center;">
+                                        <p class="Code1">5</p>
+                                    </td>
+                                    <td class="TableStyle-Shaded_Rows-BodyD-Column1-Body2">
+                                        <p>Change Groups exhausted</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Shaded_Rows-Body-Body1">
+                                    <td class="TableStyle-Shaded_Rows-BodyE-Column1-Body1" style="text-align: center;">
+                                        <p class="Code1">6</p>
+                                    </td>
+                                    <td class="TableStyle-Shaded_Rows-BodyD-Column1-Body1">
+                                        <p>Unknown change croup</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Shaded_Rows-Body-Body2">
+                                    <td class="TableStyle-Shaded_Rows-BodyE-Column1-Body2" style="text-align: center;">
+                                        <p class="Code1">7</p>
+                                    </td>
+                                    <td class="TableStyle-Shaded_Rows-BodyD-Column1-Body2">
+                                        <p>Unknown component name</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Shaded_Rows-Body-Body1">
+                                    <td class="TableStyle-Shaded_Rows-BodyE-Column1-Body1" style="text-align: center;">
+                                        <p class="Code1">8</p>
+                                    </td>
+                                    <td class="TableStyle-Shaded_Rows-BodyD-Column1-Body1">
+                                        <p>Unknown control</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Shaded_Rows-Body-Body2">
+                                    <td class="TableStyle-Shaded_Rows-BodyE-Column1-Body2" style="text-align: center;">
+                                        <p class="Code1">9</p>
+                                    </td>
+                                    <td class="TableStyle-Shaded_Rows-BodyD-Column1-Body2">
+                                        <p>Illegal mixer channel
+ index</p>
+                                    </td>
+                                </tr>
+                                <tr class="TableStyle-Shaded_Rows-Body-Body1">
+                                    <td class="TableStyle-Shaded_Rows-BodyB-Column1-Body1" style="text-align: center;">
+                                        <p class="Code1">10</p>
+                                    </td>
+                                    <td class="TableStyle-Shaded_Rows-BodyA-Column1-Body1">
+                                        <p>Logon required</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <MadCap:pageFooter class="">
+            <div style="width: 100%;position: relative; border-top: solid 1px #c2c2c2; margin-top: 15px; padding-top: 8px">
+                <p style="text-align: center;"><a href="https://help.qsys.com/" target="_blank">Q-SYS Help (Latest Version)</a> | <a href="https://www.qsys.com/resources/software-and-firmware/" target="_blank">Software&#160;and&#160;Firmware</a> | <a href="https://www.qsys.com/resources/" target="_blank">Resources</a> | <a href="https://support.qsys.com/" target="_blank">Q-SYS Knowledge Base</a> | <a href="../../Support.htm">Support</a></p>
+                <p class="legal">Copyright © 2026 QSC, LLC. Click <a href="../../Legal.htm">here</a> for trademark and other legal notices. | <MadCap:conditionalText data-mc-conditions="Primary.Versioning-1021">Q-SYS 10.2.1</MadCap:conditionalText></p>
+                <p style="text-align: center;"><a href="https://www.qsys.com/" target="_blank"><img src="../../Resources/Images/Logos/Q-SYS_logo_RGB_reduced_200.png" /></a>
+                </p>
+            </div>
+        </MadCap:pageFooter>
+    </body>
+</html>
