@@ -60,6 +60,43 @@
         "info": "Example: Intent → Policy → Action Map → Director → Dispatch\n\n- Uses the action style:\n  { type: \"watchout\", command: \"startTimeline\", timelineId: \"show_1\" }\n  { type: \"watchout\", command: \"GotoCue\", timelineId: \"show_1\", cueId: \"cue_special\" }\n\n- This flow is importable without any contrib nodes beyond Dashboard 2.0.\n- UI elements are optional; you can wire your own ui-button nodes into the two link-in nodes.\n\nWiring notes:\n- Watchout dispatch is implemented as a Link Out you can connect to your existing Watchout flow's Link In (\"Send To WO\").\n  The Watchout v2 flow expects payloads shaped like { command: \"start\"|\"jumpToCue\"|..., timelineId, cueId }.\n  This example converts startTimeline/GotoCue into that schema.\n\n- MA/QSYS/Pharos dispatch are stubs (debug + link out) you can replace with real implementations."
     },
     {
+        "id": "f1b9b2b5c63a4aa9",
+        "type": "tab",
+        "label": "UI — Audio (semantic intents)",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "2c15789a1b80fcb2",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "6960170272581485",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "test-tab-1",
+        "type": "tab",
+        "label": "Link Test",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "tab-link-all",
+        "type": "tab",
+        "label": "Audio Link-All (SFC)",
+        "disabled": false,
+        "info": ""
+    },
+    {
         "id": "22f501abaf7e8db6",
         "type": "subflow",
         "name": "Atrium Selection Switch",
@@ -70,6 +107,65 @@
         "env": [],
         "meta": {},
         "color": "#DDAA99"
+    },
+    {
+        "id": "4b8b4c8d5a2b9c01",
+        "type": "subflow",
+        "name": "Space Audio Controls (A1)",
+        "info": "Placeholder subflow instance label only (subflow defined below).",
+        "in": [],
+        "out": []
+    },
+    {
+        "id": "1df0fb70bcae0af2",
+        "type": "subflow",
+        "name": "Space Audio Controls (A2)",
+        "info": "",
+        "in": [],
+        "out": []
+    },
+    {
+        "id": "a0abcb9bfa1d9f5a",
+        "type": "subflow",
+        "name": "Space Audio Controls (A3)",
+        "info": "",
+        "in": [],
+        "out": []
+    },
+    {
+        "id": "fb79a0e67bcf53bb",
+        "type": "subflow",
+        "name": "Space Audio Controls (LS)",
+        "info": "",
+        "in": [],
+        "out": []
+    },
+    {
+        "id": "b4a977e07f780001",
+        "type": "subflow",
+        "name": "Space Audio Controls",
+        "info": "Reusable UI controls for a single space. Emits semantic intent `ui/audio/setSpaceAudio` whenever any control changes.\n\nInputs: none (all UI widgets).\nOutputs: 1 (semantic intent messages).\n\nState is stored in flow context key: audio_space_<spaceId>.\n\nControls:\n- Playback enabled\n- Levels: bgm/show/special/mic1/mic2/mixer\n- Live enable: mic1/mic2/mixer\n- Ducking: enabled + duck amount\n",
+        "category": "Audio UI",
+        "in": [],
+        "out": [
+            {
+                "x": 720,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "5fbd54a6e09df111",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#D7D7A6",
+        "icon": "font-awesome/fa-volume-up",
+        "status": {
+            "wires": []
+        }
     },
     {
         "id": "025439f9501b7114",
@@ -301,7 +397,7 @@
         "ui": "f34314dbb36334ec",
         "path": "/page4",
         "icon": "mdi-volume-high",
-        "layout": "notebook",
+        "layout": "grid",
         "theme": "macm-theme",
         "breakpoints": [
             {
@@ -325,10 +421,10 @@
                 "cols": "12"
             }
         ],
-        "order": 2,
+        "order": 4,
         "className": "",
-        "visible": "true",
-        "disabled": "false"
+        "visible": true,
+        "disabled": false
     },
     {
         "id": "89a49ec7808083dd",
@@ -337,7 +433,7 @@
         "page": "73c2ce73a1d6ef7e",
         "width": "6",
         "height": "2",
-        "order": 5,
+        "order": 3,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -365,7 +461,7 @@
         "page": "73c2ce73a1d6ef7e",
         "width": 6,
         "height": 1,
-        "order": 6,
+        "order": 4,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -379,7 +475,7 @@
         "page": "73c2ce73a1d6ef7e",
         "width": 6,
         "height": 1,
-        "order": 7,
+        "order": 5,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -417,7 +513,7 @@
                 "cols": "12"
             }
         ],
-        "order": 3,
+        "order": 5,
         "className": "",
         "visible": "true",
         "disabled": "false"
@@ -531,7 +627,7 @@
                 "cols": "12"
             }
         ],
-        "order": 4,
+        "order": 6,
         "className": "",
         "visible": "true",
         "disabled": "false"
@@ -595,7 +691,7 @@
                 "cols": "12"
             }
         ],
-        "order": 6,
+        "order": 8,
         "className": "",
         "visible": "true",
         "disabled": "false"
@@ -615,43 +711,18 @@
         "groupType": "default"
     },
     {
-        "id": "ab71585fe7e4cdb3",
-        "type": "ui-group",
-        "name": "Live Mixer",
-        "page": "73c2ce73a1d6ef7e",
-        "width": 6,
-        "height": 1,
-        "order": 3,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
         "id": "67ff5910906be82b",
         "type": "ui-group",
-        "name": "Live Microphones",
+        "name": "Landscape",
         "page": "73c2ce73a1d6ef7e",
-        "width": 6,
-        "height": 1,
-        "order": 4,
+        "width": "6",
+        "height": "2",
+        "order": 6,
         "showTitle": true,
         "className": "",
         "visible": "true",
         "disabled": "false",
         "groupType": "default"
-    },
-    {
-        "id": "f3854705b8e737f2",
-        "type": "ui-spacer",
-        "group": "ab71585fe7e4cdb3",
-        "name": "spacer",
-        "tooltip": "",
-        "order": 4,
-        "width": "6",
-        "height": 1,
-        "className": ""
     },
     {
         "id": "fbb25d9fdfc45a2e",
@@ -740,7 +811,7 @@
                 "cols": "12"
             }
         ],
-        "order": 5,
+        "order": 7,
         "className": "",
         "visible": "true",
         "disabled": "false"
@@ -790,7 +861,7 @@
                 "cols": "12"
             }
         ],
-        "order": 7,
+        "order": 9,
         "className": "",
         "visible": "true",
         "disabled": "false"
@@ -830,6 +901,277 @@
         "width": 6,
         "height": 2,
         "order": 4,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "c2a60d00f2e2f6b0",
+        "type": "ui-page",
+        "name": "Audio Control",
+        "ui": "f34314dbb36334ec",
+        "path": "/audio-control",
+        "icon": "volume-high",
+        "layout": "grid",
+        "theme": "9d013935d2e3f2be",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 10,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "9f1f7d2d0c1c8f11",
+        "type": "ui-group",
+        "name": "Global Playback",
+        "page": "c2a60d00f2e2f6b0",
+        "width": "12",
+        "order": 1,
+        "className": ""
+    },
+    {
+        "id": "0aa8a571d9d48b17",
+        "type": "ui-group",
+        "name": "Atrium 1 (a1)",
+        "page": "c2a60d00f2e2f6b0",
+        "width": "6",
+        "height": "",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "a8bc8d2a5a3b3c63",
+        "type": "ui-group",
+        "name": "Atrium 2 (a2)",
+        "page": "c2a60d00f2e2f6b0",
+        "width": "6",
+        "order": 3,
+        "className": ""
+    },
+    {
+        "id": "d3e0e3d132f05d2c",
+        "type": "ui-group",
+        "name": "Atrium 3 (a3)",
+        "page": "c2a60d00f2e2f6b0",
+        "width": "6",
+        "order": 4,
+        "className": ""
+    },
+    {
+        "id": "7b8c1f2f9c9f3b1b",
+        "type": "ui-group",
+        "name": "Landscape (ls)",
+        "page": "c2a60d00f2e2f6b0",
+        "width": "6",
+        "order": 5,
+        "className": "",
+        "visible": true,
+        "disabled": false
+    },
+    {
+        "id": "f8e2a0bb3c5a0f6b",
+        "type": "ui-group",
+        "name": "Debug / Last Intent",
+        "page": "c2a60d00f2e2f6b0",
+        "width": "12",
+        "order": 6,
+        "className": ""
+    },
+    {
+        "id": "ui-theme-test",
+        "type": "ui-theme",
+        "name": "Test Theme",
+        "colors": {
+            "surface": "#121212",
+            "primary": "#80cbc4",
+            "bgPage": "#0d0d1a",
+            "groupBg": "#1b1b2e",
+            "groupOutline": "#333344"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "6px"
+        }
+    },
+    {
+        "id": "ui-page-test",
+        "type": "ui-page",
+        "name": "Link Test",
+        "ui": "f34314dbb36334ec",
+        "path": "/link-test",
+        "icon": "mdi-link",
+        "layout": "grid",
+        "theme": "ui-theme-test",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "6"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Desktop",
+                "px": "992",
+                "cols": "12"
+            }
+        ],
+        "order": 3
+    },
+    {
+        "id": "ui-group-test",
+        "type": "ui-group",
+        "name": "Link Buttons",
+        "page": "ui-page-test",
+        "width": "6",
+        "height": "2",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ui-theme-audio",
+        "type": "ui-theme",
+        "name": "Audio Theme",
+        "colors": {
+            "surface": "#121212",
+            "primary": "#80cbc4",
+            "bgPage": "#0d0d1a",
+            "groupBg": "#1b1b2e",
+            "groupOutline": "#333344"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "6px"
+        }
+    },
+    {
+        "id": "ui-theme-linkall",
+        "type": "ui-theme",
+        "name": "Audio Theme LinkAll",
+        "colors": {
+            "surface": "#121212",
+            "primary": "#80cbc4",
+            "bgPage": "#0d0d1a",
+            "groupBg": "#1b1b2e",
+            "groupOutline": "#333344"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "6px"
+        }
+    },
+    {
+        "id": "ui-page-linkall",
+        "type": "ui-page",
+        "name": "Audio Link-All",
+        "ui": "f34314dbb36334ec",
+        "path": "/audio-linkall",
+        "icon": "mdi-link-variant",
+        "layout": "grid",
+        "theme": "ui-theme-linkall",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 2
+    },
+    {
+        "id": "ui-group-a1-linkall",
+        "type": "ui-group",
+        "name": "Atrium 1 - Audio",
+        "page": "ui-page-linkall",
+        "width": "6",
+        "height": "1",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ui-group-a2-linkall",
+        "type": "ui-group",
+        "name": "Atrium 2 - Audio",
+        "page": "ui-page-linkall",
+        "width": "6",
+        "height": "1",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ui-group-a3-linkall",
+        "type": "ui-group",
+        "name": "Atrium 3 - Audio",
+        "page": "ui-page-linkall",
+        "width": "6",
+        "height": "1",
+        "order": 3,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -2636,142 +2978,6 @@
         ]
     },
     {
-        "id": "8725c52de1c071e8",
-        "type": "ui-button",
-        "z": "8ccf58caed82bbf6",
-        "group": "89a49ec7808083dd",
-        "name": "Low",
-        "label": "Low",
-        "order": 5,
-        "width": "1",
-        "height": "1",
-        "emulateClick": false,
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "format-vertical-align-bottom",
-        "iconPosition": "left",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "pointerdownPayload": "",
-        "pointerdownPayloadType": "str",
-        "enablePointerup": false,
-        "pointerupPayload": "",
-        "pointerupPayloadType": "str",
-        "x": 130,
-        "y": 620,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "0e4f765c4dd29779",
-        "type": "ui-slider",
-        "z": "8ccf58caed82bbf6",
-        "group": "89a49ec7808083dd",
-        "name": "Show",
-        "label": "Show",
-        "tooltip": "",
-        "order": 1,
-        "width": "1",
-        "height": "6",
-        "passthru": false,
-        "outs": "all",
-        "topic": "topic",
-        "topicType": "msg",
-        "thumbLabel": "always",
-        "showTicks": "always",
-        "min": 0,
-        "max": "20",
-        "step": "0",
-        "className": "",
-        "iconPrepend": "",
-        "iconAppend": "",
-        "color": "",
-        "colorTrack": "",
-        "colorThumb": "",
-        "showTextField": false,
-        "x": 130,
-        "y": 540,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "049a39b65c2efc57",
-        "type": "ui-slider",
-        "z": "8ccf58caed82bbf6",
-        "group": "89a49ec7808083dd",
-        "name": "BGM",
-        "label": "BGM",
-        "tooltip": "",
-        "order": 2,
-        "width": "1",
-        "height": "6",
-        "passthru": false,
-        "outs": "all",
-        "topic": "topic",
-        "topicType": "msg",
-        "thumbLabel": "always",
-        "showTicks": "always",
-        "min": 0,
-        "max": "20",
-        "step": 1,
-        "className": "",
-        "iconPrepend": "",
-        "iconAppend": "",
-        "color": "",
-        "colorTrack": "",
-        "colorThumb": "",
-        "showTextField": false,
-        "x": 250,
-        "y": 540,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "3e1460e236ca9b75",
-        "type": "ui-slider",
-        "z": "8ccf58caed82bbf6",
-        "group": "89a49ec7808083dd",
-        "name": "Special Content",
-        "label": "Special Content",
-        "tooltip": "",
-        "order": 3,
-        "width": "1",
-        "height": "6",
-        "passthru": false,
-        "outs": "all",
-        "topic": "topic",
-        "topicType": "msg",
-        "thumbLabel": "always",
-        "showTicks": "always",
-        "min": 0,
-        "max": "20",
-        "step": 1,
-        "className": "",
-        "iconPrepend": "",
-        "iconAppend": "",
-        "color": "",
-        "colorTrack": "",
-        "colorThumb": "",
-        "showTextField": false,
-        "x": 400,
-        "y": 540,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "8029a84c6abf95c3",
         "type": "ui-button",
         "z": "8ccf58caed82bbf6",
@@ -2807,104 +3013,6 @@
         "wires": [
             []
         ]
-    },
-    {
-        "id": "4b50afec00256704",
-        "type": "ui-button",
-        "z": "8ccf58caed82bbf6",
-        "group": "89a49ec7808083dd",
-        "name": "Mid",
-        "label": "Mid",
-        "order": 6,
-        "width": "1",
-        "height": "1",
-        "emulateClick": false,
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "format-vertical-align-center",
-        "iconPosition": "left",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "pointerdownPayload": "",
-        "pointerdownPayloadType": "str",
-        "enablePointerup": false,
-        "pointerupPayload": "",
-        "pointerupPayloadType": "str",
-        "x": 250,
-        "y": 620,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "8a140f122db8ef9b",
-        "type": "ui-button",
-        "z": "8ccf58caed82bbf6",
-        "group": "89a49ec7808083dd",
-        "name": "High",
-        "label": "High",
-        "order": 7,
-        "width": "1",
-        "height": "1",
-        "emulateClick": false,
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "format-vertical-align-top",
-        "iconPosition": "left",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "pointerdownPayload": "",
-        "pointerdownPayloadType": "str",
-        "enablePointerup": false,
-        "pointerupPayload": "",
-        "pointerupPayloadType": "str",
-        "x": 370,
-        "y": 620,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "da47bec7c7ddb466",
-        "type": "ui-text",
-        "z": "8ccf58caed82bbf6",
-        "group": "89a49ec7808083dd",
-        "order": 4,
-        "width": "3",
-        "height": "1",
-        "name": "Presets",
-        "label": "Presets",
-        "format": "{{msg.payload}}",
-        "layout": "row-spread",
-        "style": false,
-        "font": "",
-        "fontSize": 16,
-        "color": "#717171",
-        "wrapText": false,
-        "className": "",
-        "value": "payload",
-        "valueType": "msg",
-        "x": 140,
-        "y": 580,
-        "wires": []
     },
     {
         "id": "55f7bbd4d3580c14",
@@ -3001,240 +3109,6 @@
         "wires": []
     },
     {
-        "id": "acd1c3b6a97697c9",
-        "type": "ui-button",
-        "z": "8ccf58caed82bbf6",
-        "group": "776ce3db31f8095d",
-        "name": "Low",
-        "label": "Low",
-        "order": 5,
-        "width": "1",
-        "height": "1",
-        "emulateClick": false,
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "format-vertical-align-bottom",
-        "iconPosition": "left",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "pointerdownPayload": "",
-        "pointerdownPayloadType": "str",
-        "enablePointerup": false,
-        "pointerupPayload": "",
-        "pointerupPayloadType": "str",
-        "x": 130,
-        "y": 800,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "cfdcf9e80392923c",
-        "type": "ui-slider",
-        "z": "8ccf58caed82bbf6",
-        "group": "776ce3db31f8095d",
-        "name": "Master",
-        "label": "Master",
-        "tooltip": "",
-        "order": 1,
-        "width": "1",
-        "height": "6",
-        "passthru": false,
-        "outs": "all",
-        "topic": "topic",
-        "topicType": "msg",
-        "thumbLabel": "true",
-        "showTicks": "always",
-        "min": 0,
-        "max": "20",
-        "step": 1,
-        "className": "",
-        "iconPrepend": "",
-        "iconAppend": "",
-        "color": "",
-        "colorTrack": "",
-        "colorThumb": "",
-        "showTextField": false,
-        "x": 130,
-        "y": 720,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "f4acd7b1bdedd06b",
-        "type": "ui-slider",
-        "z": "8ccf58caed82bbf6",
-        "group": "776ce3db31f8095d",
-        "name": "Show",
-        "label": "Show",
-        "tooltip": "",
-        "order": 2,
-        "width": "1",
-        "height": "6",
-        "passthru": false,
-        "outs": "all",
-        "topic": "topic",
-        "topicType": "msg",
-        "thumbLabel": "true",
-        "showTicks": "always",
-        "min": 0,
-        "max": "20",
-        "step": 1,
-        "className": "",
-        "iconPrepend": "",
-        "iconAppend": "",
-        "color": "",
-        "colorTrack": "",
-        "colorThumb": "",
-        "showTextField": false,
-        "x": 250,
-        "y": 720,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "86e1cd1bbe06244e",
-        "type": "ui-slider",
-        "z": "8ccf58caed82bbf6",
-        "group": "776ce3db31f8095d",
-        "name": "BGM",
-        "label": "BGM",
-        "tooltip": "",
-        "order": 3,
-        "width": "1",
-        "height": "6",
-        "passthru": false,
-        "outs": "all",
-        "topic": "topic",
-        "topicType": "msg",
-        "thumbLabel": "true",
-        "showTicks": "always",
-        "min": 0,
-        "max": "20",
-        "step": 1,
-        "className": "",
-        "iconPrepend": "",
-        "iconAppend": "",
-        "color": "",
-        "colorTrack": "",
-        "colorThumb": "",
-        "showTextField": false,
-        "x": 370,
-        "y": 720,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "7187d9b665e9d8b6",
-        "type": "ui-button",
-        "z": "8ccf58caed82bbf6",
-        "group": "776ce3db31f8095d",
-        "name": "Mid",
-        "label": "Mid",
-        "order": 6,
-        "width": "1",
-        "height": "1",
-        "emulateClick": false,
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "format-vertical-align-center",
-        "iconPosition": "left",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "pointerdownPayload": "",
-        "pointerdownPayloadType": "str",
-        "enablePointerup": false,
-        "pointerupPayload": "",
-        "pointerupPayloadType": "str",
-        "x": 250,
-        "y": 800,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "2007da442246a4dd",
-        "type": "ui-button",
-        "z": "8ccf58caed82bbf6",
-        "group": "776ce3db31f8095d",
-        "name": "High",
-        "label": "High",
-        "order": 7,
-        "width": "1",
-        "height": "1",
-        "emulateClick": false,
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "format-vertical-align-top",
-        "iconPosition": "left",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "pointerdownPayload": "",
-        "pointerdownPayloadType": "str",
-        "enablePointerup": false,
-        "pointerupPayload": "",
-        "pointerupPayloadType": "str",
-        "x": 370,
-        "y": 800,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "df85ebbd7ad23694",
-        "type": "ui-text",
-        "z": "8ccf58caed82bbf6",
-        "group": "776ce3db31f8095d",
-        "order": 4,
-        "width": "3",
-        "height": "1",
-        "name": "Presets",
-        "label": "Presets",
-        "format": "{{msg.payload}}",
-        "layout": "row-spread",
-        "style": false,
-        "font": "",
-        "fontSize": 16,
-        "color": "#717171",
-        "wrapText": false,
-        "className": "",
-        "value": "payload",
-        "valueType": "msg",
-        "x": 140,
-        "y": 760,
-        "wires": []
-    },
-    {
         "id": "a99b51244285bfd8",
         "type": "comment",
         "z": "8ccf58caed82bbf6",
@@ -3245,244 +3119,10 @@
         "wires": []
     },
     {
-        "id": "209ed37f613266bf",
-        "type": "ui-button",
-        "z": "8ccf58caed82bbf6",
-        "group": "d8304d5bd63f01b7",
-        "name": "Low",
-        "label": "Low",
-        "order": 6,
-        "width": "1",
-        "height": "1",
-        "emulateClick": false,
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "format-vertical-align-bottom",
-        "iconPosition": "left",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "pointerdownPayload": "",
-        "pointerdownPayloadType": "str",
-        "enablePointerup": false,
-        "pointerupPayload": "",
-        "pointerupPayloadType": "str",
-        "x": 130,
-        "y": 980,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "6e47787a9b676845",
-        "type": "ui-slider",
-        "z": "8ccf58caed82bbf6",
-        "group": "d8304d5bd63f01b7",
-        "name": "Master",
-        "label": "Master",
-        "tooltip": "",
-        "order": 1,
-        "width": "1",
-        "height": "6",
-        "passthru": false,
-        "outs": "all",
-        "topic": "topic",
-        "topicType": "msg",
-        "thumbLabel": "true",
-        "showTicks": "always",
-        "min": 0,
-        "max": "20",
-        "step": 1,
-        "className": "",
-        "iconPrepend": "",
-        "iconAppend": "",
-        "color": "",
-        "colorTrack": "",
-        "colorThumb": "",
-        "showTextField": false,
-        "x": 130,
-        "y": 900,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "50a61419112295fc",
-        "type": "ui-slider",
-        "z": "8ccf58caed82bbf6",
-        "group": "d8304d5bd63f01b7",
-        "name": "Show",
-        "label": "Show",
-        "tooltip": "",
-        "order": 2,
-        "width": "1",
-        "height": "6",
-        "passthru": false,
-        "outs": "all",
-        "topic": "topic",
-        "topicType": "msg",
-        "thumbLabel": "true",
-        "showTicks": "always",
-        "min": 0,
-        "max": "20",
-        "step": 1,
-        "className": "",
-        "iconPrepend": "",
-        "iconAppend": "",
-        "color": "",
-        "colorTrack": "",
-        "colorThumb": "",
-        "showTextField": false,
-        "x": 250,
-        "y": 900,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "9d7589a2828a98c5",
-        "type": "ui-slider",
-        "z": "8ccf58caed82bbf6",
-        "group": "d8304d5bd63f01b7",
-        "name": "BGM",
-        "label": "BGM",
-        "tooltip": "",
-        "order": 3,
-        "width": "1",
-        "height": "6",
-        "passthru": false,
-        "outs": "all",
-        "topic": "topic",
-        "topicType": "msg",
-        "thumbLabel": "true",
-        "showTicks": "always",
-        "min": 0,
-        "max": "20",
-        "step": 1,
-        "className": "",
-        "iconPrepend": "",
-        "iconAppend": "",
-        "color": "",
-        "colorTrack": "",
-        "colorThumb": "",
-        "showTextField": false,
-        "x": 370,
-        "y": 900,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "b1768b05f237232b",
-        "type": "ui-button",
-        "z": "8ccf58caed82bbf6",
-        "group": "d8304d5bd63f01b7",
-        "name": "Mid",
-        "label": "Mid",
-        "order": 8,
-        "width": "1",
-        "height": "1",
-        "emulateClick": false,
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "format-vertical-align-center",
-        "iconPosition": "left",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "pointerdownPayload": "",
-        "pointerdownPayloadType": "str",
-        "enablePointerup": false,
-        "pointerupPayload": "",
-        "pointerupPayloadType": "str",
-        "x": 250,
-        "y": 980,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "ba663ac70227a002",
-        "type": "ui-button",
-        "z": "8ccf58caed82bbf6",
-        "group": "d8304d5bd63f01b7",
-        "name": "High",
-        "label": "High",
-        "order": 7,
-        "width": "1",
-        "height": "1",
-        "emulateClick": false,
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "format-vertical-align-top",
-        "iconPosition": "left",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "pointerdownPayload": "",
-        "pointerdownPayloadType": "str",
-        "enablePointerup": false,
-        "pointerupPayload": "",
-        "pointerupPayloadType": "str",
-        "x": 370,
-        "y": 980,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "299d1925005c0283",
-        "type": "ui-text",
-        "z": "8ccf58caed82bbf6",
-        "group": "d8304d5bd63f01b7",
-        "order": 4,
-        "width": "3",
-        "height": "1",
-        "name": "Presets",
-        "label": "Presets",
-        "format": "{{msg.payload}}",
-        "layout": "row-spread",
-        "style": false,
-        "font": "",
-        "fontSize": 16,
-        "color": "#717171",
-        "wrapText": false,
-        "className": "",
-        "value": "payload",
-        "valueType": "msg",
-        "x": 140,
-        "y": 940,
-        "wires": []
-    },
-    {
         "id": "97d57a98c47dca4b",
         "type": "comment",
         "z": "8ccf58caed82bbf6",
-        "name": "Atrium 2",
+        "name": "Atrium 3",
         "info": "",
         "x": 140,
         "y": 860,
@@ -3497,7 +3137,7 @@
         "page": "",
         "ui": "",
         "name": "Vertical Slider",
-        "order": 5,
+        "order": 1,
         "width": 2,
         "height": 6,
         "format": "<div style=\"text-align: center;\">Slider</div>\n<input ng-init=\"output(msg)\" class=\"sliderV size2x6\" type=\"range\" min=0 max=100 step=1 ng-model=\"msg.payload\" aria-label=\"volume\" ng-change=\"output(msg)\">\n\n<script>\n(function($scope) {\n    $scope.output = function(key) {\n        if ($scope.hasOwnProperty(\"msg\")){\n            if ($scope.msg.hasOwnProperty(\"socketid\") || $scope.msg.payload !== 50){ //this prevents output at 50% from initialization on ng-change\n\t\t        $scope.send({payload:$scope.msg.payload, socketid:$scope.msg.socketid});\n            }\n        }\n        \n    };\n})(scope);\n</script>\n\n<style>\ninput[type='range'].sliderH {\n  margin-top: 60px;\n  width: 80px;\n  height: 240px;\n  padding: 0;\n  overflow: unset;\n  cursor: grab;\n}\ninput[type='range'].sliderV {\n  transform: rotateZ(-90deg);\n  margin-top: 60px;\n  writing-mode: bt-lr;\n  width: 80%;\n  padding: 0;\n  overflow: unset;\n  cursor: grab;\n  height: 8px;\n  margin-left: -100px;\n}\n.size1x6 {\n    height: 8px !important;\n    margin-left: -100px !important;\n}\n.size2x6 {\n    height: 13px !important;\n    margin-left: -80px !important;\n}\n.size1x6::-webkit-slider-thumb {\n    height: 23px !important;\n    width: 42px !important;\n}\n.size2x6::-webkit-slider-thumb{\n    height: 43px !important;\n    width: 72px !important;\n}\n@media screen and (-webkit-min-device-pixel-ratio: 0) {\n  input[type='range'].sliderH {\n    -webkit-appearance: none;\n    width: 240px;\n    height: 10px;\n    margin-top: 30px;\n    margin-left: 30px;\n    outline: 0;\n    border-radius: 5px;\n    background-color: #0b0b0b;\n    box-shadow: inset 1px 1px 0 1px #6d6d6d;\n  }\n}\n@media screen and (-webkit-min-device-pixel-ratio: 0) {\n  input[type='range'].sliderV {\n    -webkit-appearance: none;\n    -webkit-transform: rotate(270deg);\n    width: 240px;\n    height: 10px;\n    margin-top: 140px;\n    outline: 0;\n    border-radius: 5px;\n    background-color: #0b0b0b;\n    box-shadow: inset 1px 1px 0 1px #6d6d6d;\n  }\n}\ninput[type='range']::-ms-track {\n  width: 10px;\n  height: 240px;\n  border-radius: 5px;\n  background-color: #0b0b0b;\n  box-shadow: inset 1px 1px 0 1px #6d6d6d;\n  border: 0;\n}\ninput[type='range']::-moz-range-track {\n    transform: rotateZ(-90deg);\n  width: 10px;\n  height: 240px;\n  border-radius: 5px;\n  background-color: #0b0b0b;\n  box-shadow: inset 1px 1px 0 1px #6d6d6d;\n  border: 0;\n}\ninput[type='range']::-webkit-slider-thumb {\n  width: 72px;\n  height: 32px;\n  -webkit-appearance: none;\n  background-image: -webkit-linear-gradient(left, #0f0f0f, #2e2e2e 4%, #0f0f0f 8%, #000 47%, #808080 48%, #808080 52%, #000 53%, #1a1a1a 96%, #2e2e2e);\n  box-shadow: 5px -10px 20px 0 #1a1a1a;\n}\ninput[type='range']::-ms-thumb {\n  width: 32px;\n  height: 72px;\n  border: 0;\n  box-shadow: -10px -5px 20px 0 #1a1a1a;\n  background-image: -ms-linear-gradient(bottom, #0f0f0f, #2e2e2e 4%, #0f0f0f 8%, #000 47%, #808080 48%, #808080 52%, #000 53%, #1a1a1a 96%, #2e2e2e);\n}\ninput[type='range']::-ms-tooltip {\n  display: none;\n}\ninput[type='range']::-moz-range-thumb {\n  width: 32px;\n  height: 72px;\n  border: 0;\n  box-shadow: -10px -5px 20px 0 #1a1a1a;\n  background-image: -moz-linear-gradient(bottom, #0f0f0f, #2e2e2e 4%, #0f0f0f 8%, #000 47%, #808080 48%, #808080 52%, #000 53%, #1a1a1a 96%, #2e2e2e);\n  border-radius: 0;\n  transform: rotateZ(-90deg);\n}\n</style>",
@@ -3734,110 +3374,14 @@
         ]
     },
     {
-        "id": "dfe33faef64135d3",
-        "type": "ui-switch",
-        "z": "8ccf58caed82bbf6",
-        "name": "Atrium 1",
-        "label": "Atrium 1",
-        "group": "ab71585fe7e4cdb3",
-        "order": 5,
-        "width": "1",
-        "height": "1",
-        "passthru": false,
-        "decouple": false,
-        "topic": "topic",
-        "topicType": "msg",
-        "style": "",
-        "className": "",
-        "layout": "row-left",
-        "clickableArea": "switch",
-        "onvalue": "true",
-        "onvalueType": "bool",
-        "onicon": "",
-        "oncolor": "",
-        "offvalue": "false",
-        "offvalueType": "bool",
-        "officon": "",
-        "offcolor": "",
-        "x": 140,
-        "y": 300,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "38010a8b583a91e1",
-        "type": "ui-switch",
-        "z": "8ccf58caed82bbf6",
-        "name": "Atrium 2",
-        "label": "Atrium 2",
-        "group": "ab71585fe7e4cdb3",
-        "order": 6,
-        "width": "1",
-        "height": "1",
-        "passthru": false,
-        "decouple": false,
-        "topic": "topic",
-        "topicType": "msg",
-        "style": "",
-        "className": "",
-        "layout": "row-left",
-        "clickableArea": "switch",
-        "onvalue": "true",
-        "onvalueType": "bool",
-        "onicon": "",
-        "oncolor": "",
-        "offvalue": "false",
-        "offvalueType": "bool",
-        "officon": "",
-        "offcolor": "",
-        "x": 300,
-        "y": 300,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "239c0ac2546f9e8b",
-        "type": "ui-switch",
-        "z": "8ccf58caed82bbf6",
-        "name": "Atrium 3",
-        "label": "Atrium 3",
-        "group": "ab71585fe7e4cdb3",
-        "order": 7,
-        "width": "1",
-        "height": "1",
-        "passthru": false,
-        "decouple": false,
-        "topic": "topic",
-        "topicType": "msg",
-        "style": "",
-        "className": "",
-        "layout": "row-left",
-        "clickableArea": "switch",
-        "onvalue": "true",
-        "onvalueType": "bool",
-        "onicon": "",
-        "oncolor": "",
-        "offvalue": "false",
-        "offvalueType": "bool",
-        "officon": "",
-        "offcolor": "",
-        "x": 460,
-        "y": 300,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "f899a062eac0919f",
         "type": "ui-number-input",
         "z": "8ccf58caed82bbf6",
-        "group": "ab71585fe7e4cdb3",
+        "group": "89a49ec7808083dd",
         "name": "In 1",
         "label": "In 1",
-        "order": 1,
-        "width": "1",
+        "order": 3,
+        "width": "2",
         "height": "1",
         "topic": "topic",
         "topicType": "msg",
@@ -3857,7 +3401,7 @@
         "iconInnerPosition": "inside",
         "spinner": "default",
         "x": 130,
-        "y": 260,
+        "y": 620,
         "wires": [
             []
         ]
@@ -3866,11 +3410,11 @@
         "id": "e4a52e676e159b93",
         "type": "ui-number-input",
         "z": "8ccf58caed82bbf6",
-        "group": "ab71585fe7e4cdb3",
+        "group": "89a49ec7808083dd",
         "name": "In 2",
         "label": "In 2",
-        "order": 2,
-        "width": "1",
+        "order": 4,
+        "width": "2",
         "height": "1",
         "topic": "topic",
         "topicType": "msg",
@@ -3890,7 +3434,7 @@
         "iconInnerPosition": "inside",
         "spinner": "default",
         "x": 290,
-        "y": 260,
+        "y": 620,
         "wires": [
             []
         ]
@@ -3899,10 +3443,10 @@
         "id": "462172e88dacb3ae",
         "type": "ui-button",
         "z": "8ccf58caed82bbf6",
-        "group": "ab71585fe7e4cdb3",
+        "group": "89a49ec7808083dd",
         "name": "Accept Mixer Inputs",
         "label": "Accept Mixer Inputs",
-        "order": 3,
+        "order": 5,
         "width": "2",
         "height": "1",
         "emulateClick": false,
@@ -3927,20 +3471,136 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 500,
-        "y": 260,
+        "y": 620,
         "wires": [
             []
         ]
     },
     {
-        "id": "613714e1f22a42ce",
+        "id": "e20d8370cc4b04fd",
+        "type": "ui-template",
+        "z": "8ccf58caed82bbf6",
+        "d": true,
+        "group": "776ce3db31f8095d",
+        "page": "",
+        "ui": "",
+        "name": "Atrium 2 Audio Faders (dB)",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "head": "",
+        "format": "<div class=\"mixer-container\">\n  <div class=\"mixer-content\">\n    <!-- PLAYBACK GROUP -->\n    <div class=\"mixer-group\">\n      <div class=\"group-title\">Playback</div>\n      <div class=\"mixer-strips\">\n        <!-- Show Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"0\" class=\"vertical-fader\" @input=\"updateLevel('show', $event)\">\n          </div>\n          <div class=\"channel-label\">Show</div>\n          <div class=\"channel-level\">{{ channels.show.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('show')\" :class=\"{ muted: mutedChannels.show }\">Mute</button>\n        </div>\n\n        <!-- BGM Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-20\" class=\"vertical-fader\" @input=\"updateLevel('bgm', $event)\">\n          </div>\n          <div class=\"channel-label\">BGM</div>\n          <div class=\"channel-level\">{{ channels.bgm.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('bgm')\" :class=\"{ muted: mutedChannels.bgm }\">Mute</button>\n        </div>\n\n        <!-- Special Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-20\" class=\"vertical-fader\" @input=\"updateLevel('special', $event)\">\n          </div>\n          <div class=\"channel-label\">Special</div>\n          <div class=\"channel-level\">{{ channels.special.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('special')\" :class=\"{ muted: mutedChannels.special }\">Mute</button>\n        </div>\n      </div>\n    </div>\n\n    <!-- LIVE GROUP -->\n    <div class=\"mixer-group\">\n      <div class=\"group-title\">Live</div>\n      <div class=\"mixer-strips\">\n        <!-- Mic1 Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mic1', $event)\">\n          </div>\n          <div class=\"channel-label\">Mic 1</div>\n          <div class=\"channel-level\">{{ channels.mic1.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('mic1')\" :class=\"{ muted: mutedChannels.mic1 }\">Mute</button>\n        </div>\n\n        <!-- Mic2 Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mic2', $event)\">\n          </div>\n          <div class=\"channel-label\">Mic 2</div>\n          <div class=\"channel-level\">{{ channels.mic2.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('mic2')\" :class=\"{ muted: mutedChannels.mic2 }\">Mute</button>\n        </div>\n\n        <!-- Mixer Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mixer', $event)\">\n          </div>\n          <div class=\"channel-label\">Mixer</div>\n          <div class=\"channel-level\">{{ channels.mixer.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('mixer')\" :class=\"{ muted: mutedChannels.mixer }\">Mute</button>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n\n<style scoped>\n  .mixer-container {\n    display: flex;\n    flex-direction: column;\n    height: 100%;\n    background: linear-gradient(135deg, #1a1d2e 0%, #16192b 100%);\n    padding: 16px;\n    border-radius: 8px;\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;\n    color: #e0e0e0;\n  }\n\n  .mixer-content {\n    display: flex;\n    flex-direction: row;\n    gap: 40px;\n    flex: 1;\n    min-height: 0;\n  }\n\n  .mixer-group {\n    display: flex;\n    flex-direction: column;\n    gap: 12px;\n    flex: 1;\n    min-height: 0;\n  }\n\n  .group-title {\n    font-size: 13px;\n    font-weight: 700;\n    text-transform: uppercase;\n    letter-spacing: 1px;\n    color: #7dd3fc;\n    padding-bottom: 4px;\n    border-bottom: 2px solid #0891b2;\n  }\n\n  .mixer-strips {\n    display: flex;\n    gap: 30px;\n    flex: 1;\n    min-height: 0;\n    justify-content: flex-start;\n    align-items: flex-start;\n  }\n\n  .channel-strip {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    gap: 8px;\n    flex-shrink: 0;\n  }\n\n  .fader-wrapper {\n    flex: 1;\n    min-height: 300px;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n  }\n\n  .vertical-fader {\n    -webkit-appearance: slider-vertical;\n    appearance: slider-vertical;\n    width: 20px;\n    height: 100%;\n    min-height: 300px;\n    background: linear-gradient(to right, #3a4050 0%, #4a5060 50%, #3a4050 100%);\n    outline: none;\n    cursor: pointer;\n    border-radius: 10px;\n  }\n\n  .vertical-fader::-webkit-slider-thumb {\n    -webkit-appearance: slider-thumb;\n    appearance: slider-thumb;\n    width: 28px;\n    height: 28px;\n    background: radial-gradient(circle at 30% 30%, #7dd3fc, #06b6d4);\n    border: 2px solid #0891b2;\n    border-radius: 50%;\n    cursor: pointer;\n    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);\n  }\n\n  .vertical-fader::-webkit-slider-thumb:hover {\n    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);\n  }\n\n  .vertical-fader::-moz-range-thumb {\n    width: 28px;\n    height: 28px;\n    background: radial-gradient(circle at 30% 30%, #7dd3fc, #06b6d4);\n    border: 2px solid #0891b2;\n    border-radius: 50%;\n    cursor: pointer;\n    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);\n  }\n\n  .vertical-fader::-moz-range-thumb:hover {\n    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);\n  }\n\n  .vertical-fader::-moz-range-track {\n    background: transparent;\n    border: none;\n  }\n\n  .channel-label {\n    font-size: 14px;\n    font-weight: 600;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n    text-align: center;\n    min-height: 20px;\n  }\n\n  .channel-level {\n    font-size: 12px;\n    color: #7dd3fc;\n    font-weight: 500;\n    text-align: center;\n    min-height: 18px;\n    font-family: 'Monaco', 'Courier New', monospace;\n  }\n\n  .mute-btn {\n    width: 100%;\n    padding: 8px 6px;\n    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);\n    color: #fecaca;\n    border: 2px solid #dc2626;\n    border-radius: 4px;\n    font-weight: 600;\n    font-size: 12px;\n    cursor: pointer;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n    transition: all 0.2s ease;\n    min-height: 44px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    min-width: 80px;\n  }\n\n  .mute-btn:hover:not(.muted) {\n    background: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%);\n    border-color: #f87171;\n    box-shadow: 0 0 12px rgba(220, 38, 38, 0.3);\n  }\n\n  .mute-btn:active:not(.muted) {\n    transform: scale(0.95);\n  }\n\n  .mute-btn.muted {\n    background: linear-gradient(135deg, #365a40 0%, #15803d 100%);\n    border-color: #22c55e;\n    color: #86efac;\n  }\n\n  .mute-btn.muted:hover {\n    background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);\n    box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);\n  }\n\n  @media (max-width: 768px) {\n    .mixer-content {\n      flex-direction: column;\n      gap: 20px;\n    }\n\n    .mixer-strips {\n      gap: 20px;\n    }\n\n    .fader-wrapper {\n      min-height: 240px;\n    }\n\n    .vertical-fader {\n      width: 18px;\n      min-height: 240px;\n    }\n\n    .vertical-fader::-webkit-slider-thumb {\n      width: 24px;\n      height: 24px;\n    }\n\n    .vertical-fader::-moz-range-thumb {\n      width: 24px;\n      height: 24px;\n    }\n\n    .mute-btn {\n      min-height: 40px;\n      font-size: 11px;\n      min-width: 70px;\n    }\n  }\n</style>\n\n<script>\n  export default {\n    data() {\n      return {\n        channels: {\n          show: { value: 0 },\n          bgm: { value: -20 },\n          special: { value: -20 },\n          mic1: { value: -10 },\n          mic2: { value: -10 },\n          mixer: { value: -10 }\n        },\n        mutedChannels: {\n          show: true,\n          bgm: true,\n          special: true,\n          mic1: false,\n          mic2: false,\n          mixer: false\n        }\n      };\n    },\n    methods: {\n      updateLevel(channel, event) {\n        const value = parseInt(event.target.value);\n        this.channels[channel].value = value;\n\n        let topic = '';\n        if (channel === 'show') topic = 'ui/audio/a2/level/show';\n        else if (channel === 'bgm') topic = 'ui/audio/a2/level/bgm';\n        else if (channel === 'special') topic = 'ui/audio/a2/level/special';\n        else if (channel === 'mic1') topic = 'ui/audio/a2/level/mic1';\n        else if (channel === 'mic2') topic = 'ui/audio/a2/level/mic2';\n        else if (channel === 'mixer') topic = 'ui/audio/a2/level/mixer';\n\n        this.send({\n          topic: topic,\n          payload: value\n        });\n      },\n      toggleMute(channel) {\n        this.mutedChannels[channel] = !this.mutedChannels[channel];\n        \n        let topic = '';\n        if (channel === 'show') topic = 'ui/audio/a2/show/enabled';\n        else if (channel === 'bgm') topic = 'ui/audio/a2/bgm/enabled';\n        else if (channel === 'special') topic = 'ui/audio/a2/special/enabled';\n        else if (channel === 'mic1') topic = 'ui/audio/a2/mic1/enabled';\n        else if (channel === 'mic2') topic = 'ui/audio/a2/mic2/enabled';\n        else if (channel === 'mixer') topic = 'ui/audio/a2/mixer/enabled';\n        \n        this.send({\n          topic: topic,\n          payload: !this.mutedChannels[channel]\n        });\n      }\n    }\n  };\n</script>",
+        "storeOutMessages": false,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 200,
+        "y": 720,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "24456cb7cb055fa0",
+        "type": "ui-template",
+        "z": "8ccf58caed82bbf6",
+        "d": true,
+        "group": "d8304d5bd63f01b7",
+        "page": "",
+        "ui": "",
+        "name": "Atrium 3 Audio Faders (dB)",
+        "order": 3,
+        "width": "0",
+        "height": "0",
+        "head": "",
+        "format": "<div class=\"mixer-container\">\n  <div class=\"mixer-content\">\n    <!-- PLAYBACK GROUP -->\n    <div class=\"mixer-group\">\n      <div class=\"group-title\">Playback</div>\n      <div class=\"mixer-strips\">\n        <!-- Show Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"0\" class=\"vertical-fader\" @input=\"updateLevel('show', $event)\">\n          </div>\n          <div class=\"channel-label\">Show</div>\n          <div class=\"channel-level\">{{ channels.show.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('show')\" :class=\"{ muted: mutedChannels.show }\">Mute</button>\n        </div>\n\n        <!-- BGM Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-20\" class=\"vertical-fader\" @input=\"updateLevel('bgm', $event)\">\n          </div>\n          <div class=\"channel-label\">BGM</div>\n          <div class=\"channel-level\">{{ channels.bgm.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('bgm')\" :class=\"{ muted: mutedChannels.bgm }\">Mute</button>\n        </div>\n\n        <!-- Special Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-20\" class=\"vertical-fader\" @input=\"updateLevel('special', $event)\">\n          </div>\n          <div class=\"channel-label\">Special</div>\n          <div class=\"channel-level\">{{ channels.special.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('special')\" :class=\"{ muted: mutedChannels.special }\">Mute</button>\n        </div>\n      </div>\n    </div>\n\n    <!-- LIVE GROUP -->\n    <div class=\"mixer-group\">\n      <div class=\"group-title\">Live</div>\n      <div class=\"mixer-strips\">\n        <!-- Mic1 Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mic1', $event)\">\n          </div>\n          <div class=\"channel-label\">Mic 1</div>\n          <div class=\"channel-level\">{{ channels.mic1.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('mic1')\" :class=\"{ muted: mutedChannels.mic1 }\">Mute</button>\n        </div>\n\n        <!-- Mic2 Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mic2', $event)\">\n          </div>\n          <div class=\"channel-label\">Mic 2</div>\n          <div class=\"channel-level\">{{ channels.mic2.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('mic2')\" :class=\"{ muted: mutedChannels.mic2 }\">Mute</button>\n        </div>\n\n        <!-- Mixer Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mixer', $event)\">\n          </div>\n          <div class=\"channel-label\">Mixer</div>\n          <div class=\"channel-level\">{{ channels.mixer.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('mixer')\" :class=\"{ muted: mutedChannels.mixer }\">Mute</button>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n\n<style scoped>\n  .mixer-container {\n    display: flex;\n    flex-direction: column;\n    height: 100%;\n    background: linear-gradient(135deg, #1a1d2e 0%, #16192b 100%);\n    padding: 16px;\n    border-radius: 8px;\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;\n    color: #e0e0e0;\n  }\n\n  .mixer-content {\n    display: flex;\n    flex-direction: row;\n    gap: 40px;\n    flex: 1;\n    min-height: 0;\n  }\n\n  .mixer-group {\n    display: flex;\n    flex-direction: column;\n    gap: 12px;\n    flex: 1;\n    min-height: 0;\n  }\n\n  .group-title {\n    font-size: 13px;\n    font-weight: 700;\n    text-transform: uppercase;\n    letter-spacing: 1px;\n    color: #7dd3fc;\n    padding-bottom: 4px;\n    border-bottom: 2px solid #0891b2;\n  }\n\n  .mixer-strips {\n    display: flex;\n    gap: 30px;\n    flex: 1;\n    min-height: 0;\n    justify-content: flex-start;\n    align-items: flex-start;\n  }\n\n  .channel-strip {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    gap: 8px;\n    flex-shrink: 0;\n  }\n\n  .fader-wrapper {\n    flex: 1;\n    min-height: 300px;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n  }\n\n  .vertical-fader {\n    -webkit-appearance: slider-vertical;\n    appearance: slider-vertical;\n    width: 20px;\n    height: 100%;\n    min-height: 300px;\n    background: linear-gradient(to right, #3a4050 0%, #4a5060 50%, #3a4050 100%);\n    outline: none;\n    cursor: pointer;\n    border-radius: 10px;\n  }\n\n  .vertical-fader::-webkit-slider-thumb {\n    -webkit-appearance: slider-thumb;\n    appearance: slider-thumb;\n    width: 28px;\n    height: 28px;\n    background: radial-gradient(circle at 30% 30%, #7dd3fc, #06b6d4);\n    border: 2px solid #0891b2;\n    border-radius: 50%;\n    cursor: pointer;\n    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);\n  }\n\n  .vertical-fader::-webkit-slider-thumb:hover {\n    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);\n  }\n\n  .vertical-fader::-moz-range-thumb {\n    width: 28px;\n    height: 28px;\n    background: radial-gradient(circle at 30% 30%, #7dd3fc, #06b6d4);\n    border: 2px solid #0891b2;\n    border-radius: 50%;\n    cursor: pointer;\n    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);\n  }\n\n  .vertical-fader::-moz-range-thumb:hover {\n    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);\n  }\n\n  .vertical-fader::-moz-range-track {\n    background: transparent;\n    border: none;\n  }\n\n  .channel-label {\n    font-size: 14px;\n    font-weight: 600;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n    text-align: center;\n    min-height: 20px;\n  }\n\n  .channel-level {\n    font-size: 12px;\n    color: #7dd3fc;\n    font-weight: 500;\n    text-align: center;\n    min-height: 18px;\n    font-family: 'Monaco', 'Courier New', monospace;\n  }\n\n  .mute-btn {\n    width: 100%;\n    padding: 8px 6px;\n    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);\n    color: #fecaca;\n    border: 2px solid #dc2626;\n    border-radius: 4px;\n    font-weight: 600;\n    font-size: 12px;\n    cursor: pointer;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n    transition: all 0.2s ease;\n    min-height: 44px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    min-width: 80px;\n  }\n\n  .mute-btn:hover:not(.muted) {\n    background: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%);\n    border-color: #f87171;\n    box-shadow: 0 0 12px rgba(220, 38, 38, 0.3);\n  }\n\n  .mute-btn:active:not(.muted) {\n    transform: scale(0.95);\n  }\n\n  .mute-btn.muted {\n    background: linear-gradient(135deg, #365a40 0%, #15803d 100%);\n    border-color: #22c55e;\n    color: #86efac;\n  }\n\n  .mute-btn.muted:hover {\n    background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);\n    box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);\n  }\n\n  @media (max-width: 768px) {\n    .mixer-content {\n      flex-direction: column;\n      gap: 20px;\n    }\n\n    .mixer-strips {\n      gap: 20px;\n    }\n\n    .fader-wrapper {\n      min-height: 240px;\n    }\n\n    .vertical-fader {\n      width: 18px;\n      min-height: 240px;\n    }\n\n    .vertical-fader::-webkit-slider-thumb {\n      width: 24px;\n      height: 24px;\n    }\n\n    .vertical-fader::-moz-range-thumb {\n      width: 24px;\n      height: 24px;\n    }\n\n    .mute-btn {\n      min-height: 40px;\n      font-size: 11px;\n      min-width: 70px;\n    }\n  }\n</style>\n\n<script>\n  export default {\n    data() {\n      return {\n        channels: {\n          show: { value: 0 },\n          bgm: { value: -20 },\n          special: { value: -20 },\n          mic1: { value: -10 },\n          mic2: { value: -10 },\n          mixer: { value: -10 }\n        },\n        mutedChannels: {\n          show: true,\n          bgm: true,\n          special: true,\n          mic1: false,\n          mic2: false,\n          mixer: false\n        }\n      };\n    },\n    methods: {\n      updateLevel(channel, event) {\n        const value = parseInt(event.target.value);\n        this.channels[channel].value = value;\n\n        let topic = '';\n        if (channel === 'show') topic = 'ui/audio/a3/level/show';\n        else if (channel === 'bgm') topic = 'ui/audio/a3/level/bgm';\n        else if (channel === 'special') topic = 'ui/audio/a3/level/special';\n        else if (channel === 'mic1') topic = 'ui/audio/a3/level/mic1';\n        else if (channel === 'mic2') topic = 'ui/audio/a3/level/mic2';\n        else if (channel === 'mixer') topic = 'ui/audio/a3/level/mixer';\n\n        this.send({\n          topic: topic,\n          payload: value\n        });\n      },\n      toggleMute(channel) {\n        this.mutedChannels[channel] = !this.mutedChannels[channel];\n        \n        let topic = '';\n        if (channel === 'show') topic = 'ui/audio/a3/show/enabled';\n        else if (channel === 'bgm') topic = 'ui/audio/a3/bgm/enabled';\n        else if (channel === 'special') topic = 'ui/audio/a3/special/enabled';\n        else if (channel === 'mic1') topic = 'ui/audio/a3/mic1/enabled';\n        else if (channel === 'mic2') topic = 'ui/audio/a3/mic2/enabled';\n        else if (channel === 'mixer') topic = 'ui/audio/a3/mixer/enabled';\n        \n        this.send({\n          topic: topic,\n          payload: !this.mutedChannels[channel]\n        });\n      }\n    }\n  };\n</script>",
+        "storeOutMessages": false,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 200,
+        "y": 900,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "472746bdbd07fea1",
+        "type": "ui-number-input",
+        "z": "8ccf58caed82bbf6",
+        "group": "776ce3db31f8095d",
+        "name": "In 1",
+        "label": "In 1",
+        "order": 4,
+        "width": "2",
+        "height": "1",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "30",
+        "step": 1,
+        "tooltip": "",
+        "delay": 300,
+        "passthru": true,
+        "sendOnDelay": false,
+        "sendOnBlur": false,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": false,
+        "icon": "",
+        "iconPosition": "left",
+        "iconInnerPosition": "inside",
+        "spinner": "default",
+        "x": 130,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8b2759e9c2982c42",
+        "type": "ui-number-input",
+        "z": "8ccf58caed82bbf6",
+        "group": "776ce3db31f8095d",
+        "name": "In 2",
+        "label": "In 2",
+        "order": 5,
+        "width": "2",
+        "height": "1",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "30",
+        "step": 1,
+        "tooltip": "",
+        "delay": 300,
+        "passthru": true,
+        "sendOnDelay": false,
+        "sendOnBlur": false,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": false,
+        "icon": "",
+        "iconPosition": "right",
+        "iconInnerPosition": "inside",
+        "spinner": "default",
+        "x": 290,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f86bfa6e1b506c9d",
         "type": "ui-button",
         "z": "8ccf58caed82bbf6",
-        "group": "ab71585fe7e4cdb3",
-        "name": "A1 Out Preset 1",
-        "label": "A1 Out Preset 1",
-        "order": 8,
-        "width": "1",
+        "group": "776ce3db31f8095d",
+        "name": "Accept Mixer Inputs",
+        "label": "Accept Mixer Inputs",
+        "order": 6,
+        "width": "2",
         "height": "1",
         "emulateClick": false,
         "tooltip": "",
@@ -3963,11 +3623,389 @@
         "enablePointerup": false,
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
-        "x": 160,
-        "y": 360,
+        "x": 500,
+        "y": 800,
         "wires": [
             []
         ]
+    },
+    {
+        "id": "8c7c1f1f25f0b800",
+        "type": "ui-text",
+        "z": "8ccf58caed82bbf6",
+        "group": "89a49ec7808083dd",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "Mixer Input",
+        "label": "Mixer Input",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 150,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "472950ef02406a48",
+        "type": "ui-text",
+        "z": "8ccf58caed82bbf6",
+        "group": "776ce3db31f8095d",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "Mixer Input",
+        "label": "Mixer Input",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 150,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "115a18d274b62702",
+        "type": "ui-number-input",
+        "z": "8ccf58caed82bbf6",
+        "group": "d8304d5bd63f01b7",
+        "name": "In 1",
+        "label": "In 1",
+        "order": 5,
+        "width": "2",
+        "height": "1",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "30",
+        "step": 1,
+        "tooltip": "",
+        "delay": 300,
+        "passthru": true,
+        "sendOnDelay": false,
+        "sendOnBlur": false,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": false,
+        "icon": "",
+        "iconPosition": "left",
+        "iconInnerPosition": "inside",
+        "spinner": "default",
+        "x": 130,
+        "y": 980,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "551e3aa8d494098e",
+        "type": "ui-number-input",
+        "z": "8ccf58caed82bbf6",
+        "group": "d8304d5bd63f01b7",
+        "name": "In 2",
+        "label": "In 2",
+        "order": 6,
+        "width": "2",
+        "height": "1",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "30",
+        "step": 1,
+        "tooltip": "",
+        "delay": 300,
+        "passthru": true,
+        "sendOnDelay": false,
+        "sendOnBlur": false,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": false,
+        "icon": "",
+        "iconPosition": "right",
+        "iconInnerPosition": "inside",
+        "spinner": "default",
+        "x": 290,
+        "y": 980,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "733a10c2b82bb9e6",
+        "type": "ui-button",
+        "z": "8ccf58caed82bbf6",
+        "group": "d8304d5bd63f01b7",
+        "name": "Accept Mixer Inputs",
+        "label": "Accept Mixer Inputs",
+        "order": 7,
+        "width": "2",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "mdi-tune-vertical",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 500,
+        "y": 980,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a6d36e9218130965",
+        "type": "ui-text",
+        "z": "8ccf58caed82bbf6",
+        "group": "d8304d5bd63f01b7",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "Mixer Input",
+        "label": "Mixer Input",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 150,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "78a227c91a968485",
+        "type": "comment",
+        "z": "8ccf58caed82bbf6",
+        "name": "Landscape",
+        "info": "",
+        "x": 140,
+        "y": 1060,
+        "wires": []
+    },
+    {
+        "id": "e624fd2c4fa65a8c",
+        "type": "ui-template",
+        "z": "8ccf58caed82bbf6",
+        "group": "67ff5910906be82b",
+        "page": "",
+        "ui": "",
+        "name": "Landscape Audio Faders (dB)",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "head": "",
+        "format": "<div class=\"mixer-container\">\n  <div class=\"mixer-content\">\n    <!-- PLAYBACK GROUP -->\n    <div class=\"mixer-group\">\n      <div class=\"group-title\">Playback</div>\n      <div class=\"mixer-strips\">\n        <!-- Show Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"0\" class=\"vertical-fader\" @input=\"updateLevel('show', $event)\">\n          </div>\n          <div class=\"channel-label\">Show</div>\n          <div class=\"channel-level\">{{ channels.show.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('show')\" :class=\"{ muted: mutedChannels.show }\">Mute</button>\n        </div>\n\n        <!-- BGM Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-20\" class=\"vertical-fader\" @input=\"updateLevel('bgm', $event)\">\n          </div>\n          <div class=\"channel-label\">BGM</div>\n          <div class=\"channel-level\">{{ channels.bgm.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('bgm')\" :class=\"{ muted: mutedChannels.bgm }\">Mute</button>\n        </div>\n\n        <!-- Special Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-20\" class=\"vertical-fader\" @input=\"updateLevel('special', $event)\">\n          </div>\n          <div class=\"channel-label\">Special</div>\n          <div class=\"channel-level\">{{ channels.special.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('special')\" :class=\"{ muted: mutedChannels.special }\">Mute</button>\n        </div>\n      </div>\n    </div>\n\n    <!-- LIVE GROUP -->\n    <div class=\"mixer-group\">\n      <div class=\"group-title\">Live</div>\n      <div class=\"mixer-strips\">\n        <!-- Mic1 Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mic1', $event)\">\n          </div>\n          <div class=\"channel-label\">Mic 1</div>\n          <div class=\"channel-level\">{{ channels.mic1.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('mic1')\" :class=\"{ muted: mutedChannels.mic1 }\">Mute</button>\n        </div>\n\n        <!-- Mic2 Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mic2', $event)\">\n          </div>\n          <div class=\"channel-label\">Mic 2</div>\n          <div class=\"channel-level\">{{ channels.mic2.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('mic2')\" :class=\"{ muted: mutedChannels.mic2 }\">Mute</button>\n        </div>\n\n        <!-- Mixer Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mixer', $event)\">\n          </div>\n          <div class=\"channel-label\">Mixer</div>\n          <div class=\"channel-level\">{{ channels.mixer.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('mixer')\" :class=\"{ muted: mutedChannels.mixer }\">Mute</button>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n\n<style scoped>\n  .mixer-container {\n    display: flex;\n    flex-direction: column;\n    height: 100%;\n    background: linear-gradient(135deg, #1a1d2e 0%, #16192b 100%);\n    padding: 16px;\n    border-radius: 8px;\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;\n    color: #e0e0e0;\n  }\n\n  .mixer-content {\n    display: flex;\n    flex-direction: row;\n    gap: 40px;\n    flex: 1;\n    min-height: 0;\n  }\n\n  .mixer-group {\n    display: flex;\n    flex-direction: column;\n    gap: 12px;\n    flex: 1;\n    min-height: 0;\n  }\n\n  .group-title {\n    font-size: 13px;\n    font-weight: 700;\n    text-transform: uppercase;\n    letter-spacing: 1px;\n    color: #7dd3fc;\n    padding-bottom: 4px;\n    border-bottom: 2px solid #0891b2;\n  }\n\n  .mixer-strips {\n    display: flex;\n    gap: 30px;\n    flex: 1;\n    min-height: 0;\n    justify-content: flex-start;\n    align-items: flex-start;\n  }\n\n  .channel-strip {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    gap: 8px;\n    flex-shrink: 0;\n  }\n\n  .fader-wrapper {\n    flex: 1;\n    min-height: 300px;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n  }\n\n  .vertical-fader {\n    -webkit-appearance: slider-vertical;\n    appearance: slider-vertical;\n    width: 20px;\n    height: 100%;\n    min-height: 300px;\n    background: linear-gradient(to right, #3a4050 0%, #4a5060 50%, #3a4050 100%);\n    outline: none;\n    cursor: pointer;\n    border-radius: 10px;\n  }\n\n  .vertical-fader::-webkit-slider-thumb {\n    -webkit-appearance: slider-thumb;\n    appearance: slider-thumb;\n    width: 28px;\n    height: 28px;\n    background: radial-gradient(circle at 30% 30%, #7dd3fc, #06b6d4);\n    border: 2px solid #0891b2;\n    border-radius: 50%;\n    cursor: pointer;\n    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);\n  }\n\n  .vertical-fader::-webkit-slider-thumb:hover {\n    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);\n  }\n\n  .vertical-fader::-moz-range-thumb {\n    width: 28px;\n    height: 28px;\n    background: radial-gradient(circle at 30% 30%, #7dd3fc, #06b6d4);\n    border: 2px solid #0891b2;\n    border-radius: 50%;\n    cursor: pointer;\n    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);\n  }\n\n  .vertical-fader::-moz-range-thumb:hover {\n    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);\n  }\n\n  .vertical-fader::-moz-range-track {\n    background: transparent;\n    border: none;\n  }\n\n  .channel-label {\n    font-size: 14px;\n    font-weight: 600;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n    text-align: center;\n    min-height: 20px;\n  }\n\n  .channel-level {\n    font-size: 12px;\n    color: #7dd3fc;\n    font-weight: 500;\n    text-align: center;\n    min-height: 18px;\n    font-family: 'Monaco', 'Courier New', monospace;\n  }\n\n  .mute-btn {\n    width: 100%;\n    padding: 8px 6px;\n    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);\n    color: #fecaca;\n    border: 2px solid #dc2626;\n    border-radius: 4px;\n    font-weight: 600;\n    font-size: 12px;\n    cursor: pointer;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n    transition: all 0.2s ease;\n    min-height: 44px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    min-width: 80px;\n  }\n\n  .mute-btn:hover:not(.muted) {\n    background: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%);\n    border-color: #f87171;\n    box-shadow: 0 0 12px rgba(220, 38, 38, 0.3);\n  }\n\n  .mute-btn:active:not(.muted) {\n    transform: scale(0.95);\n  }\n\n  .mute-btn.muted {\n    background: linear-gradient(135deg, #365a40 0%, #15803d 100%);\n    border-color: #22c55e;\n    color: #86efac;\n  }\n\n  .mute-btn.muted:hover {\n    background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);\n    box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);\n  }\n\n  @media (max-width: 768px) {\n    .mixer-content {\n      flex-direction: column;\n      gap: 20px;\n    }\n\n    .mixer-strips {\n      gap: 20px;\n    }\n\n    .fader-wrapper {\n      min-height: 240px;\n    }\n\n    .vertical-fader {\n      width: 18px;\n      min-height: 240px;\n    }\n\n    .vertical-fader::-webkit-slider-thumb {\n      width: 24px;\n      height: 24px;\n    }\n\n    .vertical-fader::-moz-range-thumb {\n      width: 24px;\n      height: 24px;\n    }\n\n    .mute-btn {\n      min-height: 40px;\n      font-size: 11px;\n      min-width: 70px;\n    }\n  }\n</style>\n\n<script>\n  export default {\n    data() {\n      return {\n        channels: {\n          show: { value: 0 },\n          bgm: { value: -20 },\n          special: { value: -20 },\n          mic1: { value: -10 },\n          mic2: { value: -10 },\n          mixer: { value: -10 }\n        },\n        mutedChannels: {\n          show: true,\n          bgm: true,\n          special: true,\n          mic1: false,\n          mic2: false,\n          mixer: false\n        }\n      };\n    },\n    methods: {\n      updateLevel(channel, event) {\n        const value = parseInt(event.target.value);\n        this.channels[channel].value = value;\n\n        let topic = '';\n        if (channel === 'show') topic = 'ui/audio/ls/level/show';\n        else if (channel === 'bgm') topic = 'ui/audio/ls/level/bgm';\n        else if (channel === 'special') topic = 'ui/audio/ls/level/special';\n        else if (channel === 'mic1') topic = 'ui/audio/ls/level/mic1';\n        else if (channel === 'mic2') topic = 'ui/audio/ls/level/mic2';\n        else if (channel === 'mixer') topic = 'ui/audio/ls/level/mixer';\n\n        this.send({\n          topic: topic,\n          payload: value\n        });\n      },\n      toggleMute(channel) {\n        this.mutedChannels[channel] = !this.mutedChannels[channel];\n        \n        let topic = '';\n        if (channel === 'show') topic = 'ui/audio/ls/show/enabled';\n        else if (channel === 'bgm') topic = 'ui/audio/ls/bgm/enabled';\n        else if (channel === 'special') topic = 'ui/audio/ls/special/enabled';\n        else if (channel === 'mic1') topic = 'ui/audio/ls/mic1/enabled';\n        else if (channel === 'mic2') topic = 'ui/audio/ls/mic2/enabled';\n        else if (channel === 'mixer') topic = 'ui/audio/ls/mixer/enabled';\n        \n        this.send({\n          topic: topic,\n          payload: !this.mutedChannels[channel]\n        });\n      }\n    }\n  };\n</script>",
+        "storeOutMessages": false,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 210,
+        "y": 1100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5e4bfc0e7bc3ff2c",
+        "type": "ui-number-input",
+        "z": "8ccf58caed82bbf6",
+        "group": "67ff5910906be82b",
+        "name": "In 1",
+        "label": "In 1",
+        "order": 3,
+        "width": "2",
+        "height": "1",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "30",
+        "step": 1,
+        "tooltip": "",
+        "delay": 300,
+        "passthru": true,
+        "sendOnDelay": false,
+        "sendOnBlur": false,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": false,
+        "icon": "",
+        "iconPosition": "left",
+        "iconInnerPosition": "inside",
+        "spinner": "default",
+        "x": 130,
+        "y": 1180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "07b04535436b3719",
+        "type": "ui-number-input",
+        "z": "8ccf58caed82bbf6",
+        "group": "67ff5910906be82b",
+        "name": "In 2",
+        "label": "In 2",
+        "order": 4,
+        "width": "2",
+        "height": "1",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "30",
+        "step": 1,
+        "tooltip": "",
+        "delay": 300,
+        "passthru": true,
+        "sendOnDelay": false,
+        "sendOnBlur": false,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": false,
+        "icon": "",
+        "iconPosition": "right",
+        "iconInnerPosition": "inside",
+        "spinner": "default",
+        "x": 290,
+        "y": 1180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e1bec751b852c630",
+        "type": "ui-button",
+        "z": "8ccf58caed82bbf6",
+        "group": "67ff5910906be82b",
+        "name": "Accept Mixer Inputs",
+        "label": "Accept Mixer Inputs",
+        "order": 5,
+        "width": "2",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "mdi-tune-vertical",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 500,
+        "y": 1180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "05b0e3fd9e997d23",
+        "type": "ui-text",
+        "z": "8ccf58caed82bbf6",
+        "group": "67ff5910906be82b",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "Mixer Input",
+        "label": "Mixer Input",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 150,
+        "y": 1140,
+        "wires": []
+    },
+    {
+        "id": "3429521ecf22a2b1",
+        "type": "debug",
+        "z": "8ccf58caed82bbf6",
+        "name": "debug 11",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 420,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "30f67ca05ea43bd5",
+        "type": "link out",
+        "z": "8ccf58caed82bbf6",
+        "name": "link out 9",
+        "mode": "link",
+        "links": [
+            "803531212d80c9be"
+        ],
+        "x": 1595,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "8fa0d6827aa38fab",
+        "type": "link out",
+        "z": "8ccf58caed82bbf6",
+        "name": "link out 10",
+        "mode": "link",
+        "links": [
+            "adc8cdb66de6822c"
+        ],
+        "x": 1595,
+        "y": 500,
+        "wires": []
     },
     {
         "id": "wo2-startup-inj",
@@ -7376,5 +7414,1417 @@
         "x": 1715,
         "y": 200,
         "wires": []
+    },
+    {
+        "id": "3c2c4c8de5b9a3bf",
+        "type": "ui-dropdown",
+        "z": "f1b9b2b5c63a4aa9",
+        "group": "9f1f7d2d0c1c8f11",
+        "name": "Inside playback active",
+        "label": "Inside playback",
+        "tooltip": "Select playback mode for inside domain (A1/A2/A3). SPECIAL not included yet.",
+        "order": 2,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "BGM",
+                "value": "BGM"
+            },
+            {
+                "label": "NONE",
+                "value": "NONE"
+            }
+        ],
+        "payload": "",
+        "topic": "ui/audio/domain/inside/active",
+        "topicType": "str",
+        "className": "",
+        "x": 360,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c63b9eacb8d663e8",
+        "type": "ui-dropdown",
+        "z": "f1b9b2b5c63a4aa9",
+        "group": "9f1f7d2d0c1c8f11",
+        "name": "Inside BGM ID",
+        "label": "Inside BGM",
+        "tooltip": "Select inside background music ID (bg_music_1..4)",
+        "order": 3,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "bg_music_1",
+                "value": "bg_music_1"
+            },
+            {
+                "label": "bg_music_2",
+                "value": "bg_music_2"
+            },
+            {
+                "label": "bg_music_3",
+                "value": "bg_music_3"
+            },
+            {
+                "label": "bg_music_4",
+                "value": "bg_music_4"
+            }
+        ],
+        "payload": "",
+        "topic": "ui/audio/domain/inside/bgmId",
+        "topicType": "str",
+        "className": "",
+        "x": 340,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b6e6f35e7fb3f5d2",
+        "type": "ui-dropdown",
+        "z": "f1b9b2b5c63a4aa9",
+        "group": "9f1f7d2d0c1c8f11",
+        "name": "Landscape playback active",
+        "label": "Landscape playback",
+        "tooltip": "Select playback mode for landscape domain (LS). SPECIAL is inside-only.",
+        "order": 4,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "BGM",
+                "value": "BGM"
+            },
+            {
+                "label": "NONE",
+                "value": "NONE"
+            }
+        ],
+        "payload": "",
+        "topic": "ui/audio/domain/landscape/active",
+        "topicType": "str",
+        "className": "",
+        "x": 480,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bb2c0b5cb3c1f2aa",
+        "type": "ui-dropdown",
+        "z": "f1b9b2b5c63a4aa9",
+        "group": "9f1f7d2d0c1c8f11",
+        "name": "Landscape BGM ID",
+        "label": "Landscape BGM",
+        "tooltip": "Select landscape background music ID (bg_music_1..4)",
+        "order": 5,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "bg_music_1",
+                "value": "bg_music_1"
+            },
+            {
+                "label": "bg_music_2",
+                "value": "bg_music_2"
+            },
+            {
+                "label": "bg_music_3",
+                "value": "bg_music_3"
+            },
+            {
+                "label": "bg_music_4",
+                "value": "bg_music_4"
+            }
+        ],
+        "payload": "",
+        "topic": "ui/audio/domain/landscape/bgmId",
+        "topicType": "str",
+        "className": "",
+        "x": 330,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4f9c9c1ff75a1e9e",
+        "type": "ui-button",
+        "z": "f1b9b2b5c63a4aa9",
+        "group": "9f1f7d2d0c1c8f11",
+        "name": "Force SHOW everywhere (intent)",
+        "label": "Force SHOW everywhere (intent)",
+        "order": 6,
+        "width": 6,
+        "height": 1,
+        "emulateClick": false,
+        "tooltip": "Emits a semantic intent indicating both domains should be in SHOW (actual enforcement is Decision Maker policy).",
+        "className": "",
+        "payload": "SHOW",
+        "payloadType": "str",
+        "topic": "ui/audio/forceShow",
+        "topicType": "str",
+        "x": 380,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f2d5dd8f3c2f4f6c",
+        "type": "function",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "Aggregate domain intents (inside/landscape)",
+        "func": "/*\nCollect domain dropdown values in flow context and emit a single semantic intent.\n\nEmits:\n  topic: ui/audio/setPlaybackDomain\n  payload: { domain, active, bgmId }\n\nAlso supports:\n  topic: ui/audio/setPlaybackAllDomainsShow\n  payload: { active: 'SHOW' }\n*/\n\nconst t = msg.topic;\n\nif (t === 'ui/audio/forceShow') {\n  return {\n    topic: 'ui/audio/setPlaybackAllDomainsShow',\n    payload: { active: 'SHOW', requestedAt: new Date().toISOString(), requestedBy: 'ui' }\n  };\n}\n\nfunction getDomainFromTopic(topic) {\n  const m = topic.match(/^ui\\/audio\\/domain\\/(inside|landscape)\\/(active|bgmId)$/);\n  return m ? { domain: m[1], field: m[2] } : null;\n}\n\nconst info = getDomainFromTopic(t);\nif (!info) return null;\n\nconst key = `audio_domain_${info.domain}`;\nconst state = flow.get(key) || { active: 'BGM', bgmId: 'bg_music_1' };\nstate[info.field] = msg.payload;\nflow.set(key, state);\n\nreturn {\n  topic: 'ui/audio/setPlaybackDomain',\n  payload: {\n    domain: info.domain,\n    active: state.active,\n    bgmId: state.bgmId,\n    requestedAt: new Date().toISOString(),\n    requestedBy: 'ui'\n  }\n};\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f1a6f0c30c5ceab1",
+        "type": "ui-template",
+        "z": "f1b9b2b5c63a4aa9",
+        "group": "f8e2a0bb3c5a0f6b",
+        "name": "Last Intent (pretty JSON)",
+        "order": 1,
+        "width": 12,
+        "height": 5,
+        "format": "<template>\n  <div style=\"font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; white-space: pre; font-size: 12px;\">\n    {{ JSON.stringify(msg, null, 2) }}\n  </div>\n</template>",
+        "storeOutMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 350,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7e5b5e2f1f3a8a21",
+        "type": "debug",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "Audio UI intents (debug)",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 910,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "c0e1b6c20a9f4e56",
+        "type": "ui-template",
+        "z": "f1b9b2b5c63a4aa9",
+        "group": "9f1f7d2d0c1c8f11",
+        "name": "Global notes",
+        "order": 1,
+        "width": 12,
+        "height": 2,
+        "format": "<template>\n  <div>\n    <b>Playback domains</b>: inside (A1/A2/A3) and landscape (LS).<br>\n    <b>Special is inside-only</b> (not exposed in this UI yet).<br>\n    Controls emit <i>semantic intents</i> only — wire these to your Decision Maker / Planner.\n  </div>\n</template>",
+        "storeOutMessages": false,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 110,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_wire_1",
+        "type": "function",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "A1: tag field playbackEnabled",
+        "func": "msg._spaceId = 'a1'; msg._field = 'playbackEnabled'; return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 690,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_playback_switch",
+        "type": "ui-switch",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "A1 Playback enabled",
+        "label": "Playback enabled",
+        "group": "0aa8a571d9d48b17",
+        "order": 1,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "topic": "ui/audio/a1/playbackEnabled",
+        "topicType": "str",
+        "className": "",
+        "onvalue": true,
+        "onvalueType": "bool",
+        "offvalue": false,
+        "offvalueType": "bool",
+        "x": 140,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_mic1_switch",
+        "type": "ui-switch",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "A1 Mic1 enabled",
+        "label": "Mic 1 enabled",
+        "group": "0aa8a571d9d48b17",
+        "order": 2,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "decouple": false,
+        "topic": "ui/audio/a1/mic1Enabled",
+        "topicType": "str",
+        "className": "",
+        "onvalue": true,
+        "onvalueType": "bool",
+        "offvalue": false,
+        "offvalueType": "bool",
+        "x": 130,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_mic1_tag",
+        "type": "function",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "A1: tag field mic1Enabled",
+        "func": "msg._spaceId = 'a1'; msg._field = 'mic1Enabled'; return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 690,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_mic2_switch",
+        "type": "ui-switch",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "A1 Mic2 enabled",
+        "label": "Mic 2 enabled",
+        "group": "0aa8a571d9d48b17",
+        "order": 3,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "decouple": false,
+        "topic": "ui/audio/a1/mic2Enabled",
+        "topicType": "str",
+        "className": "",
+        "onvalue": true,
+        "onvalueType": "bool",
+        "offvalue": false,
+        "offvalueType": "bool",
+        "x": 130,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_mic2_tag",
+        "type": "function",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "A1: tag field mic2Enabled",
+        "func": "msg._spaceId = 'a1'; msg._field = 'mic2Enabled'; return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 690,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_mixer_switch",
+        "type": "ui-switch",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "A1 Mixer enabled",
+        "label": "Live mixer enabled",
+        "group": "0aa8a571d9d48b17",
+        "order": 4,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "topic": "ui/audio/a1/mixerEnabled",
+        "topicType": "str",
+        "className": "",
+        "onvalue": true,
+        "onvalueType": "bool",
+        "offvalue": false,
+        "offvalueType": "bool",
+        "x": 130,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_mixer_tag",
+        "type": "function",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "A1: tag field mixerEnabled",
+        "func": "msg._spaceId = 'a1'; msg._field = 'mixerEnabled'; return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 690,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_level_bgm",
+        "type": "ui-slider",
+        "z": "f1b9b2b5c63a4aa9",
+        "group": "0aa8a571d9d48b17",
+        "name": "A1 BGM level",
+        "label": "BGM (dB)",
+        "order": 5,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "outs": "all",
+        "topic": "ui/audio/a1/level/bgm",
+        "topicType": "str",
+        "min": -60,
+        "max": 12,
+        "step": 1,
+        "className": "",
+        "x": 120,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_level_bgm_tag",
+        "type": "function",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "A1: tag field level_bgm",
+        "func": "msg._spaceId='a1'; msg._field='level_bgm'; return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 690,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_level_show",
+        "type": "ui-slider",
+        "z": "f1b9b2b5c63a4aa9",
+        "group": "0aa8a571d9d48b17",
+        "name": "A1 Show level",
+        "label": "Show (dB)",
+        "order": 6,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "outs": "all",
+        "topic": "ui/audio/a1/level/show",
+        "topicType": "str",
+        "min": -60,
+        "max": 12,
+        "step": 1,
+        "className": "",
+        "showTextField": false,
+        "x": 120,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_level_show_tag",
+        "type": "function",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "A1: tag field level_show",
+        "func": "msg._spaceId='a1'; msg._field='level_show'; return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 690,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_level_special",
+        "type": "ui-slider",
+        "z": "f1b9b2b5c63a4aa9",
+        "group": "0aa8a571d9d48b17",
+        "name": "A1 Special level",
+        "label": "Special (dB)",
+        "order": 7,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "outs": "all",
+        "topic": "ui/audio/a1/level/special",
+        "topicType": "str",
+        "min": -60,
+        "max": 12,
+        "step": 1,
+        "className": "",
+        "x": 120,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_level_special_tag",
+        "type": "function",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "A1: tag field level_special",
+        "func": "msg._spaceId='a1'; msg._field='level_special'; return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 700,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_level_mic1",
+        "type": "ui-slider",
+        "z": "f1b9b2b5c63a4aa9",
+        "group": "0aa8a571d9d48b17",
+        "name": "A1 Mic1 level",
+        "label": "Mic1 (dB)",
+        "order": 8,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "outs": "all",
+        "topic": "ui/audio/a1/level/mic1",
+        "topicType": "str",
+        "showTicks": "false",
+        "min": -60,
+        "max": 12,
+        "step": 1,
+        "className": "",
+        "iconPrepend": "",
+        "iconAppend": "",
+        "color": "",
+        "colorTrack": "",
+        "colorThumb": "",
+        "showTextField": false,
+        "x": 120,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_level_mic1_tag",
+        "type": "function",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "A1: tag field level_mic1",
+        "func": "msg._spaceId='a1'; msg._field='level_mic1'; return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 700,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_level_mic2",
+        "type": "ui-slider",
+        "z": "f1b9b2b5c63a4aa9",
+        "group": "0aa8a571d9d48b17",
+        "name": "A1 Mic2 level",
+        "label": "Mic2 (dB)",
+        "order": 9,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "outs": "all",
+        "topic": "ui/audio/a1/level/mic2",
+        "topicType": "str",
+        "min": -60,
+        "max": 12,
+        "step": 1,
+        "className": "",
+        "showTextField": false,
+        "x": 120,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_level_mic2_tag",
+        "type": "function",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "A1: tag field level_mic2",
+        "func": "msg._spaceId='a1'; msg._field='level_mic2'; return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 700,
+        "y": 680,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_level_mixer",
+        "type": "ui-slider",
+        "z": "f1b9b2b5c63a4aa9",
+        "group": "0aa8a571d9d48b17",
+        "name": "A1 Mixer level",
+        "label": "Mixer (dB)",
+        "order": 10,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "outs": "all",
+        "topic": "ui/audio/a1/level/mixer",
+        "topicType": "str",
+        "min": -60,
+        "max": 12,
+        "step": 1,
+        "className": "",
+        "showTextField": false,
+        "x": 120,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_level_mixer_tag",
+        "type": "function",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "A1: tag field level_mixer",
+        "func": "msg._spaceId='a1'; msg._field='level_mixer'; return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 700,
+        "y": 720,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_ducking_switch",
+        "type": "ui-switch",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "A1 Ducking enabled",
+        "label": "Ducking enabled",
+        "group": "0aa8a571d9d48b17",
+        "order": 11,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "topic": "ui/audio/a1/ducking/enabled",
+        "topicType": "str",
+        "className": "",
+        "onvalue": true,
+        "onvalueType": "bool",
+        "offvalue": false,
+        "offvalueType": "bool",
+        "x": 460,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_ducking_tag",
+        "type": "function",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "A1: tag field duckingEnabled",
+        "func": "msg._spaceId='a1'; msg._field='duckingEnabled'; return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 710,
+        "y": 760,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_duck_amount",
+        "type": "ui-slider",
+        "z": "f1b9b2b5c63a4aa9",
+        "group": "0aa8a571d9d48b17",
+        "name": "A1 Duck amount",
+        "label": "Duck amount (dB)",
+        "order": 12,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "outs": "all",
+        "topic": "ui/audio/a1/ducking/amount",
+        "topicType": "str",
+        "showTicks": "false",
+        "min": -30,
+        "max": 0,
+        "step": 1,
+        "className": "",
+        "iconPrepend": "",
+        "iconAppend": "",
+        "color": "",
+        "colorTrack": "",
+        "colorThumb": "",
+        "showTextField": false,
+        "x": 130,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_duck_amount_tag",
+        "type": "function",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "A1: tag field duckAmountDb",
+        "func": "msg._spaceId='a1'; msg._field='duckAmountDb'; return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 710,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_playback_tag",
+        "type": "link in",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "A1: from playback switch",
+        "links": [],
+        "x": 535,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1_w1",
+        "type": "link out",
+        "z": "f1b9b2b5c63a4aa9",
+        "name": "OUT: Audio intents (wire to decision maker)",
+        "mode": "link",
+        "links": [],
+        "x": 1115,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "305744a049d8128d",
+        "type": "ui-template",
+        "z": "2c15789a1b80fcb2",
+        "group": "89a49ec7808083dd",
+        "page": "",
+        "ui": "",
+        "name": "Atrium 1 Audio Faders (dB)",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "format": "<template>\n  <div class=\"mixer-container\">\n    <!-- GLOBAL LINK BUTTON -->\n    <button class=\"link-all-btn\" @click=\"toggleLinkAll\" :class=\"{ linked: linkAll }\">\n      🔗 LINK ALL CHANNELS\n    </button>\n\n    <div class=\"mixer-content\">\n      <!-- PLAYBACK GROUP -->\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Playback</div>\n        <div class=\"mixer-strips\">\n          <!-- Show Channel -->\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" value=\"0\" class=\"vertical-fader\" @input=\"updateLevel('show', $event)\">\n            </div>\n            <div class=\"channel-label\">Show</div>\n            <div class=\"channel-level\">{{ channels.show.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('show')\" :class=\"{ muted: mutedChannels.show }\">\n              {{ mutedChannels.show ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <!-- BGM Channel -->\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" value=\"-20\" class=\"vertical-fader\" @input=\"updateLevel('bgm', $event)\">\n            </div>\n            <div class=\"channel-label\">BGM</div>\n            <div class=\"channel-level\">{{ channels.bgm.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('bgm')\" :class=\"{ muted: mutedChannels.bgm }\">\n              {{ mutedChannels.bgm ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <!-- Special Channel -->\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" value=\"-20\" class=\"vertical-fader\" @input=\"updateLevel('special', $event)\">\n            </div>\n            <div class=\"channel-label\">Special</div>\n            <div class=\"channel-level\">{{ channels.special.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('special')\" :class=\"{ muted: mutedChannels.special }\">\n              {{ mutedChannels.special ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n        </div>\n      </div>\n\n      <!-- LIVE GROUP -->\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Live</div>\n        <div class=\"mixer-strips\">\n          <!-- Mic1 Channel -->\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mic1', $event)\">\n            </div>\n            <div class=\"channel-label\">Mic 1</div>\n            <div class=\"channel-level\">{{ channels.mic1.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic1')\" :class=\"{ muted: mutedChannels.mic1 }\">\n              {{ mutedChannels.mic1 ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <!-- Mic2 Channel -->\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mic2', $event)\">\n            </div>\n            <div class=\"channel-label\">Mic 2</div>\n            <div class=\"channel-level\">{{ channels.mic2.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic2')\" :class=\"{ muted: mutedChannels.mic2 }\">\n              {{ mutedChannels.mic2 ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <!-- Mixer Channel -->\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mixer', $event)\">\n            </div>\n            <div class=\"channel-label\">Mixer</div>\n            <div class=\"channel-level\">{{ channels.mixer.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mixer')\" :class=\"{ muted: mutedChannels.mixer }\">\n              {{ mutedChannels.mixer ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      space: 'a1', // change to a2 / a3 in other templates\n\n      linkAll: false,\n\n      channels: {\n        show: { value: 0 },\n        bgm: { value: -20 },\n        special: { value: -20 },\n        mic1: { value: -10 },\n        mic2: { value: -10 },\n        mixer: { value: -10 }\n      },\n      mutedChannels: {\n        show: true,\n        bgm: true,\n        special: true,\n        mic1: false,\n        mic2: false,\n        mixer: false\n      },\n      linkedChannels: {\n        show: false,\n        bgm: false,\n        special: false,\n        mic1: false,\n        mic2: false,\n        mixer: false\n      }\n    };\n  },\n  methods: {\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p) return;\n\n      const channel = p.channel;\n      const targetSpace = p.space || p.targetSpace;\n      if (targetSpace && targetSpace !== this.space) return;\n\n      if (p.setLinkedAll !== undefined) {\n        this.linkAll = p.setLinkedAll;\n        Object.keys(this.linkedChannels).forEach(ch => {\n          this.linkedChannels[ch] = p.setLinkedAll;\n        });\n      }\n\n      if (p.setLinked !== undefined) {\n        this.linkedChannels[channel] = p.setLinked;\n      }\n\n      if (p.delta !== undefined) {\n        this.applyLinkedFaderDelta(channel, p.delta);\n      }\n\n      if (p.muted !== undefined) {\n        this.applyLinkedMute(channel, p.muted);\n      }\n    },\n\n    toggleLinkAll() {\n      this.linkAll = !this.linkAll;\n\n      // set all channels locally\n      Object.keys(this.linkedChannels).forEach(ch => {\n        this.linkedChannels[ch] = this.linkAll;\n      });\n\n      // broadcast to flow\n      this.send({\n        topic: `ui/audio/linkAll`,\n        payload: {\n          space: this.space,\n          linked: this.linkAll\n        }\n      });\n    },\n\n    updateLevel(channel, event) {\n      const newValue = parseInt(event.target.value);\n      const oldValue = this.channels[channel].value;\n      const delta = newValue - oldValue;\n      this.channels[channel].value = newValue;\n\n      this.send({\n        topic: `ui/audio/${this.space}/level/${channel}`,\n        payload: newValue\n      });\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: `ui/audio/linkedFader/${channel}`,\n          payload: { sourceSpace: this.space, channel, delta }\n        });\n      }\n    },\n\n    applyLinkedFaderDelta(channel, delta) {\n      const newValue = Math.max(-60, Math.min(10, this.channels[channel].value + delta));\n      this.channels[channel].value = newValue;\n      this.send({\n        topic: `ui/audio/${this.space}/level/${channel}`,\n        payload: newValue\n      });\n    },\n\n    toggleMute(channel) {\n      this.mutedChannels[channel] = !this.mutedChannels[channel];\n      this.sendMuteTopic(channel);\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: `ui/audio/linkedMute/${channel}`,\n          payload: { space: this.space, channel, muted: this.mutedChannels[channel] }\n        });\n      }\n    },\n\n    applyLinkedMute(channel, muteState) {\n      this.mutedChannels[channel] = muteState;\n      this.sendMuteTopic(channel);\n    },\n\n    sendMuteTopic(channel) {\n      this.send({\n        topic: `ui/audio/${this.space}/${channel}/enabled`,\n        payload: this.mutedChannels[channel]\n      });\n    }\n  },\n  mounted() {\n    this.$watch(\n      () => this.msg,\n      (m) => this.applyMsg(m),\n      { deep: true, immediate: true }\n    );\n  }\n};\n</script>\n\n<style scoped>\n  .link-all-btn {\n    width: 100%;\n    margin-bottom: 12px;\n    padding: 10px 12px;\n    font-weight: 700;\n    border-radius: 6px;\n    border: 2px solid #64748b;\n    background: #334155;\n    color: #cbd5e1;\n    cursor: pointer;\n  }\n  .link-all-btn.linked {\n    background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);\n    border-color: #0ea5e9;\n    color: #ffffff;\n  }\n\n  /* keep your existing CSS below */\n  .mixer-container {\n    display: flex;\n    flex-direction: column;\n    height: 100%;\n    background: linear-gradient(135deg, #1a1d2e 0%, #16192b 100%);\n    padding: 16px;\n    border-radius: 8px;\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;\n    color: #e0e0e0;\n  }\n\n  .mixer-content { display: flex; flex-direction: row; gap: 40px; flex: 1; min-height: 0; justify-content: flex-start; }\n  .mixer-group { display: flex; flex-direction: column; gap: 12px; flex: 0 0 auto; min-height: 0; }\n  .group-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #7dd3fc; padding-bottom: 4px; border-bottom: 2px solid #0891b2; width: 100%; }\n  .mixer-strips { display: flex; gap: 30px; flex: 1; min-height: 0; justify-content: flex-start; align-items: flex-start; }\n  .channel-strip { display: flex; flex-direction: column; align-items: center; gap: 6px; flex-shrink: 0; }\n  .fader-wrapper { flex: 1; min-height: 300px; height: 100%; display: flex; align-items: center; justify-content: center; }\n  .vertical-fader { -webkit-appearance: slider-vertical; appearance: slider-vertical; width: 20px; height: 100%; min-height: 300px; background: linear-gradient(to right, #3a4050 0%, #4a5060 50%, #3a4050 100%); outline: none; cursor: pointer; border-radius: 10px; }\n  .channel-label { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; min-height: 20px; }\n  .channel-level { font-size: 12px; color: #7dd3fc; font-weight: 500; text-align: center; min-height: 18px; font-family: 'Monaco', 'Courier New', monospace; }\n  .mute-btn { width: 100%; padding: 8px 6px; background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%); color: #fecaca; border: 2px solid #dc2626; border-radius: 4px; font-weight: 600; font-size: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s ease; min-height: 44px; display: flex; align-items: center; justify-content: center; min-width: 80px; }\n  .mute-btn.muted { background: linear-gradient(135deg, #365a40 0%, #15803d 100%); border-color: #22c55e; color: #86efac; }\n</style>",
+        "storeOutMessages": false,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 660,
+        "y": 140,
+        "wires": [
+            [
+                "ce5c4ef1db80b2b3"
+            ]
+        ]
+    },
+    {
+        "id": "22a9213ef95fef35",
+        "type": "ui-template",
+        "z": "2c15789a1b80fcb2",
+        "group": "776ce3db31f8095d",
+        "page": "",
+        "ui": "",
+        "name": "Atrium 2 Audio Faders (dB)",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "format": "<template>\n  <div class=\"mixer-container\">\n    <!-- GLOBAL LINK BUTTON -->\n    <button class=\"link-all-btn\" @click=\"toggleLinkAll\" :class=\"{ linked: linkAll }\">\n      🔗 LINK ALL CHANNELS\n    </button>\n\n    <div class=\"mixer-content\">\n      <!-- PLAYBACK GROUP -->\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Playback</div>\n        <div class=\"mixer-strips\">\n          <!-- Show Channel -->\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" value=\"0\" class=\"vertical-fader\" @input=\"updateLevel('show', $event)\">\n            </div>\n            <div class=\"channel-label\">Show</div>\n            <div class=\"channel-level\">{{ channels.show.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('show')\" :class=\"{ muted: mutedChannels.show }\">\n              {{ mutedChannels.show ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <!-- BGM Channel -->\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" value=\"-20\" class=\"vertical-fader\" @input=\"updateLevel('bgm', $event)\">\n            </div>\n            <div class=\"channel-label\">BGM</div>\n            <div class=\"channel-level\">{{ channels.bgm.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('bgm')\" :class=\"{ muted: mutedChannels.bgm }\">\n              {{ mutedChannels.bgm ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <!-- Special Channel -->\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" value=\"-20\" class=\"vertical-fader\" @input=\"updateLevel('special', $event)\">\n            </div>\n            <div class=\"channel-label\">Special</div>\n            <div class=\"channel-level\">{{ channels.special.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('special')\" :class=\"{ muted: mutedChannels.special }\">\n              {{ mutedChannels.special ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n        </div>\n      </div>\n\n      <!-- LIVE GROUP -->\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Live</div>\n        <div class=\"mixer-strips\">\n          <!-- Mic1 Channel -->\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mic1', $event)\">\n            </div>\n            <div class=\"channel-label\">Mic 1</div>\n            <div class=\"channel-level\">{{ channels.mic1.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic1')\" :class=\"{ muted: mutedChannels.mic1 }\">\n              {{ mutedChannels.mic1 ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <!-- Mic2 Channel -->\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mic2', $event)\">\n            </div>\n            <div class=\"channel-label\">Mic 2</div>\n            <div class=\"channel-level\">{{ channels.mic2.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic2')\" :class=\"{ muted: mutedChannels.mic2 }\">\n              {{ mutedChannels.mic2 ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <!-- Mixer Channel -->\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mixer', $event)\">\n            </div>\n            <div class=\"channel-label\">Mixer</div>\n            <div class=\"channel-level\">{{ channels.mixer.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mixer')\" :class=\"{ muted: mutedChannels.mixer }\">\n              {{ mutedChannels.mixer ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      space: 'a2', // change to a2 / a3 in other templates\n\n      linkAll: false,\n\n      channels: {\n        show: { value: 0 },\n        bgm: { value: -20 },\n        special: { value: -20 },\n        mic1: { value: -10 },\n        mic2: { value: -10 },\n        mixer: { value: -10 }\n      },\n      mutedChannels: {\n        show: true,\n        bgm: true,\n        special: true,\n        mic1: false,\n        mic2: false,\n        mixer: false\n      },\n      linkedChannels: {\n        show: false,\n        bgm: false,\n        special: false,\n        mic1: false,\n        mic2: false,\n        mixer: false\n      }\n    };\n  },\n  methods: {\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p) return;\n\n      const channel = p.channel;\n      const targetSpace = p.space || p.targetSpace;\n      if (targetSpace && targetSpace !== this.space) return;\n\n      if (p.setLinkedAll !== undefined) {\n        this.linkAll = p.setLinkedAll;\n        Object.keys(this.linkedChannels).forEach(ch => {\n          this.linkedChannels[ch] = p.setLinkedAll;\n        });\n      }\n\n      if (p.setLinked !== undefined) {\n        this.linkedChannels[channel] = p.setLinked;\n      }\n\n      if (p.delta !== undefined) {\n        this.applyLinkedFaderDelta(channel, p.delta);\n      }\n\n      if (p.muted !== undefined) {\n        this.applyLinkedMute(channel, p.muted);\n      }\n    },\n\n    toggleLinkAll() {\n      this.linkAll = !this.linkAll;\n\n      // set all channels locally\n      Object.keys(this.linkedChannels).forEach(ch => {\n        this.linkedChannels[ch] = this.linkAll;\n      });\n\n      // broadcast to flow\n      this.send({\n        topic: `ui/audio/linkAll`,\n        payload: {\n          space: this.space,\n          linked: this.linkAll\n        }\n      });\n    },\n\n    updateLevel(channel, event) {\n      const newValue = parseInt(event.target.value);\n      const oldValue = this.channels[channel].value;\n      const delta = newValue - oldValue;\n      this.channels[channel].value = newValue;\n\n      this.send({\n        topic: `ui/audio/${this.space}/level/${channel}`,\n        payload: newValue\n      });\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: `ui/audio/linkedFader/${channel}`,\n          payload: { sourceSpace: this.space, channel, delta }\n        });\n      }\n    },\n\n    applyLinkedFaderDelta(channel, delta) {\n      const newValue = Math.max(-60, Math.min(10, this.channels[channel].value + delta));\n      this.channels[channel].value = newValue;\n      this.send({\n        topic: `ui/audio/${this.space}/level/${channel}`,\n        payload: newValue\n      });\n    },\n\n    toggleMute(channel) {\n      this.mutedChannels[channel] = !this.mutedChannels[channel];\n      this.sendMuteTopic(channel);\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: `ui/audio/linkedMute/${channel}`,\n          payload: { space: this.space, channel, muted: this.mutedChannels[channel] }\n        });\n      }\n    },\n\n    applyLinkedMute(channel, muteState) {\n      this.mutedChannels[channel] = muteState;\n      this.sendMuteTopic(channel);\n    },\n\n    sendMuteTopic(channel) {\n      this.send({\n        topic: `ui/audio/${this.space}/${channel}/enabled`,\n        payload: this.mutedChannels[channel]\n      });\n    }\n  },\n  mounted() {\n    this.$watch(\n      () => this.msg,\n      (m) => this.applyMsg(m),\n      { deep: true, immediate: true }\n    );\n  }\n};\n</script>\n\n<style scoped>\n  .link-all-btn {\n    width: 100%;\n    margin-bottom: 12px;\n    padding: 10px 12px;\n    font-weight: 700;\n    border-radius: 6px;\n    border: 2px solid #64748b;\n    background: #334155;\n    color: #cbd5e1;\n    cursor: pointer;\n  }\n  .link-all-btn.linked {\n    background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);\n    border-color: #0ea5e9;\n    color: #ffffff;\n  }\n\n  /* keep your existing CSS below */\n  .mixer-container {\n    display: flex;\n    flex-direction: column;\n    height: 100%;\n    background: linear-gradient(135deg, #1a1d2e 0%, #16192b 100%);\n    padding: 16px;\n    border-radius: 8px;\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;\n    color: #e0e0e0;\n  }\n\n  .mixer-content { display: flex; flex-direction: row; gap: 40px; flex: 1; min-height: 0; justify-content: flex-start; }\n  .mixer-group { display: flex; flex-direction: column; gap: 12px; flex: 0 0 auto; min-height: 0; }\n  .group-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #7dd3fc; padding-bottom: 4px; border-bottom: 2px solid #0891b2; width: 100%; }\n  .mixer-strips { display: flex; gap: 30px; flex: 1; min-height: 0; justify-content: flex-start; align-items: flex-start; }\n  .channel-strip { display: flex; flex-direction: column; align-items: center; gap: 6px; flex-shrink: 0; }\n  .fader-wrapper { flex: 1; min-height: 300px; height: 100%; display: flex; align-items: center; justify-content: center; }\n  .vertical-fader { -webkit-appearance: slider-vertical; appearance: slider-vertical; width: 20px; height: 100%; min-height: 300px; background: linear-gradient(to right, #3a4050 0%, #4a5060 50%, #3a4050 100%); outline: none; cursor: pointer; border-radius: 10px; }\n  .channel-label { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; min-height: 20px; }\n  .channel-level { font-size: 12px; color: #7dd3fc; font-weight: 500; text-align: center; min-height: 18px; font-family: 'Monaco', 'Courier New', monospace; }\n  .mute-btn { width: 100%; padding: 8px 6px; background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%); color: #fecaca; border: 2px solid #dc2626; border-radius: 4px; font-weight: 600; font-size: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s ease; min-height: 44px; display: flex; align-items: center; justify-content: center; min-width: 80px; }\n  .mute-btn.muted { background: linear-gradient(135deg, #365a40 0%, #15803d 100%); border-color: #22c55e; color: #86efac; }\n</style>",
+        "storeOutMessages": false,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 660,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "296f8f34be297c29",
+        "type": "ui-template",
+        "z": "2c15789a1b80fcb2",
+        "group": "d8304d5bd63f01b7",
+        "page": "",
+        "ui": "",
+        "name": "Atrium 3 Audio Faders (dB)",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "format": "<template>\n  <div class=\"mixer-container\">\n    <!-- GLOBAL LINK BUTTON -->\n    <button class=\"link-all-btn\" @click=\"toggleLinkAll\" :class=\"{ linked: linkAll }\">\n      🔗 LINK ALL CHANNELS\n    </button>\n\n    <div class=\"mixer-content\">\n      <!-- PLAYBACK GROUP -->\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Playback</div>\n        <div class=\"mixer-strips\">\n          <!-- Show Channel -->\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" value=\"0\" class=\"vertical-fader\" @input=\"updateLevel('show', $event)\">\n            </div>\n            <div class=\"channel-label\">Show</div>\n            <div class=\"channel-level\">{{ channels.show.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('show')\" :class=\"{ muted: mutedChannels.show }\">\n              {{ mutedChannels.show ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <!-- BGM Channel -->\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" value=\"-20\" class=\"vertical-fader\" @input=\"updateLevel('bgm', $event)\">\n            </div>\n            <div class=\"channel-label\">BGM</div>\n            <div class=\"channel-level\">{{ channels.bgm.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('bgm')\" :class=\"{ muted: mutedChannels.bgm }\">\n              {{ mutedChannels.bgm ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <!-- Special Channel -->\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" value=\"-20\" class=\"vertical-fader\" @input=\"updateLevel('special', $event)\">\n            </div>\n            <div class=\"channel-label\">Special</div>\n            <div class=\"channel-level\">{{ channels.special.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('special')\" :class=\"{ muted: mutedChannels.special }\">\n              {{ mutedChannels.special ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n        </div>\n      </div>\n\n      <!-- LIVE GROUP -->\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Live</div>\n        <div class=\"mixer-strips\">\n          <!-- Mic1 Channel -->\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mic1', $event)\">\n            </div>\n            <div class=\"channel-label\">Mic 1</div>\n            <div class=\"channel-level\">{{ channels.mic1.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic1')\" :class=\"{ muted: mutedChannels.mic1 }\">\n              {{ mutedChannels.mic1 ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <!-- Mic2 Channel -->\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mic2', $event)\">\n            </div>\n            <div class=\"channel-label\">Mic 2</div>\n            <div class=\"channel-level\">{{ channels.mic2.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic2')\" :class=\"{ muted: mutedChannels.mic2 }\">\n              {{ mutedChannels.mic2 ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <!-- Mixer Channel -->\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mixer', $event)\">\n            </div>\n            <div class=\"channel-label\">Mixer</div>\n            <div class=\"channel-level\">{{ channels.mixer.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mixer')\" :class=\"{ muted: mutedChannels.mixer }\">\n              {{ mutedChannels.mixer ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      space: 'a3', // change to a2 / a3 in other templates\n\n      linkAll: false,\n\n      channels: {\n        show: { value: 0 },\n        bgm: { value: -20 },\n        special: { value: -20 },\n        mic1: { value: -10 },\n        mic2: { value: -10 },\n        mixer: { value: -10 }\n      },\n      mutedChannels: {\n        show: true,\n        bgm: true,\n        special: true,\n        mic1: false,\n        mic2: false,\n        mixer: false\n      },\n      linkedChannels: {\n        show: false,\n        bgm: false,\n        special: false,\n        mic1: false,\n        mic2: false,\n        mixer: false\n      }\n    };\n  },\n  methods: {\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p) return;\n\n      const channel = p.channel;\n      const targetSpace = p.space || p.targetSpace;\n      if (targetSpace && targetSpace !== this.space) return;\n\n      if (p.setLinkedAll !== undefined) {\n        this.linkAll = p.setLinkedAll;\n        Object.keys(this.linkedChannels).forEach(ch => {\n          this.linkedChannels[ch] = p.setLinkedAll;\n        });\n      }\n\n      if (p.setLinked !== undefined) {\n        this.linkedChannels[channel] = p.setLinked;\n      }\n\n      if (p.delta !== undefined) {\n        this.applyLinkedFaderDelta(channel, p.delta);\n      }\n\n      if (p.muted !== undefined) {\n        this.applyLinkedMute(channel, p.muted);\n      }\n    },\n\n    toggleLinkAll() {\n      this.linkAll = !this.linkAll;\n\n      // set all channels locally\n      Object.keys(this.linkedChannels).forEach(ch => {\n        this.linkedChannels[ch] = this.linkAll;\n      });\n\n      // broadcast to flow\n      this.send({\n        topic: `ui/audio/linkAll`,\n        payload: {\n          space: this.space,\n          linked: this.linkAll\n        }\n      });\n    },\n\n    updateLevel(channel, event) {\n      const newValue = parseInt(event.target.value);\n      const oldValue = this.channels[channel].value;\n      const delta = newValue - oldValue;\n      this.channels[channel].value = newValue;\n\n      this.send({\n        topic: `ui/audio/${this.space}/level/${channel}`,\n        payload: newValue\n      });\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: `ui/audio/linkedFader/${channel}`,\n          payload: { sourceSpace: this.space, channel, delta }\n        });\n      }\n    },\n\n    applyLinkedFaderDelta(channel, delta) {\n      const newValue = Math.max(-60, Math.min(10, this.channels[channel].value + delta));\n      this.channels[channel].value = newValue;\n      this.send({\n        topic: `ui/audio/${this.space}/level/${channel}`,\n        payload: newValue\n      });\n    },\n\n    toggleMute(channel) {\n      this.mutedChannels[channel] = !this.mutedChannels[channel];\n      this.sendMuteTopic(channel);\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: `ui/audio/linkedMute/${channel}`,\n          payload: { space: this.space, channel, muted: this.mutedChannels[channel] }\n        });\n      }\n    },\n\n    applyLinkedMute(channel, muteState) {\n      this.mutedChannels[channel] = muteState;\n      this.sendMuteTopic(channel);\n    },\n\n    sendMuteTopic(channel) {\n      this.send({\n        topic: `ui/audio/${this.space}/${channel}/enabled`,\n        payload: this.mutedChannels[channel]\n      });\n    }\n  },\n  mounted() {\n    this.$watch(\n      () => this.msg,\n      (m) => this.applyMsg(m),\n      { deep: true, immediate: true }\n    );\n  }\n};\n</script>\n\n<style scoped>\n  .link-all-btn {\n    width: 100%;\n    margin-bottom: 12px;\n    padding: 10px 12px;\n    font-weight: 700;\n    border-radius: 6px;\n    border: 2px solid #64748b;\n    background: #334155;\n    color: #cbd5e1;\n    cursor: pointer;\n  }\n  .link-all-btn.linked {\n    background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);\n    border-color: #0ea5e9;\n    color: #ffffff;\n  }\n\n  /* keep your existing CSS below */\n  .mixer-container {\n    display: flex;\n    flex-direction: column;\n    height: 100%;\n    background: linear-gradient(135deg, #1a1d2e 0%, #16192b 100%);\n    padding: 16px;\n    border-radius: 8px;\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;\n    color: #e0e0e0;\n  }\n\n  .mixer-content { display: flex; flex-direction: row; gap: 40px; flex: 1; min-height: 0; justify-content: flex-start; }\n  .mixer-group { display: flex; flex-direction: column; gap: 12px; flex: 0 0 auto; min-height: 0; }\n  .group-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #7dd3fc; padding-bottom: 4px; border-bottom: 2px solid #0891b2; width: 100%; }\n  .mixer-strips { display: flex; gap: 30px; flex: 1; min-height: 0; justify-content: flex-start; align-items: flex-start; }\n  .channel-strip { display: flex; flex-direction: column; align-items: center; gap: 6px; flex-shrink: 0; }\n  .fader-wrapper { flex: 1; min-height: 300px; height: 100%; display: flex; align-items: center; justify-content: center; }\n  .vertical-fader { -webkit-appearance: slider-vertical; appearance: slider-vertical; width: 20px; height: 100%; min-height: 300px; background: linear-gradient(to right, #3a4050 0%, #4a5060 50%, #3a4050 100%); outline: none; cursor: pointer; border-radius: 10px; }\n  .channel-label { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; min-height: 20px; }\n  .channel-level { font-size: 12px; color: #7dd3fc; font-weight: 500; text-align: center; min-height: 18px; font-family: 'Monaco', 'Courier New', monospace; }\n  .mute-btn { width: 100%; padding: 8px 6px; background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%); color: #fecaca; border: 2px solid #dc2626; border-radius: 4px; font-weight: 600; font-size: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s ease; min-height: 44px; display: flex; align-items: center; justify-content: center; min-width: 80px; }\n  .mute-btn.muted { background: linear-gradient(135deg, #365a40 0%, #15803d 100%); border-color: #22c55e; color: #86efac; }\n</style>",
+        "storeOutMessages": false,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 660,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e8fa1503d15f1b47",
+        "type": "function",
+        "z": "2c15789a1b80fcb2",
+        "name": "Track Link State & Broadcast",
+        "func": "// Track Link State & Broadcast - FIXED\nconst channel = msg.payload.channel;\nconst sourceSpace = msg.payload.space;\nconst linked = msg.payload.linked;\n\nif (!flow.get('linkedChannels')) {\n  flow.set('linkedChannels', {});\n}\n\nlet linkedChannels = flow.get('linkedChannels');\nif (!linkedChannels[channel]) {\n  linkedChannels[channel] = {};\n}\n\nlinkedChannels[channel][sourceSpace] = linked;\n\nconst allASpaces = ['a1', 'a2', 'a3'];\nif (linked) {\n  allASpaces.forEach(space => {\n    linkedChannels[channel][space] = true;\n  });\n} else {\n  allASpaces.forEach(space => {\n    linkedChannels[channel][space] = false;\n  });\n}\n\nflow.set('linkedChannels', linkedChannels);\n\n// Send individual messages to each non-source space\nallASpaces.forEach(space => {\n  if (space !== sourceSpace) {\n    node.send({\n      payload: {\n        space: space,\n        channel: channel,\n        setLinked: linked\n      },\n      topic: `setLinked/${space}/${channel}`\n    });\n  }\n});\n\nnode.status({ fill: 'blue', shape: 'dot', text: `${channel}: ${linked ? 'linked' : 'unlinked'}` });",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 980,
+        "y": 180,
+        "wires": [
+            [
+                "2bef73ad21637ec7"
+            ]
+        ]
+    },
+    {
+        "id": "084d5090bd19332b",
+        "type": "function",
+        "z": "2c15789a1b80fcb2",
+        "name": "Route Fader Delta to Linked Spaces",
+        "func": "// Route Fader Delta to Linked Spaces\n// Input: ui/audio/linkedFader/{channel} from any template\n// Output: Messages with delta to all linked spaces (except source)\n\nconst sourceSpace = msg.payload.sourceSpace;\nconst channel = msg.payload.channel;\nconst delta = msg.payload.delta;\n\n// Get current link state from flow context\nlet linkedChannels = flow.get('linkedChannels') || {};\nconst spaceStates = linkedChannels[channel] || {};\nconst allASpaces = ['a1', 'a2', 'a3'];\n\n// Find which spaces are linked to this channel (exclude source)\nconst targetSpaces = allASpaces.filter(space =>\n  spaceStates[space] && space !== sourceSpace\n);\n\n// If no spaces are linked, don't send anything\nif (targetSpaces.length === 0) {\n  node.status({ fill: 'gray', shape: 'dot', text: `${channel}: no linked spaces` });\n  return null;\n}\n\n// Create messages for each target space with delta\nconst messages = targetSpaces.map(targetSpace => ({\n  payload: {\n    targetSpace: targetSpace,  // ← Template checks this\n    channel: channel,\n    delta: delta\n  },\n  topic: `faderDelta/${targetSpace}/${channel}`\n}));\n\nnode.status({ fill: 'green', shape: 'dot', text: `${channel}: delta ${delta > 0 ? '+' : ''}${delta} to ${targetSpaces.length} space(s)` });\nreturn messages;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "cd33b15450256105",
+        "type": "function",
+        "z": "2c15789a1b80fcb2",
+        "name": "Route Mute to Linked Spaces",
+        "func": "// Route Mute to Linked Spaces\n// Input: ui/audio/linkedMute/{channel} from any template\n// Output: Messages with mute state to all linked spaces (except source)\n\nconst sourceSpace = msg.payload.space;\nconst channel = msg.payload.channel;\nconst muteState = msg.payload.muted;\n\n// Get current link state from flow context\nlet linkedChannels = flow.get('linkedChannels') || {};\nconst spaceStates = linkedChannels[channel] || {};\nconst allASpaces = ['a1', 'a2', 'a3'];\n\n// Find which spaces are linked to this channel (exclude source)\nconst targetSpaces = allASpaces.filter(space =>\n  spaceStates[space] && space !== sourceSpace\n);\n\n// If no spaces are linked, don't send anything\nif (targetSpaces.length === 0) {\n  node.status({ fill: 'gray', shape: 'dot', text: `${channel}: no linked spaces` });\n  return null;\n}\n\n// Create messages for each target space with mute state\nconst messages = targetSpaces.map(targetSpace => ({\n  payload: {\n    targetSpace: targetSpace,  // ← Template checks this\n    channel: channel,\n    muted: muteState\n  },\n  topic: `mute/${targetSpace}/${channel}`\n}));\n\nnode.status({ fill: 'green', shape: 'dot', text: `${channel}: ${muteState ? 'muted' : 'unmuted'} on ${targetSpaces.length} space(s)` });\nreturn messages;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1050,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d70b5ba811c60bb1",
+        "type": "link out",
+        "z": "2c15789a1b80fcb2",
+        "name": "link out 11",
+        "mode": "link",
+        "links": [
+            "2fc9f09118c2b88a"
+        ],
+        "x": 1175,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "ce5c4ef1db80b2b3",
+        "type": "debug",
+        "z": "2c15789a1b80fcb2",
+        "name": "debug 12",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "2bef73ad21637ec7",
+        "type": "debug",
+        "z": "2c15789a1b80fcb2",
+        "name": "debug 13",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1100,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "c5796e3dafc3cda5",
+        "type": "inject",
+        "z": "2c15789a1b80fcb2",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"space\":\"a1\",\"channel\":\"show\",\"setLinked\":true}",
+        "payloadType": "json",
+        "x": 330,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5212f0fd1aa9794c",
+        "type": "inject",
+        "z": "2c15789a1b80fcb2",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"space\":\"a2\",\"channel\":\"show\",\"setLinked\":false}",
+        "payloadType": "json",
+        "x": 330,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ed20d0fa8bf23d74",
+        "type": "inject",
+        "z": "2c15789a1b80fcb2",
+        "name": "Link SHOW ON (All)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "{\"channel\":\"show\",\"setLinked\":true}",
+        "payloadType": "json",
+        "x": 390,
+        "y": 360,
+        "wires": [
+            [
+                "4f6f657cc42b05f8"
+            ]
+        ]
+    },
+    {
+        "id": "fa2d0037d692acbd",
+        "type": "inject",
+        "z": "2c15789a1b80fcb2",
+        "name": "Link SHOW OFF (All)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "{\"channel\":\"show\",\"setLinked\":false}",
+        "payloadType": "json",
+        "x": 400,
+        "y": 410,
+        "wires": [
+            [
+                "4f6f657cc42b05f8"
+            ]
+        ]
+    },
+    {
+        "id": "4f6f657cc42b05f8",
+        "type": "function",
+        "z": "2c15789a1b80fcb2",
+        "name": "Fan-out to a1,a2,a3",
+        "func": "// Fan-out to a1, a2, a3\nconst p = msg.payload;\n\n[\"a1\", \"a2\", \"a3\"].forEach(space => {\n  node.send({\n    payload: {\n      space,\n      channel: p.channel,\n      setLinked: p.setLinked\n    }\n  });\n});",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 380,
+        "wires": [
+            [
+                "e22166c0757cb4d8",
+                "305744a049d8128d",
+                "22a9213ef95fef35",
+                "296f8f34be297c29"
+            ]
+        ]
+    },
+    {
+        "id": "e22166c0757cb4d8",
+        "type": "debug",
+        "z": "2c15789a1b80fcb2",
+        "name": "debug 16",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "inject-link-on",
+        "type": "inject",
+        "z": "test-tab-1",
+        "name": "Link SHOW ON (All)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "{\"channel\":\"show\",\"setLinked\":true}",
+        "payloadType": "json",
+        "x": 160,
+        "y": 80,
+        "wires": [
+            [
+                "fanout-to-spaces"
+            ]
+        ]
+    },
+    {
+        "id": "inject-link-off",
+        "type": "inject",
+        "z": "test-tab-1",
+        "name": "Link SHOW OFF (All)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "{\"channel\":\"show\",\"setLinked\":false}",
+        "payloadType": "json",
+        "x": 170,
+        "y": 130,
+        "wires": [
+            [
+                "fanout-to-spaces"
+            ]
+        ]
+    },
+    {
+        "id": "fanout-to-spaces",
+        "type": "function",
+        "z": "test-tab-1",
+        "name": "Fan-out to a1,a2,a3",
+        "func": "const p = msg.payload;\nconst spaces = [\"a1\",\"a2\",\"a3\"];\n\nreturn spaces.map(space => ({\n  payload: {\n    space,\n    channel: p.channel,\n    setLinked: p.setLinked\n  }\n}));",
+        "outputs": 1,
+        "x": 390,
+        "y": 100,
+        "wires": [
+            [
+                "ui-template-a1",
+                "ui-template-a2",
+                "ui-template-a3",
+                "047bd4f6f4ef9730"
+            ]
+        ]
+    },
+    {
+        "id": "ui-template-a1",
+        "type": "ui-template",
+        "z": "test-tab-1",
+        "group": "ui-group-test",
+        "page": "",
+        "ui": "",
+        "name": "Atrium 1 Link Test",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "format": "<template>\n  <div class=\"link-test\">\n    <div class=\"label\">Atrium {{ space.toUpperCase() }}</div>\n    <button class=\"link-btn\" :class=\"{ on: linkedChannels.show }\">🔗 SHOW</button>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      space: \"a1\", // change to a2 / a3 in the other templates\n      linkedChannels: { show: false },\n    };\n  },\n  methods: {\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p) return;\n      if (p.space && p.space !== this.space) return;\n\n      if (p.channel && typeof p.setLinked === \"boolean\") {\n        this.linkedChannels[p.channel] = p.setLinked;\n      }\n    }\n  },\n  mounted() {\n    this.$watch(\n      () => this.msg,\n      (msg) => this.applyMsg(msg),\n      { deep: true, immediate: true }\n    );\n  }\n};\n</script>\n\n<style scoped>\n.link-test { display:flex; flex-direction:column; gap:8px; padding:12px; color:#e2e8f0; }\n.label { font-weight:700; }\n.link-btn { padding:10px; border-radius:6px; border:2px solid #64748b; background:#334155; color:#cbd5e1; }\n.link-btn.on { background:#06b6d4; border-color:#0ea5e9; color:white; }\n</style>",
+        "storeOutMessages": true,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 670,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ui-template-a2",
+        "type": "ui-template",
+        "z": "test-tab-1",
+        "group": "ui-group-test",
+        "page": "",
+        "ui": "",
+        "name": "Atrium 2 Link Test",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "format": "<template>\n  <div class=\"link-test\">\n    <div class=\"label\">Atrium {{ space.toUpperCase() }}</div>\n    <button class=\"link-btn\" :class=\"{ on: linkedChannels.show }\">🔗 SHOW</button>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      space: \"a1\", // change to a2 / a3 in the other templates\n      linkedChannels: { show: false },\n    };\n  },\n  methods: {\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p) return;\n      if (p.space && p.space !== this.space) return;\n\n      if (p.channel && typeof p.setLinked === \"boolean\") {\n        this.linkedChannels[p.channel] = p.setLinked;\n      }\n    }\n  },\n  mounted() {\n    this.$watch(\n      () => this.msg,\n      (msg) => this.applyMsg(msg),\n      { deep: true, immediate: true }\n    );\n  }\n};\n</script>\n\n<style scoped>\n.link-test { display:flex; flex-direction:column; gap:8px; padding:12px; color:#e2e8f0; }\n.label { font-weight:700; }\n.link-btn { padding:10px; border-radius:6px; border:2px solid #64748b; background:#334155; color:#cbd5e1; }\n.link-btn.on { background:#06b6d4; border-color:#0ea5e9; color:white; }\n</style>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 670,
+        "y": 110,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ui-template-a3",
+        "type": "ui-template",
+        "z": "test-tab-1",
+        "group": "ui-group-test",
+        "page": "",
+        "ui": "",
+        "name": "Atrium 3 Link Test",
+        "order": 3,
+        "width": "0",
+        "height": "0",
+        "format": "<template>\n  <div class=\"link-test\">\n    <div class=\"label\">Atrium {{ space.toUpperCase() }}</div>\n    <button class=\"link-btn\" :class=\"{ on: linkedChannels.show }\">🔗 SHOW</button>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      space: \"a1\", // change to a2 / a3 in the other templates\n      linkedChannels: { show: false },\n    };\n  },\n  methods: {\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p) return;\n      if (p.space && p.space !== this.space) return;\n\n      if (p.channel && typeof p.setLinked === \"boolean\") {\n        this.linkedChannels[p.channel] = p.setLinked;\n      }\n    }\n  },\n  mounted() {\n    this.$watch(\n      () => this.msg,\n      (msg) => this.applyMsg(msg),\n      { deep: true, immediate: true }\n    );\n  }\n};\n</script>\n\n<style scoped>\n.link-test { display:flex; flex-direction:column; gap:8px; padding:12px; color:#e2e8f0; }\n.label { font-weight:700; }\n.link-btn { padding:10px; border-radius:6px; border:2px solid #64748b; background:#334155; color:#cbd5e1; }\n.link-btn.on { background:#06b6d4; border-color:#0ea5e9; color:white; }\n</style>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 670,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "047bd4f6f4ef9730",
+        "type": "debug",
+        "z": "test-tab-1",
+        "name": "debug 15",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 460,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "tmpl-a1-linkall",
+        "type": "ui-template",
+        "z": "tab-link-all",
+        "group": "ui-group-a1-linkall",
+        "page": "",
+        "ui": "",
+        "name": "Atrium 1 Audio (LinkAll)",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "format": "<template>\n  <div class=\"mixer-container\">\n    <button class=\"link-all-btn\" @click=\"toggleLinkAll\" :class=\"{ linked: linkAll }\">\n      🔗 LINK ATRIUMS\n    </button>\n\n    <div class=\"mixer-content\">\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Playback</div>\n        <div class=\"mixer-strips\">\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.show.value\" class=\"vertical-fader\" @input=\"updateLevel('show')\" />\n            </div>\n            <div class=\"channel-label\">Show</div>\n            <div class=\"channel-level\">{{ channels.show.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('show')\" :class=\"{ muted: mutedChannels.show }\">\n              {{ mutedChannels.show ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.bgm.value\" class=\"vertical-fader\" @input=\"updateLevel('bgm')\" />\n            </div>\n            <div class=\"channel-label\">BGM</div>\n            <div class=\"channel-level\">{{ channels.bgm.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('bgm')\" :class=\"{ muted: mutedChannels.bgm }\">\n              {{ mutedChannels.bgm ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.special.value\" class=\"vertical-fader\" @input=\"updateLevel('special')\" />\n            </div>\n            <div class=\"channel-label\">Special</div>\n            <div class=\"channel-level\">{{ channels.special.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('special')\" :class=\"{ muted: mutedChannels.special }\">\n              {{ mutedChannels.special ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Live</div>\n        <div class=\"mixer-strips\">\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mic1.value\" class=\"vertical-fader\" @input=\"updateLevel('mic1')\" />\n            </div>\n            <div class=\"channel-label\">Mic 1</div>\n            <div class=\"channel-level\">{{ channels.mic1.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic1')\" :class=\"{ muted: mutedChannels.mic1 }\">\n              {{ mutedChannels.mic1 ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mic2.value\" class=\"vertical-fader\" @input=\"updateLevel('mic2')\" />\n            </div>\n            <div class=\"channel-label\">Mic 2</div>\n            <div class=\"channel-level\">{{ channels.mic2.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic2')\" :class=\"{ muted: mutedChannels.mic2 }\">\n              {{ mutedChannels.mic2 ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mixer.value\" class=\"vertical-fader\" @input=\"updateLevel('mixer')\" />\n            </div>\n            <div class=\"channel-label\">Mixer</div>\n            <div class=\"channel-level\">{{ channels.mixer.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mixer')\" :class=\"{ muted: mutedChannels.mixer }\">\n              {{ mutedChannels.mixer ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script>\n  export default {\n  data() {\n    return {\n      space: 'a1',\n      linkAll: false,\n      channels: {\n        show: { value: 0 },\n        bgm: { value: -20 },\n        special: { value: -20 },\n        mic1: { value: -10 },\n        mic2: { value: -10 },\n        mixer: { value: -10 }\n      },\n      mutedChannels: {\n        show: true,\n        bgm: true,\n        special: true,\n        mic1: false,\n        mic2: false,\n        mixer: false\n      },\n      linkedChannels: {\n        show: false,\n        bgm: false,\n        special: false,\n        mic1: false,\n        mic2: false,\n        mixer: false\n      },\n      _lastValues: {}\n    };\n  },\n  methods: {\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p) return;\n\n      const channel = p.channel;\n      const targetSpace = p.space || p.targetSpace;\n      if (targetSpace && targetSpace !== this.space) return;\n\n      if (p.setLinkedAll !== undefined) {\n        this.linkAll = p.setLinkedAll;\n        Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = p.setLinkedAll));\n      }\n      if (p.setLinked !== undefined) this.linkedChannels[channel] = p.setLinked;\n      if (p.delta !== undefined) this.applyLinkedFaderDelta(channel, p.delta);\n      if (p.muted !== undefined) this.applyLinkedMute(channel, p.muted);\n    },\n\n    toggleLinkAll() {\n      this.linkAll = !this.linkAll;\n      Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = this.linkAll));\n      this.send({ topic: `ui/audio/linkAll`, payload: { space: this.space, linked: this.linkAll } });\n    },\n\n    updateLevel(channel) {\n      const newValue = this.channels[channel].value;\n      const oldValue = this._lastValues[channel] ?? newValue;\n      const delta = newValue - oldValue;\n\n      this._lastValues[channel] = newValue;\n\n      this.send({ topic: `ui/audio/${this.space}/level/${channel}`, payload: newValue });\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: `ui/audio/linkedFader/${channel}`,\n          payload: { sourceSpace: this.space, channel, delta }\n        });\n      }\n    },\n\n    applyLinkedFaderDelta(channel, delta) {\n      const newValue = Math.max(-60, Math.min(10, this.channels[channel].value + delta));\n      this.channels[channel].value = newValue;\n      this._lastValues[channel] = newValue;\n      this.send({ topic: `ui/audio/${this.space}/level/${channel}`, payload: newValue });\n    },\n\n    toggleMute(channel) {\n      this.mutedChannels[channel] = !this.mutedChannels[channel];\n      this.sendMuteTopic(channel);\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: `ui/audio/linkedMute/${channel}`,\n          payload: { space: this.space, channel, muted: this.mutedChannels[channel] }\n        });\n      }\n    },\n\n    applyLinkedMute(channel, muteState) {\n      this.mutedChannels[channel] = muteState;\n      this.sendMuteTopic(channel);\n    },\n\n    sendMuteTopic(channel) {\n      this.send({\n        topic: `ui/audio/${this.space}/${channel}/enabled`,\n        payload: this.mutedChannels[channel]\n      });\n    }\n  },\n  mounted() {\n    this.$watch(() => this.msg, m => this.applyMsg(m), { deep: true, immediate: true });\n  }\n};\n</script>\n\n<style scoped>\n  .link-all-btn {\n    width: 100%;\n    margin-bottom: 12px;\n    padding: 10px 12px;\n    font-weight: 700;\n    border-radius: 6px;\n    border: 2px solid #64748b;\n    background: #334155;\n    color: #cbd5e1;\n    cursor: pointer;\n  }\n\n  .link-all-btn.linked {\n    background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);\n    border-color: #0ea5e9;\n    color: #fff;\n  }\n\n  .mixer-container {\n    display: flex;\n    flex-direction: column;\n    height: 100%;\n    background: linear-gradient(135deg, #1a1d2e 0%, #16192b 100%);\n    padding: 16px;\n    border-radius: 8px;\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;\n    color: #e0e0e0;\n  }\n\n  .mixer-content {\n    display: flex;\n    flex-direction: row;\n    gap: 40px;\n    flex: 1;\n    min-height: 0;\n    justify-content: flex-start;\n  }\n\n  .mixer-group {\n    display: flex;\n    flex-direction: column;\n    gap: 12px;\n    flex: 1 1 0;\n    min-width: 0;\n  }\n\n  .group-title {\n    font-size: 13px;\n    font-weight: 700;\n    text-transform: uppercase;\n    letter-spacing: 1px;\n    color: #7dd3fc;\n    padding-bottom: 4px;\n    border-bottom: 2px solid #0891b2;\n    width: 100%;\n  }\n\n  .mixer-strips {\n    display: flex;\n    gap: 16px;\n    flex: 1;\n    min-height: 0;\n    justify-content: space-between;\n    align-items: stretch;\n  }\n\n  .channel-strip {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    gap: 6px;\n    flex: 1 1 0;\n    min-width: 0;\n  }\n\n  .fader-wrapper {\n    flex: 1;\n    min-height: 300px;\n    height: 100%;\n    width: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n  }\n\n  .vertical-fader {\n    -webkit-appearance: slider-vertical;\n    appearance: slider-vertical;\n    width: 100%;\n    max-width: 28px;\n    height: 100%;\n    min-height: 300px;\n    background: linear-gradient(to right, #3a4050 0%, #4a5060 50%, #3a4050 100%);\n    outline: none;\n    cursor: pointer;\n    border-radius: 10px;\n  }\n\n  .channel-label {\n    font-size: 14px;\n    font-weight: 600;\n    text-transform: uppercase;\n    letter-spacing: .5px;\n    text-align: center;\n    min-height: 20px;\n  }\n\n  .channel-level {\n    font-size: 12px;\n    color: #7dd3fc;\n    font-weight: 500;\n    text-align: center;\n    min-height: 18px;\n    font-family: 'Monaco', 'Courier New', monospace;\n  }\n\n  .mute-btn {\n    width: 100%;\n    padding: 8px 6px;\n    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);\n    color: #fecaca;\n    border: 2px solid #dc2626;\n    border-radius: 4px;\n    font-weight: 600;\n    font-size: 12px;\n    cursor: pointer;\n    text-transform: uppercase;\n    letter-spacing: .5px;\n    transition: all .2s ease;\n    min-height: 44px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    min-width: 80px;\n  }\n\n  .mute-btn.muted {\n    background: linear-gradient(135deg, #365a40 0%, #15803d 100%);\n    border-color: #22c55e;\n    color: #86efac;\n  }\n\n  /* Optional but recommended */\n  @media (max-width: 900px) {\n    .mixer-strips {\n      gap: 10px;\n    }\n\n    .vertical-fader {\n      max-width: 22px;\n    }\n\n    .mute-btn {\n      min-width: 70px;\n    }\n  }\n</style>",
+        "storeOutMessages": true,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 430,
+        "y": 80,
+        "wires": [
+            [
+                "bddaa7231e8e67ea"
+            ]
+        ]
+    },
+    {
+        "id": "tmpl-a2-linkall",
+        "type": "ui-template",
+        "z": "tab-link-all",
+        "group": "ui-group-a2-linkall",
+        "page": "",
+        "ui": "",
+        "name": "Atrium 2 Audio (LinkAll)",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "format": "<template>\n  <div class=\"mixer-container\">\n    <button class=\"link-all-btn\" @click=\"toggleLinkAll\" :class=\"{ linked: linkAll }\">\n      🔗 LINK ATRIUMS\n    </button>\n\n    <div class=\"mixer-content\">\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Playback</div>\n        <div class=\"mixer-strips\">\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.show.value\" class=\"vertical-fader\" @input=\"updateLevel('show')\" />\n            </div>\n            <div class=\"channel-label\">Show</div>\n            <div class=\"channel-level\">{{ channels.show.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('show')\" :class=\"{ muted: mutedChannels.show }\">\n              {{ mutedChannels.show ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.bgm.value\" class=\"vertical-fader\" @input=\"updateLevel('bgm')\" />\n            </div>\n            <div class=\"channel-label\">BGM</div>\n            <div class=\"channel-level\">{{ channels.bgm.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('bgm')\" :class=\"{ muted: mutedChannels.bgm }\">\n              {{ mutedChannels.bgm ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.special.value\" class=\"vertical-fader\" @input=\"updateLevel('special')\" />\n            </div>\n            <div class=\"channel-label\">Special</div>\n            <div class=\"channel-level\">{{ channels.special.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('special')\" :class=\"{ muted: mutedChannels.special }\">\n              {{ mutedChannels.special ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Live</div>\n        <div class=\"mixer-strips\">\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mic1.value\" class=\"vertical-fader\" @input=\"updateLevel('mic1')\" />\n            </div>\n            <div class=\"channel-label\">Mic 1</div>\n            <div class=\"channel-level\">{{ channels.mic1.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic1')\" :class=\"{ muted: mutedChannels.mic1 }\">\n              {{ mutedChannels.mic1 ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mic2.value\" class=\"vertical-fader\" @input=\"updateLevel('mic2')\" />\n            </div>\n            <div class=\"channel-label\">Mic 2</div>\n            <div class=\"channel-level\">{{ channels.mic2.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic2')\" :class=\"{ muted: mutedChannels.mic2 }\">\n              {{ mutedChannels.mic2 ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mixer.value\" class=\"vertical-fader\" @input=\"updateLevel('mixer')\" />\n            </div>\n            <div class=\"channel-label\">Mixer</div>\n            <div class=\"channel-level\">{{ channels.mixer.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mixer')\" :class=\"{ muted: mutedChannels.mixer }\">\n              {{ mutedChannels.mixer ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      space: 'a2',\n      linkAll: false,\n      channels: {\n        show: { value: 0 },\n        bgm: { value: -20 },\n        special: { value: -20 },\n        mic1: { value: -10 },\n        mic2: { value: -10 },\n        mixer: { value: -10 }\n      },\n      mutedChannels: {\n        show: true,\n        bgm: true,\n        special: true,\n        mic1: false,\n        mic2: false,\n        mixer: false\n      },\n      linkedChannels: {\n        show: false,\n        bgm: false,\n        special: false,\n        mic1: false,\n        mic2: false,\n        mixer: false\n      },\n      _lastValues: {}\n    };\n  },\n  methods: {\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p) return;\n\n      const channel = p.channel;\n      const targetSpace = p.space || p.targetSpace;\n      if (targetSpace && targetSpace !== this.space) return;\n\n      if (p.setLinkedAll !== undefined) {\n        this.linkAll = p.setLinkedAll;\n        Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = p.setLinkedAll));\n      }\n      if (p.setLinked !== undefined) this.linkedChannels[channel] = p.setLinked;\n      if (p.delta !== undefined) this.applyLinkedFaderDelta(channel, p.delta);\n      if (p.muted !== undefined) this.applyLinkedMute(channel, p.muted);\n    },\n\n    toggleLinkAll() {\n      this.linkAll = !this.linkAll;\n      Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = this.linkAll));\n      this.send({ topic: `ui/audio/linkAll`, payload: { space: this.space, linked: this.linkAll } });\n    },\n\n    updateLevel(channel) {\n      const newValue = this.channels[channel].value;\n      const oldValue = this._lastValues[channel] ?? newValue;\n      const delta = newValue - oldValue;\n\n      this._lastValues[channel] = newValue;\n\n      this.send({ topic: `ui/audio/${this.space}/level/${channel}`, payload: newValue });\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: `ui/audio/linkedFader/${channel}`,\n          payload: { sourceSpace: this.space, channel, delta }\n        });\n      }\n    },\n\n    applyLinkedFaderDelta(channel, delta) {\n      const newValue = Math.max(-60, Math.min(10, this.channels[channel].value + delta));\n      this.channels[channel].value = newValue;\n      this._lastValues[channel] = newValue;\n      this.send({ topic: `ui/audio/${this.space}/level/${channel}`, payload: newValue });\n    },\n\n    toggleMute(channel) {\n      this.mutedChannels[channel] = !this.mutedChannels[channel];\n      this.sendMuteTopic(channel);\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: `ui/audio/linkedMute/${channel}`,\n          payload: { space: this.space, channel, muted: this.mutedChannels[channel] }\n        });\n      }\n    },\n\n    applyLinkedMute(channel, muteState) {\n      this.mutedChannels[channel] = muteState;\n      this.sendMuteTopic(channel);\n    },\n\n    sendMuteTopic(channel) {\n      this.send({\n        topic: `ui/audio/${this.space}/${channel}/enabled`,\n        payload: this.mutedChannels[channel]\n      });\n    }\n  },\n  mounted() {\n    this.$watch(() => this.msg, m => this.applyMsg(m), { deep: true, immediate: true });\n  }\n};\n</script>\n\n<style scoped>\n.link-all-btn{width:100%;margin-bottom:12px;padding:10px 12px;font-weight:700;border-radius:6px;border:2px solid #64748b;background:#334155;color:#cbd5e1;cursor:pointer;}\n.link-all-btn.linked{background:linear-gradient(135deg,#0891b2 0%,#06b6d4 100%);border-color:#0ea5e9;color:#fff;}\n.mixer-container{display:flex;flex-direction:column;height:100%;background:linear-gradient(135deg,#1a1d2e 0%,#16192b 100%);padding:16px;border-radius:8px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Roboto',sans-serif;color:#e0e0e0;}\n.mixer-content{display:flex;flex-direction:row;gap:40px;flex:1;min-height:0;justify-content:flex-start;}\n.mixer-group{display:flex;flex-direction:column;gap:12px;flex:1 1 0;min-width:0;}\n.group-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#7dd3fc;padding-bottom:4px;border-bottom:2px solid #0891b2;width:100%;}\n.mixer-strips{display:flex;gap:16px;flex:1;min-height:0;justify-content:space-between;align-items:stretch;}\n.channel-strip{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1 1 0;min-width:0;}\n.fader-wrapper{flex:1;min-height:300px;height:100%;width:100%;display:flex;align-items:center;justify-content:center;}\n.vertical-fader{-webkit-appearance:slider-vertical;appearance:slider-vertical;width:100%;max-width:28px;height:100%;min-height:300px;background:linear-gradient(to right,#3a4050 0%,#4a5060 50%,#3a4050 100%);outline:none;cursor:pointer;border-radius:10px;}\n.channel-label{font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;text-align:center;min-height:20px;}\n.channel-level{font-size:12px;color:#7dd3fc;font-weight:500;text-align:center;min-height:18px;font-family:'Monaco','Courier New',monospace;}\n.mute-btn{width:100%;padding:8px 6px;background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 100%);color:#fecaca;border:2px solid #dc2626;border-radius:4px;font-weight:600;font-size:12px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;transition:all .2s ease;min-height:44px;display:flex;align-items:center;justify-content:center;min-width:80px;}\n.mute-btn.muted{background:linear-gradient(135deg,#365a40 0%,#15803d 100%);border-color:#22c55e;color:#86efac;}\n\n/* Optional but recommended */\n@media (max-width: 900px){\n  .mixer-strips{ gap:10px; }\n  .vertical-fader{ max-width:22px; }\n  .mute-btn{ min-width:70px; }\n}\n</style>",
+        "storeOutMessages": true,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 430,
+        "y": 160,
+        "wires": [
+            [
+                "bddaa7231e8e67ea"
+            ]
+        ]
+    },
+    {
+        "id": "tmpl-a3-linkall",
+        "type": "ui-template",
+        "z": "tab-link-all",
+        "group": "ui-group-a3-linkall",
+        "page": "",
+        "ui": "",
+        "name": "Atrium 3 Audio (LinkAll)",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "format": "<template>\n  <div class=\"mixer-container\">\n    <button class=\"link-all-btn\" @click=\"toggleLinkAll\" :class=\"{ linked: linkAll }\">\n      🔗 LINK ATRIUMS\n    </button>\n\n    <div class=\"mixer-content\">\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Playback</div>\n        <div class=\"mixer-strips\">\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.show.value\" class=\"vertical-fader\" @input=\"updateLevel('show')\" />\n            </div>\n            <div class=\"channel-label\">Show</div>\n            <div class=\"channel-level\">{{ channels.show.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('show')\" :class=\"{ muted: mutedChannels.show }\">\n              {{ mutedChannels.show ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.bgm.value\" class=\"vertical-fader\" @input=\"updateLevel('bgm')\" />\n            </div>\n            <div class=\"channel-label\">BGM</div>\n            <div class=\"channel-level\">{{ channels.bgm.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('bgm')\" :class=\"{ muted: mutedChannels.bgm }\">\n              {{ mutedChannels.bgm ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.special.value\" class=\"vertical-fader\" @input=\"updateLevel('special')\" />\n            </div>\n            <div class=\"channel-label\">Special</div>\n            <div class=\"channel-level\">{{ channels.special.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('special')\" :class=\"{ muted: mutedChannels.special }\">\n              {{ mutedChannels.special ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Live</div>\n        <div class=\"mixer-strips\">\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mic1.value\" class=\"vertical-fader\" @input=\"updateLevel('mic1')\" />\n            </div>\n            <div class=\"channel-label\">Mic 1</div>\n            <div class=\"channel-level\">{{ channels.mic1.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic1')\" :class=\"{ muted: mutedChannels.mic1 }\">\n              {{ mutedChannels.mic1 ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mic2.value\" class=\"vertical-fader\" @input=\"updateLevel('mic2')\" />\n            </div>\n            <div class=\"channel-label\">Mic 2</div>\n            <div class=\"channel-level\">{{ channels.mic2.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic2')\" :class=\"{ muted: mutedChannels.mic2 }\">\n              {{ mutedChannels.mic2 ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mixer.value\" class=\"vertical-fader\" @input=\"updateLevel('mixer')\" />\n            </div>\n            <div class=\"channel-label\">Mixer</div>\n            <div class=\"channel-level\">{{ channels.mixer.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mixer')\" :class=\"{ muted: mutedChannels.mixer }\">\n              {{ mutedChannels.mixer ? 'ON' : 'MUTED' }}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      space: 'a3',\n      linkAll: false,\n      channels: {\n        show: { value: 0 },\n        bgm: { value: -20 },\n        special: { value: -20 },\n        mic1: { value: -10 },\n        mic2: { value: -10 },\n        mixer: { value: -10 }\n      },\n      mutedChannels: {\n        show: true,\n        bgm: true,\n        special: true,\n        mic1: false,\n        mic2: false,\n        mixer: false\n      },\n      linkedChannels: {\n        show: false,\n        bgm: false,\n        special: false,\n        mic1: false,\n        mic2: false,\n        mixer: false\n      },\n      _lastValues: {}\n    };\n  },\n  methods: {\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p) return;\n\n      const channel = p.channel;\n      const targetSpace = p.space || p.targetSpace;\n      if (targetSpace && targetSpace !== this.space) return;\n\n      if (p.setLinkedAll !== undefined) {\n        this.linkAll = p.setLinkedAll;\n        Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = p.setLinkedAll));\n      }\n      if (p.setLinked !== undefined) this.linkedChannels[channel] = p.setLinked;\n      if (p.delta !== undefined) this.applyLinkedFaderDelta(channel, p.delta);\n      if (p.muted !== undefined) this.applyLinkedMute(channel, p.muted);\n    },\n\n    toggleLinkAll() {\n      this.linkAll = !this.linkAll;\n      Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = this.linkAll));\n      this.send({ topic: `ui/audio/linkAll`, payload: { space: this.space, linked: this.linkAll } });\n    },\n\n    updateLevel(channel) {\n      const newValue = this.channels[channel].value;\n      const oldValue = this._lastValues[channel] ?? newValue;\n      const delta = newValue - oldValue;\n\n      this._lastValues[channel] = newValue;\n\n      this.send({ topic: `ui/audio/${this.space}/level/${channel}`, payload: newValue });\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: `ui/audio/linkedFader/${channel}`,\n          payload: { sourceSpace: this.space, channel, delta }\n        });\n      }\n    },\n\n    applyLinkedFaderDelta(channel, delta) {\n      const newValue = Math.max(-60, Math.min(10, this.channels[channel].value + delta));\n      this.channels[channel].value = newValue;\n      this._lastValues[channel] = newValue;\n      this.send({ topic: `ui/audio/${this.space}/level/${channel}`, payload: newValue });\n    },\n\n    toggleMute(channel) {\n      this.mutedChannels[channel] = !this.mutedChannels[channel];\n      this.sendMuteTopic(channel);\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: `ui/audio/linkedMute/${channel}`,\n          payload: { space: this.space, channel, muted: this.mutedChannels[channel] }\n        });\n      }\n    },\n\n    applyLinkedMute(channel, muteState) {\n      this.mutedChannels[channel] = muteState;\n      this.sendMuteTopic(channel);\n    },\n\n    sendMuteTopic(channel) {\n      this.send({\n        topic: `ui/audio/${this.space}/${channel}/enabled`,\n        payload: this.mutedChannels[channel]\n      });\n    }\n  },\n  mounted() {\n    this.$watch(() => this.msg, m => this.applyMsg(m), { deep: true, immediate: true });\n  }\n};\n</script>\n\n<style scoped>\n.link-all-btn{width:100%;margin-bottom:12px;padding:10px 12px;font-weight:700;border-radius:6px;border:2px solid #64748b;background:#334155;color:#cbd5e1;cursor:pointer;}\n.link-all-btn.linked{background:linear-gradient(135deg,#0891b2 0%,#06b6d4 100%);border-color:#0ea5e9;color:#fff;}\n.mixer-container{display:flex;flex-direction:column;height:100%;background:linear-gradient(135deg,#1a1d2e 0%,#16192b 100%);padding:16px;border-radius:8px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Roboto',sans-serif;color:#e0e0e0;}\n.mixer-content{display:flex;flex-direction:row;gap:40px;flex:1;min-height:0;justify-content:flex-start;}\n.mixer-group{display:flex;flex-direction:column;gap:12px;flex:1 1 0;min-width:0;}\n.group-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#7dd3fc;padding-bottom:4px;border-bottom:2px solid #0891b2;width:100%;}\n.mixer-strips{display:flex;gap:16px;flex:1;min-height:0;justify-content:space-between;align-items:stretch;}\n.channel-strip{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1 1 0;min-width:0;}\n.fader-wrapper{flex:1;min-height:300px;height:100%;width:100%;display:flex;align-items:center;justify-content:center;}\n.vertical-fader{-webkit-appearance:slider-vertical;appearance:slider-vertical;width:100%;max-width:28px;height:100%;min-height:300px;background:linear-gradient(to right,#3a4050 0%,#4a5060 50%,#3a4050 100%);outline:none;cursor:pointer;border-radius:10px;}\n.channel-label{font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;text-align:center;min-height:20px;}\n.channel-level{font-size:12px;color:#7dd3fc;font-weight:500;text-align:center;min-height:18px;font-family:'Monaco','Courier New',monospace;}\n.mute-btn{width:100%;padding:8px 6px;background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 100%);color:#fecaca;border:2px solid #dc2626;border-radius:4px;font-weight:600;font-size:12px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;transition:all .2s ease;min-height:44px;display:flex;align-items:center;justify-content:center;min-width:80px;}\n.mute-btn.muted{background:linear-gradient(135deg,#365a40 0%,#15803d 100%);border-color:#22c55e;color:#86efac;}\n\n/* Optional but recommended */\n@media (max-width: 900px){\n  .mixer-strips{ gap:10px; }\n  .vertical-fader{ max-width:22px; }\n  .mute-btn{ min-width:70px; }\n}\n</style>",
+        "storeOutMessages": true,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 430,
+        "y": 240,
+        "wires": [
+            [
+                "bddaa7231e8e67ea"
+            ]
+        ]
+    },
+    {
+        "id": "fn-linkall",
+        "type": "function",
+        "z": "tab-link-all",
+        "name": "Link-All Broadcast",
+        "func": "// Link-All Broadcast + populate flow.linkedChannels\n\nconst linked = msg.payload.linked;\nconst allASpaces = ['a1','a2','a3'];\nconst allChannels = ['show','bgm','special','mic1','mic2','mixer'];\n\n// 1) Update flow.linkedChannels for all channels/spaces\nlet linkedChannels = flow.get('linkedChannels') || {};\nallChannels.forEach(channel => {\n  if (!linkedChannels[channel]) linkedChannels[channel] = {};\n  allASpaces.forEach(space => {\n    linkedChannels[channel][space] = linked;\n  });\n});\nflow.set('linkedChannels', linkedChannels);\n\n// 2) Broadcast to all templates so UI reflects Link-All state\nallASpaces.forEach(space => {\n  node.send({\n    payload: { space, setLinkedAll: linked }\n  });\n});\n\nnode.status({ fill:'blue', shape:'dot', text:`linkAll: ${linked}` });",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 910,
+        "y": 120,
+        "wires": [
+            [
+                "link-out-linkall"
+            ]
+        ]
+    },
+    {
+        "id": "fn-delta",
+        "type": "function",
+        "z": "tab-link-all",
+        "name": "Route Fader Delta to Linked Spaces",
+        "func": "const sourceSpace = msg.payload.sourceSpace;\nconst channel = msg.payload.channel;\nconst delta = msg.payload.delta;\n\nlet linkedChannels = flow.get('linkedChannels') || {};\nconst spaceStates = linkedChannels[channel] || {};\nconst allASpaces = ['a1','a2','a3'];\n\nconst targets = allASpaces.filter(s => spaceStates[s] && s !== sourceSpace);\nif (targets.length === 0) return null;\n\ntargets.forEach(targetSpace => {\n  node.send({ payload:{ targetSpace, channel, delta }, topic:`faderDelta/${targetSpace}/${channel}` });\n});\nnode.status({ fill:'green', shape:'dot', text:`${channel}: delta ${delta}` });",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 180,
+        "wires": [
+            [
+                "link-out-linkall"
+            ]
+        ]
+    },
+    {
+        "id": "fn-mute",
+        "type": "function",
+        "z": "tab-link-all",
+        "name": "Route Mute to Linked Spaces",
+        "func": "const sourceSpace = msg.payload.space;\nconst channel = msg.payload.channel;\nconst muteState = msg.payload.muted;\n\nlet linkedChannels = flow.get('linkedChannels') || {};\nconst spaceStates = linkedChannels[channel] || {};\nconst allASpaces = ['a1','a2','a3'];\n\nconst targets = allASpaces.filter(s => spaceStates[s] && s !== sourceSpace);\nif (targets.length === 0) return null;\n\ntargets.forEach(targetSpace => {\n  node.send({ payload:{ targetSpace, channel, muted: muteState }, topic:`mute/${targetSpace}/${channel}` });\n});\nnode.status({ fill:'green', shape:'dot', text:`${channel}: ${muteState ? 'muted' : 'unmuted'}` });",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 910,
+        "y": 240,
+        "wires": [
+            [
+                "link-out-linkall"
+            ]
+        ]
+    },
+    {
+        "id": "link-out-linkall",
+        "type": "link out",
+        "z": "tab-link-all",
+        "name": "Broadcast to Templates",
+        "mode": "link",
+        "links": [
+            "link-in-linkall"
+        ],
+        "x": 1155,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "link-in-linkall",
+        "type": "link in",
+        "z": "tab-link-all",
+        "name": "From Functions",
+        "links": [
+            "link-out-linkall"
+        ],
+        "x": 255,
+        "y": 180,
+        "wires": [
+            [
+                "tmpl-a1-linkall",
+                "tmpl-a2-linkall",
+                "tmpl-a3-linkall"
+            ]
+        ]
+    },
+    {
+        "id": "bddaa7231e8e67ea",
+        "type": "switch",
+        "z": "tab-link-all",
+        "name": "",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "ui/audio/linkAll",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "ui/audio/linkedFader/",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "ui/audio/linkedMute/",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 670,
+        "y": 160,
+        "wires": [
+            [
+                "fn-linkall"
+            ],
+            [
+                "fn-delta"
+            ],
+            [
+                "fn-mute"
+            ]
+        ]
     }
 ]
