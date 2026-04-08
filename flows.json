@@ -75,14 +75,6 @@
         "env": []
     },
     {
-        "id": "6960170272581485",
-        "type": "tab",
-        "label": "Flow 2",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
         "id": "test-tab-1",
         "type": "tab",
         "label": "Link Test",
@@ -93,6 +85,13 @@
         "id": "tab-link-all",
         "type": "tab",
         "label": "Audio Link-All (SFC)",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "tab_qsys_control",
+        "type": "tab",
+        "label": "Qsys Control",
         "disabled": false,
         "info": ""
     },
@@ -421,7 +420,7 @@
                 "cols": "12"
             }
         ],
-        "order": 4,
+        "order": 5,
         "className": "",
         "visible": true,
         "disabled": false
@@ -513,7 +512,7 @@
                 "cols": "12"
             }
         ],
-        "order": 5,
+        "order": 6,
         "className": "",
         "visible": "true",
         "disabled": "false"
@@ -627,7 +626,7 @@
                 "cols": "12"
             }
         ],
-        "order": 6,
+        "order": 7,
         "className": "",
         "visible": "true",
         "disabled": "false"
@@ -691,7 +690,7 @@
                 "cols": "12"
             }
         ],
-        "order": 8,
+        "order": 9,
         "className": "",
         "visible": "true",
         "disabled": "false"
@@ -811,7 +810,7 @@
                 "cols": "12"
             }
         ],
-        "order": 7,
+        "order": 8,
         "className": "",
         "visible": "true",
         "disabled": "false"
@@ -861,7 +860,7 @@
                 "cols": "12"
             }
         ],
-        "order": 9,
+        "order": 10,
         "className": "",
         "visible": "true",
         "disabled": "false"
@@ -938,7 +937,7 @@
                 "cols": "12"
             }
         ],
-        "order": 10,
+        "order": 11,
         "className": "",
         "visible": "true",
         "disabled": "false"
@@ -1049,7 +1048,7 @@
                 "cols": "12"
             }
         ],
-        "order": 3
+        "order": 4
     },
     {
         "id": "ui-group-test",
@@ -1134,7 +1133,7 @@
                 "cols": "12"
             }
         ],
-        "order": 2
+        "order": 3
     },
     {
         "id": "ui-group-a1-linkall",
@@ -1177,6 +1176,70 @@
         "visible": "true",
         "disabled": "false",
         "groupType": "default"
+    },
+    {
+        "id": "ui_theme_default",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0f62fe",
+            "bgPage": "#f4f4f4",
+            "groupBg": "#ffffff",
+            "groupOutline": "#dddddd"
+        },
+        "sizes": {
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupPadding": "12px"
+        }
+    },
+    {
+        "id": "ui_page_qsys",
+        "type": "ui-page",
+        "name": "Qsys Control",
+        "ui": "f34314dbb36334ec",
+        "path": "/qsys-control",
+        "icon": "",
+        "layout": "grid",
+        "theme": "ui_theme_default",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 2,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "ui_group_qsys_test",
+        "type": "ui-group",
+        "name": "Qsys test controls",
+        "page": "ui_page_qsys",
+        "width": "12",
+        "order": 1,
+        "className": "",
+        "visible": "true",
+        "disabled": false
     },
     {
         "id": "b67850082a42953b",
@@ -7580,6 +7643,7 @@
         "payloadType": "str",
         "topic": "ui/audio/forceShow",
         "topicType": "str",
+        "enableClick": true,
         "x": 380,
         "y": 260,
         "wires": [
@@ -7684,6 +7748,7 @@
         "width": 6,
         "height": 1,
         "passthru": true,
+        "decouple": false,
         "topic": "ui/audio/a1/playbackEnabled",
         "topicType": "str",
         "className": "",
@@ -7786,6 +7851,7 @@
         "width": 6,
         "height": 1,
         "passthru": true,
+        "decouple": false,
         "topic": "ui/audio/a1/mixerEnabled",
         "topicType": "str",
         "className": "",
@@ -7908,6 +7974,7 @@
         "max": 12,
         "step": 1,
         "className": "",
+        "showTextField": false,
         "x": 120,
         "y": 380,
         "wires": [
@@ -8641,7 +8708,8 @@
         "y": 80,
         "wires": [
             [
-                "bddaa7231e8e67ea"
+                "bddaa7231e8e67ea",
+                "d7e603b086d64b72"
             ]
         ]
     },
@@ -8666,7 +8734,8 @@
         "y": 160,
         "wires": [
             [
-                "bddaa7231e8e67ea"
+                "bddaa7231e8e67ea",
+                "d7e603b086d64b72"
             ]
         ]
     },
@@ -8691,7 +8760,8 @@
         "y": 240,
         "wires": [
             [
-                "bddaa7231e8e67ea"
+                "bddaa7231e8e67ea",
+                "d7e603b086d64b72"
             ]
         ]
     },
@@ -8826,5 +8896,374 @@
                 "fn-mute"
             ]
         ]
+    },
+    {
+        "id": "0efd9d167966dbf2",
+        "type": "debug",
+        "z": "tab-link-all",
+        "name": "A1 template out",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 670,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "c93563fba9029ea1",
+        "type": "link out",
+        "z": "tab-link-all",
+        "name": "A1,2,3 Mixer Out",
+        "mode": "link",
+        "links": [
+            "link_in_qrc_cmd"
+        ],
+        "x": 1025,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "d7e603b086d64b72",
+        "type": "function",
+        "z": "tab-link-all",
+        "name": "Switch Level, Mute",
+        "func": "// Route levels through delay, mute bypasses\nconst t = msg.topic || \"\";\n\nif (/^ui\\/audio\\/[^/]+\\/level\\/.+/.test(t)) {\n  // output 1 = level\n  return [msg, null];\n}\n\nif (/^ui\\/audio\\/[^/]+\\/[^/]+\\/(enabled|Enabled)$/.test(t)) {\n  // output 2 = mute\n  return [null, msg];\n}\n\nreturn [null, null];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 60,
+        "wires": [
+            [
+                "b721f129d37ea782"
+            ],
+            [
+                "c93563fba9029ea1"
+            ]
+        ]
+    },
+    {
+        "id": "b721f129d37ea782",
+        "type": "delay",
+        "z": "tab-link-all",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "50",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 900,
+        "y": 40,
+        "wires": [
+            [
+                "c93563fba9029ea1"
+            ]
+        ]
+    },
+    {
+        "id": "ui_slider_mic1",
+        "type": "ui-slider",
+        "z": "tab_qsys_control",
+        "group": "ui_group_qsys_test",
+        "name": "Mic1 Level",
+        "label": "Mic1 Level (dB)",
+        "order": 1,
+        "width": 12,
+        "height": 1,
+        "passthru": true,
+        "outs": "all",
+        "topic": "ui/audio/a1/level/mic1",
+        "min": -60,
+        "max": 10,
+        "step": 0.1,
+        "className": "",
+        "showTextField": false,
+        "x": 220,
+        "y": 120,
+        "wires": [
+            [
+                "fn_qrc_router"
+            ]
+        ]
+    },
+    {
+        "id": "ui_switch_mic2_enabled",
+        "type": "ui-switch",
+        "z": "tab_qsys_control",
+        "name": "Mic2 Enabled",
+        "label": "Mic2 Enabled",
+        "group": "ui_group_qsys_test",
+        "order": 2,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "topic": "ui/audio/a1/mic2Enabled",
+        "className": "",
+        "onvalue": true,
+        "onvalueType": "bool",
+        "offvalue": false,
+        "offvalueType": "bool",
+        "x": 230,
+        "y": 180,
+        "wires": [
+            [
+                "fn_qrc_router"
+            ]
+        ]
+    },
+    {
+        "id": "link_in_qrc_cmd",
+        "type": "link in",
+        "z": "tab_qsys_control",
+        "name": "QRC Command In",
+        "links": [
+            "c93563fba9029ea1"
+        ],
+        "x": 200,
+        "y": 260,
+        "wires": [
+            [
+                "fn_qrc_router",
+                "7d1940848e7213d6"
+            ]
+        ]
+    },
+    {
+        "id": "fn_qrc_router",
+        "type": "function",
+        "z": "tab_qsys_control",
+        "name": "Map UI/topics → QRC JSON",
+        "func": "// QRC Mixer Mapping — edit only the sections below\n// ===============================================\n\n// 1) Space → Mixer mapping\nconst spaceToMixer = {\n  a1: \"a1\",\n  a2: \"a2\",\n  a3: \"a3\",\n  ls: \"ls\"\n};\n\n// 2) Input mapping (shared across all spaces by default)\nconst inputsShared = {\n  special: [1, 2],\n  bgm: [3, 4],\n  show: [5, 6, 7, 8],     // stereo\n  mic1: [9],\n  mic2: [10], // example: 4ch (expand as needed)\n  mixer: [11, 12],\n};\n\n// 3) Optional per-space overrides (only if a space differs)\nconst inputsPerSpace = {\n  // a2: { bgm: [7, 8] }, // example override\n};\n\n// ====== internal logic (no edits needed) ======\n\nconst baseTopic = \"ui/audio\";\nconst t = msg.topic;\nconst p = msg.payload;\n\nfunction makeId() {\n  return Date.now() % 1000000;\n}\n\n// Parse topic\n// Expected:\n// ui/audio/<space>/level/<inputKey>\n// ui/audio/<space>/<inputKey>Enabled\n// Accept both:\n// ui/audio/<space>/<inputKey>/enabled\n// ui/audio/<space>/<inputKey>Enabled\nconst m = t.match(/^ui\\/audio\\/([^/]+)\\/(level\\/([^/]+)|([^/]+)\\/enabled|([^/]+)Enabled)$/);\nif (!m) return null;\n\nconst space = m[1];\nconst inputKey = m[3] || m[4] || m[5];\nconst isLevel = !!m[3];\nconst isEnabled = !!(m[4] || m[5]);\n\nconst mixerName = spaceToMixer[space];\nif (!mixerName) return null;\n\n// Resolve input channels (shared + overrides)\nconst perSpace = inputsPerSpace[space] || {};\nconst channels = perSpace[inputKey] || inputsShared[inputKey];\nif (!channels || !channels.length) return null;\n\n// Build Q-SYS mixer selector string: \"1\", \"5,6\", \"1-60\"\nconst inputSelector = Array.isArray(channels)\n  ? (channels.length === 1 ? `${channels[0]}` : channels.join(\",\"))\n  : `${channels}`;\n\nlet req = null;\n\nif (isLevel) {\n  let val = Number(p);\n  if (Number.isNaN(val)) return null;\n  val = Math.max(-60, Math.min(10, val));\n  req = {\n    jsonrpc: \"2.0\",\n    method: \"Mixer.SetInputGain\",\n    params: {\n      Name: mixerName,\n      Inputs: inputSelector,\n      Value: val\n    },\n    id: makeId()\n  };\n}\n\nif (isEnabled) {\n  const enabled = !!p;\n  req = {\n    jsonrpc: \"2.0\",\n    method: \"Mixer.SetInputMute\",\n    params: {\n      Name: mixerName,\n      Inputs: inputSelector,\n      Value: !enabled\n    },\n    id: makeId()\n  };\n}\n\nif (!req) return null;\n\nmsg.qrc = req;\nmsg.payload = JSON.stringify(req) + \"\\u0000\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 180,
+        "wires": [
+            [
+                "tcp_out_qrc",
+                "debug_qrc_out"
+            ]
+        ]
+    },
+    {
+        "id": "tcp_out_qrc",
+        "type": "tcp out",
+        "z": "tab_qsys_control",
+        "name": "QRC TCP Out (set host/port)",
+        "host": "172.20.10.3",
+        "port": "1710",
+        "beserver": "client",
+        "base64": false,
+        "end": false,
+        "tls": "",
+        "x": 830,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "tcp_in_qrc",
+        "type": "tcp in",
+        "z": "tab_qsys_control",
+        "name": "QRC TCP In (set host/port)",
+        "server": "client",
+        "host": "172.20.10.3",
+        "port": "1710",
+        "datamode": "stream",
+        "datatype": "utf8",
+        "newline": "\\u0000",
+        "topic": "",
+        "trim": false,
+        "base64": false,
+        "tls": "",
+        "x": 220,
+        "y": 340,
+        "wires": [
+            [
+                "4b5b244a2524671c",
+                "da5cc154d9e1a68f",
+                "81c33195a1b74073"
+            ]
+        ]
+    },
+    {
+        "id": "json_qrc_in",
+        "type": "json",
+        "z": "tab_qsys_control",
+        "name": "Parse QRC JSON",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 670,
+        "y": 340,
+        "wires": [
+            [
+                "debug_qrc_in"
+            ]
+        ]
+    },
+    {
+        "id": "debug_qrc_in",
+        "type": "debug",
+        "z": "tab_qsys_control",
+        "name": "QRC IN",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 840,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "debug_qrc_out",
+        "type": "debug",
+        "z": "tab_qsys_control",
+        "name": "QRC OUT",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "qrc",
+        "targetType": "msg",
+        "x": 820,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "4b5b244a2524671c",
+        "type": "function",
+        "z": "tab_qsys_control",
+        "name": "Parse QRC Buffer",
+        "func": "// Split QRC stream payload into individual JSON strings\nlet s = msg.payload;\n\n// If payload is a Buffer, convert it\nif (Buffer.isBuffer(s)) s = s.toString(\"utf8\");\n\n// Split on null terminator and emit one message per JSON string\nconst parts = s.split(\"\\u0000\").filter(p => p.trim().length);\n\nreturn parts.map(p => ({\n  ...msg,\n  payload: p\n}));",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 340,
+        "wires": [
+            [
+                "json_qrc_in"
+            ]
+        ]
+    },
+    {
+        "id": "8cb15193a2c810a3",
+        "type": "inject",
+        "z": "tab_qsys_control",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"jsonrpc\":\"2.0\",\"method\":\"Component.GetComponents\",\"params\":{},\"id\":1}",
+        "payloadType": "json",
+        "x": 490,
+        "y": 60,
+        "wires": [
+            [
+                "7058b167d3441a8c"
+            ]
+        ]
+    },
+    {
+        "id": "da5cc154d9e1a68f",
+        "type": "debug",
+        "z": "tab_qsys_control",
+        "name": "debug 14",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 440,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "7058b167d3441a8c",
+        "type": "function",
+        "z": "tab_qsys_control",
+        "name": "function 1",
+        "func": "const session = global.get(\"qrcSession\");\nif (!session) {\n  node.warn(\"No QRC session yet. Wait for TCP In to receive data (EngineStatus) first.\");\n  return null;\n}\n\nconst req = {\n  jsonrpc: \"2.0\",\n  method: \"Component.GetComponents\",\n  params: {},\n  id: Date.now() % 1000000\n};\n\nmsg._session = session; // IMPORTANT: reply on same socket\nmsg.payload = JSON.stringify(req) + \"\\u0000\";\nmsg.qrc = req;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 60,
+        "wires": [
+            [
+                "tcp_out_qrc"
+            ]
+        ]
+    },
+    {
+        "id": "81c33195a1b74073",
+        "type": "function",
+        "z": "tab_qsys_control",
+        "name": "Set Session",
+        "func": "// Store TCP session for replies\nglobal.set(\"qrcSession\", msg._session);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7d1940848e7213d6",
+        "type": "debug",
+        "z": "tab_qsys_control",
+        "name": "Audio In MSGs",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 360,
+        "y": 260,
+        "wires": []
     }
 ]
