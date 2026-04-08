@@ -1,5 +1,5 @@
 {
-  "version": "1.3",
+  "version": "1.4",
   "globalModes": ["INITIALIZING", "NORMAL", "SHOW", "FAULT"],
 
   "context": {
@@ -30,6 +30,42 @@
       "requestedBy": null
     },
 
+    "audio": {
+      "notes": [
+        "Playback domains control which audio source is selected for each physical zone group.",
+        "Supported selections — inside: SHOW | BGM | SPECIAL | NONE; landscape: SHOW | BGM | NONE.",
+        "SPECIAL playback is inside-only; the landscape domain must never be set to SPECIAL.",
+        "BGM is delivered via Watchout timelines (bg_music_1..bg_music_4) on channels 3–4.",
+        "SPECIAL playback comes from Watchout channels 1–2 (inside spaces only).",
+        "SHOW playback comes from Watchout channels 5–64.",
+        "RULE: When context.mode == 'SHOW', both domains' effective playback is forced to 'SHOW' regardless of desired value."
+      ],
+      "domains": {
+        "inside": {
+          "desired": "BGM",
+          "effective": "BGM",
+          "bgmSelection": "bg_music_1",
+          "specialSelection": null,
+          "transition": {
+            "fadeOutMs": 2000,
+            "fadeInMs": 2000,
+            "mode": "CROSS_FADE"
+          }
+        },
+        "landscape": {
+          "notes": ["SPECIAL is not a valid selection for the landscape domain."],
+          "desired": "BGM",
+          "effective": "BGM",
+          "bgmSelection": "bg_music_1",
+          "transition": {
+            "fadeOutMs": 2000,
+            "fadeInMs": 2000,
+            "mode": "CROSS_FADE"
+          }
+        }
+      }
+    },
+
     "spaces": {
       "a1": {
         "capabilities": { "hasVideo": true },
@@ -41,6 +77,34 @@
             "contentId": null,
             "audioMode": "none",
             "includes": { "ribbon": true, "column": true, "sphere": false }
+          }
+        },
+        "audio": {
+          "playbackDomain": "inside",
+          "playback": {
+            "enabled": true,
+            "levelsDb": { "bgm": 0, "show": 0, "special": 0 }
+          },
+          "live": {
+            "mics": {
+              "mic1": { "enabled": false, "levelDb": 0, "outputPresetId": "all_speakers" },
+              "mic2": { "enabled": false, "levelDb": 0, "outputPresetId": "all_speakers" }
+            },
+            "mixer": {
+              "enabled": false,
+              "mode": "GLOBAL",
+              "mixerId": null,
+              "levelDb": 0,
+              "outputPresetId": "all_speakers"
+            }
+          },
+          "ducking": {
+            "enabled": true,
+            "triggerSources": ["mic1", "mic2"],
+            "duckTargets": ["playback"],
+            "duckAmountDb": -12,
+            "attackMs": 100,
+            "releaseMs": 500
           }
         }
       },
@@ -55,6 +119,34 @@
             "audioMode": "none",
             "includes": { "ribbon": true, "column": true, "sphere": false }
           }
+        },
+        "audio": {
+          "playbackDomain": "inside",
+          "playback": {
+            "enabled": true,
+            "levelsDb": { "bgm": 0, "show": 0, "special": 0 }
+          },
+          "live": {
+            "mics": {
+              "mic1": { "enabled": false, "levelDb": 0, "outputPresetId": "all_speakers" },
+              "mic2": { "enabled": false, "levelDb": 0, "outputPresetId": "all_speakers" }
+            },
+            "mixer": {
+              "enabled": false,
+              "mode": "GLOBAL",
+              "mixerId": null,
+              "levelDb": 0,
+              "outputPresetId": "all_speakers"
+            }
+          },
+          "ducking": {
+            "enabled": true,
+            "triggerSources": ["mic1", "mic2"],
+            "duckTargets": ["playback"],
+            "duckAmountDb": -12,
+            "attackMs": 100,
+            "releaseMs": 500
+          }
         }
       },
       "a3": {
@@ -68,6 +160,34 @@
             "audioMode": "none",
             "includes": { "ribbon": true, "column": true, "sphere": false }
           }
+        },
+        "audio": {
+          "playbackDomain": "inside",
+          "playback": {
+            "enabled": true,
+            "levelsDb": { "bgm": 0, "show": 0, "special": 0 }
+          },
+          "live": {
+            "mics": {
+              "mic1": { "enabled": false, "levelDb": 0, "outputPresetId": "all_speakers" },
+              "mic2": { "enabled": false, "levelDb": 0, "outputPresetId": "all_speakers" }
+            },
+            "mixer": {
+              "enabled": false,
+              "mode": "GLOBAL",
+              "mixerId": null,
+              "levelDb": 0,
+              "outputPresetId": "all_speakers"
+            }
+          },
+          "ducking": {
+            "enabled": true,
+            "triggerSources": ["mic1", "mic2"],
+            "duckTargets": ["playback"],
+            "duckAmountDb": -12,
+            "attackMs": 100,
+            "releaseMs": 500
+          }
         }
       },
       "ls": {
@@ -80,6 +200,35 @@
             "contentId": null,
             "audioMode": "none",
             "includes": { "ribbon": false, "column": false, "sphere": false }
+          }
+        },
+        "audio": {
+          "playbackDomain": "landscape",
+          "playback": {
+            "enabled": true,
+            "levelsDb": { "bgm": 0, "show": 0 },
+            "notes": ["'special' level is intentionally absent: SPECIAL playback is not valid in the landscape domain."]
+          },
+          "live": {
+            "mics": {
+              "mic1": { "enabled": false, "levelDb": 0, "outputPresetId": "all_speakers" },
+              "mic2": { "enabled": false, "levelDb": 0, "outputPresetId": "all_speakers" }
+            },
+            "mixer": {
+              "enabled": false,
+              "mode": "GLOBAL",
+              "mixerId": null,
+              "levelDb": 0,
+              "outputPresetId": "all_speakers"
+            }
+          },
+          "ducking": {
+            "enabled": true,
+            "triggerSources": ["mic1", "mic2"],
+            "duckTargets": ["playback"],
+            "duckAmountDb": -12,
+            "attackMs": 100,
+            "releaseMs": 500
           }
         }
       }
