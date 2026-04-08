@@ -2,17 +2,44 @@
   "main_timeline": {
     "displayName": "Main Timeline",
     "watchoutTimelineId": "0",
-    "cues": {}
+    "cues": {
+      "shows": {
+        "displayName": "Shows",
+        "watchoutCueId": "0"
+      },
+      "start_transition": {
+        "displayName": "Start Transition",
+        "watchoutCueId": "1"
+      },
+      "tcp_out": {
+        "displayName": "TCP out",
+        "watchoutCueId": "3"
+      },
+      "marker_1": {
+        "displayName": "marker 1",
+        "watchoutCueId": "4"
+      }
+    }
   },
   "show_1": {
     "displayName": "Show 1",
     "watchoutTimelineId": "1",
-    "cues": {}
+    "cues": {
+      "gotrans1": {
+        "displayName": "GoTrans1",
+        "watchoutCueId": "1"
+      }
+    }
   },
   "special_overlay_1": {
     "displayName": "Special Overlay 1",
     "watchoutTimelineId": "2",
-    "cues": {}
+    "cues": {
+      "yoo": {
+        "displayName": "yoo",
+        "watchoutCueId": "3"
+      }
+    }
   },
   "ambience_a1": {
     "displayName": "Ambience A1",
@@ -27,7 +54,12 @@
   "transition_1_a2": {
     "displayName": "Transition 1 A2",
     "watchoutTimelineId": "5",
-    "cues": {}
+    "cues": {
+      "trans_start": {
+        "displayName": "Trans Start",
+        "watchoutCueId": "2"
+      }
+    }
   },
   "special_overlay_2": {
     "displayName": "Special Overlay 2",
@@ -37,12 +69,22 @@
   "bg_music_1": {
     "displayName": "BG Music 1",
     "watchoutTimelineId": "7",
-    "cues": {}
+    "cues": {
+      "always_output_bg_music_to_out_34": {
+        "displayName": "ALWAYS OUTPUT BG MUSIC TO OUT 3-4",
+        "watchoutCueId": "2"
+      }
+    }
   },
   "bg_music_2": {
     "displayName": "BG Music 2",
     "watchoutTimelineId": "8",
-    "cues": {}
+    "cues": {
+      "always_output_bg_music_to_out_34": {
+        "displayName": "ALWAYS OUTPUT BG MUSIC TO OUT 3-4",
+        "watchoutCueId": "1"
+      }
+    }
   },
   "show_2": {
     "displayName": "Show 2",
@@ -62,7 +104,16 @@
   "transition_1_a1": {
     "displayName": "Transition 1 A1",
     "watchoutTimelineId": "12",
-    "cues": {}
+    "cues": {
+      "transition_full": {
+        "displayName": "Transition Full",
+        "watchoutCueId": "1"
+      },
+      "transition_finished": {
+        "displayName": "Transition Finished",
+        "watchoutCueId": "2"
+      }
+    }
   },
   "spcial_3": {
     "displayName": "Spcial 3",

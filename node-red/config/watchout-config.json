@@ -1,6 +1,6 @@
 {
   "_comment": "Watchout 7 HTTP Integration — Node-RED configuration",
-  "host": "192.168.5.48",
+  "host": "10.154.10.41",
   "port": 3019,
   "mappingFile": "/data/projects/XYZ-Exit10/node-red/data/timeline-mapping.json",
   "_notes": [
