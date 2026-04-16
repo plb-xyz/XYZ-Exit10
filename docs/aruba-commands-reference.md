@@ -17,20 +17,33 @@ Focused command reference for Aruba 6300/6400 switches used in the Exit10 show-c
 
 | Hostname | Type | Model | Part # | Location | VLAN | IP (Control) |
 |---|---|---|---|---|---|---|
-| AVR-08-SFP-01 | **Core Switch** | CX 6300M 24P | JL658A | EER (AVR-08) | Control | 10.154.10.20 |
+| AVR-08-SFP-01 | **Core Switch** | CX 6300M 24P SFP | JL658A | EER — Core Fiber | Control | 10.154.10.20 |
 | AVR-01-SWE-01 | Network Switch | CX 6300F 24P | JL666A | IDF-FF-03A | Control | 10.154.10.21 |
 | AVR-02-SWE-01 | Network Switch | CX 6300F 48P | JL665A | IDF-GF-06 | Control | 10.154.10.22 |
 | AVR-03-SWE-01 | Network Switch | CX 6300F 24P | JL666A | IDF-FF-08 | Control | 10.154.10.23 |
 | AVR-04-SWE-01 | Network Switch | CX 6300F 24P | JL666A | IDF-GF-P1 | Control | 10.154.10.24 |
 | AVR-05-SWE-01 | Network Switch | CX 6300F 24P | JL666A | IDF-GF-P2 | Control | 10.154.10.25 |
-| AVR-07-SWE-01 | Network Switch | CX 6300F 48P | JL665A | EER (AVR-07) | Control | 10.154.10.27 |
-| AVR-08-SWE-01 | Network Switch | CX 6300F 48P | JL665A | EER (AVR-08) | Control | 10.154.10.28 |
-| AVR-10-SWE-01 | Network Switch | CX 6300F 48P | JL665A | EER (AVR-10) | Control | 10.154.10.30 |
+| AVR-07-SWE-01 | Network Switch | CX 6300F 48P | JL665A | EER | Control | 10.154.10.27 |
+| AVR-08-SWE-01 | Network Switch | CX 6300F 48P | JL665A | EER | Control | 10.154.10.28 |
+| AVR-10-SWE-01 | Network Switch | CX 6300F 48P | JL665A | EER | Control | 10.154.10.30 |
 
 - All switches are **Aruba AOS-CX**, firmware **10.13/10.14**
 - Management access via SSH or web UI on the Control VLAN (`10.154.10.x`)
 - `AVR-08-SFP-01` is the **core/uplink switch** (CX 6300M)
-- To SSH into a switch: `ssh admin@10.154.10.2x` (use the exact IP from the table above: `10.154.10.21`-`10.154.10.29`)
+- To SSH into a switch, use the exact control IP shown above (for example: `ssh admin@10.154.10.20`)
+
+## VLAN Assignments
+
+| VLAN / Mode | Purpose | AOS-CX Usage |
+|---|---|---|
+| VLAN 10 (Control) | Switch management + control endpoints | `vlan access 10` |
+| VLAN 20 (QLAN) | Q-LAN / audio-control devices | `vlan access 20` |
+| VLAN 30 (Dante) | Dante audio network | `vlan access 30` |
+| VLAN 40 (sACN-Lighting) | Lighting/sACN multicast transport | `vlan access 40` + IGMP snooping querier on VLAN 40 |
+| Trunk | Inter-switch uplinks | `vlan trunk allowed all` + `vlan trunk native 10` |
+| Landlord | Landlord-facing ports (placeholder) | `vlan access 1` (verify final VLAN ID with landlord network team) |
+
+See [`docs/switch-configs/`](./switch-configs/) for complete per-switch port tables and full CLI configuration blocks.
 
 ## 1) Basic navigation & modes
 
