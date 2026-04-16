@@ -218,6 +218,8 @@ username admin privilege 15 password plaintext <pw>
 ! Create/update local admin account (replace <pw>)
 ```
 
+> Security note: avoid leaving plaintext credentials in shared logs/backups. Use your standard secure credential handling process after initial bootstrap.
+
 ## 9) Show / diagnostic commands
 
 ```text
