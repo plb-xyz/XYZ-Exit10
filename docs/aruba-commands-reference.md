@@ -259,4 +259,5 @@ reload
 - Forgetting to save config (`write memory` or `copy running-config startup-config`) -> changes lost after reboot.
 - Trunk port missing required VLAN tag -> endpoints in that VLAN become unreachable.
 - End-device ports not set to `spanning-tree port-type admin-edge` -> unnecessary STP delays during link-up.
-- Misaligning endpoint addressing with show-control plan -> for Exit10, Watchout servers are in `10.154.10.141-142` (Production) and `10.154.10.151-159` (Display) and should be reachable in the show VLAN design.
+- Misaligning endpoint addressing with the show-control IP plan can break endpoint reachability.
+- Exit10 Watchout servers are `10.154.10.141-142` (Production) and `10.154.10.151-159` (Display).
