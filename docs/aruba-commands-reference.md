@@ -30,7 +30,7 @@ Focused command reference for Aruba 6300/6400 switches used in the Exit10 show-c
 - All switches are **Aruba AOS-CX**, firmware **10.13/10.14**
 - Management access via SSH or web UI on the Control VLAN (`10.154.10.x`)
 - `AVR-08-SFP-01` is the **core/uplink switch** (CX 6300M)
-- To SSH into a switch: `ssh admin@10.154.10.2x`
+- To SSH into a switch: `ssh admin@10.154.10.2x` (replace `x` with `1`-`9` from the table above)
 
 ## 1) Basic navigation & modes
 
