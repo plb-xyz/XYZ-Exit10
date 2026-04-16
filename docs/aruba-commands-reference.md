@@ -13,6 +13,25 @@ Focused command reference for Aruba 6300/6400 switches used in the Exit10 show-c
 
 > Exit10 note: shows run in sync globally, lighting is always routed through MA, and multicast/broadcast delivery must be reliable to all relevant endpoints.
 
+## Switch Inventory — Exit10
+
+| Hostname | Type | Model | Part # | Location | VLAN | IP (Control) |
+|---|---|---|---|---|---|---|
+| AVR-01-SWE-01 | Network Switch | CX 6300F 24P | JL666A | IDF-FF-03A | Control | 10.154.10.21 |
+| AVR-02-SWE-01 | Network Switch | CX 6300F 24P | JL666A | IDF-GF-06 | Control | 10.154.10.22 |
+| AVR-03-SWE-01 | Network Switch | CX 6300F 24P | JL666A | IDF-FF-08 | Control | 10.154.10.23 |
+| AVR-04-SWE-01 | Network Switch | CX 6300F 48P | JL665A | IDF-GF-P1 | Control | 10.154.10.24 |
+| AVR-05-SWE-01 | Network Switch | CX 6300F 48P | JL665A | IDF-GF-P2 | Control | 10.154.10.25 |
+| AVR-07-SWE-01 | Network Switch | CX 6300F 48P | JL665A | EER (AVR-07) | Control | 10.154.10.26 |
+| AVR-08-SFP-01 | Core Switch | CX 6300M 24P | JL658A | EER (AVR-08) | Control | 10.154.10.27 |
+| AVR-10-SWE-01 | Network Switch | CX 6300F 48P | JL665A | EER (AVR-10) | Control | 10.154.10.28 |
+| AVR-12-SWE-01 | Network Switch | CX 6300F 24P | JL666A | IDF-GF-013 (AVR-12) | Control | 10.154.10.29 |
+
+- All switches are **Aruba AOS-CX**, firmware **10.13/10.14**
+- Management access via SSH or web UI on the Control VLAN (`10.154.10.x`)
+- `AVR-08-SFP-01` is the **core/uplink switch** (CX 6300M)
+- To SSH into a switch: `ssh admin@10.154.10.2x` (use the exact IP from the table above: `10.154.10.21`-`10.154.10.29`)
+
 ## 1) Basic navigation & modes
 
 ```text
