@@ -6,8 +6,62 @@ This folder contains one per-switch Aruba AOS-CX configuration document for the 
 
 Every switch file includes **Step 1 — Initial Setup**. Run Step 1 first from:
 
-1. Serial console connection, or
+1. Serial console connection (recommended — see [Windows 11 USB-C Serial Connection](#windows-11-usb-c-serial-connection) below), or
 2. Factory default web UI.
+
+### Windows 11 USB-C Serial Connection
+
+The Aruba CX 6300 series has a **USB-C console port** on the front panel.
+
+**1 — Install the driver**
+
+Windows 11 may auto-install the driver. If the port does not appear in Device Manager:
+
+- Download and install the **Silicon Labs CP210x VCP driver** from:
+  `https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers`
+- After installing, reconnect the USB-C cable. A new **COMx** port appears under *Ports (COM & LPT)* in Device Manager.
+
+**2 — Find the COM port number**
+
+1. Press `Win + X` → *Device Manager*
+2. Expand **Ports (COM & LPT)**
+3. Note the number shown next to *Silicon Labs CP210x USB to UART Bridge* — for example `COM3`
+
+**3 — Open a terminal (PuTTY — recommended)**
+
+Download PuTTY from `https://www.putty.org` if not already installed.
+
+Settings:
+
+| Field | Value |
+|---|---|
+| Connection type | Serial |
+| Serial line | `COM3` (use the number found in step 2) |
+| Speed (baud) | `9600` |
+| Data bits | `8` |
+| Stop bits | `1` |
+| Parity | None |
+| Flow control | None |
+
+Click **Open**. Press **Enter** if the screen is blank. The switch login prompt appears.
+
+**4 — Alternative: Windows Terminal / PowerShell**
+
+```powershell
+# Replace COM3 with your actual COM port
+mode COM3 BAUD=9600 PARITY=n DATA=8 STOP=1
+# Then open a serial session with PuTTY or:
+plink -serial COM3 -sercfg 9600,8,n,1,N
+```
+
+**5 — Log in**
+
+```
+Login: admin
+Password: (press Enter — blank by default)
+```
+
+You are now at the AOS-CX prompt. Run the **Step 1 — Initial Setup** commands from the per-switch file.
 
 Default credentials are:
 

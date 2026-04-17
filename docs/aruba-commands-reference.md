@@ -47,9 +47,53 @@ See [`docs/switch-configs/`](./switch-configs/) for complete per-switch port tab
 
 ## Initial Switch Setup (Out of Box)
 
-Run this once on each brand-new switch before applying the main configuration:
+Run this once on each brand-new switch before applying the main configuration.
 
-1. Connect over serial console or factory default web UI.
+### Connecting via Serial Console (Windows 11 + USB-C)
+
+The Aruba CX 6300 series has a **USB-C console port** on the front panel. Use a USB-C to USB-A (or USB-C to USB-C) cable from your Windows 11 laptop.
+
+**Step A — Install the driver**
+
+Windows 11 often auto-installs the driver. If no COM port appears in Device Manager, install the **Silicon Labs CP210x VCP driver**:
+`https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers`
+
+After installing, reconnect the cable. A **COMx** entry appears under *Ports (COM & LPT)* in Device Manager.
+
+**Step B — Find the COM port**
+
+1. Press `Win + X` → *Device Manager*
+2. Expand **Ports (COM & LPT)**
+3. Note the number next to *Silicon Labs CP210x USB to UART Bridge* (e.g. `COM3`)
+
+**Step C — Open PuTTY**
+
+Download PuTTY from `https://www.putty.org` if needed.
+
+| PuTTY field | Value |
+|---|---|
+| Connection type | Serial |
+| Serial line | `COM3` (or your actual COM number) |
+| Speed | `9600` |
+| Data bits | `8` |
+| Stop bits | `1` |
+| Parity | None |
+| Flow control | None |
+
+Click **Open**. Press **Enter** if the screen is blank. The AOS-CX login prompt appears.
+
+**Step D — Log in with factory defaults**
+
+```
+Login: admin
+Password: (press Enter — blank)
+```
+
+---
+
+**Full procedure:**
+
+1. Connect via serial console (see above) or factory default web UI.
 2. Log in with factory default credentials (`admin` / blank password).
 3. Apply the initial setup commands below.
 4. Save (`write memory`), then continue with the switch-specific **Step 2 — Main Configuration** in `docs/switch-configs/<HOSTNAME>.md`.
