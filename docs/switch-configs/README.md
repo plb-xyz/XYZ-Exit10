@@ -2,15 +2,51 @@
 
 This folder contains one per-switch Aruba AOS-CX configuration document for the Exit10 network.
 
-## Global Standards Used
+## Out-of-Box Initial Setup (run first)
+
+Every switch file includes **Step 1 — Initial Setup**. Run Step 1 first from:
+
+1. Serial console connection, or
+2. Factory default web UI.
+
+Default credentials are:
+
+- Username: `admin`
+- Password: *(blank / no password)*
+
+Step 1 sets the production admin credential:
+
+- Username: `admin`
+- Password: `Exit10-2026!`
+
+After Step 1 completes, web UI is available at:
+
+- `https://10.154.10.20` (AVR-08-SFP-01)
+- `https://10.154.10.21` (AVR-01-SWE-01)
+- `https://10.154.10.22` (AVR-02-SWE-01)
+- `https://10.154.10.23` (AVR-03-SWE-01)
+- `https://10.154.10.24` (AVR-04-SWE-01)
+- `https://10.154.10.25` (AVR-05-SWE-01)
+- `https://10.154.10.27` (AVR-07-SWE-01)
+- `https://10.154.10.28` (AVR-08-SWE-01)
+- `https://10.154.10.30` (AVR-10-SWE-01)
+
+## Network and Protocol Standards
 
 - Firmware target: **AOS-CX 10.13/10.14**
-- Control VLAN gateway: **10.154.10.1**
-- Trunk ports: `vlan trunk allowed all` + `vlan trunk native 10`
-- Trunks carry VLANs **10, 20, 30, 40**
-- Empty ports are intentionally left unconfigured
-- Reserved ports are configured as access + `no shutdown` + `description "Reserved - no device"`
-- IGMP snooping querier is enabled on VLAN 40
+- Control VLAN subnet: `10.154.10.0/24`
+- Gateway: `10.154.10.1`
+- Trunks carry VLANs **10, 20, 30, 40** (`vlan trunk allowed all` + `vlan trunk native 10`)
+- VLAN 30 (Dante): `no ip igmp snooping`, no querier
+- VLAN 40 (sACN): IGMP snooping + querier enabled
+- SNMP is enabled during Step 1 for ISAAC integration
+
+### Dante note (Audinate requirement)
+
+On every VLAN 30 Dante port:
+
+- `no eee` is set to disable Energy Efficient Ethernet (IEEE 802.3az)
+- QoS DSCP mappings are configured for CS7/EF/CS1 priorities
 
 ## Switch Files
 

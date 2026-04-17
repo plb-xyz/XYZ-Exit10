@@ -1,11 +1,17 @@
-# AVR-04-SWE-01
+# AVR-04-SWE-01 — IDF-GF-P1
 
-- **IP:** `10.154.10.24`
-- **Model:** CX 6300F 24P (JL666A)
-- **Location:** IDF-GF-P1
-- **Port Count:** 24 + 1 uplink
+## Overview
 
-## Port Assignment
+| Field | Value |
+|---|---|
+| Hostname | `AVR-04-SWE-01` |
+| IP | `10.154.10.24` |
+| Model | CX 6300F 24P (JL666A) |
+| Part # | JL666A |
+| Location | IDF-GF-P1 |
+| Port count | 24 + 1 uplink |
+
+## Port Assignment Table
 
 | Port | VLAN | Device | Notes |
 |---|---|---|---|
@@ -28,7 +34,53 @@
 | 24 | empty | — | Left unconfigured (default state) |
 | 25 | TRUNK | AVR-08-SFP-01 | Uplink trunk (native VLAN 10, all VLANs tagged) |
 
-## Complete AOS-CX CLI
+## Step 1 — Initial Setup
+
+```text
+! ============================================================
+! STEP 1 — INITIAL SETUP (run once via serial console / default web UI)
+! Factory default credentials: admin / (no password)
+! ============================================================
+
+configure terminal
+
+  ! --- Hostname ---
+  hostname AVR-04-SWE-01
+
+  ! --- Admin user ---
+  user admin group administrators password plaintext Exit10-2026!
+
+  ! --- Enable HTTPS web UI ---
+  https-server vrf default
+  https-server rest access-mode read-write
+
+  ! --- Enable SSH ---
+  ssh server vrf default
+
+  ! --- SNMP (required for ISAAC integration) ---
+  snmp-server vrf default
+
+  ! --- Management accessible on ALL ports (not just MGMT port) ---
+  ! This allows SSH and web UI access from any connected port on any VLAN
+  https-server vrf default
+  ssh server vrf default
+
+  ! --- Management IP on Control VLAN SVI (accessible from all ports) ---
+  interface vlan 10
+    ip address 10.154.10.24/24
+    no shutdown
+
+  ! --- Default route ---
+  ip route 0.0.0.0/0 10.154.10.1
+
+end
+
+write memory
+```
+
+> Note: Run this first via serial console or factory web UI before connecting to the network.
+
+## Step 2 — Main Configuration
 
 ```text
 ! ============================================================
@@ -59,8 +111,10 @@ configure terminal
   ! --- Default route ---
   ip route 0.0.0.0/0 10.154.10.1
 
-  ! --- IGMP Snooping (required for sACN multicast on VLAN 40) ---
+  ! --- IGMP Snooping ---
   ip igmp snooping
+  vlan 30
+    no ip igmp snooping
   vlan 40
     ip igmp snooping
     ip igmp snooping querier
@@ -165,6 +219,10 @@ end
 write memory
 ```
 
-## Notes
+## Notes & Verification
 
 - No uncertain ports were identified in the provided assignment table.
+- `spanning-tree port-type admin-edge` makes endpoint ports forward immediately (faster link-up for end devices).
+- `no shutdown` administratively enables each configured port.
+- Verify Dante ports: `show running-config interface 1/1/<port>` should include `vlan access 30` and `no eee`.
+- Verify multicast: VLAN 30 should show `no ip igmp snooping`; VLAN 40 should show snooping + querier enabled.

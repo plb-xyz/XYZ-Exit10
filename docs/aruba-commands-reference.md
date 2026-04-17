@@ -45,6 +45,40 @@ Focused command reference for Aruba 6300/6400 switches used in the Exit10 show-c
 
 See [`docs/switch-configs/`](./switch-configs/) for complete per-switch port tables and full CLI configuration blocks.
 
+## Initial Switch Setup (Out of Box)
+
+Run this once on each brand-new switch before applying the main configuration:
+
+1. Connect over serial console or factory default web UI.
+2. Log in with factory default credentials (`admin` / blank password).
+3. Apply the initial setup commands below.
+4. Save (`write memory`), then continue with the switch-specific **Step 2 — Main Configuration** in `docs/switch-configs/<HOSTNAME>.md`.
+
+```text
+configure terminal
+
+  hostname <HOSTNAME>
+
+  user admin group administrators password plaintext Exit10-2026!
+
+  https-server vrf default
+  https-server rest access-mode read-write
+  ssh server vrf default
+  snmp-server vrf default
+
+  interface vlan 10
+    ip address <SWITCH_IP>/24
+    no shutdown
+
+  ip route 0.0.0.0/0 10.154.10.1
+
+end
+
+write memory
+```
+
+Use the per-switch files in [`docs/switch-configs/`](./switch-configs/) for the exact `<HOSTNAME>` and `<SWITCH_IP>` values.
+
 ## 1) Basic navigation & modes
 
 ```text
