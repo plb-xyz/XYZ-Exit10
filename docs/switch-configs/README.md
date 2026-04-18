@@ -4,6 +4,18 @@ This folder contains one per-switch Aruba AOS-CX configuration document for the 
 
 ## Out-of-Box Initial Setup (run first)
 
+1. Physical serial cable → PuTTY (Serial, COM4, 9600)
+        ↓
+2. Login: admin / (blank)
+        ↓
+3. Paste Step 1 initial config → write memory
+        ↓
+4. Unplug serial cable
+        ↓
+5. SSH admin@10.154.10.XX  ← all future config via network
+        ↓
+6. Web UI: https://10.154.10.XX  ← or upload .cfg via Config Mgmt page
+
 Every switch file includes **Step 1 — Initial Setup**. Run Step 1 first from:
 
 1. Serial console connection (recommended — see [Windows 11 USB-C Serial Connection](#windows-11-usb-c-serial-connection) below), or
