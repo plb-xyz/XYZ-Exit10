@@ -90,11 +90,15 @@ write memory
 
 ## Step 2 — Main Configuration
 
+### To connect to switch
+| Windows PowerShell | `ssh admin@10.154.10.27` |
+|---|---|
+
 ```text
 ! ============================================================
 ! AVR-07-SWE-01 — EER
 ! IP: 10.154.10.27 | Model: CX 6300F 48P (JL665A)
-! VLANs: 10=Control 20=QLAN 30=Dante 40=sACN-Lighting
+! VLANs: 10=Control 20=QLAN 30=Dante 40=Lighting
 ! ============================================================
 
 configure terminal
@@ -109,7 +113,7 @@ configure terminal
   vlan 30
     name Dante
   vlan 40
-    name sACN-Lighting
+    name Lighting
 
   ! --- Management IP (Control VLAN SVI) ---
   interface vlan 10
@@ -120,14 +124,12 @@ configure terminal
   ip route 0.0.0.0/0 10.154.10.1
 
   ! --- QoS for Dante (Audinate recommended DSCP priorities) ---
-  qos trust dscp
   qos dscp-map 56 local-priority 7    ! CS7  — PTP clock sync (High)
   qos dscp-map 46 local-priority 5    ! EF   — Dante audio (Medium)
   qos dscp-map 8  local-priority 1    ! CS1  — Reserved (Low)
 
 
   ! --- IGMP Snooping ---
-  ip igmp snooping
   vlan 30
     no ip igmp snooping
   vlan 40
@@ -143,135 +145,160 @@ configure terminal
     description "AVR-07-DSP-01 Port 1"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/2
     description "AVR-07-DSP-02 Port 1"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/3
     description "AVR-07-AMP-01"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/4
     description "AVR-07-AMP-02"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/5
     description "AVR-07-AMP-03"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/6
     description "AVR-07-AMP-04"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/7
     description "AVR-07-AMP-05"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/8
     description "AVR-07-AMP-06"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/9
     description "AVR-07-L4o-01"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/10
     description "AVR-07-L4o-02"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/11
     description "AVR-07-L4o-03"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/12
     description "AVR-07-L4o-04"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/13
     description "AVR-07-GPIO-01"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/19
     description "AVR-07-DSP-01 Port 3"
     vlan access 10
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/20
     description "AVR-07-DSP-01 iDRAC"
     vlan access 10
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/21
     description "AVR-07-DSP-02 Port 3"
     vlan access 10
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/22
     description "AVR-07-DSP-02 iDRAC"
     vlan access 10
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/23
     description "ACB-102-1"
     vlan access 10
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/24
     description "ACB-102-2"
     vlan access 10
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/27
     description "AVR-07-DSP-01 Port 2"
     vlan access 30
+    qos trust dscp
     no eee
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/28
     description "AVR-07-DSP-02 Port 2"
     vlan access 30
+    qos trust dscp
     no eee
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/29
     description "ACB-102"
     vlan access 30
+    qos trust dscp
     no eee
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/49
