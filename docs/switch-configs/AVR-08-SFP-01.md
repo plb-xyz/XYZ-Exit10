@@ -92,7 +92,7 @@ write memory
 ! ============================================================
 ! AVR-08-SFP-01 — EER — Core Fiber
 ! IP: 10.154.10.20 | Model: CX 6300M 24P SFP (JL658A)
-! VLANs: 10=Control 20=QLAN 30=Dante 40=sACN-Lighting
+! VLANs: 10=Control 20=QLAN 30=Dante 40=Lighting
 ! ============================================================
 
 configure terminal
@@ -107,7 +107,7 @@ configure terminal
   vlan 30
     name Dante
   vlan 40
-    name sACN-Lighting
+    name Lighting
 
   ! --- Management IP (Control VLAN SVI) ---
   interface vlan 10
@@ -127,7 +127,7 @@ configure terminal
 
   ! --- Spanning Tree ---
   spanning-tree mode mstp
-  spanning-tree priority 8
+  spanning-tree priority 1
 
   ! --- Interfaces ---
   interface 1/1/9
