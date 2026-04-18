@@ -26,20 +26,23 @@
 | 9 | 20 | AVR-03-AMP-09 |  |
 | 10 | 20 | AVR-03-AMP-10 |  |
 | 11 | 20 | TSC-301 |  |
-| 12 | empty | — | Left unconfigured (default state) |
+| 12 | 20 | Reserved - no device |  |
 | 13 | 10 | AVR-03-UPS-01 |  |
-| 14 | 10 | ACB-301 |  |
-| 15 | 10 | ACB-301 (port B) |  |
-| 16 | 10 | ACB-302 |  |
-| 17 | 10 | ACB-302 (port B) |  |
-| 18 | empty | — | Left unconfigured (default state) |
+| 14 | 10 | Reserved - no device |  |
+| 15 | 10 | ACB-301 (port 1) |  |
+| 16 | 10 | ACB-301 (port 2) |  |
+| 17 | 10 | ACB-302 (port 1) |  |
+| 18 | 10 | ACB-302 (port 2) |  |
 | 19 | 30 | ACB-301 |  |
-| 20 | 30 | WISK-NODE-102 |  |
-| 21 | 30 | WISK-NODE-101 |  |
-| 22 | 40 | Reserved - no device | Reserved port |
-| 23 | 10 | RLP-402 |  |
-| 24 | empty | — | Left unconfigured (default state) |
+| 20 | 30 | ACB-302 |  |
+| 21 | 40 | WISK-NODE-101 |  |
+| 22 | 40 | WISK-NODE-102 |  |
+| 23 | 40 | RLP-402 |  |
+| 24 | 40 | Reserved - no device |  |
 | 25 | TRUNK | AVR-08-SFP-01 | Uplink trunk (native VLAN 10, all VLANs tagged) |
+| 26 | — | SPARE |  |
+| 27 | — | SPARE |  |
+| 28 | — | SPARE |  |
 
 ## Step 1 — Initial Setup
 
@@ -97,7 +100,7 @@ write memory
 ! ============================================================
 ! AVR-03-SWE-01 — IDF-FF-08
 ! IP: 10.154.10.23 | Model: CX 6300F 24P (JL666A)
-! VLANs: 10=Control 20=QLAN 30=Dante 40=Lighting
+! VLANs: 10=Control 20=QLAN 30=Dante 40=Lighting 50=Landlord
 ! ============================================================
 
 configure terminal
@@ -113,6 +116,8 @@ configure terminal
     name Dante
   vlan 40
     name Lighting
+  vlan 50
+    name Landlord
 
   ! --- Management IP (Control VLAN SVI) ---
   interface vlan 10
@@ -133,6 +138,8 @@ configure terminal
     ip igmp snooping enable
   vlan 40
     ip igmp snooping enable
+  vlan 50
+    no ip igmp snooping
   ! --- Spanning Tree ---
   spanning-tree mode mstp
   spanning-tree priority 8
@@ -215,6 +222,13 @@ configure terminal
     spanning-tree bpdu-guard
     no shutdown
 
+  interface 1/1/12
+    description "Reserved - no device"
+    vlan access 20
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    no shutdown
+
   interface 1/1/13
     description "AVR-03-UPS-01"
     vlan access 10
@@ -223,28 +237,35 @@ configure terminal
     no shutdown
 
   interface 1/1/14
-    description "ACB-301"
+    description "Reserved - no device"
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/15
-    description "ACB-301 (port B)"
+    description "ACB-301 (port 1)"
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/16
-    description "ACB-302"
+    description "ACB-301 (port 2)"
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/17
-    description "ACB-302 (port B)"
+    description "ACB-302 (port 1)"
+    vlan access 10
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/18
+    description "ACB-302 (port 2)"
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
@@ -259,7 +280,7 @@ configure terminal
     no shutdown
 
   interface 1/1/20
-    description "WISK-NODE-102"
+    description "ACB-302"
     vlan access 30
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -268,14 +289,13 @@ configure terminal
 
   interface 1/1/21
     description "WISK-NODE-101"
-    vlan access 30
-    qos trust dscp
+    vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/22
-    description "Reserved - no device"
+    description "WISK-NODE-102"
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
@@ -283,7 +303,14 @@ configure terminal
 
   interface 1/1/23
     description "RLP-402"
-    vlan access 10
+    vlan access 40
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/24
+    description "Reserved - no device"
+    vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -294,6 +321,27 @@ configure terminal
     vlan trunk native 10
     no spanning-tree bpdu-guard
     no shutdown
+
+  interface 1/1/26
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/27
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/28
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
 
 end
 

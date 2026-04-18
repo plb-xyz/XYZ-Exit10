@@ -21,38 +21,52 @@
 | 4 | 20 | AVR-02-AMP-04 |  |
 | 5 | 20 | AVR-02-AMP-05 |  |
 | 6 | 20 | TSC-101 |  |
-| 7 | empty | — | Left unconfigured (default state) |
-| 8 | empty | — | Left unconfigured (default state) |
-| 9 | empty | — | Left unconfigured (default state) |
-| 10 | empty | — | Left unconfigured (default state) |
-| 11 | empty | — | Left unconfigured (default state) |
-| 12 | empty | — | Left unconfigured (default state) |
-| 13 | 10 | ACB-101 |  |
-| 14 | 10 | ACB-101 |  |
-| 15 | 10 | ACB-105 |  |
-| 16 | 10 | ACB-105 |  |
-| 17 | 10 | ACB-202 |  |
-| 18 | 10 | ACB-202 |  |
-| 19 | 10 | ACB-203 |  |
-| 20 | 10 | ACB-203 |  |
-| 21 | 10 | ACB-204 |  |
-| 22 | 10 | ACB-204 |  |
-| 23 | empty | — | Left unconfigured (default state) |
-| 24 | empty | — | Left unconfigured (default state) |
-| 25 | empty | — | Left unconfigured (default state) |
-| 26 | empty | — | Left unconfigured (default state) |
+| 7 | — | SPARE |  |
+| 8 | — | SPARE |  |
+| 9 | — | SPARE |  |
+| 10 | — | SPARE |  |
+| 11 | — | SPARE |  |
+| 12 | — | SPARE |  |
+| 13 | 10 | ACB-101 (port 1) |  |
+| 14 | 10 | ACB-101 (port 2) |  |
+| 15 | 10 | ACB-105 (port 1) |  |
+| 16 | 10 | ACB-105 (port 2) |  |
+| 17 | 10 | ACB-202 (port 1) |  |
+| 18 | 10 | ACB-202 (port 2) |  |
+| 19 | 10 | ACB-203 (port 1) |  |
+| 20 | 10 | ACB-203 (port 2) |  |
+| 21 | 10 | ACB-204 (port 1) |  |
+| 22 | 10 | ACB-204 (port 2) |  |
+| 23 | — | SPARE |  |
+| 24 | — | SPARE |  |
+| 25 | — | SPARE |  |
+| 26 | — | SPARE |  |
 | 27 | 30 | ACB-101 |  |
 | 28 | 30 | ACB-105 |  |
 | 29 | 30 | ACB-202 |  |
 | 30 | 30 | ACB-203 |  |
 | 31 | 30 | ACB-204 |  |
-| 32 | 30 | Reserved - no device | Reserved port |
-| 33 | empty | — | Left unconfigured (default state) |
-| 34 | empty | — | Left unconfigured (default state) |
+| 32 | 30 | Reserved - no device |  |
+| 33 | — | SPARE |  |
+| 34 | — | SPARE |  |
 | 35 | 40 | RLP-401 |  |
-| 36 | 40 | Reserved - no device | Reserved port |
-| 37-48 | empty | — | Left unconfigured (default state) |
+| 36 | 40 | Reserved - no device |  |
+| 37 | 40 | Reserved - no device |  |
+| 38 | 40 | Reserved - no device |  |
+| 39 | — | SPARE |  |
+| 40 | — | SPARE |  |
+| 41 | — | SPARE |  |
+| 42 | — | SPARE |  |
+| 43 | — | SPARE |  |
+| 44 | — | SPARE |  |
+| 45 | 10 | Reserved - no device |  |
+| 46 | 10 | Reserved - no device |  |
+| 47 | 50 | Reserved - no device |  |
+| 48 | 50 | Reserved - no device |  |
 | 49 | TRUNK | AVR-08-SFP-01 | Uplink trunk (native VLAN 10, all VLANs tagged) |
+| 50 | — | SPARE |  |
+| 51 | — | SPARE |  |
+| 52 | — | SPARE |  |
 
 ## Step 1 — Initial Setup
 
@@ -110,7 +124,7 @@ write memory
 ! ============================================================
 ! AVR-02-SWE-01 — IDF-GF-06
 ! IP: 10.154.10.22 | Model: CX 6300F 48P (JL665A)
-! VLANs: 10=Control 20=QLAN 30=Dante 40=Lighting
+! VLANs: 10=Control 20=QLAN 30=Dante 40=Lighting 50=Landlord
 ! ============================================================
 
 configure terminal
@@ -126,6 +140,8 @@ configure terminal
     name Dante
   vlan 40
     name Lighting
+  vlan 50
+    name Landlord
 
   ! --- Management IP (Control VLAN SVI) ---
   interface vlan 10
@@ -146,6 +162,8 @@ configure terminal
     ip igmp snooping enable
   vlan 40
     ip igmp snooping enable
+  vlan 50
+    no ip igmp snooping
   ! --- Spanning Tree ---
   spanning-tree mode mstp
   spanning-tree priority 8
@@ -193,75 +211,145 @@ configure terminal
     spanning-tree bpdu-guard
     no shutdown
 
+  interface 1/1/7
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/8
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/9
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/10
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/11
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/12
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
   interface 1/1/13
-    description "ACB-101"
+    description "ACB-101 (port 1)"
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/14
-    description "ACB-101"
+    description "ACB-101 (port 2)"
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/15
-    description "ACB-105"
+    description "ACB-105 (port 1)"
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/16
-    description "ACB-105"
+    description "ACB-105 (port 2)"
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/17
-    description "ACB-202"
+    description "ACB-202 (port 1)"
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/18
-    description "ACB-202"
+    description "ACB-202 (port 2)"
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/19
-    description "ACB-203"
+    description "ACB-203 (port 1)"
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/20
-    description "ACB-203"
+    description "ACB-203 (port 2)"
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/21
-    description "ACB-204"
+    description "ACB-204 (port 1)"
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/22
-    description "ACB-204"
+    description "ACB-204 (port 2)"
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
+
+  interface 1/1/23
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/24
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/25
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/26
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
 
   interface 1/1/27
     description "ACB-101"
@@ -311,6 +399,20 @@ configure terminal
     spanning-tree bpdu-guard
     no shutdown
 
+  interface 1/1/33
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/34
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
   interface 1/1/35
     description "RLP-401"
     vlan access 40
@@ -325,12 +427,117 @@ configure terminal
     spanning-tree bpdu-guard
     no shutdown
 
+  interface 1/1/37
+    description "Reserved - no device"
+    vlan access 40
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/38
+    description "Reserved - no device"
+    vlan access 40
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/39
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/40
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/41
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/42
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/43
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/44
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/45
+    description "Reserved - no device"
+    vlan access 10
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/46
+    description "Reserved - no device"
+    vlan access 10
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/47
+    description "Reserved - no device"
+    vlan access 50
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/48
+    description "Reserved - no device"
+    vlan access 50
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    no shutdown
+
   interface 1/1/49
     description "TRUNK to AVR-08-SFP-01"
     vlan trunk allowed all
     vlan trunk native 10
     no spanning-tree bpdu-guard
     no shutdown
+
+  interface 1/1/50
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/51
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/52
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
 
 end
 

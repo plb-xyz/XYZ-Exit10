@@ -129,4 +129,4 @@ On every VLAN 30 Dante port:
 | AVR-08-SWE-01 | 10.154.10.28 | CX 6300F 48P (JL665A) | EER | [AVR-08-SWE-01.md](./AVR-08-SWE-01.md) |
 | AVR-10-SWE-01 | 10.154.10.30 | CX 6300F 48P (JL665A) | EER | [AVR-10-SWE-01.md](./AVR-10-SWE-01.md) |
 
-> Note: Landlord ports are configured with `vlan access 1` as a placeholder. Confirm final VLAN ID with the landlord network team before deployment.
+> Note: Landlord network is implemented as VLAN 50 (`Landlord`) on the designated ports.

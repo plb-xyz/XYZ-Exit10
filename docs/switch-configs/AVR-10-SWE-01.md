@@ -23,7 +23,7 @@
 | 6 | 10 | AVR-10-VSR-06 |  |
 | 7 | 10 | AVR-10-VSR-07 |  |
 | 8 | 10 | AVR-10-VSR-08 |  |
-| 9 | 10 | AVR-10-VSR-SFP-01 |  |
+| 9 | 10 | AVR-10-VSR-SP-01 |  |
 | 10 | 10 | AVR-09-H15-01A |  |
 | 11 | 10 | AVR-09-H15-01B |  |
 | 12 | 10 | MPU-S9900-01 |  |
@@ -31,11 +31,42 @@
 | 14 | 10 | AVR-09-UPS-001 |  |
 | 15 | 10 | AVR-10-UPS-01 |  |
 | 16 | 10 | AVR-11-UPS-01 |  |
-| 17-26 | empty | — | Left unconfigured (default state) |
+| 17 | — | SPARE |  |
+| 18 | — | SPARE |  |
+| 19 | — | SPARE |  |
+| 20 | — | SPARE |  |
+| 21 | — | SPARE |  |
+| 22 | — | SPARE |  |
+| 23 | — | SPARE |  |
+| 24 | — | SPARE |  |
+| 25 | — | SPARE |  |
+| 26 | — | SPARE |  |
 | 27 | 30 | AVR-10-VSR-01 |  |
 | 28 | 30 | AVR-10-VSR-02 |  |
-| 29-48 | empty | — | Left unconfigured (default state) |
+| 29 | 30 | Reserved - no device |  |
+| 30 | 30 | Reserved - no device |  |
+| 31 | — | SPARE |  |
+| 32 | — | SPARE |  |
+| 33 | — | SPARE |  |
+| 34 | — | SPARE |  |
+| 35 | — | SPARE |  |
+| 36 | — | SPARE |  |
+| 37 | — | SPARE |  |
+| 38 | — | SPARE |  |
+| 39 | — | SPARE |  |
+| 40 | — | SPARE |  |
+| 41 | — | SPARE |  |
+| 42 | — | SPARE |  |
+| 43 | — | SPARE |  |
+| 44 | — | SPARE |  |
+| 45 | 10 | Reserved - no device |  |
+| 46 | 10 | Reserved - no device |  |
+| 47 | 50 | Reserved - no device |  |
+| 48 | 50 | Reserved - no device |  |
 | 49 | TRUNK | AVR-08-SFP-01 | Uplink trunk (native VLAN 10, all VLANs tagged) |
+| 50 | — | SPARE |  |
+| 51 | — | SPARE |  |
+| 52 | — | SPARE |  |
 
 ## Step 1 — Initial Setup
 
@@ -93,7 +124,7 @@ write memory
 ! ============================================================
 ! AVR-10-SWE-01 — EER
 ! IP: 10.154.10.30 | Model: CX 6300F 48P (JL665A)
-! VLANs: 10=Control 20=QLAN 30=Dante 40=Lighting
+! VLANs: 10=Control 20=QLAN 30=Dante 40=Lighting 50=Landlord
 ! ============================================================
 
 configure terminal
@@ -109,6 +140,8 @@ configure terminal
     name Dante
   vlan 40
     name Lighting
+  vlan 50
+    name Landlord
 
   ! --- Management IP (Control VLAN SVI) ---
   interface vlan 10
@@ -129,6 +162,8 @@ configure terminal
     ip igmp snooping enable
   vlan 40
     ip igmp snooping enable
+  vlan 50
+    no ip igmp snooping
   ! --- Spanning Tree ---
   spanning-tree mode mstp
   spanning-tree priority 8
@@ -191,7 +226,7 @@ configure terminal
     no shutdown
 
   interface 1/1/9
-    description "AVR-10-VSR-SFP-01"
+    description "AVR-10-VSR-SP-01"
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
@@ -246,6 +281,76 @@ configure terminal
     spanning-tree bpdu-guard
     no shutdown
 
+  interface 1/1/17
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/18
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/19
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/20
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/21
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/22
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/23
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/24
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/25
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/26
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
   interface 1/1/27
     description "AVR-10-VSR-01"
     vlan access 30
@@ -262,12 +367,175 @@ configure terminal
     spanning-tree bpdu-guard
     no shutdown
 
+  interface 1/1/29
+    description "Reserved - no device"
+    vlan access 30
+    qos trust dscp
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/30
+    description "Reserved - no device"
+    vlan access 30
+    qos trust dscp
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/31
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/32
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/33
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/34
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/35
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/36
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/37
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/38
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/39
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/40
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/41
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/42
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/43
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/44
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/45
+    description "Reserved - no device"
+    vlan access 10
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/46
+    description "Reserved - no device"
+    vlan access 10
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/47
+    description "Reserved - no device"
+    vlan access 50
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/48
+    description "Reserved - no device"
+    vlan access 50
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    no shutdown
+
   interface 1/1/49
     description "TRUNK to AVR-08-SFP-01"
     vlan trunk allowed all
     vlan trunk native 10
     no spanning-tree bpdu-guard
     no shutdown
+
+  interface 1/1/50
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/51
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/52
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
 
 end
 
