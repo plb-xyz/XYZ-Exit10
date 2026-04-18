@@ -117,11 +117,9 @@ configure terminal
 
   ! --- IGMP Snooping ---
   vlan 30
-    no ip igmp snooping
+    ip igmp snooping enable
   vlan 40
-    ip igmp snooping
-    ip igmp snooping querier
-
+    ip igmp snooping enable
   ! --- Spanning Tree ---
   spanning-tree mode mstp
   spanning-tree priority 8
@@ -131,104 +129,105 @@ configure terminal
     description "AVR-04-AMP-01"
     vlan access 20
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/2
     description "AVR-04-AMP-02"
     vlan access 20
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/3
     description "AVR-04-L4o-01"
     vlan access 20
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/4
     description "AVR-04-L4o-02"
     vlan access 20
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/5
     description "AVR-04-L4o-03"
     vlan access 20
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/6
     description "AVR-04-L4o-04"
     vlan access 20
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/7
     description "AVR-04-L4o-05"
     vlan access 20
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/8
     description "AVR-04-L4o-06"
     vlan access 20
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/9
     description "AVR-04-L4o-07"
     vlan access 20
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/10
     description "AVR-04-L4o-08"
     vlan access 20
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/11
     description "AVR-04-L4o-09"
     vlan access 20
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/12
     description "AVR-04-L4o-10"
     vlan access 20
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/21
     description "NOD-001"
     vlan access 40
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/22
     description "Reserved - no device"
     vlan access 40
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/25
     description "TRUNK to AVR-08-SFP-01"
     vlan trunk allowed all
     vlan trunk native 10
+    no spanning-tree bpdu-guard
     no shutdown
 
 end
@@ -241,5 +240,5 @@ write memory
 - No uncertain ports were identified in the provided assignment table.
 - `spanning-tree port-type admin-edge` makes endpoint ports forward immediately (faster link-up for end devices).
 - `no shutdown` administratively enables each configured port.
-- Verify Dante ports: `show running-config interface 1/1/<port>` should include `vlan access 30` and `no eee`.
-- Verify multicast: VLAN 30 should show `no ip igmp snooping`; VLAN 40 should show snooping + querier enabled.
+- Verify Dante ports: `show running-config interface 1/1/<port>` should include `vlan access 30` and `qos trust dscp`.
+- Verify multicast: VLAN 30 and VLAN 40 should show `ip igmp snooping enable`; querier should run from AVR-08-SFP-01 only.

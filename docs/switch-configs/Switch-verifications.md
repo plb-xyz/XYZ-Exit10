@@ -40,7 +40,6 @@ VLAN  Name      Status
 30    Dante     up
 40    Lighting  up
 ```
-
 ---
 
 ## 4. Management IP & Routing
@@ -63,11 +62,12 @@ show ip igmp snooping
 **Expected:**
 ```
 VLAN  IGMP Snooping  Querier
-30    disabled       none     ← Dante — must be OFF
-40    enabled        active   ← Lighting — must be ON + querier active
+30    enabled        active/none*
+40    enabled        active/none*
 ```
-> ℹ️ IGMP is ON by default for all VLANs. Only VLAN 30 needs an explicit `no ip igmp snooping`.
-> The querier runs from AVR-08-SFP-01 (core) only — edge switches will show `none` for querier on VLAN 40, which is correct.
+> ℹ️ IGMP snooping should be explicitly enabled on both VLAN 30 and VLAN 40 using `ip igmp snooping enable`.
+> The querier runs from AVR-08-SFP-01 (core) only (configured under `interface vlan 30` and `interface vlan 40` with `ip igmp querier`).
+> Edge switches should not have querier config and may show `none`.
 
 ---
 
@@ -123,7 +123,6 @@ interface 1/1/XX
     no routing
     vlan access 30
     qos trust dscp              ← must be present on every Dante port
-    no eee                      ← must be present — prevents audio glitches
     spanning-tree port-type admin-edge
     exit
 ```
@@ -134,15 +133,13 @@ interface 1/1/XX
 |---|---|---|
 | Correct VLAN | `vlan access 30` | Port is on wrong VLAN |
 | QoS scoped to port | `qos trust dscp` | DSCP not trusted — Dante priority won't work |
-| EEE disabled | `no eee` | Run `no eee` on the port + `write memory` |
 | Fast convergence | `spanning-tree port-type admin-edge` | Port takes 30s to come up after reboot |
 
-**Fix if `qos trust dscp` or `no eee` is missing:**
+**Fix if `qos trust dscp` is missing:**
 ```text
 configure terminal
 interface 1/1/XX
 qos trust dscp
-no eee
 exit
 exit
 write memory
@@ -172,9 +169,9 @@ show startup-config
 | 7 | Mgmt IP | `show interface vlan 10` | IP assigned, state up |
 | 8 | Route | `show ip route` | 0.0.0.0/0 via 10.154.10.1 |
 | 9 | Gateway | `ping 10.154.10.1` | Success |
-| 10 | IGMP | `show ip igmp snooping` | VLAN 30 off, VLAN 40 on + querier |
+| 10 | IGMP | `show ip igmp snooping` | VLAN 30 + VLAN 40 enabled; querier on core |
 | 11 | STP | `show spanning-tree` | AVR-08-SFP-01 = root |
 | 12 | Ports | `show interface brief` | Connected ports up |
 | 13 | QoS map | `show qos dscp-map` | CS7=7, EF=5, CS1=1 |
-| 14 | Dante ports | `show running-config interface 1/1/XX` | `qos trust dscp` + `no eee` on each |
+| 14 | Dante ports | `show running-config interface 1/1/XX` | `qos trust dscp` on each Dante port |
 | 15 | Saved | `show startup-config` | Matches running config |

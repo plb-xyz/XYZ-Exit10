@@ -118,10 +118,14 @@ configure terminal
     ip address 10.154.10.20/24
     no shutdown
 
-  ! --- VLAN 40 SVI (IGMP querier source — Lighting/sACN) ---
+  ! --- VLAN 30/40 SVI (IGMP querier source) ---
+  interface vlan 30
+    ip igmp querier
+
   interface vlan 40
     ip address 10.154.40.1/24
     ip igmp
+    ip igmp querier
     no shutdown
 
   ! --- Default route ---
@@ -129,11 +133,9 @@ configure terminal
 
   ! --- IGMP Snooping ---
   vlan 30
-    no ip igmp snooping
+    ip igmp snooping enable
   vlan 40
-    ip igmp snooping
-    ip igmp snooping querier
-
+    ip igmp snooping enable
   ! --- Spanning Tree ---
   spanning-tree mode mstp
   spanning-tree priority 1
@@ -143,160 +145,168 @@ configure terminal
     description "AVR-06-NOD-01"
     vlan access 40
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/10
     description "PWR-02.0-10002"
     vlan access 40
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/11
     description "PWR-02.0-10004"
     vlan access 40
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/12
     description "PWR-02.0-10005"
     vlan access 40
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/13
     description "PWR-02.0-10006"
     vlan access 40
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/14
     description "PWR-02.0-10008"
     vlan access 40
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/15
     description "PWR-02.0-10010"
     vlan access 40
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/16
     description "PWR-02.0-10001"
     vlan access 40
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/17
     description "PWR-02.0-20004"
     vlan access 40
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/18
     description "PWR-01.0-20005"
     vlan access 40
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/19
     description "PWR-02.0-20001"
     vlan access 40
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/20
     description "PWR-02.0-30001"
     vlan access 40
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/21
     description "WISK-NODE-101"
     vlan access 40
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/22
     description "ACB-101"
     vlan access 10
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/23
     description "ACB-201"
     vlan access 10
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/24
     description "ACB-301"
     vlan access 10
     spanning-tree port-type admin-edge
-    spanning-tree bpduguard enable
+    spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/1
     description "TRUNK to AVR-01-SWE-01"
     vlan trunk allowed all
     vlan trunk native 10
+    no spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/2
     description "TRUNK to AVR-02-SWE-01"
     vlan trunk allowed all
     vlan trunk native 10
+    no spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/3
     description "TRUNK to AVR-03-SWE-01"
     vlan trunk allowed all
     vlan trunk native 10
+    no spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/4
     description "TRUNK to AVR-04-SWE-01"
     vlan trunk allowed all
     vlan trunk native 10
+    no spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/5
     description "TRUNK to AVR-05-SWE-01"
     vlan trunk allowed all
     vlan trunk native 10
+    no spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/6
     description "TRUNK to AVR-07-SWE-01"
     vlan trunk allowed all
     vlan trunk native 10
+    no spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/7
     description "TRUNK to AVR-08-SWE-01"
     vlan trunk allowed all
     vlan trunk native 10
+    no spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/8
     description "TRUNK to AVR-10-SWE-01"
     vlan trunk allowed all
     vlan trunk native 10
+    no spanning-tree bpdu-guard
     no shutdown
 
 end
@@ -309,5 +319,5 @@ write memory
 - No uncertain ports were identified in the provided assignment table.
 - `spanning-tree port-type admin-edge` makes endpoint ports forward immediately (faster link-up for end devices).
 - `no shutdown` administratively enables each configured port.
-- Verify Dante ports: `show running-config interface 1/1/<port>` should include `vlan access 30` and `no eee`.
-- Verify multicast: VLAN 30 should show `no ip igmp snooping`; VLAN 40 should show snooping + querier enabled.
+- Verify Dante ports: `show running-config interface 1/1/<port>` should include `vlan access 30` and `qos trust dscp`.
+- Verify multicast: VLAN 30 and VLAN 40 should show `ip igmp snooping enable`; querier should run from AVR-08-SFP-01 only.
