@@ -147,14 +147,15 @@ configure terminal
   interface vlan 10
     ip address 10.154.10.22/24
     no shutdown
+  exit
 
   ! --- Default route ---
   ip route 0.0.0.0/0 10.154.10.1
 
   ! --- QoS for Dante (Audinate recommended DSCP priorities) ---
-  qos dscp-map 56 local-priority 7    ! CS7  — PTP clock sync (High)
-  qos dscp-map 46 local-priority 5    ! EF   — Dante audio (Medium)
-  qos dscp-map 8  local-priority 1    ! CS1  — Reserved (Low)
+  qos dscp-map 56 local-priority 7
+  qos dscp-map 46 local-priority 5
+  qos dscp-map 8  local-priority 1
 
 
   ! --- IGMP Snooping ---
@@ -164,6 +165,8 @@ configure terminal
     ip igmp snooping enable
   vlan 50
     no ip igmp snooping
+  exit
+
   ! --- Spanning Tree ---
   spanning-tree mode mstp
   spanning-tree priority 8
