@@ -16,10 +16,10 @@
 | Port | VLAN | Device | Notes |
 |---|---|---|---|
 | 1 | 20 | AVR-08-PC-01-2 |  |
-| 2 | 1 | Landlord | Landlord network (placeholder VLAN 1) |
+| 2 | 50 | Landlord | Landlord network |
 | 3 | 10 | ISAAC 01 Port 2 |  |
 | 4 | 10 | ISAAC 02 |  |
-| 5-6 | empty | — | Left unconfigured (default state) |
+| 5-6 | 1 | SPARE | Shutdown spare port |
 | 7 | 10 | MA Console 1 Port 1 |  |
 | 8 | 10 | MA Console 2 Port 1 |  |
 | 9 | 10 | AVR-08-LRU-01 Port 1 |  |
@@ -27,7 +27,7 @@
 | 11 | 10 | AVR-08-LPU-01 Port 1 |  |
 | 12 | 10 | AVR-08-LPU-02 Port 1 |  |
 | 13 | 10 | AVR-08-LPU-03 Port 1 |  |
-| 14 | empty | — | Left unconfigured (default state) |
+| 14 | 1 | SPARE | Shutdown spare port |
 | 15 | 10 | AVR-08-MPC-01 Port 1 |  |
 | 16 | 10 | AVR-08-MPC-02 Port 1 |  |
 | 17 | 10 | ISAAC 01 Port 1 |  |
@@ -36,10 +36,10 @@
 | 20 | 10 | ISAAC 02 iDRAC |  |
 | 21 | 10 | AVR-08-UPS-01 |  |
 | 22 | 10 | AVR-08-PC-01-1 |  |
-| 23-24 | empty | — | Left unconfigured (default state) |
+| 23-24 | 1 | SPARE | Shutdown spare port |
 | 25 | 30 | AVR-08-MPC-01 Port 2 |  |
 | 26 | 30 | AVR-08-MPC-02 Port 2 |  |
-| 27-34 | empty | — | Left unconfigured (default state) |
+| 27-34 | 1 | SPARE | Shutdown spare port |
 | 35 | 10 | Grand MA Console 1 Port 2 |  |
 | 36 | 10 | Grand MA Console 2 Port 2 |  |
 | 37 | 10 | AVR-08-LRU-01 Port 2 |  |
@@ -48,12 +48,12 @@
 | 40 | 10 | AVR-08-LPU-02 Port 2 |  |
 | 41 | 10 | AVR-08-LPU-03 Port 2 |  |
 | 42 | 40 | NOD-003 |  |
-| 43-44 | empty | — | Left unconfigured (default state) |
+| 43-44 | 1 | SPARE | Shutdown spare port |
 | 45 | 1 | Reserved - no device | Reserved port |
 | 46 | 1 | Reserved - no device | Reserved port |
 | 47 | 1 | Reserved - no device | Reserved port |
 | 48 | 1 | Reserved - no device | Reserved port |
-| 49-50 | empty | — | Left unconfigured (default state) |
+| 49-50 | 1 | SPARE | Shutdown spare port |
 | 51 | TRUNK | AVR-08-SFP-01 | Uplink trunk (native VLAN 10, all VLANs tagged) |
 
 ## Step 1 — Initial Setup
@@ -112,7 +112,7 @@ write memory
 ! ============================================================
 ! AVR-08-SWE-01 — EER
 ! IP: 10.154.10.28 | Model: CX 6300F 48P (JL665A)
-! VLANs: 10=Control 20=QLAN 30=Dante 40=Lighting
+! VLANs: 10=Control 20=QLAN 30=Dante 40=Lighting 50=Landlord
 ! ============================================================
 
 configure terminal
@@ -128,6 +128,8 @@ configure terminal
     name Dante
   vlan 40
     name Lighting
+  vlan 50
+    name Landlord
 
   ! --- Management IP (Control VLAN SVI) ---
   interface vlan 10
@@ -148,6 +150,8 @@ configure terminal
     ip igmp snooping enable
   vlan 40
     ip igmp snooping enable
+  vlan 50
+    no ip igmp snooping
   ! --- Spanning Tree ---
   spanning-tree mode mstp
   spanning-tree priority 8
@@ -162,7 +166,7 @@ configure terminal
 
   interface 1/1/2
     description "Landlord"
-    vlan access 1
+    vlan access 50
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -386,6 +390,125 @@ configure terminal
     spanning-tree bpdu-guard
     no shutdown
 
+  interface 1/1/5
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/6
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/14
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/23
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/24
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/27
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/28
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/29
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/30
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/31
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/32
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/33
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/34
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/43
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/44
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/49
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/50
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
   interface 1/1/51
     description "TRUNK to AVR-08-SFP-01"
     vlan trunk allowed all
@@ -400,7 +523,7 @@ write memory
 
 ## Notes & Verification
 
-- Landlord ports use `vlan access 1` as a placeholder; verify final landlord VLAN ID with the landlord network team.
+- Landlord ports use `vlan access 50` (`Landlord` VLAN).
 - No uncertain ports were identified in the provided assignment table.
 - `spanning-tree port-type admin-edge` makes endpoint ports forward immediately (faster link-up for end devices).
 - `no shutdown` administratively enables each configured port.

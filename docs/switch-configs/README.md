@@ -102,16 +102,16 @@ After Step 1 completes, web UI is available at:
 - Firmware target: **AOS-CX 10.13/10.14**
 - Control VLAN subnet: `10.154.10.0/24`
 - Gateway: `10.154.10.1`
-- Trunks carry VLANs **10, 20, 30, 40** (`vlan trunk allowed all` + `vlan trunk native 10`)
-- VLAN 30 (Dante): `no ip igmp snooping`, no querier
-- VLAN 40 (sACN): IGMP snooping + querier enabled
+- Trunks carry VLANs **10, 20, 30, 40, 50** (`vlan trunk allowed all` + `vlan trunk native 10`)
+- VLAN 30 (Dante): `ip igmp snooping enable`, querier enabled on core only
+- VLAN 40 (sACN): `ip igmp snooping enable`, querier enabled on core only
+- VLAN 50 (Landlord): `no ip igmp snooping`, no local SVI/IP configured
 - SNMP is enabled during Step 1 for ISAAC integration
 
 ### Dante note (Audinate requirement)
 
 On every VLAN 30 Dante port:
 
-- `no eee` is set to disable Energy Efficient Ethernet (IEEE 802.3az)
 - `qos trust dscp` is set on the interface (port-level trust for Dante only)
 - QoS DSCP mappings are configured for CS7/EF/CS1 priorities
 
@@ -129,4 +129,4 @@ On every VLAN 30 Dante port:
 | AVR-08-SWE-01 | 10.154.10.28 | CX 6300F 48P (JL665A) | EER | [AVR-08-SWE-01.md](./AVR-08-SWE-01.md) |
 | AVR-10-SWE-01 | 10.154.10.30 | CX 6300F 48P (JL665A) | EER | [AVR-10-SWE-01.md](./AVR-10-SWE-01.md) |
 
-> Note: Landlord ports are configured with `vlan access 1` as a placeholder. Confirm final VLAN ID with the landlord network team before deployment.
+> Note: Landlord ports are configured on `vlan access 50` (`Landlord` VLAN).
