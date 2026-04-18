@@ -118,6 +118,12 @@ configure terminal
     ip address 10.154.10.20/24
     no shutdown
 
+  ! --- VLAN 40 SVI (IGMP querier source — Lighting/sACN) ---
+  interface vlan 40
+    ip address 10.154.40.1/24
+    ip igmp
+    no shutdown
+
   ! --- Default route ---
   ip route 0.0.0.0/0 10.154.10.1
 
