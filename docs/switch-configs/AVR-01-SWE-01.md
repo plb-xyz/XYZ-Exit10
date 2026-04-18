@@ -33,13 +33,16 @@
 | 16 | 10 | ACB-104-2 |  |
 | 17 | 10 | ACB-201-1 |  |
 | 18 | 10 | ACB-201-2 |  |
-| 19 | empty | — | Left unconfigured (default state) |
-| 20 | empty | — | Left unconfigured (default state) |
+| 19 | 10 | Reserved - no device |  |
+| 20 | 50 | Reserved - no device |  |
 | 21 | 30 | ACB-103 |  |
 | 22 | 30 | ACB-104 |  |
 | 23 | 30 | ACB-201 |  |
-| 24 | 30 | — | Reserved for Dante |
+| 24 | 30 | Reserved - no device |  |
 | 25 | TRUNK | AVR-08-SFP-01 | Uplink trunk (native VLAN 10, all VLANs tagged) |
+| 26 | — | SPARE |  |
+| 27 | — | SPARE |  |
+| 28 | — | SPARE |  |
 
 ## Step 1 — Initial Setup
 
@@ -97,7 +100,7 @@ write memory
 ! ============================================================
 ! AVR-01-SWE-01 — IDF-FF-03A
 ! IP: 10.154.10.21 | Model: CX 6300F 24P (JL666A)
-! VLANs: 10=Control 20=QLAN 30=Dante 40=Lighting
+! VLANs: 10=Control 20=QLAN 30=Dante 40=Lighting 50=Landlord
 ! ============================================================
 
 configure terminal
@@ -113,6 +116,8 @@ configure terminal
     name Dante
   vlan 40
     name Lighting
+  vlan 50
+    name Landlord
 
   ! --- Management IP (Control VLAN SVI) ---
   interface vlan 10
@@ -133,6 +138,8 @@ configure terminal
     ip igmp snooping enable
   vlan 40
     ip igmp snooping enable
+  vlan 50
+    no ip igmp snooping
   ! --- Spanning Tree ---
   spanning-tree mode mstp
   spanning-tree priority 8
@@ -264,6 +271,20 @@ configure terminal
     spanning-tree bpdu-guard
     no shutdown
 
+  interface 1/1/19
+    description "Reserved - no device"
+    vlan access 10
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/20
+    description "Reserved - no device"
+    vlan access 50
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    no shutdown
+
   interface 1/1/21
     description "ACB-103"
     vlan access 30
@@ -289,7 +310,7 @@ configure terminal
     no shutdown
 
   interface 1/1/24
-    description "Dante"
+    description "Reserved - no device"
     vlan access 30
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -302,6 +323,27 @@ configure terminal
     vlan trunk native 10
     no spanning-tree bpdu-guard
     no shutdown
+
+  interface 1/1/26
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/27
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/28
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
 
 end
 

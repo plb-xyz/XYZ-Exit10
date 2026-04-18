@@ -24,8 +24,8 @@
 | 7 | TRUNK | AVR-08-SWE-01 | Uplink trunk (native VLAN 10, all VLANs tagged) |
 | 8 | TRUNK | AVR-10-SWE-01 | Uplink trunk (native VLAN 10, all VLANs tagged) |
 | 9 | 40 | AVR-06-NOD-01 |  |
-| 10 | 40 | PWR-02.0-10002 |  |
-| 11 | 40 | PWR-02.0-10004 |  |
+| 10 | 40 | PWR-02.0-10004 |  |
+| 11 | 40 | PWR-02.0-10006 |  |
 | 12 | 40 | PWR-02.0-10005 |  |
 | 13 | 40 | PWR-02.0-10006 |  |
 | 14 | 40 | PWR-02.0-10008 |  |
@@ -39,6 +39,10 @@
 | 22 | 10 | ACB-101 |  |
 | 23 | 10 | ACB-201 |  |
 | 24 | 10 | ACB-301 |  |
+| 25 | — | SPARE |  |
+| 26 | — | SPARE |  |
+| 27 | — | SPARE |  |
+| 28 | — | SPARE |  |
 
 ## Step 1 — Initial Setup
 
@@ -96,7 +100,7 @@ write memory
 ! ============================================================
 ! AVR-08-SFP-01 — EER — Core Fiber
 ! IP: 10.154.10.20 | Model: CX 6300M 24P SFP (JL658A)
-! VLANs: 10=Control 20=QLAN 30=Dante 40=Lighting
+! VLANs: 10=Control 20=QLAN 30=Dante 40=Lighting 50=Landlord
 ! ============================================================
 
 configure terminal
@@ -112,6 +116,8 @@ configure terminal
     name Dante
   vlan 40
     name Lighting
+  vlan 50
+    name Landlord
 
   ! --- Management IP (Control VLAN SVI) ---
   interface vlan 10
@@ -139,11 +145,69 @@ configure terminal
     ip igmp snooping enable
   vlan 40
     ip igmp snooping enable
+  vlan 50
+    no ip igmp snooping
   ! --- Spanning Tree ---
   spanning-tree mode mstp
   spanning-tree priority 1
 
   ! --- Interfaces ---
+  interface 1/1/1
+    description "TRUNK to AVR-01-SWE-01"
+    vlan trunk allowed all
+    vlan trunk native 10
+    no spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/2
+    description "TRUNK to AVR-02-SWE-01"
+    vlan trunk allowed all
+    vlan trunk native 10
+    no spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/3
+    description "TRUNK to AVR-03-SWE-01"
+    vlan trunk allowed all
+    vlan trunk native 10
+    no spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/4
+    description "TRUNK to AVR-04-SWE-01"
+    vlan trunk allowed all
+    vlan trunk native 10
+    no spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/5
+    description "TRUNK to AVR-05-SWE-01"
+    vlan trunk allowed all
+    vlan trunk native 10
+    no spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/6
+    description "TRUNK to AVR-07-SWE-01"
+    vlan trunk allowed all
+    vlan trunk native 10
+    no spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/7
+    description "TRUNK to AVR-08-SWE-01"
+    vlan trunk allowed all
+    vlan trunk native 10
+    no spanning-tree bpdu-guard
+    no shutdown
+
+  interface 1/1/8
+    description "TRUNK to AVR-10-SWE-01"
+    vlan trunk allowed all
+    vlan trunk native 10
+    no spanning-tree bpdu-guard
+    no shutdown
+
   interface 1/1/9
     description "AVR-06-NOD-01"
     vlan access 40
@@ -152,14 +216,14 @@ configure terminal
     no shutdown
 
   interface 1/1/10
-    description "PWR-02.0-10002"
+    description "PWR-02.0-10004"
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/11
-    description "PWR-02.0-10004"
+    description "PWR-02.0-10006"
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
@@ -256,61 +320,33 @@ configure terminal
     spanning-tree bpdu-guard
     no shutdown
 
-  interface 1/1/1
-    description "TRUNK to AVR-01-SWE-01"
-    vlan trunk allowed all
-    vlan trunk native 10
-    no spanning-tree bpdu-guard
-    no shutdown
+  interface 1/1/25
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
 
-  interface 1/1/2
-    description "TRUNK to AVR-02-SWE-01"
-    vlan trunk allowed all
-    vlan trunk native 10
-    no spanning-tree bpdu-guard
-    no shutdown
+  interface 1/1/26
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
 
-  interface 1/1/3
-    description "TRUNK to AVR-03-SWE-01"
-    vlan trunk allowed all
-    vlan trunk native 10
-    no spanning-tree bpdu-guard
-    no shutdown
+  interface 1/1/27
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
 
-  interface 1/1/4
-    description "TRUNK to AVR-04-SWE-01"
-    vlan trunk allowed all
-    vlan trunk native 10
-    no spanning-tree bpdu-guard
-    no shutdown
-
-  interface 1/1/5
-    description "TRUNK to AVR-05-SWE-01"
-    vlan trunk allowed all
-    vlan trunk native 10
-    no spanning-tree bpdu-guard
-    no shutdown
-
-  interface 1/1/6
-    description "TRUNK to AVR-07-SWE-01"
-    vlan trunk allowed all
-    vlan trunk native 10
-    no spanning-tree bpdu-guard
-    no shutdown
-
-  interface 1/1/7
-    description "TRUNK to AVR-08-SWE-01"
-    vlan trunk allowed all
-    vlan trunk native 10
-    no spanning-tree bpdu-guard
-    no shutdown
-
-  interface 1/1/8
-    description "TRUNK to AVR-10-SWE-01"
-    vlan trunk allowed all
-    vlan trunk native 10
-    no spanning-tree bpdu-guard
-    no shutdown
+  interface 1/1/28
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
 
 end
 
