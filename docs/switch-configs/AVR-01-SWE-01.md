@@ -38,7 +38,7 @@
 | 21 | 30 | ACB-103 |  |
 | 22 | 30 | ACB-104 |  |
 | 23 | 30 | ACB-201 |  |
-| 24 | empty | — | Left unconfigured (default state) |
+| 24 | 30 | — | Reserved for Dante |
 | 25 | TRUNK | AVR-08-SFP-01 | Uplink trunk (native VLAN 10, all VLANs tagged) |
 
 ## Step 1 — Initial Setup
@@ -89,11 +89,14 @@ write memory
 
 ## Step 2 — Main Configuration
 
+### To connect to switch
+| Windows Powershell | `ssh admin@10.154.10.21`|
+
 ```text
 ! ============================================================
 ! AVR-01-SWE-01 — IDF-FF-03A
 ! IP: 10.154.10.21 | Model: CX 6300F 24P (JL666A)
-! VLANs: 10=Control 20=QLAN 30=Dante 40=sACN-Lighting
+! VLANs: 10=Control 20=QLAN 30=Dante 40=Lighting
 ! ============================================================
 
 configure terminal
@@ -108,7 +111,7 @@ configure terminal
   vlan 30
     name Dante
   vlan 40
-    name sACN-Lighting
+    name Lighting
 
   ! --- Management IP (Control VLAN SVI) ---
   interface vlan 10
@@ -119,14 +122,13 @@ configure terminal
   ip route 0.0.0.0/0 10.154.10.1
 
   ! --- QoS for Dante (Audinate recommended DSCP priorities) ---
-  qos trust dscp
+  ! --- qos trust dscp (do if want to enable qos for whole switch)
   qos dscp-map 56 local-priority 7    ! CS7  — PTP clock sync (High)
   qos dscp-map 46 local-priority 5    ! EF   — Dante audio (Medium)
   qos dscp-map 8  local-priority 1    ! CS1  — Reserved (Low)
 
 
   ! --- IGMP Snooping ---
-  ip igmp snooping
   vlan 30
     no ip igmp snooping
   vlan 40
@@ -249,6 +251,7 @@ configure terminal
   interface 1/1/21
     description "ACB-103"
     vlan access 30
+    qos trust dscp
     no eee
     spanning-tree port-type admin-edge
     no shutdown
