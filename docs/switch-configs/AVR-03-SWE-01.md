@@ -26,19 +26,19 @@
 | 9 | 20 | AVR-03-AMP-09 |  |
 | 10 | 20 | AVR-03-AMP-10 |  |
 | 11 | 20 | TSC-301 |  |
-| 12 | empty | — | Left unconfigured (default state) |
+| 12 | 1 | SPARE | Shutdown spare port |
 | 13 | 10 | AVR-03-UPS-01 |  |
 | 14 | 10 | ACB-301 |  |
 | 15 | 10 | ACB-301 (port B) |  |
 | 16 | 10 | ACB-302 |  |
 | 17 | 10 | ACB-302 (port B) |  |
-| 18 | empty | — | Left unconfigured (default state) |
+| 18 | 1 | SPARE | Shutdown spare port |
 | 19 | 30 | ACB-301 |  |
 | 20 | 30 | WISK-NODE-102 |  |
 | 21 | 30 | WISK-NODE-101 |  |
 | 22 | 40 | Reserved - no device | Reserved port |
 | 23 | 10 | RLP-402 |  |
-| 24 | empty | — | Left unconfigured (default state) |
+| 24 | 1 | SPARE | Shutdown spare port |
 | 25 | TRUNK | AVR-08-SFP-01 | Uplink trunk (native VLAN 10, all VLANs tagged) |
 
 ## Step 1 — Initial Setup
@@ -97,7 +97,7 @@ write memory
 ! ============================================================
 ! AVR-03-SWE-01 — IDF-FF-08
 ! IP: 10.154.10.23 | Model: CX 6300F 24P (JL666A)
-! VLANs: 10=Control 20=QLAN 30=Dante 40=Lighting
+! VLANs: 10=Control 20=QLAN 30=Dante 40=Lighting 50=Landlord
 ! ============================================================
 
 configure terminal
@@ -113,6 +113,8 @@ configure terminal
     name Dante
   vlan 40
     name Lighting
+  vlan 50
+    name Landlord
 
   ! --- Management IP (Control VLAN SVI) ---
   interface vlan 10
@@ -133,6 +135,8 @@ configure terminal
     ip igmp snooping enable
   vlan 40
     ip igmp snooping enable
+  vlan 50
+    no ip igmp snooping
   ! --- Spanning Tree ---
   spanning-tree mode mstp
   spanning-tree priority 8
@@ -287,6 +291,27 @@ configure terminal
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
+
+  interface 1/1/12
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/18
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
+
+  interface 1/1/24
+    description "SPARE"
+    vlan access 1
+    spanning-tree port-type admin-edge
+    spanning-tree bpdu-guard
+    shutdown
 
   interface 1/1/25
     description "TRUNK to AVR-08-SFP-01"
