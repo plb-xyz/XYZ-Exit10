@@ -88,6 +88,10 @@ write memory
 
 ## Step 2 — Main Configuration
 
+### To connect to switch
+| Windows PowerShell | `ssh admin@10.154.10.20` |
+|---|---|
+
 ```text
 ! ============================================================
 ! AVR-08-SFP-01 — EER — Core Fiber
@@ -118,7 +122,6 @@ configure terminal
   ip route 0.0.0.0/0 10.154.10.1
 
   ! --- IGMP Snooping ---
-  ip igmp snooping
   vlan 30
     no ip igmp snooping
   vlan 40
@@ -134,96 +137,112 @@ configure terminal
     description "AVR-06-NOD-01"
     vlan access 40
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/10
     description "PWR-02.0-10002"
     vlan access 40
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/11
     description "PWR-02.0-10004"
     vlan access 40
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/12
     description "PWR-02.0-10005"
     vlan access 40
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/13
     description "PWR-02.0-10006"
     vlan access 40
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/14
     description "PWR-02.0-10008"
     vlan access 40
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/15
     description "PWR-02.0-10010"
     vlan access 40
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/16
     description "PWR-02.0-10001"
     vlan access 40
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/17
     description "PWR-02.0-20004"
     vlan access 40
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/18
     description "PWR-01.0-20005"
     vlan access 40
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/19
     description "PWR-02.0-20001"
     vlan access 40
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/20
     description "PWR-02.0-30001"
     vlan access 40
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/21
     description "WISK-NODE-101"
     vlan access 40
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/22
     description "ACB-101"
     vlan access 10
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/23
     description "ACB-201"
     vlan access 10
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/24
     description "ACB-301"
     vlan access 10
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/1

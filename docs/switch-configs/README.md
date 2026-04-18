@@ -112,6 +112,7 @@ After Step 1 completes, web UI is available at:
 On every VLAN 30 Dante port:
 
 - `no eee` is set to disable Energy Efficient Ethernet (IEEE 802.3az)
+- `qos trust dscp` is set on the interface (port-level trust for Dante only)
 - QoS DSCP mappings are configured for CS7/EF/CS1 priorities
 
 ## Switch Files

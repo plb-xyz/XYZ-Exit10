@@ -6,7 +6,7 @@
 |---|---|---|---|---|---|---|
 | 10 | Control | default | no | no | default | Management, SNMP, ISAAC |
 | 20 | QLAN | default | no | no | default | Q-SYS unicast TCP |
-| 30 | Dante | OFF | no | trust DSCP + strict priority | OFF (no eee) | Dante manages own multicast |
+| 30 | Dante | OFF | no | trust DSCP on Dante ports + strict priority | OFF (no eee) | Dante manages own multicast |
 | 40 | sACN | ON | YES | no | default | GrandMA3 multicast |
 
 ## 1) Network / Switching

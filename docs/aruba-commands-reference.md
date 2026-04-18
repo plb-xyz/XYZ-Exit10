@@ -39,7 +39,7 @@ Focused command reference for Aruba 6300/6400 switches used in the Exit10 show-c
 | VLAN 10 (Control) | Switch management + control endpoints | `vlan access 10` |
 | VLAN 20 (QLAN) | Q-LAN / audio-control devices | `vlan access 20` |
 | VLAN 30 (Dante) | Dante audio network | `vlan access 30` |
-| VLAN 40 (sACN-Lighting) | Lighting/sACN multicast transport | `vlan access 40` + IGMP snooping querier on VLAN 40 |
+| VLAN 40 (Lighting) | Lighting/sACN multicast transport | `vlan access 40` + IGMP snooping querier on VLAN 40 |
 | Trunk | Inter-switch uplinks | `vlan trunk allowed all` + `vlan trunk native 10` |
 | Landlord | Landlord-facing ports (placeholder) | `vlan access 1` (verify final VLAN ID with landlord network team) |
 
@@ -217,21 +217,14 @@ show vlan
 
 ```text
 configure terminal
-ip igmp snooping
-! Enable IGMP snooping globally
+vlan 30
+ no ip igmp snooping
+! Dante VLAN in this project keeps IGMP snooping off
 
-vlan 10
+vlan 40
  ip igmp snooping
-! Enable IGMP snooping in show VLAN
-
-ip igmp snooping drop-unknown vlan-exclusive
-! Drop unknown multicast where required by policy
-
-ip igmp snooping fastlearn 1/1/1,1/1/2,1/1/3
-! Fast-learn joins on endpoint-facing ports
-
-ip igmp snooping querier
-! Enable querier so multicast group state is maintained
+ ip igmp snooping querier
+! sACN VLAN keeps snooping enabled and requires a querier
 ```
 
 ```text
@@ -281,12 +274,13 @@ configure terminal
 spanning-tree mode mstp
 ! Or use: spanning-tree mode rpvst
 
-spanning-tree priority 4096
-! Lower value = higher root preference
+spanning-tree priority 1
+! Lower value = higher root preference (1..15 on AOS-CX)
 
 interface 1/1/1
  spanning-tree port-type admin-edge
-! End-device port: skip long transition delays
+ spanning-tree bpduguard enable
+! End-device port: fast transition + BPDU protection
 ```
 
 ```text
@@ -324,7 +318,7 @@ configure terminal
 aaa authentication login default local
 ! Use local user database for login authentication
 
-username admin privilege 15 password plaintext <pw>
+user admin group administrators password plaintext <pw>
 ! Create/update local admin account (replace <pw>)
 ```
 
@@ -370,6 +364,6 @@ reload
 - Forgetting IGMP querier on show VLAN -> sACN multicast can drop or never forward to nodes.
 - Forgetting to save config (`write memory` or `copy running-config startup-config`) -> changes lost after reboot.
 - Trunk port missing required VLAN tag -> endpoints in that VLAN become unreachable.
-- End-device ports not set to `spanning-tree port-type admin-edge` -> unnecessary STP delays during link-up.
+- End-device ports missing `spanning-tree bpduguard enable` can allow accidental loops if another switch is patched in.
 - Misaligning endpoint addressing with the show-control IP plan can break endpoint reachability.
 - Verify Watchout server addressing against the **Exit10 Network Context** section before deployment.

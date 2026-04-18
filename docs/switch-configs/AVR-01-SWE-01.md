@@ -90,7 +90,8 @@ write memory
 ## Step 2 — Main Configuration
 
 ### To connect to switch
-| Windows Powershell | `ssh admin@10.154.10.21`|
+| Windows PowerShell | `ssh admin@10.154.10.21` |
+|---|---|
 
 ```text
 ! ============================================================
@@ -122,7 +123,6 @@ configure terminal
   ip route 0.0.0.0/0 10.154.10.1
 
   ! --- QoS for Dante (Audinate recommended DSCP priorities) ---
-  ! --- qos trust dscp (do if want to enable qos for whole switch)
   qos dscp-map 56 local-priority 7    ! CS7  — PTP clock sync (High)
   qos dscp-map 46 local-priority 5    ! EF   — Dante audio (Medium)
   qos dscp-map 8  local-priority 1    ! CS1  — Reserved (Low)
@@ -144,108 +144,126 @@ configure terminal
     description "AVR-01-AMP-01"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/2
     description "AVR-01-AMP-02"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/3
     description "AVR-01-AMP-03"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/4
     description "AVR-01-AMP-04"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/5
     description "AVR-01-AMP-05"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/6
     description "AVR-01-AMP-06"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/7
     description "AVR-01-AMP-07"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/8
     description "AVR-01-AMP-08"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/9
     description "AVR-01-AMP-09"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/10
     description "AVR-01-AMP-10"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/11
     description "TSC-201"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/12
     description "TSC-202"
     vlan access 20
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/13
     description "ACB-103-1"
     vlan access 10
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/14
     description "ACB-103-2"
     vlan access 10
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/15
     description "ACB-104-1"
     vlan access 10
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/16
     description "ACB-104-2"
     vlan access 10
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/17
     description "ACB-201-1"
     vlan access 10
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/18
     description "ACB-201-2"
     vlan access 10
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/21
@@ -254,20 +272,25 @@ configure terminal
     qos trust dscp
     no eee
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/22
     description "ACB-104"
     vlan access 30
+    qos trust dscp
     no eee
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/23
     description "ACB-201"
     vlan access 30
+    qos trust dscp
     no eee
     spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
     no shutdown
 
   interface 1/1/25
