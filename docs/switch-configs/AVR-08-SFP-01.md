@@ -120,11 +120,14 @@ configure terminal
 
   ! --- VLAN 30/40 SVI (IGMP querier source) ---
   interface vlan 30
+    ip address 10.154.30.1/24
+    ip igmp enable
     ip igmp querier
+    no shutdown
 
   interface vlan 40
     ip address 10.154.40.1/24
-    ip igmp
+    ip igmp enable
     ip igmp querier
     no shutdown
 
