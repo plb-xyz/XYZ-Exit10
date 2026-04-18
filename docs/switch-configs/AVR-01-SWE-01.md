@@ -293,6 +293,15 @@ configure terminal
     spanning-tree bpduguard enable
     no shutdown
 
+  interface 1/1/24
+    description "Dante"
+    vlan access 30
+    qos trust dscp
+    no eee
+    spanning-tree port-type admin-edge
+    spanning-tree bpduguard enable
+    no shutdown
+
   interface 1/1/25
     description "TRUNK to AVR-08-SFP-01"
     vlan trunk allowed all
