@@ -6,7 +6,7 @@
 |---|---|---|---|---|---|---|
 | 10 | Control | default | no | no | default | Management, SNMP, ISAAC |
 | 20 | QLAN | default | no | no | default | Q-SYS unicast TCP |
-| 30 | Dante | OFF | no | trust DSCP on Dante ports + strict priority | OFF (no eee) | Dante manages own multicast |
+| 30 | Dante | ON | YES | trust DSCP on Dante ports + strict priority | OFF (no eee) |
 | 40 | sACN | ON | YES | no | default | GrandMA3 multicast |
 
 ## 1) Network / Switching
@@ -22,7 +22,6 @@
 - **Audinate Dante Network Design Guide** — Vendor best-practice guidance for Dante transport, clocking, and switch behavior — https://www.getdante.com/resources/
 - **ESTA E1.31 Streaming ACN (sACN) Specification** — Streaming ACN protocol reference used in mixed AV networks — https://tsp.esta.org/tsp/documents/published_docs.php
 - **Disable EEE on Dante ports (`no eee`)** — Project requirement to avoid Dante dropouts from EEE behavior — [docs/switch-configs/](./switch-configs/)
-- **Disable IGMP snooping on VLAN 30 (`no ip igmp snooping`)** — Project decision because Dante manages its own multicast behavior in this deployment — [docs/switch-configs/](./switch-configs/)
 - **QoS DSCP priorities: CS7 (56), EF (46), CS1 (8)** — Project QoS mapping requirement for Dante PTP/audio/reserved classes — [docs/switch-configs/](./switch-configs/)
 - **Strict priority queueing when QoS is enabled** — Project requirement to preserve Dante timing and audio delivery priority — [docs/switch-configs/](./switch-configs/)
 - **Dante transport VLAN = 30** — Project VLAN design assignment for Dante endpoints — [docs/aruba-commands-reference.md](./aruba-commands-reference.md)
