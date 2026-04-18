@@ -103,8 +103,8 @@ After Step 1 completes, web UI is available at:
 - Control VLAN subnet: `10.154.10.0/24`
 - Gateway: `10.154.10.1`
 - Trunks carry VLANs **10, 20, 30, 40, 50** (`vlan trunk allowed all` + `vlan trunk native 10`)
-- VLAN 30 (Dante): `ip igmp snooping enable`, querier enabled on core only
-- VLAN 40 (sACN): `ip igmp snooping enable`, querier enabled on core only
+- VLAN 30 (Dante): `ip igmp snooping enable` on all switches; `ip igmp querier` on core (`AVR-08-SFP-01`) only
+- VLAN 40 (sACN): `ip igmp snooping enable` on all switches; `ip igmp querier` on core (`AVR-08-SFP-01`) only
 - VLAN 50 (Landlord): `no ip igmp snooping`, no local SVI/IP configured
 - SNMP is enabled during Step 1 for ISAAC integration
 
