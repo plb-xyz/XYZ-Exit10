@@ -544,7 +544,6 @@ write memory
 
 ## Notes & Verification
 
-- Landlord ports use `vlan access 1` as a placeholder; verify final landlord VLAN ID with the landlord network team.
 - No uncertain ports were identified in the provided assignment table.
 - `spanning-tree port-type admin-edge` makes endpoint ports forward immediately (faster link-up for end devices).
 - `no shutdown` administratively enables each configured port.
