@@ -24,8 +24,8 @@
 | 7 | TRUNK | AVR-08-SWE-01 | Uplink trunk (native VLAN 10, all VLANs tagged) |
 | 8 | TRUNK | AVR-10-SWE-01 | Uplink trunk (native VLAN 10, all VLANs tagged) |
 | 9 | 40 | AVR-06-NOD-01 |  |
-| 10 | 40 | PWR-02.0-10004 |  |
-| 11 | 40 | PWR-02.0-10006 |  |
+| 10 | 40 | PWR-02.0-10002 |  |
+| 11 | 40 | PWR-02.0-10004 |  |
 | 12 | 40 | PWR-02.0-10005 |  |
 | 13 | 40 | PWR-02.0-10006 |  |
 | 14 | 40 | PWR-02.0-10008 |  |
@@ -216,14 +216,14 @@ configure terminal
     no shutdown
 
   interface 1/1/10
-    description "PWR-02.0-10004"
+    description "PWR-02.0-10002"
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/11
-    description "PWR-02.0-10006"
+    description "PWR-02.0-10004"
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
