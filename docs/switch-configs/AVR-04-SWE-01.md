@@ -34,7 +34,7 @@
 | 17 | — | SPARE |  |
 | 18 | — | SPARE |  |
 | 19 | — | SPARE |  |
-| 20 | 50 | Reserved - no device |  |
+| 20 | — | SPARE |  |
 | 21 | 40 | NOD-001 |  |
 | 22 | 40 | Reserved - no device |  |
 | 23 | 40 | Reserved - no device |  |
@@ -273,8 +273,8 @@ configure terminal
     shutdown
 
   interface 1/1/20
-    description "Reserved - no device"
-    vlan access 50
+    description "SPARE"
+    vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
