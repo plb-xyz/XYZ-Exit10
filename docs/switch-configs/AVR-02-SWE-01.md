@@ -61,8 +61,8 @@
 | 44 | — | SPARE |  |
 | 45 | 10 | Reserved - no device |  |
 | 46 | 10 | Reserved - no device |  |
-| 47 | 50 | Reserved - no device |  |
-| 48 | 50 | Reserved - no device |  |
+| 47 | — | SPARE |  |
+| 48 | — | SPARE |  |
 | 49 | TRUNK | AVR-08-SFP-01 | Uplink trunk (native VLAN 10, all VLANs tagged) |
 | 50 | — | SPARE |  |
 | 51 | — | SPARE |  |
@@ -501,15 +501,15 @@ configure terminal
     no shutdown
 
   interface 1/1/47
-    description "Reserved - no device"
-    vlan access 50
+    description "SPARE"
+    vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/48
-    description "Reserved - no device"
-    vlan access 50
+    description "SPARE"
+    vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
