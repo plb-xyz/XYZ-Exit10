@@ -34,7 +34,7 @@
 | 17 | 10 | ACB-201-1 |  |
 | 18 | 10 | ACB-201-2 |  |
 | 19 | 10 | Reserved - no device |  |
-| 20 | 50 | Reserved - no device |  |
+| 20 | 10 | Reserved - no device |  |
 | 21 | 30 | ACB-103 |  |
 | 22 | 30 | ACB-104 |  |
 | 23 | 30 | ACB-201 |  |
@@ -284,7 +284,7 @@ configure terminal
 
   interface 1/1/20
     description "Reserved - no device"
-    vlan access 50
+    vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
