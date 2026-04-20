@@ -152,9 +152,10 @@ configure terminal
   ip route 0.0.0.0/0 10.154.10.1
 
   ! --- QoS for Dante (Audinate recommended DSCP priorities) ---
-  qos dscp-map 56 local-priority 7
-  qos dscp-map 46 local-priority 5
-  qos dscp-map 8  local-priority 1
+  qos dscp-map 56 local-priority 7 name CS7
+  qos dscp-map 46 local-priority 5 name EF
+  qos dscp-map 8  local-priority 1 name CS1
+  qos dscp-map 0  local-priority 1 name CS0
 
 
   ! --- IGMP Snooping ---
