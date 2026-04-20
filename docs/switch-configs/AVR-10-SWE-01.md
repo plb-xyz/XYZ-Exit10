@@ -158,6 +158,8 @@ configure terminal
 
 
   ! --- IGMP Snooping ---
+  vlan 20
+    ip igmp snooping enable
   vlan 30
     ip igmp snooping enable
   vlan 40
