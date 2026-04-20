@@ -134,6 +134,8 @@ configure terminal
   qos dscp-map 8  local-priority 1
 
   ! --- IGMP Snooping ---
+  vlan 20
+    ip igmp snooping enable
   vlan 30
     ip igmp snooping enable
   vlan 40
@@ -150,6 +152,7 @@ configure terminal
   interface 1/1/1
     description "AVR-03-AMP-01"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -157,6 +160,7 @@ configure terminal
   interface 1/1/2
     description "AVR-03-AMP-02"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -164,6 +168,7 @@ configure terminal
   interface 1/1/3
     description "AVR-03-AMP-03"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -171,6 +176,7 @@ configure terminal
   interface 1/1/4
     description "AVR-03-AMP-04"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -178,6 +184,7 @@ configure terminal
   interface 1/1/5
     description "AVR-03-AMP-05"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -185,6 +192,7 @@ configure terminal
   interface 1/1/6
     description "AVR-03-AMP-06"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -192,6 +200,7 @@ configure terminal
   interface 1/1/7
     description "AVR-03-AMP-07"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -199,6 +208,7 @@ configure terminal
   interface 1/1/8
     description "AVR-03-AMP-08"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -206,6 +216,7 @@ configure terminal
   interface 1/1/9
     description "AVR-03-AMP-09"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -213,6 +224,7 @@ configure terminal
   interface 1/1/10
     description "AVR-03-AMP-10"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -220,6 +232,7 @@ configure terminal
   interface 1/1/11
     description "TSC-301"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -227,6 +240,7 @@ configure terminal
   interface 1/1/12
     description "Reserved - no device"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
