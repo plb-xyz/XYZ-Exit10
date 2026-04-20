@@ -104,6 +104,10 @@ configure terminal
     ip address 10.154.10.30/24
     no shutdown
 
+  interface mgmt
+    ip static 10.154.10.30/24
+    no shutdown
+
   ! --- Default route ---
   ip route 0.0.0.0/0 10.154.10.1
 
@@ -148,6 +152,10 @@ configure terminal
     ip address 10.154.10.30/24
     no shutdown
 
+  interface mgmt
+    ip static 10.154.10.30/24
+    no shutdown
+
   ! --- Default route ---
   ip route 0.0.0.0/0 10.154.10.1
 
@@ -157,6 +165,9 @@ configure terminal
   qos dscp-map 8  local-priority 1 name CS1
   qos dscp-map 0  local-priority 1 name CS0
 
+  ntp enable
+  no ntp dhcp
+  ntp server 10.154.10.20
 
   ! --- IGMP Snooping ---
   vlan 20
