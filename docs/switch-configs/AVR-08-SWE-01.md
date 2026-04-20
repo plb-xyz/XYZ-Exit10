@@ -90,6 +90,7 @@ configure terminal
 
   ! --- Enable SSH ---
   ssh server vrf default
+  ssh server vrf mgmt
 
   ! --- SNMP (required for ISAAC integration) ---
   snmp-server vrf default
@@ -102,6 +103,10 @@ configure terminal
   ! --- Management IP on Control VLAN SVI (accessible from all ports) ---
   interface vlan 10
     ip address 10.154.10.28/24
+    no shutdown
+
+  interface mgmt
+    ip static 10.154.10.28/24
     no shutdown
 
   ! --- Default route ---
@@ -148,14 +153,22 @@ configure terminal
     ip address 10.154.10.28/24
     no shutdown
 
+  interface mgmt
+    ip static 10.154.10.28/24
+    no shutdown
+
   ! --- Default route ---
   ip route 0.0.0.0/0 10.154.10.1
 
   ! --- QoS for Dante (Audinate recommended DSCP priorities) ---
-  qos dscp-map 56 local-priority 7    ! CS7  — PTP clock sync (High)
-  qos dscp-map 46 local-priority 5    ! EF   — Dante audio (Medium)
-  qos dscp-map 8  local-priority 1    ! CS1  — Reserved (Low)
+  qos dscp-map 56 local-priority 7 name CS7
+  qos dscp-map 46 local-priority 5 name EF
+  qos dscp-map 8  local-priority 1 name CS1
+  qos dscp-map 0  local-priority 1 name CS0
 
+  ntp enable
+  no ntp dhcp
+  ntp server 10.154.10.20
 
   ! --- IGMP Snooping ---
   vlan 20
