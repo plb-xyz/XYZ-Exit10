@@ -152,9 +152,10 @@ configure terminal
   ip route 0.0.0.0/0 10.154.10.1
 
   ! --- QoS for Dante (Audinate recommended DSCP priorities) ---
-  qos dscp-map 56 local-priority 7    ! CS7  — PTP clock sync (High)
-  qos dscp-map 46 local-priority 5    ! EF   — Dante audio (Medium)
-  qos dscp-map 8  local-priority 1    ! CS1  — Reserved (Low)
+  qos dscp-map 56 local-priority 7 name CS7
+  qos dscp-map 46 local-priority 5 name EF
+  qos dscp-map 8  local-priority 1 name CS1
+  qos dscp-map 0  local-priority 1 name CS0
 
 
   ! --- IGMP Snooping ---
@@ -180,7 +181,7 @@ configure terminal
     no shutdown
 
   interface 1/1/2
-    description "AVR-07-DSP-02 Port 1"
+    description AVR-07-DSP-02 Port 1
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -188,7 +189,7 @@ configure terminal
     no shutdown
 
   interface 1/1/3
-    description "AVR-07-AMP-01"
+    description AVR-07-AMP-01
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -196,7 +197,7 @@ configure terminal
     no shutdown
 
   interface 1/1/4
-    description "AVR-07-AMP-02"
+    description AVR-07-AMP-02
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -204,7 +205,7 @@ configure terminal
     no shutdown
 
   interface 1/1/5
-    description "AVR-07-AMP-03"
+    description AVR-07-AMP-03
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -212,7 +213,7 @@ configure terminal
     no shutdown
 
   interface 1/1/6
-    description "AVR-07-AMP-04"
+    description AVR-07-AMP-04
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -220,7 +221,7 @@ configure terminal
     no shutdown
 
   interface 1/1/7
-    description "AVR-07-AMP-05"
+    description AVR-07-AMP-05
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -228,7 +229,7 @@ configure terminal
     no shutdown
 
   interface 1/1/8
-    description "AVR-07-AMP-06"
+    description AVR-07-AMP-06
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -236,7 +237,7 @@ configure terminal
     no shutdown
 
   interface 1/1/9
-    description "AVR-07-L4o-01"
+    description AVR-07-L4o-01
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -244,7 +245,7 @@ configure terminal
     no shutdown
 
   interface 1/1/10
-    description "AVR-07-L4o-02"
+    description AVR-07-L4o-02
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -252,7 +253,7 @@ configure terminal
     no shutdown
 
   interface 1/1/11
-    description "AVR-07-L4o-03"
+    description AVR-07-L4o-03
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -260,7 +261,7 @@ configure terminal
     no shutdown
 
   interface 1/1/12
-    description "AVR-07-L4o-04"
+    description AVR-07-L4o-04
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -268,7 +269,7 @@ configure terminal
     no shutdown
 
   interface 1/1/13
-    description "AVR-07-GPIO-01"
+    description AVR-07-GPIO-01
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -276,7 +277,7 @@ configure terminal
     no shutdown
 
   interface 1/1/14
-    description "Reserved - no device"
+    description Reserved - no device
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -284,91 +285,91 @@ configure terminal
     no shutdown
 
   interface 1/1/15
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/16
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/17
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/18
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/19
-    description "AVR-07-DSP-01 Port 3"
+    description AVR-07-DSP-01 Port 3
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/20
-    description "AVR-07-DSP-01 iDrac"
+    description AVR-07-DSP-01 iDrac
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/21
-    description "AVR-07-DSP-02 Port 3"
+    description AVR-07-DSP-02 Port 3
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/22
-    description "AVR-07-DSP-02 iDrac"
+    description AVR-07-DSP-02 iDrac
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/23
-    description "ACB-102-1"
+    description ACB-102-1
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/24
-    description "ACB-102-2"
+    description ACB-102-2
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/25
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/26
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/27
-    description "AVR-07-DSP-01 Port 2"
+    description AVR-07-DSP-01 Port 2
     vlan access 30
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -376,7 +377,7 @@ configure terminal
     no shutdown
 
   interface 1/1/28
-    description "AVR-07-DSP-02 Port 2"
+    description AVR-07-DSP-02 Port 2
     vlan access 30
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -384,7 +385,7 @@ configure terminal
     no shutdown
 
   interface 1/1/29
-    description "ACB-102"
+    description ACB-102
     vlan access 30
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -392,7 +393,7 @@ configure terminal
     no shutdown
 
   interface 1/1/30
-    description "Reserved - no device"
+    description Reserved - no device
     vlan access 30
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -400,154 +401,154 @@ configure terminal
     no shutdown
 
   interface 1/1/31
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/32
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/33
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/34
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/35
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/36
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/37
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/38
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/39
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/40
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/41
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/42
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/43
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/44
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/45
-    description "Reserved - no device"
+    description Reserved - no device
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/46
-    description "Reserved - no device"
+    description Reserved - no device
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/47
-    description "Reserved - no device"
+    description Reserved - no device
     vlan access 50
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/48
-    description "Reserved - no device"
+    description Reserved - no device
     vlan access 50
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/49
-    description "TRUNK to AVR-08-SFP-01"
+    description TRUNK to AVR-08-SFP-01
     vlan trunk allowed all
     vlan trunk native 10
     no spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/50
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/51
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/52
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
