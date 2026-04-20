@@ -153,9 +153,10 @@ configure terminal
   ip route 0.0.0.0/0 10.154.10.1
 
   ! --- QoS for Dante (Audinate recommended DSCP priorities) ---
-  qos dscp-map 56 local-priority 7
-  qos dscp-map 46 local-priority 5
-  qos dscp-map 8  local-priority 1
+  qos dscp-map 56 local-priority 7 name CS7
+  qos dscp-map 46 local-priority 5 name EF
+  qos dscp-map 8  local-priority 1 name CS1
+  qos dscp-map 0  local-priority 1 name CS0
 
 
   ! --- IGMP Snooping ---
@@ -223,42 +224,42 @@ configure terminal
     no shutdown
 
   interface 1/1/7
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/8
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/9
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/10
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/11
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/12
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
@@ -335,28 +336,28 @@ configure terminal
     no shutdown
 
   interface 1/1/23
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/24
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/25
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/26
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
@@ -411,14 +412,14 @@ configure terminal
     no shutdown
 
   interface 1/1/33
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/34
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
@@ -453,42 +454,42 @@ configure terminal
     no shutdown
 
   interface 1/1/39
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/40
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/41
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/42
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/43
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/44
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
@@ -509,14 +510,14 @@ configure terminal
     no shutdown
 
   interface 1/1/47
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/48
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
@@ -530,21 +531,21 @@ configure terminal
     no shutdown
 
   interface 1/1/50
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/51
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     shutdown
 
   interface 1/1/52
-    description "SPARE"
+    description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
