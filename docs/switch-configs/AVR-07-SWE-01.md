@@ -96,8 +96,8 @@ configure terminal
 
   ! --- Management accessible on ALL ports (not just MGMT port) ---
   ! This allows SSH and web UI access from any connected port on any VLAN
-  https-server vrf default
-  ssh server vrf default
+https-server vrf default
+ssh server vrf default
 
   ! --- Management IP on Control VLAN SVI (accessible from all ports) ---
   interface vlan 10
@@ -172,7 +172,7 @@ configure terminal
 
   ! --- Interfaces ---
   interface 1/1/1
-    description "AVR-07-DSP-01 Port 1"
+    description AVR-07-DSP-01 Port 1
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
