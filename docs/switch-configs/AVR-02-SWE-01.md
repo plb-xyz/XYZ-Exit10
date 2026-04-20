@@ -514,14 +514,14 @@ configure terminal
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
-    no shutdown
+    shutdown
 
   interface 1/1/48
     description SPARE
     vlan access 1
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
-    no shutdown
+    shutdown
 
   interface 1/1/49
     description TRUNK to AVR-08-SFP-01
