@@ -66,6 +66,7 @@ configure terminal
 
   ! --- Enable SSH ---
   ssh server vrf default
+  ssh server vrf mgmt
 
   ! --- SNMP (required for ISAAC integration) ---
   snmp-server vrf default
@@ -73,11 +74,15 @@ configure terminal
   ! --- Management accessible on ALL ports (not just MGMT port) ---
   ! This allows SSH and web UI access from any connected port on any VLAN
   https-server vrf default
-  ssh server vrf default
+  https-server vrf mgmt
 
   ! --- Management IP on Control VLAN SVI (accessible from all ports) ---
   interface vlan 10
     ip address 10.154.10.20/24
+    no shutdown
+
+  interface mgmt
+    ip static 10.154.10.20/24
     no shutdown
 
   ! --- Default route ---
@@ -142,6 +147,11 @@ configure terminal
     ip igmp enable
     ip igmp querier
     no shutdown
+
+  qos dscp-map 56 local-priority 7 name CS7
+  qos dscp-map 46 local-priority 5 name EF
+  qos dscp-map 8  local-priority 1 name CS1
+  qos dscp-map 0  local-priority 1 name CS0
 
   ! --- Default route ---
   ip route 0.0.0.0/0 10.154.10.1
