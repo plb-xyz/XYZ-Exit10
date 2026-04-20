@@ -161,168 +161,168 @@ configure terminal
 
   ! --- Interfaces ---
   interface 1/1/1
-    description "TRUNK to AVR-01-SWE-01"
+    description TRUNK to AVR-01-SWE-01
     vlan trunk allowed all
     vlan trunk native 10
     no spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/2
-    description "TRUNK to AVR-02-SWE-01"
+    description TRUNK to AVR-02-SWE-01
     vlan trunk allowed all
     vlan trunk native 10
     no spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/3
-    description "TRUNK to AVR-03-SWE-01"
+    description TRUNK to AVR-03-SWE-01
     vlan trunk allowed all
     vlan trunk native 10
     no spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/4
-    description "TRUNK to AVR-04-SWE-01"
+    description TRUNK to AVR-04-SWE-01
     vlan trunk allowed all
     vlan trunk native 10
     no spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/5
-    description "TRUNK to AVR-05-SWE-01"
+    description TRUNK to AVR-05-SWE-01
     vlan trunk allowed all
     vlan trunk native 10
     no spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/6
-    description "TRUNK to AVR-07-SWE-01"
+    description TRUNK to AVR-07-SWE-01
     vlan trunk allowed all
     vlan trunk native 10
     no spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/7
-    description "TRUNK to AVR-08-SWE-01"
+    description TRUNK to AVR-08-SWE-01
     vlan trunk allowed all
     vlan trunk native 10
     no spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/8
-    description "TRUNK to AVR-10-SWE-01"
+    description TRUNK to AVR-10-SWE-01
     vlan trunk allowed all
     vlan trunk native 10
     no spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/9
-    description "AVR-06-NOD-01"
+    description AVR-06-NOD-01
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/10
-    description "PWR-02.0-10002"
+    description PWR-02.0-10002
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/11
-    description "PWR-02.0-10004"
+    description PWR-02.0-10004
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/12
-    description "PWR-02.0-10005"
+    description PWR-02.0-10005
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/13
-    description "PWR-02.0-10006"
+    description PWR-02.0-10006
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/14
-    description "PWR-02.0-10008"
+    description PWR-02.0-10008
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/15
-    description "PWR-02.0-10010"
+    description PWR-02.0-10010
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/16
-    description "PWR-02.0-10001"
+    description PWR-02.0-10001
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/17
-    description "PWR-02.0-20004"
+    description PWR-02.0-20004
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/18
-    description "PWR-01.0-20005"
+    description PWR-01.0-20005
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/19
-    description "PWR-02.0-20001"
+    description PWR-02.0-20001
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/20
-    description "PWR-02.0-30001"
+    description PWR-02.0-30001
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/21
-    description "WISK-NODE-101"
+    description WISK-NODE-101
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/22
-    description "ACB-101"
+    description ACB-101
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/23
-    description "ACB-201"
+    description ACB-201
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/24
-    description "ACB-301"
+    description ACB-301
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard

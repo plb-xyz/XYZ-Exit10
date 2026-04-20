@@ -176,7 +176,7 @@ configure terminal
 
   ! --- Interfaces ---
   interface 1/1/1
-    description "AVR-02-AMP-01"
+    description AVR-02-AMP-01
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -184,7 +184,7 @@ configure terminal
     no shutdown
 
   interface 1/1/2
-    description "AVR-02-AMP-02"
+    description AVR-02-AMP-02
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -192,7 +192,7 @@ configure terminal
     no shutdown
 
   interface 1/1/3
-    description "AVR-02-AMP-03"
+    description AVR-02-AMP-03
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -200,7 +200,7 @@ configure terminal
     no shutdown
 
   interface 1/1/4
-    description "AVR-02-AMP-04"
+    description AVR-02-AMP-04
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -208,7 +208,7 @@ configure terminal
     no shutdown
 
   interface 1/1/5
-    description "AVR-02-AMP-05"
+    description AVR-02-AMP-05
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -216,7 +216,7 @@ configure terminal
     no shutdown
 
   interface 1/1/6
-    description "TSC-101"
+    description TSC-101
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -266,70 +266,70 @@ configure terminal
     shutdown
 
   interface 1/1/13
-    description "ACB-101 (port 1)"
+    description ACB-101 (port 1)
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/14
-    description "ACB-101 (port 2)"
+    description ACB-101 (port 2)
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/15
-    description "ACB-105 (port 1)"
+    description ACB-105 (port 1)
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/16
-    description "ACB-105 (port 2)"
+    description ACB-105 (port 2)
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/17
-    description "ACB-202 (port 1)"
+    description ACB-202 (port 1)
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/18
-    description "ACB-202 (port 2)"
+    description ACB-202 (port 2)
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/19
-    description "ACB-203 (port 1)"
+    description ACB-203 (port 1)
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/20
-    description "ACB-203 (port 2)"
+    description ACB-203 (port 2)
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/21
-    description "ACB-204 (port 1)"
+    description ACB-204 (port 1)
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/22
-    description "ACB-204 (port 2)"
+    description ACB-204 (port 2)
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
@@ -364,7 +364,7 @@ configure terminal
     shutdown
 
   interface 1/1/27
-    description "ACB-101"
+    description ACB-101
     vlan access 30
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -372,7 +372,7 @@ configure terminal
     no shutdown
 
   interface 1/1/28
-    description "ACB-105"
+    description ACB-105
     vlan access 30
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -380,7 +380,7 @@ configure terminal
     no shutdown
 
   interface 1/1/29
-    description "ACB-202"
+    description ACB-202
     vlan access 30
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -388,7 +388,7 @@ configure terminal
     no shutdown
 
   interface 1/1/30
-    description "ACB-203"
+    description ACB-203
     vlan access 30
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -396,7 +396,7 @@ configure terminal
     no shutdown
 
   interface 1/1/31
-    description "ACB-204"
+    description ACB-204
     vlan access 30
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -404,7 +404,7 @@ configure terminal
     no shutdown
 
   interface 1/1/32
-    description "Reserved - no device"
+    description Reserved - no device
     vlan access 30
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -426,28 +426,28 @@ configure terminal
     shutdown
 
   interface 1/1/35
-    description "RLP-401"
+    description RLP-401
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/36
-    description "Reserved - no device"
+    description Reserved - no device
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/37
-    description "Reserved - no device"
+    description Reserved - no device
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/38
-    description "Reserved - no device"
+    description Reserved - no device
     vlan access 40
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
@@ -496,14 +496,14 @@ configure terminal
     shutdown
 
   interface 1/1/45
-    description "Reserved - no device"
+    description Reserved - no device
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/46
-    description "Reserved - no device"
+    description Reserved - no device
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
@@ -524,7 +524,7 @@ configure terminal
     no shutdown
 
   interface 1/1/49
-    description "TRUNK to AVR-08-SFP-01"
+    description TRUNK to AVR-08-SFP-01
     vlan trunk allowed all
     vlan trunk native 10
     no spanning-tree bpdu-guard

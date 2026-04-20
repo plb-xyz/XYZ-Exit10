@@ -153,7 +153,7 @@ configure terminal
 
   ! --- Interfaces ---
   interface 1/1/1
-    description "AVR-01-AMP-01"
+    description AVR-01-AMP-01
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -161,7 +161,7 @@ configure terminal
     no shutdown
 
   interface 1/1/2
-    description "AVR-01-AMP-02"
+    description AVR-01-AMP-02
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -169,7 +169,7 @@ configure terminal
     no shutdown
 
   interface 1/1/3
-    description "AVR-01-AMP-03"
+    description AVR-01-AMP-03
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -177,7 +177,7 @@ configure terminal
     no shutdown
 
   interface 1/1/4
-    description "AVR-01-AMP-04"
+    description AVR-01-AMP-04
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -185,7 +185,7 @@ configure terminal
     no shutdown
 
   interface 1/1/5
-    description "AVR-01-AMP-05"
+    description AVR-01-AMP-05
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -193,7 +193,7 @@ configure terminal
     no shutdown
 
   interface 1/1/6
-    description "AVR-01-AMP-06"
+    description AVR-01-AMP-06
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -201,7 +201,7 @@ configure terminal
     no shutdown
 
   interface 1/1/7
-    description "AVR-01-AMP-07"
+    description AVR-01-AMP-07
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -209,7 +209,7 @@ configure terminal
     no shutdown
 
   interface 1/1/8
-    description "AVR-01-AMP-08"
+    description AVR-01-AMP-08
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -217,7 +217,7 @@ configure terminal
     no shutdown
 
   interface 1/1/9
-    description "AVR-01-AMP-09"
+    description AVR-01-AMP-09
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -225,7 +225,7 @@ configure terminal
     no shutdown
 
   interface 1/1/10
-    description "AVR-01-AMP-10"
+    description AVR-01-AMP-10
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -233,7 +233,7 @@ configure terminal
     no shutdown
 
   interface 1/1/11
-    description "TSC-201"
+    description TSC-201
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -241,7 +241,7 @@ configure terminal
     no shutdown
 
   interface 1/1/12
-    description "TSC-202"
+    description TSC-202
     vlan access 20
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -249,63 +249,63 @@ configure terminal
     no shutdown
 
   interface 1/1/13
-    description "ACB-103-1"
+    description ACB-103-1
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/14
-    description "ACB-103-2"
+    description ACB-103-2
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/15
-    description "ACB-104-1"
+    description ACB-104-1
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/16
-    description "ACB-104-2"
+    description ACB-104-2
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/17
-    description "ACB-201-1"
+    description ACB-201-1
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/18
-    description "ACB-201-2"
+    description ACB-201-2
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/19
-    description "Reserved - no device"
+    description Reserved - no device
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/20
-    description "Reserved - no device"
+    description Reserved - no device
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
 
   interface 1/1/21
-    description "ACB-103"
+    description ACB-103
     vlan access 30
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -313,7 +313,7 @@ configure terminal
     no shutdown
 
   interface 1/1/22
-    description "ACB-104"
+    description ACB-104
     vlan access 30
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -321,7 +321,7 @@ configure terminal
     no shutdown
 
   interface 1/1/23
-    description "ACB-201"
+    description ACB-201
     vlan access 30
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -329,7 +329,7 @@ configure terminal
     no shutdown
 
   interface 1/1/24
-    description "Reserved - no device"
+    description Reserved - no device
     vlan access 30
     qos trust dscp
     spanning-tree port-type admin-edge
@@ -337,7 +337,7 @@ configure terminal
     no shutdown
 
   interface 1/1/25
-    description "TRUNK to AVR-08-SFP-01"
+    description TRUNK to AVR-08-SFP-01
     vlan trunk allowed all
     vlan trunk native 10
     no spanning-tree bpdu-guard
