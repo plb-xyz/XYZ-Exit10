@@ -173,7 +173,7 @@ configure terminal
 
   ! --- Interfaces ---
   interface 1/1/1
-    description "AVR-10-VSR-01"
+    description AVR-10-VSR-01
     vlan access 10
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard

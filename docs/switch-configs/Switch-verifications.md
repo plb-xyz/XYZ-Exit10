@@ -118,7 +118,7 @@ show running-config interface 1/1/XX
 **Expected output for every Dante port:**
 ```text
 interface 1/1/XX
-    description "Dante - <DEVICE>"
+    description Dante - <DEVICE>
     no shutdown
     no routing
     vlan access 30
