@@ -1,0 +1,83 @@
+CATEGORY;CHECK ITEM;EXPECTED VALUE / COMMAND;AVR-08-SFP-01;AVR-01-SWE-01;AVR-02-SWE-01;AVR-03-SWE-01;AVR-04-SWE-01;AVR-05-SWE-01;AVR-07-SWE-01;AVR-08-SWE-01;AVR-10-SWE-01;NOTES
+;Location;;EER - Core Fiber;IDF-FF-03A;IDF-GF-06;IDF-FF-08;IDF-GF-P1;IDF-GF-P2;EER;EER;EER;
+;Management IP;;10.154.10.20;10.154.10.21;10.154.10.22;10.154.10.23;10.154.10.24;10.154.10.25;10.154.10.27;10.154.10.28;10.154.10.30;
+;Model;;CX 6300M 24P SFP JL658A;CX 6300F 24P JL666A;CX 6300F 48P JL665A;CX 6300F 24P JL666A;CX 6300F 24P JL666A;CX 6300F 24P JL666A;CX 6300F 48P JL665A;CX 6300F 48P JL665A;CX 6300F 48P JL665A;
+;Verified By;;;;;;;;;;;
+;Date Verified;;;;;;;;;;;
+;;;;;;;;;;;;
+1 - BASIC CONNECTIVITY;Firmware version FL.10.10.x;show version;;;;;;;;;;
+1 - BASIC CONNECTIVITY;Management IP reachable;ping 10.154.10.XX from control PC;;;;;;;;;;
+1 - BASIC CONNECTIVITY;SSH login successful;ssh admin@10.154.10.XX;;;;;;;;;;
+1 - BASIC CONNECTIVITY;Hostname correct;show running-config | include hostname;;;;;;;;;;
+1 - BASIC CONNECTIVITY;Running config saved to startup;show startup-config matches running-config;;;;;;;;;;
+;;;;;;;;;;;;
+2 - VLAN CONFIG;VLAN 10 Control exists and named;show vlan 10;;;;;;;;;;
+2 - VLAN CONFIG;VLAN 20 QLAN exists and named;show vlan 20;;;;;;;;;;
+2 - VLAN CONFIG;VLAN 30 Dante exists and named;show vlan 30;;;;;;;;;;
+2 - VLAN CONFIG;VLAN 40 Lighting exists and named;show vlan 40;;;;;;;;;;
+2 - VLAN CONFIG;VLAN 50 Landlord exists and named;show vlan 50;;;;;;;;;;
+2 - VLAN CONFIG;VLAN 10 SVI IP correct;show interface vlan10;;;;;;;;;;
+2 - VLAN CONFIG;VLAN 20 SVI IP 10.154.20.1 + querier;show interface vlan20 + show ip igmp;;N/A;N/A;N/A;N/A;N/A;N/A;N/A;N/A;Querier on core only
+2 - VLAN CONFIG;VLAN 30 SVI IP 10.154.30.1 + querier;show interface vlan30 + show ip igmp;;N/A;N/A;N/A;N/A;N/A;N/A;N/A;N/A;Querier on core only
+2 - VLAN CONFIG;VLAN 40 SVI IP 10.154.40.1 + querier;show interface vlan40 + show ip igmp;;N/A;N/A;N/A;N/A;N/A;N/A;N/A;N/A;Querier on core only
+2 - VLAN CONFIG;Default route 0.0.0.0/0 -> 10.154.10.1;show ip route 0.0.0.0/0;;;;;;;;;;
+;;;;;;;;;;;;
+3 - IGMP SNOOPING;VLAN 20 snooping enabled;show ip igmp snooping vlan 20;;;;;;;;;;
+3 - IGMP SNOOPING;VLAN 30 snooping enabled;show ip igmp snooping vlan 30;;;;;;;;;;
+3 - IGMP SNOOPING;VLAN 40 snooping enabled;show ip igmp snooping vlan 40;;;;;;;;;;
+3 - IGMP SNOOPING;VLAN 50 snooping disabled;show ip igmp snooping vlan 50;;;;;;;;;;
+3 - IGMP SNOOPING;IGMP querier active on VLAN 20;show ip igmp snooping querier vlan 20;;N/A;N/A;N/A;N/A;N/A;N/A;N/A;N/A;Core only
+3 - IGMP SNOOPING;IGMP querier active on VLAN 30;show ip igmp snooping querier vlan 30;;N/A;N/A;N/A;N/A;N/A;N/A;N/A;N/A;Core only
+3 - IGMP SNOOPING;IGMP querier active on VLAN 40;show ip igmp snooping querier vlan 40;;N/A;N/A;N/A;N/A;N/A;N/A;N/A;N/A;Core only
+;;;;;;;;;;;;
+4 - QoS DSCP MAP;DSCP 56 -> local-priority 7 (CS7 - PTP);show qos dscp-map 56;;;;;;;;;;
+4 - QoS DSCP MAP;DSCP 46 -> local-priority 5 (EF - Audio);show qos dscp-map 46;;;;;;;;;;
+4 - QoS DSCP MAP;DSCP 34 -> local-priority 4 (AF41 - Q-SYS audio);show qos dscp-map 34;N/A;;;N/A;N/A;N/A;N/A;;N/A;QLAN switches only (AVR-01 AVR-02 AVR-08-SWE-01)
+4 - QoS DSCP MAP;DSCP 26 -> local-priority 3 (AF31 - Video);show qos dscp-map 26;;;;;;;;;;
+4 - QoS DSCP MAP;DSCP 8 -> local-priority 1 (CS1 - Reserved);show qos dscp-map 8;;;;;;;;;;
+4 - QoS DSCP MAP;qos trust dscp on VLAN 20 (QLAN) ports;show running-config interface 1/1/XX;N/A;;;N/A;N/A;N/A;N/A;;N/A;N/A on core and non-QLAN switches
+4 - QoS DSCP MAP;qos trust dscp on VLAN 30 (Dante) ports;show running-config interface 1/1/XX;N/A;;;;;;;;;N/A on core and non-Dante switches
+;;;;;;;;;;;;
+5 - SPANNING TREE;STP mode MSTP;show spanning-tree | include mode;;;;;;;;;;
+5 - SPANNING TREE;AVR-08-SFP-01 is root (priority 1);show spanning-tree - This bridge is root;;N/A;N/A;N/A;N/A;N/A;N/A;N/A;N/A;Only applicable on core
+5 - SPANNING TREE;Edge switch STP priority = 8;show spanning-tree;N/A;;;;;;;;;N/A on core
+5 - SPANNING TREE;Root bridge = 10.154.10.20 on all edges;show spanning-tree;N/A;;;;;;;;;N/A on core
+5 - SPANNING TREE;All access ports have spanning-tree port-type admin-edge;show spanning-tree interface 1/1/XX;;;;;;;;;;
+5 - SPANNING TREE;All access ports have bpdu-guard;show spanning-tree interface 1/1/XX;;;;;;;;;;
+5 - SPANNING TREE;Trunk/uplink has no bpdu-guard;show spanning-tree interface 1/1/XX (uplink);;;;;;;;;;
+;;;;;;;;;;;;
+6 - PORT VERIFICATION;Uplink trunk port number correct;show interface brief - check correct SFP/port;N/A;;;;;;;;;N/A on core (is the core)
+6 - PORT VERIFICATION;Uplink vlan trunk allowed all;show running-config interface 1/1/XX;N/A;;;;;;;;;N/A on core
+6 - PORT VERIFICATION;Uplink vlan trunk native 10;show running-config interface 1/1/XX;N/A;;;;;;;;;N/A on core
+6 - PORT VERIFICATION;All SPARE ports admin-down (shutdown);show interface brief - look for admin-down;;;;;;;;;;
+6 - PORT VERIFICATION;All SPARE ports vlan access 1;show running-config interface 1/1/XX (spare);;;;;;;;;;
+6 - PORT VERIFICATION;Landlord ports vlan access 50;show running-config interface 1/1/XX (landlord);;;;;;;;;;
+6 - PORT VERIFICATION;Reserved ports no shutdown;show interface brief - up/up or up/down;;;;;;;;;;
+6 - PORT VERIFICATION;All active device ports link up;show interface brief - no unexpected down ports;;;;;;;;;;
+6 - PORT VERIFICATION;Correct MAC address on Q-SYS device ports;show mac-address-table vlan 20;N/A;;;N/A;N/A;N/A;N/A;;N/A;N/A on core and non-QLAN switches
+;;;;;;;;;;;;
+7 - Q-SYS SPECIFIC;Q-SYS devices visible in Q-SYS Designer;Q-SYS Designer device list;N/A;;;N/A;N/A;N/A;N/A;;N/A;Applicable on AVR-01 AVR-02 AVR-08-SWE-01 only
+7 - Q-SYS SPECIFIC;Overrun (drop_count) = 0;Q-SYS Designer -> Status Core -> Verbose mode;N/A;;;N/A;N/A;N/A;N/A;;N/A;Applicable on AVR-01 AVR-02 AVR-08-SWE-01 only
+7 - Q-SYS SPECIFIC;Missing (missing_count) = 0;Q-SYS Designer -> Status Core -> Verbose mode;N/A;;;N/A;N/A;N/A;N/A;;N/A;Applicable on AVR-01 AVR-02 AVR-08-SWE-01 only
+7 - Q-SYS SPECIFIC;QLAN ports confirmed 1Gbps;show interface 1/1/XX - speed 1000Mbps;N/A;;;N/A;N/A;N/A;N/A;;N/A;Applicable on AVR-01 AVR-02 AVR-08-SWE-01 only
+7 - Q-SYS SPECIFIC;No port errors on QLAN ports;show interface 1/1/XX statistics - 0 errors;N/A;;;N/A;N/A;N/A;N/A;;N/A;Applicable on AVR-01 AVR-02 AVR-08-SWE-01 only
+7 - Q-SYS SPECIFIC;Q-SYS Designer DSCP preset = Audinate;Q-SYS Designer -> File -> Design Properties;N/A;;;N/A;N/A;N/A;N/A;;N/A;Software config not switch
+;;;;;;;;;;;;
+8 - HARDWARE HEALTH;POST passed - no boot errors;show log | include POST;;;;;;;;;;
+8 - HARDWARE HEALTH;All fans normal;show environment fan;;;;;;;;;;
+8 - HARDWARE HEALTH;Power supply OK;show environment power;;;;;;;;;;
+8 - HARDWARE HEALTH;Temperature within normal range;show environment temperature;;;;;;;;;;
+8 - HARDWARE HEALTH;SFP modules seated and link active;show interface brief - SFP ports up;;;;;;;;;;
+8 - HARDWARE HEALTH;No interface errors or drops;show interface brief - no err/drop counters;;;;;;;;;;
+8 - HARDWARE HEALTH;No unusual LED indicators on chassis;Physical visual inspection;;;;;;;;;;
+;;;;;;;;;;;;
+9 - BURN-IN (QSC Checklist);2-hour burn-in completed;All devices running minimum 2 hours continuously;;;;;;;;;;
+9 - BURN-IN (QSC Checklist);24-hour burn-in completed;All devices running minimum 24 hours (QSC requirement);;;;;;;;;;
+9 - BURN-IN (QSC Checklist);Zero errors after 2-hour burn-in;show interface brief + Q-SYS Designer verbose;;;;;;;;;;
+9 - BURN-IN (QSC Checklist);Zero errors after 24-hour burn-in;show interface brief + Q-SYS Designer verbose;;;;;;;;;;
+9 - BURN-IN (QSC Checklist);Config backed up to repo after burn-in;write memory + git commit to XYZ-Exit10 repo;;;;;;;;;;
+;;;;;;;;;;;;
+10 - SIGN-OFF;Verified by;free text;;;;;;;;;;
+10 - SIGN-OFF;Date verified;DD-MM-YYYY;;;;;;;;;;
+10 - SIGN-OFF;Overall result;PASS / FAIL / PARTIAL;;;;;;;;;;
+10 - SIGN-OFF;General notes;free text;;;;;;;;;;
