@@ -128,6 +128,8 @@ configure terminal
   ip route 0.0.0.0/0 10.154.10.1
 
   ! --- IGMP Snooping ---
+  vlan 20
+    ip igmp snooping enable
   vlan 30
     ip igmp snooping enable
   vlan 40
@@ -142,6 +144,7 @@ configure terminal
   interface 1/1/1
     description "AVR-04-AMP-01"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -149,6 +152,7 @@ configure terminal
   interface 1/1/2
     description "AVR-04-AMP-02"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -156,6 +160,7 @@ configure terminal
   interface 1/1/3
     description "AVR-04-L4o-01"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -163,6 +168,7 @@ configure terminal
   interface 1/1/4
     description "AVR-04-L4o-02"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -170,6 +176,7 @@ configure terminal
   interface 1/1/5
     description "AVR-04-L4o-03"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -177,6 +184,7 @@ configure terminal
   interface 1/1/6
     description "AVR-04-L4o-04"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -184,6 +192,7 @@ configure terminal
   interface 1/1/7
     description "AVR-04-L4o-05"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -191,6 +200,7 @@ configure terminal
   interface 1/1/8
     description "AVR-04-L4o-06"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -198,6 +208,7 @@ configure terminal
   interface 1/1/9
     description "AVR-04-L4o-07"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -205,6 +216,7 @@ configure terminal
   interface 1/1/10
     description "AVR-04-L4o-08"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -212,6 +224,7 @@ configure terminal
   interface 1/1/11
     description "AVR-04-L4o-09"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
@@ -219,6 +232,7 @@ configure terminal
   interface 1/1/12
     description "AVR-04-L4o-10"
     vlan access 20
+    qos trust dscp
     spanning-tree port-type admin-edge
     spanning-tree bpdu-guard
     no shutdown
