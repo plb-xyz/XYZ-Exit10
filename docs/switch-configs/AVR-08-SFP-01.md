@@ -124,7 +124,13 @@ configure terminal
     ip address 10.154.10.20/24
     no shutdown
 
-  ! --- VLAN 30/40 SVI (IGMP querier source) ---
+  ! --- VLAN 20/30/40 SVI (IGMP querier source) ---
+  interface vlan 20
+    ip address 10.154.20.1/24
+    ip igmp enable
+    ip igmp querier
+    no shutdown
+
   interface vlan 30
     ip address 10.154.30.1/24
     ip igmp enable
@@ -141,6 +147,8 @@ configure terminal
   ip route 0.0.0.0/0 10.154.10.1
 
   ! --- IGMP Snooping ---
+  vlan 20
+    ip igmp snooping enable
   vlan 30
     ip igmp snooping enable
   vlan 40
