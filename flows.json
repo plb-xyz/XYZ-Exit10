@@ -102,6 +102,14 @@
         "info": ""
     },
     {
+        "id": "1f04ca82ca07a995",
+        "type": "tab",
+        "label": "External Video Systems",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "22f501abaf7e8db6",
         "type": "subflow",
         "name": "Atrium Selection Switch",
@@ -275,11 +283,12 @@
             "88e9064a95242695",
             "11640e038d97c965",
             "26a8ee30820da650",
-            "e57e82ddaea146c1"
+            "e57e82ddaea146c1",
+            "93bbda1dc613d890"
         ],
         "x": 14,
         "y": 79,
-        "w": 1912,
+        "w": 2002,
         "h": 362
     },
     {
@@ -1561,7 +1570,7 @@
         "type": "ui-text",
         "z": "19fbd7cf3882c4ad",
         "group": "fbb25d9fdfc45a2e",
-        "order": 4,
+        "order": 3,
         "width": 0,
         "height": 0,
         "name": "",
@@ -1698,7 +1707,7 @@
         "group": "fbb25d9fdfc45a2e",
         "name": "Osc message",
         "label": "OSC Messsage",
-        "order": 3,
+        "order": 2,
         "width": 0,
         "height": 0,
         "topic": "topic",
@@ -1730,7 +1739,7 @@
         "z": "19fbd7cf3882c4ad",
         "name": "OSC Port choice",
         "group": "fbb25d9fdfc45a2e",
-        "order": 2,
+        "order": 1,
         "width": 6,
         "height": 1,
         "label": "Destination",
@@ -7484,7 +7493,8 @@
                 "orch-wo-linkout"
             ],
             [
-                "5d95a8429415d88f"
+                "5d95a8429415d88f",
+                "93bbda1dc613d890"
             ]
         ]
     },
@@ -7822,6 +7832,24 @@
         ],
         "x": 1715,
         "y": 200,
+        "wires": []
+    },
+    {
+        "id": "93bbda1dc613d890",
+        "type": "debug",
+        "z": "orch-tab",
+        "g": "orch-group",
+        "name": "out of WO adapt",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1890,
+        "y": 260,
         "wires": []
     },
     {
@@ -9047,6 +9075,128 @@
         ]
     },
     {
+        "id": "ea4fd52b815dafe6",
+        "type": "inject",
+        "z": "3e37539e100b4dee",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 420,
+        "wires": [
+            [
+                "078410cdf12611f8"
+            ]
+        ]
+    },
+    {
+        "id": "078410cdf12611f8",
+        "type": "isaac generic request",
+        "z": "3e37539e100b4dee",
+        "isaacConnection": "1763323c89c37655",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "variables",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 400,
+        "y": 420,
+        "wires": [
+            [
+                "a565b4ff92b60084"
+            ]
+        ]
+    },
+    {
+        "id": "ad7bdfe0fe3b021b",
+        "type": "debug",
+        "z": "3e37539e100b4dee",
+        "name": "debug 12",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "a565b4ff92b60084",
+        "type": "json",
+        "z": "3e37539e100b4dee",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 590,
+        "y": 420,
+        "wires": [
+            [
+                "ad7bdfe0fe3b021b"
+            ]
+        ]
+    },
+    {
+        "id": "33ad73462d41514a",
+        "type": "isaac schedule",
+        "z": "3e37539e100b4dee",
+        "isaacConnection": "1763323c89c37655",
+        "name": "",
+        "prerollWarning": 0,
+        "upcomingTime": 0,
+        "upcomingCount": 0,
+        "useIfModifiedSince": false,
+        "x": 920,
+        "y": 220,
+        "wires": [
+            [
+                "61924986a6f6b1a1"
+            ]
+        ]
+    },
+    {
+        "id": "61924986a6f6b1a1",
+        "type": "function",
+        "z": "3e37539e100b4dee",
+        "name": "function 1",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1130,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
         "id": "fn_init_devices",
         "type": "function",
         "z": "tab_idrac_power",
@@ -9956,6 +10106,156 @@
             [
                 "fn_prepare_status_v3"
             ]
+        ]
+    },
+    {
+        "id": "dcee5c7fdbf5a045",
+        "type": "comment",
+        "z": "1f04ca82ca07a995",
+        "name": "Dome Screen - Watchout V6 - Send and Receive",
+        "info": "",
+        "x": 240,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "2ad96a1dff6cc96e",
+        "type": "comment",
+        "z": "1f04ca82ca07a995",
+        "name": "Space Bridge - 7th Sense (2 computers) - Send and Receive",
+        "info": "",
+        "x": 280,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "53e2bbb0fbf0cb37",
+        "type": "comment",
+        "z": "1f04ca82ca07a995",
+        "name": "Cinema Columns - BrightSign (1 player) - Send and Receive",
+        "info": "",
+        "x": 280,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "177f9aad4ec695a7",
+        "type": "link in",
+        "z": "1f04ca82ca07a995",
+        "name": "ext_domeled_in",
+        "links": [],
+        "x": 155,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e0e53daa383c0f79",
+        "type": "tcp out",
+        "z": "1f04ca82ca07a995",
+        "name": "TCP To Watchout v6",
+        "host": "127.0.0.1",
+        "port": "3040",
+        "beserver": "client",
+        "base64": false,
+        "end": false,
+        "tls": "",
+        "x": 840,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "cde32fd93a24cab6",
+        "type": "link in",
+        "z": "1f04ca82ca07a995",
+        "name": "ext_spacepj_in",
+        "links": [],
+        "x": 155,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6cb2220e156036e5",
+        "type": "link in",
+        "z": "1f04ca82ca07a995",
+        "name": "ext_spaceled_in",
+        "links": [],
+        "x": 155,
+        "y": 680,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a9f0dea58ed206d3",
+        "type": "tcp in",
+        "z": "1f04ca82ca07a995",
+        "name": "WO6 Feedback",
+        "server": "server",
+        "host": "",
+        "port": "3041",
+        "datamode": "stream",
+        "datatype": "buffer",
+        "newline": "",
+        "topic": "",
+        "trim": false,
+        "base64": false,
+        "tls": "",
+        "x": 160,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d06e6f15659f133d",
+        "type": "link in",
+        "z": "1f04ca82ca07a995",
+        "name": "ext_cinemaled_in",
+        "links": [],
+        "x": 165,
+        "y": 1080,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0829ca41d4ba9327",
+        "type": "function",
+        "z": "1f04ca82ca07a995",
+        "name": "wo 7 input messages",
+        "func": "// Expected input (msg.payload):\n//   Timelines:\n//     { command: \"start\"|\"stop\"|\"pause\", timelineKey: \"show_1\" }\n//     { command: \"playAll\" }\n//     { command: \"getState\" }\n//\n//   Jump to Time:\n//     { command: \"jumpToTime\", timelineKey: \"show_1\", milliseconds: 12345, state?: \"pause\"|\"play\" }\n//\n//   Jump to Cue:\n//     { command: \"jumpToCue\", timelineKey: \"show_1\", cueKey: \"shows\", state?: \"pause\"|\"play\" }\n//     Resolves timelineKey → watchoutTimelineId and cueKey → watchoutCueId from mapping.\n//\n//   Get Timeline Cues:\n//     { command: \"getCues\", timelineKey: \"show_1\" }\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "253629fb877a27e3",
+        "type": "function",
+        "z": "1f04ca82ca07a995",
+        "name": "QSC input messages (example)",
+        "func": "// QSC way\n// Parse topic\n// Expected:\n// ui/audio/<space>/level/<inputKey>\n// ui/audio/<space>/<inputKey>Enabled\n// Accept both:\n// ui/audio/<space>/<inputKey>/enabled\n// ui/audio/<space>/<inputKey>Enabled\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 600,
+        "wires": [
+            []
         ]
     }
 ]

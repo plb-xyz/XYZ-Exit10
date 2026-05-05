@@ -102,6 +102,14 @@
         "info": ""
     },
     {
+        "id": "1f04ca82ca07a995",
+        "type": "tab",
+        "label": "External Video Systems",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "22f501abaf7e8db6",
         "type": "subflow",
         "name": "Atrium Selection Switch",
@@ -275,11 +283,12 @@
             "88e9064a95242695",
             "11640e038d97c965",
             "26a8ee30820da650",
-            "e57e82ddaea146c1"
+            "e57e82ddaea146c1",
+            "93bbda1dc613d890"
         ],
         "x": 14,
         "y": 79,
-        "w": 1912,
+        "w": 2002,
         "h": 362
     },
     {
@@ -1561,7 +1570,7 @@
         "type": "ui-text",
         "z": "19fbd7cf3882c4ad",
         "group": "fbb25d9fdfc45a2e",
-        "order": 4,
+        "order": 3,
         "width": 0,
         "height": 0,
         "name": "",
@@ -1698,7 +1707,7 @@
         "group": "fbb25d9fdfc45a2e",
         "name": "Osc message",
         "label": "OSC Messsage",
-        "order": 3,
+        "order": 2,
         "width": 0,
         "height": 0,
         "topic": "topic",
@@ -1730,7 +1739,7 @@
         "z": "19fbd7cf3882c4ad",
         "name": "OSC Port choice",
         "group": "fbb25d9fdfc45a2e",
-        "order": 2,
+        "order": 1,
         "width": 6,
         "height": 1,
         "label": "Destination",
@@ -2416,7 +2425,7 @@
         "width": 0,
         "height": 0,
         "head": "",
-        "format": "<template>\n  <div class=\"status-board\">\n    <!-- SECTION 1: Status - Exit10 - Main -->\n    <div class=\"section section-bordered\">\n      <button class=\"section-title fold-header\" type=\"button\" @click=\"toggleSection('systems')\">\n        <span class=\"left-title\">\n          <span class=\"chev\" :class=\"{ open: sectionsOpen.systems }\">▸</span>\n          <span>Status - Exit10 - Main</span>\n        </span>\n\n        <span class=\"summary\">\n          <span\n            class=\"led\"\n            :class=\"[ledClass(systemsSummaryState), blinkModeClass(systemsSummaryState), blinkOnOffClass(systemsSummaryState)]\"\n          ></span>\n          <span class=\"state-text\">{{ systemsSummaryLabel }}</span>\n        </span>\n      </button>\n\n      <div v-show=\"sectionsOpen.systems\" class=\"fold-body\">\n        <div class=\"system-grid\">\n          <div\n            class=\"system-card\"\n            v-for=\"(sys, idx) in exit10Systems\"\n            :key=\"sys.id\"\n            :class=\"idx % 2 === 0 ? 'alt-a' : 'alt-b'\"\n          >\n            <div class=\"system-title\">{{ sys.title }}</div>\n\n            <div class=\"endpoints\">\n              <div class=\"endpoint\" v-for=\"ep in sys.items\" :key=\"ep.id\">\n                <div class=\"ep-name\">{{ ep.name }}</div>\n\n                <div class=\"ep-indicator\">\n                  <span class=\"led\" :class=\"[ledClass(ep.state), blinkModeClass(ep.state), blinkOnOffClass(ep.state)]\"></span>\n                  <span class=\"state-text\">{{ stateText(ep.state) }}</span>\n                </div>\n              </div>\n            </div>\n\n            <div class=\"meta\" v-if=\"sys.meta\">{{ sys.meta }}</div>\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <!-- SECTION 2: Status - Exit10 - Details -->\n    <div class=\"section section-bordered\">\n      <button class=\"section-title fold-header\" type=\"button\" @click=\"toggleSection('details')\">\n        <span class=\"left-title\">\n          <span class=\"chev\" :class=\"{ open: sectionsOpen.details }\">▸</span>\n          <span>Status - Exit10 - Details</span>\n        </span>\n\n        <span class=\"summary\">\n          <span\n            class=\"led\"\n            :class=\"[ledClass(detailsSummaryState), blinkModeClass(detailsSummaryState), blinkOnOffClass(detailsSummaryState)]\"\n          ></span>\n          <span class=\"state-text\">{{ detailsSummaryLabel }}</span>\n        </span>\n      </button>\n\n      <div v-show=\"sectionsOpen.details\" class=\"fold-body\">\n        <!-- Watchout Displays -->\n        <div class=\"subsection\">\n          <button class=\"sub-title fold-header\" type=\"button\" @click=\"toggleSub('watchoutDisplays')\">\n            <span class=\"left-title\">\n              <span class=\"chev\" :class=\"{ open: subsOpen.watchoutDisplays }\">▸</span>\n              <span>Watchout Displays (1–8)</span>\n            </span>\n\n            <span class=\"summary\">\n              <span class=\"led\" :class=\"[ledClass(wdSummaryState), blinkModeClass(wdSummaryState), blinkOnOffClass(wdSummaryState)]\"></span>\n              <span class=\"state-text\">{{ wdSummaryLabel }}</span>\n            </span>\n          </button>\n\n          <div v-show=\"subsOpen.watchoutDisplays\" class=\"fold-body\">\n            <div class=\"detail-grid column-major\">\n              <div class=\"detail-card\" v-for=\"(d, idx) in watchoutDisplays\" :key=\"d.id\" :class=\"idx % 2 === 0 ? 'alt-a' : 'alt-b'\">\n                <div class=\"card-top\">\n                  <div class=\"name\">{{ d.name }}</div>\n                  <div class=\"indicator\">\n                    <span class=\"led\" :class=\"[ledClass(d.state), blinkModeClass(d.state), blinkOnOffClass(d.state)]\"></span>\n                    <span class=\"state-text\">{{ stateText(d.state) }}</span>\n                  </div>\n                </div>\n                <div class=\"meta\" v-if=\"d.meta\">{{ d.meta }}</div>\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <!-- Amps -->\n        <div class=\"subsection\">\n          <button class=\"sub-title fold-header\" type=\"button\" @click=\"toggleSub('amps')\">\n            <span class=\"left-title\">\n              <span class=\"chev\" :class=\"{ open: subsOpen.amps }\">▸</span>\n              <span>Amps (1–8)</span>\n            </span>\n\n            <span class=\"summary\">\n              <span class=\"led\" :class=\"[ledClass(ampsSummaryState), blinkModeClass(ampsSummaryState), blinkOnOffClass(ampsSummaryState)]\"></span>\n              <span class=\"state-text\">{{ ampsSummaryLabel }}</span>\n            </span>\n          </button>\n\n          <div v-show=\"subsOpen.amps\" class=\"fold-body\">\n            <div class=\"detail-grid column-major\">\n              <div class=\"detail-card\" v-for=\"(a, idx) in amps\" :key=\"a.id\" :class=\"idx % 2 === 0 ? 'alt-a' : 'alt-b'\">\n                <div class=\"card-top\">\n                  <div class=\"name\">{{ a.name }}</div>\n                  <div class=\"indicator\">\n                    <span class=\"led\" :class=\"[ledClass(a.state), blinkModeClass(a.state), blinkOnOffClass(a.state)]\"></span>\n                    <span class=\"state-text\">{{ stateText(a.state) }}</span>\n                  </div>\n                </div>\n                <div class=\"meta\" v-if=\"a.meta\">{{ a.meta }}</div>\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <!-- Lighting -->\n        <div class=\"subsection\">\n          <button class=\"sub-title fold-header\" type=\"button\" @click=\"toggleSub('lighting')\">\n            <span class=\"left-title\">\n              <span class=\"chev\" :class=\"{ open: subsOpen.lighting }\">▸</span>\n              <span>Lighting</span>\n            </span>\n\n            <span class=\"summary\">\n              <span class=\"led\" :class=\"[ledClass(lightingSummaryState), blinkModeClass(lightingSummaryState), blinkOnOffClass(lightingSummaryState)]\"></span>\n              <span class=\"state-text\">{{ lightingSummaryLabel }}</span>\n            </span>\n          </button>\n\n          <div v-show=\"subsOpen.lighting\" class=\"fold-body\">\n            <div class=\"detail-grid column-major\">\n              <div class=\"detail-card\" v-for=\"(l, idx) in lighting\" :key=\"l.id\" :class=\"idx % 2 === 0 ? 'alt-a' : 'alt-b'\">\n                <div class=\"card-top\">\n                  <div class=\"name\">{{ l.name }}</div>\n                  <div class=\"indicator\">\n                    <span class=\"led\" :class=\"[ledClass(l.state), blinkModeClass(l.state), blinkOnOffClass(l.state)]\"></span>\n                    <span class=\"state-text\">{{ stateText(l.state) }}</span>\n                  </div>\n                </div>\n                <div class=\"meta\" v-if=\"l.meta\">{{ l.meta }}</div>\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <!-- Relay Panels -->\n        <div class=\"subsection\">\n          <button class=\"sub-title fold-header\" type=\"button\" @click=\"toggleSub('relayPanels')\">\n            <span class=\"left-title\">\n              <span class=\"chev\" :class=\"{ open: subsOpen.relayPanels }\">▸</span>\n              <span>Relay Panels</span>\n            </span>\n\n            <span class=\"summary\">\n              <span class=\"led\" :class=\"[ledClass(relaySummaryState), blinkModeClass(relaySummaryState), blinkOnOffClass(relaySummaryState)]\"></span>\n              <span class=\"state-text\">{{ relaySummaryLabel }}</span>\n            </span>\n          </button>\n\n          <div v-show=\"subsOpen.relayPanels\" class=\"fold-body\">\n            <div class=\"detail-grid column-major\">\n              <div class=\"detail-card\" v-for=\"(rp, idx) in relayPanels\" :key=\"rp.id\" :class=\"idx % 2 === 0 ? 'alt-a' : 'alt-b'\">\n                <div class=\"card-top\">\n                  <div class=\"name\">{{ rp.name }}</div>\n                  <div class=\"indicator\">\n                    <span class=\"led\" :class=\"[ledClass(rp.state), blinkModeClass(rp.state), blinkOnOffClass(rp.state)]\"></span>\n                    <span class=\"state-text\">{{ stateText(rp.state) }}</span>\n                  </div>\n                </div>\n                <div class=\"meta\" v-if=\"rp.meta\">{{ rp.meta }}</div>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div><!-- /details fold-body -->\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      // blink driver\n      blinkTick: 0,\n      blinkTimer: null,\n\n      sectionsOpen: { systems: true, details: false },\n      subsOpen: { watchoutDisplays: false, amps: false, lighting: false, relayPanels: false },\n\n      // Main systems (Relay Panels moved out)\n      exit10Systems: [\n        {\n          id: \"sys_watchout\",\n          title: \"Watchout\",\n          items: [\n            { id: \"watchout_main\", name: \"Main\", state: \"disconnected\" },\n            { id: \"watchout_backup\", name: \"Backup\", state: \"disconnected\" }\n          ],\n          meta: \"\"\n        },\n        {\n          id: \"sys_grandma\",\n          title: \"GrandMA\",\n          items: [\n            { id: \"grandma_rpu_main\", name: \"RPU Main\", state: \"disconnected\" },\n            { id: \"grandma_rpu_backup\", name: \"RPU Backup\", state: \"disconnected\" },\n            { id: \"grandma_npu_main\", name: \"NPU Main\", state: \"disconnected\" },\n            { id: \"grandma_npu_backup\", name: \"NPU Backup\", state: \"disconnected\" }\n          ],\n          meta: \"\"\n        },\n        {\n          id: \"sys_qsys\",\n          title: \"Qsys\",\n          items: [\n            { id: \"qsys_main\", name: \"Main\", state: \"disconnected\" },\n            { id: \"qsys_backup\", name: \"Backup\", state: \"disconnected\" }\n          ],\n          meta: \"\"\n        },\n        {\n          id: \"sys_video_h15\",\n          title: \"Video H15\",\n          items: [\n            { id: \"video_h15_main\", name: \"Main\", state: \"disconnected\" },\n            { id: \"video_h15_backup\", name: \"Backup\", state: \"disconnected\" }\n          ],\n          meta: \"\"\n        }\n      ],\n\n      watchoutDisplays: Array.from({ length: 8 }, (_, i) => ({\n        id: `wo_display_${String(i + 1).padStart(2, \"0\")}`,\n        name: `Display ${i + 1}`,\n        state: \"disconnected\",\n        meta: \"\"\n      })),\n\n      amps: Array.from({ length: 8 }, (_, i) => ({\n        id: `amp_${String(i + 1).padStart(2, \"0\")}`,\n        name: `Amp ${i + 1}`,\n        state: \"disconnected\",\n        meta: \"\"\n      })),\n\n      lighting: [\n        { id: \"lighting_node_1\", name: \"Node 1\", state: \"disconnected\", meta: \"\" },\n        { id: \"lighting_node_2\", name: \"Node 2\", state: \"disconnected\", meta: \"\" },\n        { id: \"lighting_node_3\", name: \"Node 3\", state: \"disconnected\", meta: \"\" },\n        { id: \"lighting_wisk_node_101\", name: \"Wisk Node 101\", state: \"disconnected\", meta: \"\" },\n        { id: \"lighting_wisk_node_102\", name: \"Wisk Node 102\", state: \"disconnected\", meta: \"\" }\n      ],\n\n      relayPanels: [\n        { id: \"relay_panel_1\", name: \"Panel 1\", state: \"disconnected\", meta: \"\" },\n        { id: \"relay_panel_2\", name: \"Panel 2\", state: \"disconnected\", meta: \"\" }\n      ]\n    };\n  },\n\n  computed: {\n    systemsStatesFlat() {\n      return this.exit10Systems.flatMap((sys) => sys.items.map((x) => x.state));\n    },\n    systemsSummaryState() {\n      return this.worstState(this.systemsStatesFlat);\n    },\n    systemsSummaryLabel() {\n      return this.richSummaryLabel(this.systemsStatesFlat);\n    },\n\n    detailsStatesFlat() {\n      return [\n        ...this.watchoutDisplays.map((x) => x.state),\n        ...this.amps.map((x) => x.state),\n        ...this.lighting.map((x) => x.state),\n        ...this.relayPanels.map((x) => x.state)\n      ];\n    },\n    detailsSummaryState() {\n      return this.worstState(this.detailsStatesFlat);\n    },\n    detailsSummaryLabel() {\n      return this.richSummaryLabel(this.detailsStatesFlat);\n    },\n\n    wdSummaryState() { return this.worstState(this.watchoutDisplays.map((x) => x.state)); },\n    ampsSummaryState() { return this.worstState(this.amps.map((x) => x.state)); },\n    lightingSummaryState() { return this.worstState(this.lighting.map((x) => x.state)); },\n    relaySummaryState() { return this.worstState(this.relayPanels.map((x) => x.state)); },\n\n    wdSummaryLabel() { return this.richSummaryLabel(this.watchoutDisplays.map((x) => x.state)); },\n    ampsSummaryLabel() { return this.richSummaryLabel(this.amps.map((x) => x.state)); },\n    lightingSummaryLabel() { return this.richSummaryLabel(this.lighting.map((x) => x.state)); },\n    relaySummaryLabel() { return this.richSummaryLabel(this.relayPanels.map((x) => x.state)); }\n  },\n\n  methods: {\n    // ---- blink driver (keeps working after page switches) ----\n    startBlinkTimer() {\n      if (this.blinkTimer) return;\n      this.blinkTimer = setInterval(() => {\n        this.blinkTick = (this.blinkTick + 1) % 1000000;\n      }, 350);\n    },\n    stopBlinkTimer() {\n      if (this.blinkTimer) clearInterval(this.blinkTimer);\n      this.blinkTimer = null;\n    },\n    blinkModeClass(state) {\n      if (state === \"error\") return \"blink-fast\";\n      if (state === \"connecting\") return \"blink-slow\";\n      return \"\";\n    },\n    blinkOnOffClass(state) {\n      if (state !== \"error\" && state !== \"connecting\") return \"\";\n      if (state === \"error\") return this.blinkTick % 2 === 0 ? \"\" : \"blink-off\";\n      return Math.floor(this.blinkTick / 2) % 2 === 0 ? \"\" : \"blink-off\";\n    },\n\n    toggleSection(key) { this.sectionsOpen[key] = !this.sectionsOpen[key]; },\n    toggleSub(key) { this.subsOpen[key] = !this.subsOpen[key]; },\n\n    countStates(states) {\n      const counts = { connected: 0, connecting: 0, disconnected: 0, error: 0, unknown: 0 };\n      for (const s of states) {\n        if (s === \"connected\") counts.connected++;\n        else if (s === \"connecting\") counts.connecting++;\n        else if (s === \"disconnected\") counts.disconnected++;\n        else if (s === \"error\") counts.error++;\n        else counts.unknown++;\n      }\n      return counts;\n    },\n\n    worstState(states) {\n      const rank = (s) => (s === \"error\" ? 4 : s === \"disconnected\" ? 3 : s === \"connecting\" ? 2 : s === \"connected\" ? 1 : 3);\n      let worst = \"connected\", worstRank = 0;\n      for (const s of states) {\n        const r = rank(s);\n        if (r > worstRank) { worstRank = r; worst = s; }\n      }\n      return worst;\n    },\n\n    richSummaryLabel(states) {\n      const n = states.length;\n      const c = this.countStates(states);\n      if (n === 0) return \"—\";\n      if (c.connected === n) return `All Connected (${n}/${n})`;\n      if (c.disconnected === n) return `All Offline (${n}/${n})`;\n      if (c.error === n) return `All Error (${n}/${n})`;\n      if (c.connecting === n) return `All Connecting (${n}/${n})`;\n\n      const kindsPresent =\n        (c.connected ? 1 : 0) +\n        (c.connecting ? 1 : 0) +\n        (c.disconnected ? 1 : 0) +\n        (c.error ? 1 : 0) +\n        (c.unknown ? 1 : 0);\n\n      if (kindsPresent === 2 && c.connected > 0) {\n        if (c.error) return `Errors (${c.error}) · ${c.connected}/${n} online`;\n        if (c.disconnected) return `Offline (${c.disconnected}) · ${c.connected}/${n} online`;\n        if (c.connecting) return `Connecting (${c.connecting}) · ${c.connected}/${n} online`;\n      }\n\n      const parts = [];\n      if (c.connected) parts.push(`${c.connected} online`);\n      if (c.connecting) parts.push(`${c.connecting} connecting`);\n      if (c.disconnected) parts.push(`${c.disconnected} offline`);\n      if (c.error) parts.push(`${c.error} error`);\n      if (c.unknown) parts.push(`${c.unknown} unknown`);\n      return `Mixed (${parts.join(\", \")})`;\n    },\n\n    ledClass(state) { return state === \"connected\" ? \"led-green\" : state === \"connecting\" ? \"led-amber\" : \"led-red\"; },\n    stateText(state) { return state === \"connected\" ? \"Connected\" : state === \"connecting\" ? \"Connecting…\" : state === \"error\" ? \"Error\" : \"Disconnected\"; },\n\n    findEndpointById(id) {\n      for (const sys of this.exit10Systems) {\n        const ep = sys.items.find((x) => x.id === id);\n        if (ep) return ep;\n      }\n      return (\n        this.watchoutDisplays.find((x) => x.id === id) ||\n        this.amps.find((x) => x.id === id) ||\n        this.lighting.find((x) => x.id === id) ||\n        this.relayPanels.find((x) => x.id === id) ||\n        null\n      );\n    },\n\n    setItem(id, patch) {\n      const item = this.findEndpointById(id);\n      if (!item) return false;\n      if (patch.state) item.state = patch.state;\n      if (typeof patch.meta === \"string\") item.meta = patch.meta;\n      if (typeof patch.name === \"string\") item.name = patch.name;\n      return true;\n    },\n\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p) return;\n\n      if (typeof p === \"object\" && p.id) {\n        this.setItem(p.id, p);\n        return;\n      }\n      if (typeof p === \"object\") {\n        for (const [id, val] of Object.entries(p)) {\n          if (val && typeof val === \"object\") this.setItem(id, val);\n          else if (typeof val === \"string\") this.setItem(id, { state: val });\n        }\n      }\n    }\n  },\n\n  mounted() {\n    this.startBlinkTimer();\n    this.$watch(() => this.msg, (msg) => this.applyMsg(msg), { deep: true, immediate: true });\n  },\n\n  beforeUnmount() {\n    this.stopBlinkTimer();\n  }\n};\n</script>\n\n<style>\n.status-board {\n  display: flex;\n  flex-direction: column;\n  gap: 22px;\n}\n\n.section {\n  padding: 14px;\n  border-radius: 16px;\n  background: rgba(0,0,0,0.03);\n}\n\n.section-bordered {\n  border: 2px solid rgba(152, 92, 255, 0.22);\n}\n\n.section-title {\n  font-size: 22px;\n  font-weight: 950;\n  letter-spacing: 0.2px;\n  margin: 0;\n}\n\n/* Foldable headers */\n.fold-header {\n  width: 100%;\n  border: 0 !important;\n  background: transparent !important;\n  padding: 0 !important;\n  margin: 0 0 12px 0 !important;\n  cursor: pointer;\n\n  display: flex !important;\n  align-items: center !important;\n  justify-content: space-between !important;\n  gap: 12px !important;\n  text-align: left;\n}\n\n.left-title {\n  display: inline-flex;\n  align-items: center;\n  gap: 8px;\n  min-width: 0;\n}\n\n.fold-body {\n  margin-top: 6px;\n}\n\n.chev {\n  display: inline-block;\n  width: 18px;\n  transform: rotate(0deg);\n  transition: transform 120ms ease;\n  opacity: 0.85;\n}\n.chev.open { transform: rotate(90deg); }\n\n.summary {\n  display: inline-flex;\n  align-items: center;\n  gap: 8px;\n  flex-shrink: 0;\n}\n\n.system-grid,\n.detail-grid {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(280px, 1fr));\n  gap: 10px;\n}\n\n/* Collapse to 1 column on small screens */\n@media (max-width: 820px) {\n  .system-grid,\n  .detail-grid {\n    grid-template-columns: 1fr;\n  }\n}\n\n/* Column-major ordering:\n   - Default (small screens / 1 column): normal row flow\n   - Large screens (2 columns): fill down then across (1–4 left, 5–8 right) */\n.detail-grid.column-major {\n  grid-auto-flow: row;\n  grid-template-rows: none;\n}\n\n@media (min-width: 821px) {\n  .detail-grid.column-major {\n    grid-auto-flow: column;\n    grid-template-rows: repeat(4, auto);\n  }\n}\n\n.subsection {\n  margin-top: 18px;\n  padding-top: 10px;\n  border-top: 1px dashed rgba(152, 92, 255, 0.22);\n}\n\n.sub-title {\n  font-size: 18px;\n  font-weight: 900;\n  margin: 0;\n}\n\n.alt-a { background: rgba(152, 92, 255, 0.07); }\n.alt-b { background: rgba(152, 92, 255, 0.07); }\n\n.system-card,\n.detail-card {\n  padding: 10px 10px;\n  border-radius: 16px;\n  box-shadow: 0 1px 0 rgba(0,0,0,0.04);\n}\n\n.system-title {\n  font-size: 18px;\n  font-weight: 900;\n  margin: 2px 0 8px 2px;\n}\n\n.endpoints {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n}\n\n.endpoint {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 10px;\n  padding: 9px 10px;\n  border-radius: 14px;\n  background: rgba(255,255,255,0.2);\n}\n\n.ep-name {\n  font-size: 14px;\n  font-weight: 500;\n  opacity: 0.9;\n}\n\n.ep-indicator,\n.indicator {\n  display: inline-flex;\n  align-items: center;\n  gap: 8px;\n  flex-shrink: 0;\n}\n\n.state-text {\n  font-size: 14px;\n  font-weight: 700;\n}\n\n.card-top {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 10px;\n}\n\n.name {\n  font-size: 14px;\n  font-weight: 700;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n.meta {\n  margin-top: 6px;\n  font-size: 12px;\n  opacity: 0.75;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n/* LED */\n.led {\n  width: 14px;\n  height: 14px;\n  border-radius: 999px;\n  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.22),\n              0 0 0 2px rgba(0,0,0,0.10);\n}\n.led-green {\n  background: #22c55e;\n  box-shadow: 0 0 12px rgba(34,197,94,0.50),\n              inset 0 0 0 2px rgba(255,255,255,0.22),\n              0 0 0 2px rgba(0,0,0,0.10);\n}\n.led-amber {\n  background: #f59e0b;\n  box-shadow: 0 0 12px rgba(245,158,11,0.50),\n              inset 0 0 0 2px rgba(255,255,255,0.22),\n              0 0 0 2px rgba(0,0,0,0.10);\n}\n.led-red {\n  background: #ef4444;\n  box-shadow: 0 0 12px rgba(239,68,68,0.50),\n              inset 0 0 0 2px rgba(255,255,255,0.22),\n              0 0 0 2px rgba(0,0,0,0.10);\n}\n\n/* JS-driven blink: when class is applied we \"dim\" the LED */\n.blink-off {\n  opacity: 0.15;\n}\n</style>",
+        "format": "<template>\n  <div class=\"status-board\">\n    <!-- SECTION 1: Status - Exit10 - Main -->\n    <div class=\"section section-bordered\">\n      <button class=\"section-title fold-header\" type=\"button\" @click=\"toggleSection('systems')\">\n        <span class=\"left-title\">\n          <span class=\"chev\" :class=\"{ open: sectionsOpen.systems }\">▸</span>\n          <span>Status - Exit10 - Main</span>\n        </span>\n\n        <span class=\"summary\">\n          <span\n            class=\"led\"\n            :class=\"[ledClass(systemsSummaryState), blinkModeClass(systemsSummaryState), blinkOnOffClass(systemsSummaryState)]\"\n          ></span>\n          <span class=\"state-text\">{{ systemsSummaryLabel }}</span>\n        </span>\n      </button>\n\n      <div v-show=\"sectionsOpen.systems\" class=\"fold-body\">\n        <div class=\"system-grid\">\n          <div\n            class=\"system-card\"\n            v-for=\"(sys, idx) in exit10Systems\"\n            :key=\"sys.id\"\n            :class=\"idx % 2 === 0 ? 'alt-a' : 'alt-b'\"\n          >\n            <div class=\"system-title\">{{ sys.title }}</div>\n\n            <div class=\"endpoints\">\n              <div class=\"endpoint\" v-for=\"ep in sys.items\" :key=\"ep.id\">\n                <div class=\"ep-name\">{{ ep.name }}</div>\n\n                <div class=\"ep-indicator\">\n                  <span class=\"led\" :class=\"[ledClass(ep.state), blinkModeClass(ep.state), blinkOnOffClass(ep.state)]\"></span>\n                  <span class=\"state-text\">{{ stateText(ep.state) }}</span>\n                </div>\n              </div>\n            </div>\n\n            <div class=\"meta\" v-if=\"sys.meta\">{{ sys.meta }}</div>\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <!-- SECTION 2: Status - Exit10 - Details -->\n    <div class=\"section section-bordered\">\n      <button class=\"section-title fold-header\" type=\"button\" @click=\"toggleSection('details')\">\n        <span class=\"left-title\">\n          <span class=\"chev\" :class=\"{ open: sectionsOpen.details }\">▸</span>\n          <span>Status - Exit10 - Details</span>\n        </span>\n\n        <span class=\"summary\">\n          <span\n            class=\"led\"\n            :class=\"[ledClass(detailsSummaryState), blinkModeClass(detailsSummaryState), blinkOnOffClass(detailsSummaryState)]\"\n          ></span>\n          <span class=\"state-text\">{{ detailsSummaryLabel }}</span>\n        </span>\n      </button>\n\n      <div v-show=\"sectionsOpen.details\" class=\"fold-body\">\n        <!-- Watchout Displays -->\n        <div class=\"subsection\">\n          <button class=\"sub-title fold-header\" type=\"button\" @click=\"toggleSub('watchoutDisplays')\">\n            <span class=\"left-title\">\n              <span class=\"chev\" :class=\"{ open: subsOpen.watchoutDisplays }\">▸</span>\n              <span>Watchout Displays (1–8)</span>\n            </span>\n\n            <span class=\"summary\">\n              <span class=\"led\" :class=\"[ledClass(wdSummaryState), blinkModeClass(wdSummaryState), blinkOnOffClass(wdSummaryState)]\"></span>\n              <span class=\"state-text\">{{ wdSummaryLabel }}</span>\n            </span>\n          </button>\n\n          <div v-show=\"subsOpen.watchoutDisplays\" class=\"fold-body\">\n            <div class=\"detail-grid column-major\">\n              <div class=\"detail-card\" v-for=\"(d, idx) in watchoutDisplays\" :key=\"d.id\" :class=\"idx % 2 === 0 ? 'alt-a' : 'alt-b'\">\n                <div class=\"card-top\">\n                  <div class=\"name\">{{ d.name }}</div>\n                  <div class=\"indicator\">\n                    <span class=\"led\" :class=\"[ledClass(d.state), blinkModeClass(d.state), blinkOnOffClass(d.state)]\"></span>\n                    <span class=\"state-text\">{{ stateText(d.state) }}</span>\n                  </div>\n                </div>\n                <div class=\"meta\" v-if=\"d.meta\">{{ d.meta }}</div>\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <!-- Amps -->\n        <div class=\"subsection\">\n          <button class=\"sub-title fold-header\" type=\"button\" @click=\"toggleSub('amps')\">\n            <span class=\"left-title\">\n              <span class=\"chev\" :class=\"{ open: subsOpen.amps }\">▸</span>\n              <span>Amps (1–8)</span>\n            </span>\n\n            <span class=\"summary\">\n              <span class=\"led\" :class=\"[ledClass(ampsSummaryState), blinkModeClass(ampsSummaryState), blinkOnOffClass(ampsSummaryState)]\"></span>\n              <span class=\"state-text\">{{ ampsSummaryLabel }}</span>\n            </span>\n          </button>\n\n          <div v-show=\"subsOpen.amps\" class=\"fold-body\">\n            <div class=\"detail-grid column-major\">\n              <div class=\"detail-card\" v-for=\"(a, idx) in amps\" :key=\"a.id\" :class=\"idx % 2 === 0 ? 'alt-a' : 'alt-b'\">\n                <div class=\"card-top\">\n                  <div class=\"name\">{{ a.name }}</div>\n                  <div class=\"indicator\">\n                    <span class=\"led\" :class=\"[ledClass(a.state), blinkModeClass(a.state), blinkOnOffClass(a.state)]\"></span>\n                    <span class=\"state-text\">{{ stateText(a.state) }}</span>\n                  </div>\n                </div>\n                <div class=\"meta\" v-if=\"a.meta\">{{ a.meta }}</div>\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <!-- Lighting -->\n        <div class=\"subsection\">\n          <button class=\"sub-title fold-header\" type=\"button\" @click=\"toggleSub('lighting')\">\n            <span class=\"left-title\">\n              <span class=\"chev\" :class=\"{ open: subsOpen.lighting }\">▸</span>\n              <span>Lighting</span>\n            </span>\n\n            <span class=\"summary\">\n              <span class=\"led\" :class=\"[ledClass(lightingSummaryState), blinkModeClass(lightingSummaryState), blinkOnOffClass(lightingSummaryState)]\"></span>\n              <span class=\"state-text\">{{ lightingSummaryLabel }}</span>\n            </span>\n          </button>\n\n          <div v-show=\"subsOpen.lighting\" class=\"fold-body\">\n            <div class=\"detail-grid column-major\">\n              <div class=\"detail-card\" v-for=\"(l, idx) in lighting\" :key=\"l.id\" :class=\"idx % 2 === 0 ? 'alt-a' : 'alt-b'\">\n                <div class=\"card-top\">\n                  <div class=\"name\">{{ l.name }}</div>\n                  <div class=\"indicator\">\n                    <span class=\"led\" :class=\"[ledClass(l.state), blinkModeClass(l.state), blinkOnOffClass(l.state)]\"></span>\n                    <span class=\"state-text\">{{ stateText(l.state) }}</span>\n                  </div>\n                </div>\n                <div class=\"meta\" v-if=\"l.meta\">{{ l.meta }}</div>\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <!-- Relay Panels -->\n        <div class=\"subsection\">\n          <button class=\"sub-title fold-header\" type=\"button\" @click=\"toggleSub('relayPanels')\">\n            <span class=\"left-title\">\n              <span class=\"chev\" :class=\"{ open: subsOpen.relayPanels }\">▸</span>\n              <span>Relay Panels</span>\n            </span>\n\n            <span class=\"summary\">\n              <span class=\"led\" :class=\"[ledClass(relaySummaryState), blinkModeClass(relaySummaryState), blinkOnOffClass(relaySummaryState)]\"></span>\n              <span class=\"state-text\">{{ relaySummaryLabel }}</span>\n            </span>\n          </button>\n\n          <div v-show=\"subsOpen.relayPanels\" class=\"fold-body\">\n            <div class=\"detail-grid column-major\">\n              <div class=\"detail-card\" v-for=\"(rp, idx) in relayPanels\" :key=\"rp.id\" :class=\"idx % 2 === 0 ? 'alt-a' : 'alt-b'\">\n                <div class=\"card-top\">\n                  <div class=\"name\">{{ rp.name }}</div>\n                  <div class=\"indicator\">\n                    <span class=\"led\" :class=\"[ledClass(rp.state), blinkModeClass(rp.state), blinkOnOffClass(rp.state)]\"></span>\n                    <span class=\"state-text\">{{ stateText(rp.state) }}</span>\n                  </div>\n                </div>\n                <div class=\"meta\" v-if=\"rp.meta\">{{ rp.meta }}</div>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div><!-- /details fold-body -->\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      // blink driver\n      blinkTick: 0,\n      blinkTimer: null,\n\n      sectionsOpen: { systems: true, details: false },\n      subsOpen: { watchoutDisplays: false, amps: false, lighting: false, relayPanels: false },\n\n      // Main systems (Relay Panels moved out)\n      exit10Systems: [\n        {\n          id: \"sys_watchout\",\n          title: \"Watchout\",\n          items: [\n            { id: \"watchout_main\", name: \"Main\", state: \"disconnected\" },\n            { id: \"watchout_backup\", name: \"Backup\", state: \"disconnected\" }\n          ],\n          meta: \"\"\n        },\n        {\n          id: \"sys_grandma\",\n          title: \"GrandMA\",\n          items: [\n            { id: \"grandma_rpu_main\", name: \"RPU Main\", state: \"disconnected\" },\n            { id: \"grandma_rpu_backup\", name: \"RPU Backup\", state: \"disconnected\" },\n            { id: \"grandma_npu_main\", name: \"NPU Main\", state: \"disconnected\" },\n            { id: \"grandma_npu_backup\", name: \"NPU Backup\", state: \"disconnected\" }\n          ],\n          meta: \"\"\n        },\n        {\n          id: \"sys_qsys\",\n          title: \"Qsys\",\n          items: [\n            { id: \"qsys_main\", name: \"Main\", state: \"disconnected\" },\n            { id: \"qsys_backup\", name: \"Backup\", state: \"disconnected\" }\n          ],\n          meta: \"\"\n        },\n        {\n          id: \"sys_video_h15\",\n          title: \"Video H15\",\n          items: [\n            { id: \"video_h15_main\", name: \"Main\", state: \"disconnected\" },\n            { id: \"video_h15_backup\", name: \"Backup\", state: \"disconnected\" }\n          ],\n          meta: \"\"\n        }\n      ],\n\n      watchoutDisplays: Array.from({ length: 8 }, (_, i) => ({\n        id: `wo_display_${String(i + 1).padStart(2, \"0\")}`,\n        name: `Display ${i + 1}`,\n        state: \"disconnected\",\n        meta: \"\"\n      })),\n\n      amps: Array.from({ length: 8 }, (_, i) => ({\n        id: `amp_${String(i + 1).padStart(2, \"0\")}`,\n        name: `Amp ${i + 1}`,\n        state: \"disconnected\",\n        meta: \"\"\n      })),\n\n      lighting: [\n        { id: \"lighting_node_1\", name: \"Node 1\", state: \"disconnected\", meta: \"\" },\n        { id: \"lighting_node_2\", name: \"Node 2\", state: \"disconnected\", meta: \"\" },\n        { id: \"lighting_node_3\", name: \"Node 3\", state: \"disconnected\", meta: \"\" },\n        { id: \"lighting_wisk_node_101\", name: \"Wisk Node 101\", state: \"disconnected\", meta: \"\" },\n        { id: \"lighting_wisk_node_102\", name: \"Wisk Node 102\", state: \"disconnected\", meta: \"\" }\n      ],\n\n      relayPanels: [\n        { id: \"relay_panel_1\", name: \"Panel 1\", state: \"disconnected\", meta: \"\" },\n        { id: \"relay_panel_2\", name: \"Panel 2\", state: \"disconnected\", meta: \"\" }\n      ]\n    };\n  },\n\n  computed: {\n    systemsStatesFlat() {\n      return this.exit10Systems.flatMap((sys) => sys.items.map((x) => x.state));\n    },\n    systemsSummaryState() {\n      return this.worstState(this.systemsStatesFlat);\n    },\n    systemsSummaryLabel() {\n      return this.richSummaryLabel(this.systemsStatesFlat);\n    },\n\n    detailsStatesFlat() {\n      return [\n        ...this.watchoutDisplays.map((x) => x.state),\n        ...this.amps.map((x) => x.state),\n        ...this.lighting.map((x) => x.state),\n        ...this.relayPanels.map((x) => x.state)\n      ];\n    },\n    detailsSummaryState() {\n      return this.worstState(this.detailsStatesFlat);\n    },\n    detailsSummaryLabel() {\n      return this.richSummaryLabel(this.detailsStatesFlat);\n    },\n\n    wdSummaryState() { return this.worstState(this.watchoutDisplays.map((x) => x.state)); },\n    ampsSummaryState() { return this.worstState(this.amps.map((x) => x.state)); },\n    lightingSummaryState() { return this.worstState(this.lighting.map((x) => x.state)); },\n    relaySummaryState() { return this.worstState(this.relayPanels.map((x) => x.state)); },\n\n    wdSummaryLabel() { return this.richSummaryLabel(this.watchoutDisplays.map((x) => x.state)); },\n    ampsSummaryLabel() { return this.richSummaryLabel(this.amps.map((x) => x.state)); },\n    lightingSummaryLabel() { return this.richSummaryLabel(this.lighting.map((x) => x.state)); },\n    relaySummaryLabel() { return this.richSummaryLabel(this.relayPanels.map((x) => x.state)); }\n  },\n\n  methods: {\n    // ---- blink driver (keeps working after page switches) ----\n    startBlinkTimer() {\n      if (this.blinkTimer) return;\n      this.blinkTimer = setInterval(() => {\n        this.blinkTick = (this.blinkTick + 1) % 1000000;\n      }, 350);\n    },\n    stopBlinkTimer() {\n      if (this.blinkTimer) clearInterval(this.blinkTimer);\n      this.blinkTimer = null;\n    },\n    blinkModeClass(state) {\n      if (state === \"error\") return \"blink-fast\";\n      if (state === \"connecting\") return \"blink-slow\";\n      return \"\";\n    },\n    blinkOnOffClass(state) {\n      if (state !== \"error\" && state !== \"connecting\") return \"\";\n      if (state === \"error\") return this.blinkTick % 2 === 0 ? \"\" : \"blink-off\";\n      return Math.floor(this.blinkTick / 2) % 2 === 0 ? \"\" : \"blink-off\";\n    },\n\n    toggleSection(key) { this.sectionsOpen[key] = !this.sectionsOpen[key]; },\n    toggleSub(key) { this.subsOpen[key] = !this.subsOpen[key]; },\n\n    countStates(states) {\n      const counts = { connected: 0, connecting: 0, disconnected: 0, error: 0, unknown: 0 };\n      for (const s of states) {\n        if (s === \"connected\") counts.connected++;\n        else if (s === \"connecting\") counts.connecting++;\n        else if (s === \"disconnected\") counts.disconnected++;\n        else if (s === \"error\") counts.error++;\n        else counts.unknown++;\n      }\n      return counts;\n    },\n\n    worstState(states) {\n      const rank = (s) => (s === \"error\" ? 4 : s === \"disconnected\" ? 3 : s === \"connecting\" ? 2 : s === \"connected\" ? 1 : 3);\n      let worst = \"connected\", worstRank = 0;\n      for (const s of states) {\n        const r = rank(s);\n        if (r > worstRank) { worstRank = r; worst = s; }\n      }\n      return worst;\n    },\n\n    richSummaryLabel(states) {\n      const n = states.length;\n      const c = this.countStates(states);\n      if (n === 0) return \"—\";\n      if (c.connected === n) return `All Connected (${n}/${n})`;\n      if (c.disconnected === n) return `All Offline (${n}/${n})`;\n      if (c.error === n) return `All Error (${n}/${n})`;\n      if (c.connecting === n) return `All Connecting (${n}/${n})`;\n\n      const kindsPresent =\n        (c.connected ? 1 : 0) +\n        (c.connecting ? 1 : 0) +\n        (c.disconnected ? 1 : 0) +\n        (c.error ? 1 : 0) +\n        (c.unknown ? 1 : 0);\n\n      if (kindsPresent === 2 && c.connected > 0) {\n        if (c.error) return `Errors (${c.error}) · ${c.connected}/${n} online`;\n        if (c.disconnected) return `Offline (${c.disconnected}) · ${c.connected}/${n} online`;\n        if (c.connecting) return `Connecting (${c.connecting}) · ${c.connected}/${n} online`;\n      }\n\n      const parts = [];\n      if (c.connected) parts.push(`${c.connected} online`);\n      if (c.connecting) parts.push(`${c.connecting} connecting`);\n      if (c.disconnected) parts.push(`${c.disconnected} offline`);\n      if (c.error) parts.push(`${c.error} error`);\n      if (c.unknown) parts.push(`${c.unknown} unknown`);\n      return `Mixed (${parts.join(\", \")})`;\n    },\n\n    ledClass(state) { return state === \"connected\" ? \"led-green\" : state === \"connecting\" ? \"led-amber\" : \"led-red\"; },\n    stateText(state) { return state === \"connected\" ? \"Connected\" : state === \"connecting\" ? \"Connecting…\" : state === \"error\" ? \"Error\" : \"Disconnected\"; },\n\n    findEndpointById(id) {\n      for (const sys of this.exit10Systems) {\n        const ep = sys.items.find((x) => x.id === id);\n        if (ep) return ep;\n      }\n      return (\n        this.watchoutDisplays.find((x) => x.id === id) ||\n        this.amps.find((x) => x.id === id) ||\n        this.lighting.find((x) => x.id === id) ||\n        this.relayPanels.find((x) => x.id === id) ||\n        null\n      );\n    },\n\n    setItem(id, patch) {\n      const item = this.findEndpointById(id);\n      if (!item) return false;\n      if (patch.state) item.state = patch.state;\n      if (typeof patch.meta === \"string\") item.meta = patch.meta;\n      if (typeof patch.name === \"string\") item.name = patch.name;\n      return true;\n    },\n\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p) return;\n\n      if (typeof p === \"object\" && p.id) {\n        this.setItem(p.id, p);\n        return;\n      }\n      if (typeof p === \"object\") {\n        for (const [id, val] of Object.entries(p)) {\n          if (val && typeof val === \"object\") this.setItem(id, val);\n          else if (typeof val === \"string\") this.setItem(id, { state: val });\n        }\n      }\n    }\n  },\n\n  mounted() {\n    this.startBlinkTimer();\n    this.$watch(() => this.msg, (msg) => this.applyMsg(msg), { deep: true, immediate: true });\n  },\n\n  beforeUnmount() {\n    this.stopBlinkTimer();\n  }\n};\n</script>\n\n<style>\n.status-board {\n  display: flex;\n  flex-direction: column;\n  gap: 22px;\n}\n\n.section {\n  padding: 14px;\n  border-radius: 16px;\n  background: rgba(0,0,0,0.03);\n}\n\n.section-bordered {\n  border: 2px solid rgba(152, 92, 255, 0.22);\n}\n\n.section-title {\n  font-size: 22px;\n  font-weight: 950;\n  letter-spacing: 0.2px;\n  margin: 0;\n}\n\n/* Foldable headers */\n.fold-header {\n  width: 100%;\n  border: 0 !important;\n  background: transparent !important;\n  padding: 0 !important;\n  margin: 0 0 12px 0 !important;\n  cursor: pointer;\n\n  display: flex !important;\n  align-items: center !important;\n  justify-content: space-between !important;\n  gap: 12px !important;\n  text-align: left;\n}\n\n.left-title {\n  display: inline-flex;\n  align-items: center;\n  gap: 8px;\n  min-width: 0;\n}\n\n.fold-body {\n  margin-top: 6px;\n}\n\n.chev {\n  display: inline-block;\n  width: 18px;\n  transform: rotate(0deg);\n  transition: transform 120ms ease;\n  opacity: 0.85;\n}\n.chev.open { transform: rotate(90deg); }\n\n.summary {\n  display: inline-flex;\n  align-items: center;\n  gap: 8px;\n  flex-shrink: 0;\n}\n\n.system-grid,\n.detail-grid {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(280px, 1fr));\n  gap: 10px;\n}\n\n/* Collapse to 1 column on small screens */\n@media (max-width: 820px) {\n  .system-grid,\n  .detail-grid {\n    grid-template-columns: 1fr;\n  }\n}\n\n/* Column-major ordering:\n   - Default (small screens / 1 column): normal row flow\n   - Large screens (2 columns): fill down then across (1–4 left, 5–8 right) */\n.detail-grid.column-major {\n  grid-auto-flow: row;\n  grid-template-rows: none;\n}\n\n@media (min-width: 821px) {\n  .detail-grid.column-major {\n    grid-auto-flow: column;\n    grid-template-rows: repeat(4, auto);\n  }\n}\n\n.subsection {\n  margin-top: 18px;\n  padding-top: 10px;\n  border-top: 1px dashed rgba(152, 92, 255, 0.22);\n}\n\n.sub-title {\n  font-size: 18px;\n  font-weight: 900;\n  margin: 0;\n}\n\n.alt-a { background: rgba(152, 92, 255, 0.07); }\n.alt-b { background: rgba(152, 92, 255, 0.07); }\n\n.system-card,\n.detail-card {\n  padding: 10px 10px;\n  border-radius: 16px;\n  box-shadow: 0 1px 0 rgba(0,0,0,0.04);\n}\n\n.system-title {\n  font-size: 18px;\n  font-weight: 900;\n  margin: 2px 0 8px 2px;\n}\n\n.endpoints {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n}\n\n.endpoint {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 10px;\n  padding: 9px 10px;\n  border-radius: 14px;\n  background: rgba(255,255,255,0.15);\n}\n\n.ep-name {\n  font-size: 14px;\n  font-weight: 500;\n  opacity: 0.9;\n}\n\n.ep-indicator,\n.indicator {\n  display: inline-flex;\n  align-items: center;\n  gap: 8px;\n  flex-shrink: 0;\n}\n\n.state-text {\n  font-size: 14px;\n  font-weight: 700;\n}\n\n.card-top {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 10px;\n}\n\n.name {\n  font-size: 14px;\n  font-weight: 700;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n.meta {\n  margin-top: 6px;\n  font-size: 12px;\n  opacity: 0.75;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n/* LED */\n.led {\n  width: 14px;\n  height: 14px;\n  border-radius: 999px;\n  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.22),\n              0 0 0 2px rgba(0,0,0,0.10);\n}\n.led-green {\n  background: #22c55e;\n  box-shadow: 0 0 12px rgba(34,197,94,0.50),\n              inset 0 0 0 2px rgba(255,255,255,0.22),\n              0 0 0 2px rgba(0,0,0,0.10);\n}\n.led-amber {\n  background: #f59e0b;\n  box-shadow: 0 0 12px rgba(245,158,11,0.50),\n              inset 0 0 0 2px rgba(255,255,255,0.22),\n              0 0 0 2px rgba(0,0,0,0.10);\n}\n.led-red {\n  background: #ef4444;\n  box-shadow: 0 0 12px rgba(239,68,68,0.50),\n              inset 0 0 0 2px rgba(255,255,255,0.22),\n              0 0 0 2px rgba(0,0,0,0.10);\n}\n\n/* JS-driven blink: when class is applied we \"dim\" the LED */\n.blink-off {\n  opacity: 0.15;\n}\n</style>",
         "storeOutMessages": true,
         "passthru": true,
         "resendOnRefresh": true,
@@ -7484,7 +7493,8 @@
                 "orch-wo-linkout"
             ],
             [
-                "5d95a8429415d88f"
+                "5d95a8429415d88f",
+                "93bbda1dc613d890"
             ]
         ]
     },
@@ -7822,6 +7832,24 @@
         ],
         "x": 1715,
         "y": 200,
+        "wires": []
+    },
+    {
+        "id": "93bbda1dc613d890",
+        "type": "debug",
+        "z": "orch-tab",
+        "g": "orch-group",
+        "name": "out of WO adapt",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1890,
+        "y": 260,
         "wires": []
     },
     {
@@ -9047,6 +9075,128 @@
         ]
     },
     {
+        "id": "ea4fd52b815dafe6",
+        "type": "inject",
+        "z": "3e37539e100b4dee",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 420,
+        "wires": [
+            [
+                "078410cdf12611f8"
+            ]
+        ]
+    },
+    {
+        "id": "078410cdf12611f8",
+        "type": "isaac generic request",
+        "z": "3e37539e100b4dee",
+        "isaacConnection": "1763323c89c37655",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "variables",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 400,
+        "y": 420,
+        "wires": [
+            [
+                "a565b4ff92b60084"
+            ]
+        ]
+    },
+    {
+        "id": "ad7bdfe0fe3b021b",
+        "type": "debug",
+        "z": "3e37539e100b4dee",
+        "name": "debug 12",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "a565b4ff92b60084",
+        "type": "json",
+        "z": "3e37539e100b4dee",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 590,
+        "y": 420,
+        "wires": [
+            [
+                "ad7bdfe0fe3b021b"
+            ]
+        ]
+    },
+    {
+        "id": "33ad73462d41514a",
+        "type": "isaac schedule",
+        "z": "3e37539e100b4dee",
+        "isaacConnection": "1763323c89c37655",
+        "name": "",
+        "prerollWarning": 0,
+        "upcomingTime": 0,
+        "upcomingCount": 0,
+        "useIfModifiedSince": false,
+        "x": 920,
+        "y": 220,
+        "wires": [
+            [
+                "61924986a6f6b1a1"
+            ]
+        ]
+    },
+    {
+        "id": "61924986a6f6b1a1",
+        "type": "function",
+        "z": "3e37539e100b4dee",
+        "name": "function 1",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1130,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
         "id": "fn_init_devices",
         "type": "function",
         "z": "tab_idrac_power",
@@ -9956,6 +10106,156 @@
             [
                 "fn_prepare_status_v3"
             ]
+        ]
+    },
+    {
+        "id": "dcee5c7fdbf5a045",
+        "type": "comment",
+        "z": "1f04ca82ca07a995",
+        "name": "Dome Screen - Watchout V6 - Send and Receive",
+        "info": "",
+        "x": 240,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "2ad96a1dff6cc96e",
+        "type": "comment",
+        "z": "1f04ca82ca07a995",
+        "name": "Space Bridge - 7th Sense (2 computers) - Send and Receive",
+        "info": "",
+        "x": 280,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "53e2bbb0fbf0cb37",
+        "type": "comment",
+        "z": "1f04ca82ca07a995",
+        "name": "Cinema Columns - BrightSign (1 player) - Send and Receive",
+        "info": "",
+        "x": 280,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "177f9aad4ec695a7",
+        "type": "link in",
+        "z": "1f04ca82ca07a995",
+        "name": "ext_domeled_in",
+        "links": [],
+        "x": 155,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e0e53daa383c0f79",
+        "type": "tcp out",
+        "z": "1f04ca82ca07a995",
+        "name": "TCP To Watchout v6",
+        "host": "127.0.0.1",
+        "port": "3040",
+        "beserver": "client",
+        "base64": false,
+        "end": false,
+        "tls": "",
+        "x": 840,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "cde32fd93a24cab6",
+        "type": "link in",
+        "z": "1f04ca82ca07a995",
+        "name": "ext_spacepj_in",
+        "links": [],
+        "x": 155,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6cb2220e156036e5",
+        "type": "link in",
+        "z": "1f04ca82ca07a995",
+        "name": "ext_spaceled_in",
+        "links": [],
+        "x": 155,
+        "y": 680,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a9f0dea58ed206d3",
+        "type": "tcp in",
+        "z": "1f04ca82ca07a995",
+        "name": "WO6 Feedback",
+        "server": "server",
+        "host": "",
+        "port": "3041",
+        "datamode": "stream",
+        "datatype": "buffer",
+        "newline": "",
+        "topic": "",
+        "trim": false,
+        "base64": false,
+        "tls": "",
+        "x": 160,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d06e6f15659f133d",
+        "type": "link in",
+        "z": "1f04ca82ca07a995",
+        "name": "ext_cinemaled_in",
+        "links": [],
+        "x": 165,
+        "y": 1080,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0829ca41d4ba9327",
+        "type": "function",
+        "z": "1f04ca82ca07a995",
+        "name": "function 3",
+        "func": "// Expected input (msg.payload):\n//   Timelines:\n//     { command: \"start\"|\"stop\"|\"pause\", timelineKey: \"show_1\" }\n//     { command: \"playAll\" }\n//     { command: \"getState\" }\n//\n//   Jump to Time:\n//     { command: \"jumpToTime\", timelineKey: \"show_1\", milliseconds: 12345, state?: \"pause\"|\"play\" }\n//\n//   Jump to Cue:\n//     { command: \"jumpToCue\", timelineKey: \"show_1\", cueKey: \"shows\", state?: \"pause\"|\"play\" }\n//     Resolves timelineKey → watchoutTimelineId and cueKey → watchoutCueId from mapping.\n//\n//   Get Timeline Cues:\n//     { command: \"getCues\", timelineKey: \"show_1\" }\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "253629fb877a27e3",
+        "type": "function",
+        "z": "1f04ca82ca07a995",
+        "name": "function 4",
+        "func": "// QSC way\n// Parse topic\n// Expected:\n// ui/audio/<space>/level/<inputKey>\n// ui/audio/<space>/<inputKey>Enabled\n// Accept both:\n// ui/audio/<space>/<inputKey>/enabled\n// ui/audio/<space>/<inputKey>Enabled\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 600,
+        "wires": [
+            []
         ]
     }
 ]
