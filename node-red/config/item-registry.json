@@ -1,0 +1,425 @@
+{
+  "id": "all",
+  "label": "All",
+  "zones": [
+    {
+      "id": "in",
+      "label": "Indoors",
+      "zones": [
+        {
+          "id": "a1",
+          "label": "Atrium 1",
+          "items": [
+            {
+              "id": "a1.ribbonLed",
+              "label": "Ribbon LED",
+              "tags": ["video", "led", "xyz"],
+              "system": "watchout7",
+              "device": "a1_ribbon"
+            },
+            {
+              "id": "a1.sphereLed",
+              "label": "Sphere LED",
+              "tags": ["video", "led", "xyz"],
+              "system": "watchout7",
+              "device": "a1_sphere"
+            },
+            {
+              "id": "a1.columnLed",
+              "label": "Column LED",
+              "tags": ["video", "led", "xyz"],
+              "system": "watchout7",
+              "device": "a1_column"
+            },
+            {
+              "id": "a1.audio",
+              "label": "Audio",
+              "tags": ["audio", "xyz"],
+              "system": "qsc",
+              "device": "core_a1"
+            },
+            {
+              "id": "a1.movingLights",
+              "label": "Moving Lights",
+              "tags": ["lighting", "lx", "moving", "xyz"],
+              "system": "ma",
+              "device": "main"
+            },
+            {
+              "id": "a1.wisk",
+              "label": "Wisk",
+              "tags": ["lighting", "lx", "xyz"],
+              "system": "ma",
+              "device": "main"
+            },
+            {
+              "id": "a1.arch",
+              "label": "Arch",
+              "tags": ["lighting", "lx", "xyz"],
+              "system": "ma",
+              "device": "main"
+            },
+            {
+              "id": "a1.hublessWheel.movingLights",
+              "label": "Hubless Wheel – Moving Lights",
+              "tags": ["lighting", "lx", "moving", "xyz", "hublessWheel"],
+              "system": "ma",
+              "device": "main"
+            },
+            {
+              "id": "a1.hublessWheel.ring",
+              "label": "Hubless Wheel – Ring",
+              "tags": ["lighting", "lx", "strips", "xyz", "hublessWheel"],
+              "system": "ma",
+              "device": "main"
+            },
+            {
+              "id": "a1.hublessWheel.gondolas",
+              "label": "Hubless Wheel – Gondolas",
+              "tags": ["lighting", "lx", "xyz", "hublessWheel"],
+              "system": "ma",
+              "device": "main"
+            },
+            {
+              "id": "a1.hublessWheel.gondolaBenches",
+              "label": "Hubless Wheel – Gondola Benches",
+              "tags": ["lighting", "lx", "xyz", "hublessWheel"],
+              "system": "ma",
+              "device": "main"
+            },
+            {
+              "id": "a1.multiverseStrips",
+              "label": "Multiverse Strips",
+              "tags": ["lighting", "lx", "strips"],
+              "system": "pharos",
+              "device": "a1_pharos"
+            },
+            {
+              "id": "a1.handrailStrips",
+              "label": "Handrail Strips",
+              "tags": ["lighting", "lx", "strips"],
+              "system": "pharos",
+              "device": "a1_pharos"
+            }
+          ]
+        },
+        {
+          "id": "a2",
+          "label": "Atrium 2",
+          "items": [
+            {
+              "id": "a2.ribbonLed",
+              "label": "Ribbon LED",
+              "tags": ["video", "led", "xyz"],
+              "system": "watchout7",
+              "device": "a2_ribbon"
+            },
+            {
+              "id": "a2.audio",
+              "label": "Audio",
+              "tags": ["audio", "xyz"],
+              "system": "qsc",
+              "device": "core_a2"
+            },
+            {
+              "id": "a2.movingLights",
+              "label": "Moving Lights",
+              "tags": ["lighting", "lx", "moving", "xyz"],
+              "system": "ma",
+              "device": "main"
+            },
+            {
+              "id": "a2.ceilingStrips",
+              "label": "Ceiling Strips",
+              "tags": ["lighting", "lx", "strips"],
+              "system": "pharos",
+              "device": "a2_pharos"
+            },
+            {
+              "id": "a2.multiverseStrips",
+              "label": "Multiverse Strips",
+              "tags": ["lighting", "lx", "strips"],
+              "system": "pharos",
+              "device": "a2_pharos"
+            },
+            {
+              "id": "a2.handrailStrips",
+              "label": "Handrail Strips",
+              "tags": ["lighting", "lx", "strips"],
+              "system": "pharos",
+              "device": "a2_pharos"
+            }
+          ]
+        },
+        {
+          "id": "a3",
+          "label": "Atrium 3",
+          "items": [
+            {
+              "id": "a3.ribbonLed",
+              "label": "Ribbon LED",
+              "tags": ["video", "led", "xyz"],
+              "system": "watchout7",
+              "device": "a3_ribbon"
+            },
+            {
+              "id": "a3.audio",
+              "label": "Audio",
+              "tags": ["audio", "xyz"],
+              "system": "qsc",
+              "device": "core_a3"
+            },
+            {
+              "id": "a3.movingLights",
+              "label": "Moving Lights",
+              "tags": ["lighting", "lx", "moving", "xyz"],
+              "system": "ma",
+              "device": "main"
+            },
+            {
+              "id": "a3.ceilingStrips",
+              "label": "Ceiling Strips",
+              "tags": ["lighting", "lx", "strips"],
+              "system": "pharos",
+              "device": "a3_pharos"
+            },
+            {
+              "id": "a3.multiverseStrips",
+              "label": "Multiverse Strips",
+              "tags": ["lighting", "lx", "strips"],
+              "system": "pharos",
+              "device": "a3_pharos"
+            },
+            {
+              "id": "a3.handrailStrips",
+              "label": "Handrail Strips",
+              "tags": ["lighting", "lx", "strips"],
+              "system": "pharos",
+              "device": "a3_pharos"
+            }
+          ]
+        },
+        {
+          "id": "sb",
+          "label": "Space Bridge",
+          "items": [
+            {
+              "id": "sb.portalLed",
+              "label": "Portal LED",
+              "tags": ["video", "led"],
+              "system": "7thsense",
+              "device": "sb_led"
+            },
+            {
+              "id": "sb.portalProj",
+              "label": "Portal Projection",
+              "tags": ["video", "projection"],
+              "system": "7thsense",
+              "device": "sb_proj"
+            },
+            {
+              "id": "sb.transformerLX",
+              "label": "Transformer Lighting",
+              "tags": ["lighting", "lx"],
+              "system": "ma",
+              "device": "main"
+            },
+            {
+              "id": "sb.transformerAudio",
+              "label": "Transformer Audio",
+              "tags": ["audio"],
+              "system": "qsc",
+              "device": "core_sb"
+            }
+          ]
+        },
+        {
+          "id": "ds",
+          "label": "Dome Screen",
+          "items": [
+            {
+              "id": "ds.domeLed",
+              "label": "Dome LED",
+              "tags": ["video", "led"],
+              "system": "watchout6",
+              "device": "dome"
+            }
+          ]
+        },
+        {
+          "id": "cc",
+          "label": "Cinema Columns",
+          "items": [
+            {
+              "id": "cc.cinemaColumnsLed",
+              "label": "Cinema Columns LED",
+              "tags": ["video", "led"],
+              "system": "brightsign",
+              "device": "columns"
+            }
+          ]
+        },
+        {
+          "id": "fb",
+          "label": "Food & Beverage",
+          "items": [
+            {
+              "id": "fb.retails",
+              "label": "Retail Lighting",
+              "tags": ["lighting", "lx"],
+              "system": "pharos",
+              "device": "fb_pharos"
+            }
+          ]
+        },
+        {
+          "id": "it",
+          "label": "Interstellars",
+          "items": [
+            {
+              "id": "it.audio",
+              "label": "Audio",
+              "tags": ["audio", "xyz"],
+              "system": "qsc",
+              "device": "core_it"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ou",
+      "label": "Outdoors",
+      "zones": [
+        {
+          "id": "we",
+          "label": "West Entrance",
+          "items": [
+            {
+              "id": "we.led",
+              "label": "LED",
+              "tags": ["video", "led", "xyz"],
+              "system": "watchout7",
+              "device": "we_led"
+            }
+          ]
+        },
+        {
+          "id": "kl",
+          "label": "K Logo",
+          "items": [
+            {
+              "id": "kl.led",
+              "label": "LED",
+              "tags": ["video", "led", "xyz"],
+              "system": "watchout7",
+              "device": "kl_led"
+            }
+          ]
+        },
+        {
+          "id": "ls",
+          "label": "Landscape",
+          "items": [
+            {
+              "id": "ls.lights1",
+              "label": "Landscape Lights 1",
+              "tags": ["lighting", "lx", "xyz"],
+              "system": "pharos",
+              "device": "ls_pharos"
+            },
+            {
+              "id": "ls.lights2",
+              "label": "Landscape Lights 2",
+              "tags": ["lighting", "lx", "xyz"],
+              "system": "pharos",
+              "device": "ls_pharos"
+            },
+            {
+              "id": "ls.lights3",
+              "label": "Landscape Lights 3",
+              "tags": ["lighting", "lx"],
+              "system": "pharos",
+              "device": "ls_pharos"
+            },
+            {
+              "id": "ls.lights4",
+              "label": "Landscape Lights 4",
+              "tags": ["lighting", "lx"],
+              "system": "pharos",
+              "device": "ls_pharos"
+            },
+            {
+              "id": "ls.audio",
+              "label": "Landscape Audio",
+              "tags": ["audio", "xyz"],
+              "system": "qsc",
+              "device": "core_ls"
+            }
+          ]
+        },
+        {
+          "id": "et",
+          "label": "External Transformers",
+          "items": [
+            {
+              "id": "et.lights",
+              "label": "Transformer Lights",
+              "tags": ["lighting", "lx"],
+              "system": "pharos",
+              "device": "et_pharos"
+            },
+            {
+              "id": "et.sound",
+              "label": "Transformer Sound",
+              "tags": ["audio"],
+              "system": "qsc",
+              "device": "core_et"
+            },
+            {
+              "id": "et.smoke",
+              "label": "Transformer Smoke",
+              "tags": ["practical"],
+              "system": "pharos",
+              "device": "et_pharos"
+            }
+          ]
+        },
+        {
+          "id": "wf",
+          "label": "Water Features",
+          "items": [
+            {
+              "id": "wf.1",
+              "label": "Water Feature 1",
+              "tags": ["practical"],
+              "system": "pharos",
+              "device": "wf_pharos"
+            },
+            {
+              "id": "wf.2",
+              "label": "Water Feature 2",
+              "tags": ["practical"],
+              "system": "pharos",
+              "device": "wf_pharos"
+            },
+            {
+              "id": "wf.3",
+              "label": "Water Feature 3",
+              "tags": ["practical"],
+              "system": "pharos",
+              "device": "wf_pharos"
+            },
+            {
+              "id": "wf.4",
+              "label": "Water Feature 4",
+              "tags": ["practical"],
+              "system": "pharos",
+              "device": "wf_pharos"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
