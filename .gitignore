@@ -14,3 +14,7 @@ node_modules/
 
 # Backup files
 *.backup
+
+**/.DS_Store
+flows_cred.json
+.flows_cred.json.backup
