@@ -1225,7 +1225,7 @@
     {
         "id": "d3950453e214dbe5",
         "type": "tls-config",
-        "name": "name",
+        "name": "tls-config",
         "cert": "",
         "key": "",
         "ca": "",
@@ -1568,7 +1568,7 @@
         "id": "4d79fba2cf808ca8",
         "type": "tcp request",
         "z": "wo6-subflow-001",
-        "name": "name",
+        "name": "wo6 subflow 1",
         "server": "${ip}",
         "port": "3040",
         "out": "time",
@@ -1735,7 +1735,7 @@
         "type": "ui-dropdown",
         "z": "19fbd7cf3882c4ad",
         "group": "5176b798f54b89e5",
-        "name": "name",
+        "name": "content_selector",
         "label": "Select Content:",
         "tooltip": "",
         "order": 1,
@@ -1797,7 +1797,7 @@
         "order": 3,
         "width": 0,
         "height": 0,
-        "name": "name",
+        "name": "incoming_osc_messages",
         "label": "Incoming OSC messages",
         "format": "{{msg.payload}}",
         "layout": "row-spread",
@@ -1833,7 +1833,7 @@
         "id": "a9103b8bd1668d6f",
         "type": "change",
         "z": "19fbd7cf3882c4ad",
-        "name": "name",
+        "name": "change",
         "rules": [
             {
                 "t": "set",
@@ -2001,7 +2001,7 @@
         "id": "557570a035650704",
         "type": "osc",
         "z": "19fbd7cf3882c4ad",
-        "name": "name",
+        "name": "osc",
         "path": "",
         "metadata": false,
         "x": 470,
@@ -2017,7 +2017,7 @@
         "id": "03625a79e8807adc",
         "type": "inject",
         "z": "19fbd7cf3882c4ad",
-        "name": "name",
+        "name": "Test OSC",
         "props": [
             {
                 "p": "payload"
@@ -2042,7 +2042,7 @@
         "id": "71bb1df31241f8e7",
         "type": "inject",
         "z": "19fbd7cf3882c4ad",
-        "name": "name",
+        "name": "Test OSC",
         "props": [
             {
                 "p": "topic",
@@ -2066,7 +2066,7 @@
         "id": "eee292bfd74fad2f",
         "type": "osc",
         "z": "19fbd7cf3882c4ad",
-        "name": "name",
+        "name": "Test OSC Output",
         "path": "",
         "metadata": false,
         "x": 350,
@@ -2081,7 +2081,7 @@
         "id": "dce7dd7dbe94f72b",
         "type": "udp out",
         "z": "19fbd7cf3882c4ad",
-        "name": "name",
+        "name": "udp out",
         "addr": "host.docker.internal",
         "iface": "",
         "port": "53000",
@@ -2097,7 +2097,7 @@
         "id": "2c13c807c664eac3",
         "type": "change",
         "z": "19fbd7cf3882c4ad",
-        "name": "name",
+        "name": "change",
         "rules": [
             {
                 "t": "set",
@@ -2142,7 +2142,7 @@
         "id": "7d8570d211d2f5e4",
         "type": "udp out",
         "z": "19fbd7cf3882c4ad",
-        "name": "name",
+        "name": "udp out",
         "addr": "host.docker.internal",
         "iface": "",
         "port": "",
@@ -2185,7 +2185,7 @@
         "id": "0e9d8e3e23b6e557",
         "type": "subflow:22f501abaf7e8db6",
         "z": "19fbd7cf3882c4ad",
-        "name": "name",
+        "name": "subflow",
         "x": 420,
         "y": 1660,
         "wires": []
@@ -2348,7 +2348,7 @@
         "confirmText": "Confirm",
         "raw": false,
         "className": "",
-        "name": "name",
+        "name": "ui notification",
         "x": 360,
         "y": 1420,
         "wires": [
@@ -2689,7 +2689,7 @@
         "id": "8e0e70df4d119293",
         "type": "inject",
         "z": "19fbd7cf3882c4ad",
-        "name": "name",
+        "name": "inject",
         "props": [
             {
                 "p": "payload"
@@ -2714,7 +2714,7 @@
         "id": "5bba1dc98b72437a",
         "type": "inject",
         "z": "19fbd7cf3882c4ad",
-        "name": "name",
+        "name": "inject",
         "props": [
             {
                 "p": "payload"
@@ -2739,7 +2739,7 @@
         "id": "d3c23f0cdb9ddd23",
         "type": "inject",
         "z": "19fbd7cf3882c4ad",
-        "name": "name",
+        "name": "inject",
         "props": [
             {
                 "p": "payload"
@@ -2799,7 +2799,7 @@
         "id": "c403daad2832f024",
         "type": "inject",
         "z": "19fbd7cf3882c4ad",
-        "name": "name",
+        "name": "inject",
         "props": [
             {
                 "p": "payload"
@@ -3058,7 +3058,7 @@
         "finalize": "",
         "libs": [],
         "x": 830,
-        "y": 260,
+        "y": 280,
         "wires": [
             []
         ]
@@ -3134,7 +3134,7 @@
         "group": "8ad5a7c72deac7fb",
         "page": "",
         "ui": "",
-        "name": "name",
+        "name": "confirm dialog test2",
         "order": 2,
         "width": 0,
         "height": 0,
@@ -3145,7 +3145,7 @@
         "resendOnRefresh": true,
         "templateScope": "local",
         "className": "",
-        "x": 1085,
+        "x": 1115,
         "y": 1360,
         "wires": [
             [
@@ -3184,7 +3184,7 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1190,
+        "x": 1300,
         "y": 1320,
         "wires": []
     },
@@ -3195,7 +3195,7 @@
         "group": "8ad5a7c72deac7fb",
         "page": "",
         "ui": "",
-        "name": "name",
+        "name": "Confirm Dialog test",
         "order": 1,
         "width": 0,
         "height": 0,
@@ -3206,7 +3206,7 @@
         "resendOnRefresh": true,
         "templateScope": "local",
         "className": "",
-        "x": 480,
+        "x": 500,
         "y": 1300,
         "wires": [
             []
@@ -4590,7 +4590,7 @@
         "id": "bddaa7231e8e67ea",
         "type": "switch",
         "z": "8ccf58caed82bbf6",
-        "name": "name",
+        "name": "switch",
         "property": "topic",
         "propertyType": "msg",
         "rules": [
@@ -4684,7 +4684,7 @@
         "id": "b721f129d37ea782",
         "type": "delay",
         "z": "8ccf58caed82bbf6",
-        "name": "name",
+        "name": "delay",
         "pauseType": "rate",
         "timeout": "5",
         "timeoutUnits": "seconds",
@@ -5096,7 +5096,7 @@
         "id": "9bd1967afe321d77",
         "type": "inject",
         "z": "wo2-tab",
-        "name": "name",
+        "name": "inject",
         "props": [
             {
                 "p": "payload"
@@ -5567,7 +5567,7 @@
         "id": "90130b9791133b25",
         "type": "delay",
         "z": "wo2-tab",
-        "name": "name",
+        "name": "delay",
         "pauseType": "delay",
         "timeout": "0.3",
         "timeoutUnits": "seconds",
@@ -6073,7 +6073,7 @@
         "id": "a6c82e7e838b08f3",
         "type": "change",
         "z": "wo2-tab",
-        "name": "name",
+        "name": "change",
         "rules": [
             {
                 "t": "set",
@@ -6461,7 +6461,7 @@
         "id": "ma-udp-primary",
         "type": "udp out",
         "z": "ma-tab",
-        "name": "name",
+        "name": "udp out",
         "addr": "10.154.10.103",
         "iface": "",
         "port": "8000",
@@ -6493,7 +6493,7 @@
         "id": "ma-osc-node",
         "type": "osc",
         "z": "ma-tab",
-        "name": "name",
+        "name": "osc",
         "path": "",
         "metadata": false,
         "x": 690,
@@ -6750,7 +6750,7 @@
         "group": "",
         "page": "d4724cfa86c7c770",
         "ui": "",
-        "name": "name",
+        "name": "ui-template",
         "order": 1,
         "width": 0,
         "height": 0,
@@ -8098,7 +8098,7 @@
         "id": "1f3f368fcf5cd3e8",
         "type": "inject",
         "z": "orch-tab",
-        "name": "name",
+        "name": "inject",
         "props": [
             {
                 "p": "topic",
@@ -8122,7 +8122,7 @@
         "id": "73e7031b585aad56",
         "type": "inject",
         "z": "orch-tab",
-        "name": "name",
+        "name": "inject",
         "props": [
             {
                 "p": "topic",
@@ -9283,7 +9283,7 @@
         "id": "6364204cf3202e3b",
         "type": "inject",
         "z": "3e37539e100b4dee",
-        "name": "name",
+        "name": "inject",
         "props": [
             {
                 "p": "payload"
@@ -9329,7 +9329,7 @@
         "id": "dd10b8aaf1935ee0",
         "type": "inject",
         "z": "3e37539e100b4dee",
-        "name": "name",
+        "name": "inject",
         "props": [
             {
                 "p": "payload"
@@ -9387,7 +9387,7 @@
         "id": "6d690b38e9393328",
         "type": "inject",
         "z": "3e37539e100b4dee",
-        "name": "name",
+        "name": "inject",
         "props": [
             {
                 "p": "payload"
@@ -9416,7 +9416,7 @@
         "id": "16797d0b93791ae3",
         "type": "inject",
         "z": "3e37539e100b4dee",
-        "name": "name",
+        "name": "inject",
         "props": [
             {
                 "p": "payload"
@@ -9445,7 +9445,7 @@
         "id": "8a7489cf66aa4fe1",
         "type": "change",
         "z": "3e37539e100b4dee",
-        "name": "name",
+        "name": "change",
         "rules": [
             {
                 "t": "set",
@@ -9470,7 +9470,7 @@
         "id": "34281b6b88425158",
         "type": "inject",
         "z": "3e37539e100b4dee",
-        "name": "name",
+        "name": "inject",
         "props": [
             {
                 "p": "payload"
@@ -9499,7 +9499,7 @@
         "id": "cfe88dc84e1316f3",
         "type": "change",
         "z": "3e37539e100b4dee",
-        "name": "name",
+        "name": "change",
         "rules": [
             {
                 "t": "set",
@@ -9524,7 +9524,7 @@
         "id": "ea4fd52b815dafe6",
         "type": "inject",
         "z": "3e37539e100b4dee",
-        "name": "name",
+        "name": "inject",
         "props": [
             {
                 "p": "payload"
@@ -9554,7 +9554,7 @@
         "type": "isaac generic request",
         "z": "3e37539e100b4dee",
         "isaacConnection": "1763323c89c37655",
-        "name": "name",
+        "name": "isaac generic request",
         "method": "GET",
         "ret": "txt",
         "paytoqs": "ignore",
@@ -9594,7 +9594,7 @@
         "id": "a565b4ff92b60084",
         "type": "json",
         "z": "3e37539e100b4dee",
-        "name": "name",
+        "name": "json",
         "property": "payload",
         "action": "",
         "pretty": false,
@@ -9611,7 +9611,7 @@
         "type": "isaac schedule",
         "z": "3e37539e100b4dee",
         "isaacConnection": "1763323c89c37655",
-        "name": "name",
+        "name": "isaac schedule",
         "prerollWarning": 0,
         "upcomingTime": 0,
         "upcomingCount": 0,
@@ -10676,7 +10676,7 @@
         "id": "a65f0c24adbc6ff4",
         "type": "comment",
         "z": "1f04ca82ca07a995",
-        "name": "name",
+        "name": "comment",
         "info": "test push",
         "x": 440,
         "y": 240,
@@ -10686,7 +10686,7 @@
         "id": "55f926e03662f466",
         "type": "subflow:wo6-subflow-001",
         "z": "1f04ca82ca07a995",
-        "name": "name",
+        "name": "subflow:wo6-subflow-001",
         "x": 690,
         "y": 320,
         "wires": [
