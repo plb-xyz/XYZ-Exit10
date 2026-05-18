@@ -7853,6 +7853,228 @@
         "wires": []
     },
     {
+        "id": "d7e1c163adc89632",
+        "type": "smxstate",
+        "z": "orch-tab",
+        "name": "tattoto",
+        "xstateDefinition": "// Available variables/objects/functions:\n// xstate\n// - .Machine\n// - .interpret\n// - .assign\n// - .send\n// - .sendParent\n// - .spawn\n// - .raise\n// - .actions\n//\n// Common\n// - setInterval, setTimeout, clearInterval, clearTimeout\n// - node.send, node.warn, node.log, node.error\n// - context.get, context.set\n// - flow.get, flow.set\n// - env.get\n// - util\n\nconst { assign } = xstate;\n\n// First define names guards, actions, ...\n\n/**\n * Guards\n */\nconst maxValueReached = (context, event) => {\n  return context.counter >= 10;\n};\n\n/**\n * Actions\n */\nconst incrementCounter = assign({\n  counter: (context, event) => context.counter + 1\n});\n\nconst resetCounter = assign({\n  counter: (context, event) => {\n    // Can send log messages via\n    //  - node.log\n    //  - node.warn\n    //  - node.error\n    //node.warn(\"RESET\");\n\n    // Can send messages to the second outport\n    // Specify an array to send multiple messages\n    // at once\n    //  - node.send(msg)\n    node.send({ payload: \"resetCounter\" });\n    \n    return 0;\n  }\n});\n\n/**\n * Activities\n */\nconst doStuff = () => {\n  // See https://xstate.js.org/docs/guides/activities.html\n  const interval = setInterval(() => {\n    node.send({ payload: 'BEEP' });\n  }, 1000);\n  return () => clearInterval(interval);\n};\n\n/***************************\n * Main machine definition * \n ***************************/\nreturn {\n  machine: {\n    context: {\n      counter: 0\n    },\n    initial: 'run',\n    states: {\n      run: {\n        initial: 'count',\n        states: {\n          count: {\n            on: {\n              '': { target: 'reset', cond: 'maxValueReached' }\n            },\n            after: {\n              1000: { target: 'count', actions: 'incrementCounter' }\n            }\n          },\n          reset: {\n            exit: 'resetCounter',\n            after: {\n              5000: { target: 'count' }\n            },\n            activities: 'doStuff'\n          }\n        },\n        on: {\n          PAUSE: 'pause'\n        }\n      },\n      pause: {\n        on: {\n          RESUME: 'run'\n        }\n      }\n    }\n  },\n  // Configuration containing guards, actions, activities, ...\n  // see above\n  config: {\n    guards: { maxValueReached },\n    actions: { incrementCounter, resetCounter },\n    activities: { doStuff }\n  },\n  // Define listeners (can be an array of functions)\n  //    Functions get called on every state/context update\n  listeners: (data) => {\n    //node.warn(data.state + \":\" + data.context.counter);\n  }\n};",
+        "noerr": 0,
+        "x": 290,
+        "y": 540,
+        "wires": [
+            [
+                "9e3cee3116b39887"
+            ],
+            [
+                "bba51def2d8e8a76"
+            ]
+        ]
+    },
+    {
+        "id": "1f3f368fcf5cd3e8",
+        "type": "inject",
+        "z": "orch-tab",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "PAUSE",
+        "x": 90,
+        "y": 540,
+        "wires": [
+            [
+                "d7e1c163adc89632"
+            ]
+        ]
+    },
+    {
+        "id": "73e7031b585aad56",
+        "type": "inject",
+        "z": "orch-tab",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "RESUME",
+        "x": 100,
+        "y": 600,
+        "wires": [
+            [
+                "d7e1c163adc89632"
+            ]
+        ]
+    },
+    {
+        "id": "9e3cee3116b39887",
+        "type": "debug",
+        "z": "orch-tab",
+        "name": "debug 13",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 470,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "bba51def2d8e8a76",
+        "type": "debug",
+        "z": "orch-tab",
+        "name": "debug 15",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 460,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "c8a1dcfa11a8b34f",
+        "type": "function",
+        "z": "orch-tab",
+        "name": "xstate State Machine",
+        "func": "// ─── Get the running actor ─────────────────────────────────────────────────\nconst actor = flow.get('xstate_actor');\n\nif (!actor) {\n    node.warn(\"State machine actor not ready — redeploy to restart\");\n    return null;\n}\n\n// ─── Accept event in multiple formats ─────────────────────────────────────\n// Format A: msg.payload = { \"event\": \"Trans to Normal\" }\n// Format B: msg.payload = { \"type\": \"Trans to Normal\" }  (XState native)\n// Format C: msg.payload = \"Trans to Normal\"  (plain string)\n// Format D: msg.topic   = \"Trans to Normal\"  (topic as event)\n\nlet eventType = null;\n\nif (typeof msg.payload === \"string\") {\n    eventType = msg.payload;\n} else if (msg.payload && msg.payload.event) {\n    eventType = msg.payload.event;\n} else if (msg.payload && msg.payload.type) {\n    eventType = msg.payload.type;\n} else if (msg.topic) {\n    eventType = msg.topic;\n}\n\nif (!eventType) {\n    node.warn(\"No event found in msg — expected msg.payload.event, msg.payload, or msg.topic\");\n    return null;\n}\n\n// ─── Send the event to the actor ──────────────────────────────────────────\n// The actor's subscribe() will fire automatically if a transition occurs\nconst before = actor.getSnapshot().value;\nactor.send({ type: eventType });\nconst after = actor.getSnapshot().value;\n\n// ─── Log ignored events (no transition occurred) ──────────────────────────\nif (JSON.stringify(before) === JSON.stringify(after)) {\n    node.warn(`Event \"${eventType}\" had no effect in state: ${JSON.stringify(before)}`);\n}\n\n// subscribe() handles output — nothing to return here\nreturn null;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "// ─── Pull functions out of the xstate module ───────────────────────────────\nconst { createMachine, createActor } = xstate;\n\n// ─── Machine definition (your Stately.ai export) ───────────────────────────\nconst machineDefinition = {\n    \"id\": \"Exit10\",\n    \"initial\": \"INIT\",\n    \"states\": {\n        \"INIT\": {\n            \"on\": {\n                \"Goto Idle\": [{ \"target\": \"IDLE\" }]\n            }\n        },\n        \"IDLE\": {\n            \"on\": {\n                \"Trans to Normal\": [{ \"target\": \"NORMAL\" }],\n                \"Start Show\": [{ \"target\": \"SHOW\", \"guard\": \"Prayer\" }]\n            }\n        },\n        \"NORMAL\": {\n            \"type\": \"parallel\",\n            \"on\": {\n                \"Goto Idle\": [{ \"target\": \"IDLE\" }],\n                \"Start Show\": [{ \"target\": \"SHOW\", \"guard\": \"Prayer\" }]\n            },\n            \"states\": {\n                \"A1 AUDIO\": {\n                    \"initial\": \"BGM\",\n                    \"states\": {\n                        \"BGM\": {\n                            \"on\": {\n                                \"A1.AUDIO.SPECIAL\": [{ \"target\": \"SPECIAL\" }],\n                                \"A1.AUDIO.NONE\": [{ \"target\": \"NONE\" }]\n                            }\n                        },\n                        \"SPECIAL\": {\n                            \"on\": {\n                                \"A1.AUDIO.NONE\": [{ \"target\": \"NONE\" }],\n                                \"A1.AUDIO.BGM\": [{ \"target\": \"BGM\" }]\n                            }\n                        },\n                        \"NONE\": {\n                            \"on\": {\n                                \"A1.AUDIO.BGM\": [{ \"target\": \"BGM\" }],\n                                \"A1.AUDIO.SPECIAL\": [{ \"target\": \"SPECIAL\" }]\n                            }\n                        }\n                    }\n                },\n                \"A1 AMBIENCE\": {\n                    \"initial\": \"AMBIENCE\",\n                    \"on\": {\n                        \"Start A1 Event Simple\": [{ \"target\": \"#Exit10.NORMAL.A1 Events.SIMPLE\" }],\n                        \"Start A1 Event Complex\": [{ \"target\": \"#Exit10.NORMAL.A1 Events.COMPLEX\" }]\n                    },\n                    \"states\": {\n                        \"AMBIENCE\": {\n                            \"on\": {\n                                \"Start A1 OnTop\": [{ \"target\": \"ON TOP\" }],\n                                \"Start A1 FullScreen\": [{ \"target\": \"FULL SCREEN\" }]\n                            }\n                        },\n                        \"ON TOP\": {\n                            \"on\": {\n                                \"End A1 OnTop\": [{ \"target\": \"AMBIENCE\" }]\n                            }\n                        },\n                        \"FULL SCREEN\": {\n                            \"on\": {\n                                \"End A1 FullScreen\": [{ \"target\": \"AMBIENCE\" }]\n                            }\n                        }\n                    }\n                },\n                \"A1 Events\": {\n                    \"initial\": \"NONE\",\n                    \"states\": {\n                        \"NONE\": {},\n                        \"SIMPLE\": {\n                            \"on\": {\n                                \"End A1 Event Simple\": [{ \"target\": \"NONE\" }]\n                            }\n                        },\n                        \"COMPLEX\": {\n                            \"on\": {\n                                \"End A1 Event Complex\": [{ \"target\": \"NONE\" }]\n                            }\n                        }\n                    }\n                },\n                \"A2 AMBIENCE\": {\n                    \"initial\": \"AMBIENCE\",\n                    \"on\": {\n                        \"Start A2 Event Simple\": [{ \"target\": \"#Exit10.NORMAL.A2 Events.SIMPLE\" }],\n                        \"Start A2 Event Complex\": [{ \"target\": \"#Exit10.NORMAL.A2 Events.COMPLEX\" }]\n                    },\n                    \"states\": {\n                        \"AMBIENCE\": {\n                            \"on\": {\n                                \"Start A2 OnTop\": [{ \"target\": \"ON TOP\" }],\n                                \"Start A2 FullScreen\": [{ \"target\": \"FULL SCREEN\" }]\n                            }\n                        },\n                        \"ON TOP\": {\n                            \"on\": {\n                                \"End A2 OnTop\": [{ \"target\": \"AMBIENCE\" }]\n                            }\n                        },\n                        \"FULL SCREEN\": {\n                            \"on\": {\n                                \"End A2 FullScreen\": [{ \"target\": \"AMBIENCE\" }]\n                            }\n                        }\n                    }\n                },\n                \"A2 Events\": {\n                    \"initial\": \"NONE\",\n                    \"states\": {\n                        \"NONE\": {},\n                        \"SIMPLE\": {\n                            \"on\": {\n                                \"End A2 Event Simple\": [{ \"target\": \"NONE\" }]\n                            }\n                        },\n                        \"COMPLEX\": {\n                            \"on\": {\n                                \"End A2 Event Complex\": [{ \"target\": \"NONE\" }]\n                            }\n                        }\n                    }\n                },\n                \"A3 AMBIENCE\": {\n                    \"initial\": \"AMBIENCE\",\n                    \"on\": {\n                        \"Start A3 Event Simple\": [{ \"target\": \"#Exit10.NORMAL.A3 Events.SIMPLE\" }],\n                        \"Start A3 Event Complex\": [{ \"target\": \"#Exit10.NORMAL.A3 Events.COMPLEX\" }]\n                    },\n                    \"states\": {\n                        \"AMBIENCE\": {\n                            \"on\": {\n                                \"Start A3 On Top\": [{ \"target\": \"ON TOP\" }],\n                                \"Start A3 Full Screen\": [{ \"target\": \"FULL SCREEN\" }]\n                            }\n                        },\n                        \"ON TOP\": {\n                            \"on\": {\n                                \"End A3 On Top\": [{ \"target\": \"AMBIENCE\" }]\n                            }\n                        },\n                        \"FULL SCREEN\": {\n                            \"on\": {\n                                \"End A3 Full Screen\": [{ \"target\": \"AMBIENCE\" }]\n                            }\n                        }\n                    }\n                },\n                \"A3 Events\": {\n                    \"initial\": \"NONE\",\n                    \"states\": {\n                        \"NONE\": {},\n                        \"SIMPLE\": {\n                            \"on\": {\n                                \"End A3 Event Simple\": [{ \"target\": \"NONE\" }]\n                            }\n                        },\n                        \"COMPLEX\": {\n                            \"on\": {\n                                \"End A3 Event Complex\": [{ \"target\": \"NONE\" }]\n                            }\n                        }\n                    }\n                },\n                \"LANDSCAPE\": {\n                    \"type\": \"parallel\",\n                    \"states\": {\n                        \"LIGHTING\": {\n                            \"initial\": \"AMBIENCE\",\n                            \"states\": {\n                                \"AMBIENCE\": {}\n                            }\n                        },\n                        \"AUDIO\": {\n                            \"initial\": \"BGM\",\n                            \"states\": {\n                                \"BGM\": {\n                                    \"on\": {\n                                        \"LS.AUDIO.SPECIAL\": [{ \"target\": \"SPECIAL\" }],\n                                        \"LS.AUDIO.NONE\": [{ \"target\": \"NONE\" }]\n                                    }\n                                },\n                                \"SPECIAL\": {\n                                    \"on\": {\n                                        \"LS.AUDIO.NONE\": [{ \"target\": \"NONE\" }],\n                                        \"LS.AUDIO.BGM\": [{ \"target\": \"BGM\" }]\n                                    }\n                                },\n                                \"NONE\": {\n                                    \"on\": {\n                                        \"LS.AUDIO.BGM\": [{ \"target\": \"BGM\" }],\n                                        \"LS.AUDIO.SPECIAL\": [{ \"target\": \"SPECIAL\" }]\n                                    }\n                                }\n                            }\n                        }\n                    }\n                }\n            }\n        },\n        \"SHOW\": {\n            \"entry\": { \"type\": \"startShowLogic\" },\n            \"exit\": { \"type\": \"pharosWater1Normal\" },\n            \"on\": {\n                \"Goto Idle\": [{ \"target\": \"IDLE\" }],\n                \"Trans to Normal\": [{ \"target\": \"NORMAL\" }]\n            }\n        }\n    }\n};\n\n// ─── Guards ────────────────────────────────────────────────────────────────\n// \"Prayer\" guard: returns true if show is allowed to start.\n// For now always true — replace with real logic later\n// e.g. check time window, operator confirmation flag, etc.\nconst guards = {\n    Prayer: () => {\n        return flow.get('prayerGuardAllowed') !== false; // default: allowed\n    }\n};\n\n// ─── Actions ───────────────────────────────────────────────────────────────\n// Entry/exit actions emit command envelopes downstream (output 2)\nconst actions = {\n    startShowLogic: () => {\n        node.send([null, {\n            topic: \"cmd\",\n            payload: {\n                v: 1,\n                source: \"statemachine\",\n                event: \"entry\",\n                state: \"SHOW\",\n                description: \"Show started — trigger show logic\"\n            }\n        }]);\n    },\n    pharosWater1Normal: () => {\n        node.send([null, {\n            topic: \"cmd\",\n            payload: {\n                v: 1,\n                source: \"statemachine\",\n                event: \"exit\",\n                state: \"SHOW\",\n                description: \"Show ended — set Pharos Water1 to Normal\"\n            }\n        }]);\n    }\n};\n\n// ─── Create machine ────────────────────────────────────────────────────────\nconst machine = createMachine(machineDefinition, { guards, actions });\n\n// ─── Create and start actor ────────────────────────────────────────────────\nconst actor = createActor(machine);\n\n// ─── Subscribe: fires on every state transition ────────────────────────────\nactor.subscribe(snapshot => {\n    const stateValue = snapshot.value;\n\n    // Store snapshot in flow context (queryable by other nodes)\n    flow.set('xstate_snapshot', snapshot);\n    flow.set('xstate_state', stateValue);\n\n    // ── Node status display (visible under the node on the canvas) ──────────\n    let fill = \"grey\";\n    let text = \"\";\n\n    if (stateValue === \"INIT\") {\n        fill = \"grey\";\n        text = \"INIT\";\n    } else if (stateValue === \"IDLE\") {\n        fill = \"blue\";\n        text = \"IDLE\";\n    } else if (stateValue === \"SHOW\") {\n        fill = \"yellow\";\n        text = \"● SHOW\";\n    } else if (typeof stateValue === \"object\") {\n        // NORMAL is parallel — value is an object of sub-states\n        // Build a compact summary e.g. \"NORMAL | A1:BGM | A2:AMBIENCE\"\n        const a1audio = stateValue[\"A1 AUDIO\"] || \"?\";\n        const a1ambience = stateValue[\"A1 AMBIENCE\"] || \"?\";\n        const a1events = stateValue[\"A1 Events\"] || \"NONE\";\n        fill = \"green\";\n        text = `NORMAL | A1aud:${a1audio} A1amb:${a1ambience}${a1events !== \"NONE\" ? \" EVT:\" + a1events : \"\"}`;\n    }\n\n    node.status({ fill, shape: \"dot\", text });\n\n    // ── Emit state change event downstream (output 1) ──────────────────────\n    node.send([{\n        topic: \"evt/statemachine/state\",\n        payload: {\n            v: 1,\n            source: \"statemachine\",\n            state: stateValue,\n            snapshot: snapshot.value\n        }\n    }, null]);\n});\n\n// ─── Start the actor ───────────────────────────────────────────────────────\nactor.start();\n\n// ─── Store actor in flow context so On Message tab can reach it ───────────\nflow.set('xstate_actor', actor);\n\nnode.status({ fill: \"grey\", shape: \"dot\", text: \"INIT\" });\nnode.warn(\"Exit10 state machine started\");",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "xstate",
+                "module": "xstate"
+            }
+        ],
+        "x": 960,
+        "y": 540,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "05db305ada536a7d",
+        "type": "inject",
+        "z": "orch-tab",
+        "name": "Goto Idle",
+        "props": [
+            {
+                "p": "payload.event",
+                "v": "Goto Idle",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 700,
+        "y": 500,
+        "wires": [
+            [
+                "c8a1dcfa11a8b34f"
+            ]
+        ]
+    },
+    {
+        "id": "e0aaf132d15e1d94",
+        "type": "inject",
+        "z": "orch-tab",
+        "name": "Trans to Normal",
+        "props": [
+            {
+                "p": "payload.event",
+                "v": "Trans to Normal",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 720,
+        "y": 540,
+        "wires": [
+            [
+                "c8a1dcfa11a8b34f"
+            ]
+        ]
+    },
+    {
+        "id": "2cc181f482ae8f37",
+        "type": "inject",
+        "z": "orch-tab",
+        "name": "Start Show",
+        "props": [
+            {
+                "p": "payload.event",
+                "v": "Start Show",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 700,
+        "y": 580,
+        "wires": [
+            [
+                "c8a1dcfa11a8b34f"
+            ]
+        ]
+    },
+    {
+        "id": "f57f279fe53b780a",
+        "type": "inject",
+        "z": "orch-tab",
+        "name": "Start A1 Event Simple",
+        "props": [
+            {
+                "p": "payload.event",
+                "v": "Start A1 Event Simple",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 740,
+        "y": 640,
+        "wires": [
+            [
+                "c8a1dcfa11a8b34f"
+            ]
+        ]
+    },
+    {
         "id": "3c2c4c8de5b9a3bf",
         "type": "ui-dropdown",
         "z": "f1b9b2b5c63a4aa9",
