@@ -176,6 +176,104 @@
         }
     },
     {
+        "id": "wo6-subflow-001",
+        "type": "subflow",
+        "name": "WATCHOUT v6 Control",
+        "info": "Controls a WATCHOUT v6 display cluster over TCP.\n\n**Properties:**\n- `ip` – IP address of the WATCHOUT display computer\n- `deviceid` – Logical device identifier\n- `name` – Human-readable label\n\n**Input:**\n- `msg.action` – WATCHOUT command name (`run`, `halt`, `gotoControlCue`, `gotoTime`, `standBy`, `load`, `authenticate`, `ping`, `reset`, `setInput`, `setInputs`, `getStatus`, `online`, `kill`, etc.)\n- `msg.payload` – Params object, raw string, or null\n\n**Output 1 – Feedback:**\n- `msg.payload` – Raw TCP buffer from WATCHOUT (`Ready`, `Reply`, `Busy`, `Error`, `Warning`, `Quit`)",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 100,
+                "wires": [
+                    {
+                        "id": "0006a56c1fc14bbe"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 700,
+                "y": 220,
+                "wires": [
+                    {
+                        "id": "a9f0dea58ed206d3",
+                        "port": 0
+                    },
+                    {
+                        "id": "4d79fba2cf808ca8",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "ip",
+                "type": "str",
+                "value": "172.24.16.209",
+                "ui": {
+                    "icon": "fa-network-wired",
+                    "label": {
+                        "en-US": "IP Address"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "deviceid",
+                "type": "str",
+                "value": "",
+                "ui": {
+                    "icon": "fa-tag",
+                    "label": {
+                        "en-US": "Device ID"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "name",
+                "type": "str",
+                "value": "WO6 Display",
+                "ui": {
+                    "icon": "fa-tv",
+                    "label": {
+                        "en-US": "Name"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str"
+                        ]
+                    }
+                }
+            }
+        ],
+        "meta": {
+            "module": "watchout-v6-control",
+            "version": "1.0.0",
+            "author": "Smart Monkeys",
+            "desc": "WATCHOUT v6 TCP control subflow"
+        },
+        "color": "#C0C0C0",
+        "icon": "font-awesome/fa-film",
+        "status": {
+            "wires": []
+        }
+    },
+    {
         "id": "025439f9501b7114",
         "type": "group",
         "z": "wo2-tab",
@@ -1189,6 +1287,12 @@
         "groupType": "default"
     },
     {
+        "id": "0ba38235513c582a",
+        "type": "FlowCompareCfg",
+        "name": "FlowCompare",
+        "data": "some default value"
+    },
+    {
         "id": "b67850082a42953b",
         "type": "debug",
         "z": "22f501abaf7e8db6",
@@ -1403,6 +1507,126 @@
         "x": 390,
         "y": 100,
         "wires": []
+    },
+    {
+        "id": "0006a56c1fc14bbe",
+        "type": "function",
+        "z": "wo6-subflow-001",
+        "name": "Build WO6 Command",
+        "func": "\n// ── WATCHOUT v6 Command Builder ──────────────────────────────────────────────\n// msg.action  : command name  e.g. \"run\", \"halt\", \"gotoControlCue\"\n// msg.payload : params object e.g. { cue: \"MyScene\", reverse: false }\n//               OR a raw string to append after the command\n//               OR null/undefined for zero-param commands\n//\n// Subflow env: ip, deviceid, name\n//\n// Output:\n//   msg.payload  = \"command param1 param2\\r\\n\"  (TCP-ready string)\n//   msg.wo6      = { ip, deviceid, name, command }\n// ─────────────────────────────────────────────────────────────────────────────\n\nconst action  = msg.action;\nconst params  = msg.payload;\nconst ip      = env.get(\"ip\");\nconst devId   = env.get(\"deviceid\");\nconst devName = env.get(\"name\");\n\nif (!action) {\n    node.warn(\"[WO6 \" + devName + \"] msg.action is required\");\n    return null;\n}\n\n// Quote a string value per WATCHOUT protocol (UTF-8, backslash-escaped)\nfunction q(s) {\n    return '\"' + String(s).replace(/\\\\/g, '\\\\\\\\').replace(/\"/g, '\\\\\"') + '\"';\n}\n\n// Build parameter string from payload \nfunction buildParams(cmd, p) {\n    if (p === null || p === undefined) return \"\";\n    if (typeof p !== \"object\") return String(p);\n\n    const actions = {\n        \"load\"           : [\"path\", \"showName\", \"conditionFlags\", \"goOnline\", \"managedLoad\", \"master\"],\n        \"gotoTime\"       : [\"time\", \"timeline\"],\n        \"gotoControlCue\" : [\"cue\", \"reverse\", \"timeline\"],\n        \"standBy\"        : [\"enable\", \"fadeRate\"],\n        \"setInput\"       : [\"name\", \"value\", \"rate\"],\n        \"online\"         : [\"enable\"],\n        \"run\"            : [\"timeline\"],\n        \"halt\"           : [\"timeline\"],\n        \"kill\"           : [\"timeline\"],\n        \"enableLayerCond\": [\"flags\"],\n        \"hitTest\"        : [\"x\", \"y\"],\n        \"timecodeMode\"   : [\"mode\", \"offset\"],\n        \"serialPort\"     : [\"open\", \"port\", \"protocol\", \"baud\", \"dataBits\", \"stopBits\", \"parity\"]\n    };\n\n    const parts = [];\n\n    // setInputs: rate then repeated name/value pairs from p.inputs array\n    if (cmd === \"setInputs\") {\n        parts.push(p.rate !== undefined ? p.rate : 0);\n        if (Array.isArray(p.inputs)) {\n            p.inputs.forEach(pair => { parts.push(q(pair.name)); parts.push(pair.value); });\n        }\n        return parts.join(\" \");\n    }\n\n    const action = actions[cmd];\n    const keys  = action || Object.keys(p);\n    keys.forEach(key => {\n        if (p[key] === undefined) return;\n        const v = p[key];\n        if      (typeof v === \"string\")  parts.push(q(v));\n        else if (typeof v === \"boolean\") parts.push(v ? \"true\" : \"false\");\n        else                             parts.push(v);\n    });\n\n    return parts.join(\" \");\n}\n\nconst paramStr = buildParams(action, params);\nconst command  = paramStr ? (action + \" \" + paramStr) : action;\n\nmsg.payload = command + \"\\r\\n\";\nmsg.wo6 = { ip: ip, deviceid: devId, name: devName, command: command };\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 100,
+        "wires": [
+            [
+                "4d79fba2cf808ca8"
+            ]
+        ]
+    },
+    {
+        "id": "e0e53daa383c0f79",
+        "type": "tcp out",
+        "z": "wo6-subflow-001",
+        "name": "TCP To Watchout v6",
+        "host": "${ip}",
+        "port": "3040",
+        "beserver": "client",
+        "base64": false,
+        "end": false,
+        "tls": "",
+        "x": 680,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "a9f0dea58ed206d3",
+        "type": "tcp in",
+        "z": "wo6-subflow-001",
+        "name": "WO6 Feedback",
+        "server": "server",
+        "host": "",
+        "port": "3041",
+        "datamode": "stream",
+        "datatype": "buffer",
+        "newline": "",
+        "topic": "",
+        "trim": false,
+        "base64": false,
+        "tls": "",
+        "x": 80,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4d79fba2cf808ca8",
+        "type": "tcp request",
+        "z": "wo6-subflow-001",
+        "name": "",
+        "server": "${ip}",
+        "port": "3040",
+        "out": "time",
+        "ret": "string",
+        "splitc": "0",
+        "newline": "",
+        "trim": false,
+        "tls": "",
+        "x": 540,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "wo6-inject-poll",
+        "type": "inject",
+        "z": "wo6-subflow-001",
+        "name": "Poll 5s",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 340,
+        "wires": [
+            [
+                "wo6-setmsg-poll"
+            ]
+        ]
+    },
+    {
+        "id": "wo6-setmsg-poll",
+        "type": "function",
+        "z": "wo6-subflow-001",
+        "name": "getStatus",
+        "func": "msg.action = \"getStatus\";\nmsg.payload = null;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 340,
+        "wires": [
+            [
+                "4d79fba2cf808ca8"
+            ]
+        ]
     },
     {
         "id": "ma3_osc_receiver",
@@ -10369,23 +10593,10 @@
         "x": 155,
         "y": 160,
         "wires": [
-            []
+            [
+                "0829ca41d4ba9327"
+            ]
         ]
-    },
-    {
-        "id": "e0e53daa383c0f79",
-        "type": "tcp out",
-        "z": "1f04ca82ca07a995",
-        "name": "TCP To Watchout v6",
-        "host": "127.0.0.1",
-        "port": "3040",
-        "beserver": "client",
-        "base64": false,
-        "end": false,
-        "tls": "",
-        "x": 840,
-        "y": 160,
-        "wires": []
     },
     {
         "id": "cde32fd93a24cab6",
@@ -10407,27 +10618,6 @@
         "links": [],
         "x": 155,
         "y": 680,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "a9f0dea58ed206d3",
-        "type": "tcp in",
-        "z": "1f04ca82ca07a995",
-        "name": "WO6 Feedback",
-        "server": "server",
-        "host": "",
-        "port": "3041",
-        "datamode": "stream",
-        "datatype": "buffer",
-        "newline": "",
-        "topic": "",
-        "trim": false,
-        "base64": false,
-        "tls": "",
-        "x": 160,
-        "y": 320,
         "wires": [
             []
         ]
@@ -10459,7 +10649,9 @@
         "x": 380,
         "y": 160,
         "wires": [
-            []
+            [
+                "55f926e03662f466"
+            ]
         ]
     },
     {
@@ -10476,6 +10668,27 @@
         "libs": [],
         "x": 410,
         "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a65f0c24adbc6ff4",
+        "type": "comment",
+        "z": "1f04ca82ca07a995",
+        "name": "",
+        "info": "test push",
+        "x": 440,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "55f926e03662f466",
+        "type": "subflow:wo6-subflow-001",
+        "z": "1f04ca82ca07a995",
+        "name": "",
+        "x": 690,
+        "y": 320,
         "wires": [
             []
         ]
