@@ -13,7 +13,7 @@ It defines:
 
 - The canonical shape of `flow.state` (the live context object stored inside Node-RED).
 - The allowed global modes and how the system can transition between them.
-- The message contract: which `msg.topic` / `msg.payload` pairs are valid inputs to the Decision Maker.
+- The message contract: the command envelope shape in `msg.payload` (`action`, `target`, `params`).
 - Guards and policies that the Decision Maker must enforce.
 
 Use it as the single source of truth when building or reviewing the Node-RED "Decision Maker" function node.
@@ -58,7 +58,7 @@ Fullscreen always wins over On-Top. When a special ends, the layer below is reve
 
 ### 2.4 Ambience (spelling: Ambience, not Ambiance)
 
-An **Ambience** is the default background content for a space: a looping video (A1/A2/A3) or an audio/lighting look (LS). It is selected per-space using `ui/setAmbience` and stored in `context.spaces.<space>.background.contentId`.
+An **Ambience** is the default background content for a space: a looping video (A1/A2/A3) or an audio/lighting look (LS). It is selected using `content.go` with `params.key` and optional `target`, then stored in `context.spaces.<space>.background.contentId`.
 
 ### 2.5 Events as a Sub-Mode
 
@@ -81,6 +81,8 @@ context.mode == 'NORMAL'
 ```
 
 It gates whether `sched/*` topics (future scheduler) are allowed to trigger shows/events.
+
+It gates whether scheduler-originated actions are allowed to trigger shows/events.
 
 ### 2.7 Prayer Gating
 
@@ -110,48 +112,35 @@ The `policies` section of the JSON documents intent for the Decision Maker:
 
 ---
 
-## 3. Message Contract (`msg.topic` / `msg.payload`)
+## 3. Message Contract (Command Envelope)
 
-All messages entering the Decision Maker follow this structure:
+All commands entering the Decision Maker use `msg.payload` in this shape:
 
+```json
+{
+  "v": 1,
+  "source": "ui | scheduler | auto | operator | prayer | sys",
+  "target": "<zone/item/filter/array>",
+  "action": "<domain.verb>",
+  "params": {}
+}
 ```
-msg.topic   = "<namespace>/<action>"    (string)
-msg.payload = { ...fields }             (object)
-```
 
-### 3.1 Canonical Topic Namespaces
+### 3.1 Canonical Actions
 
-| Namespace  | Source               | Examples                                              |
-|------------|----------------------|-------------------------------------------------------|
-| `ui/`      | Dashboard buttons    | `ui/startShow`, `ui/setAmbience`, `ui/specialOnTopOn` |
-| `prayer/`  | External prayer system | `prayer/active`, `prayer/inactive`                  |
-| `sys/`     | System/health events | `sys/ready`, `sys/fault`, `sys/resetFault`            |
-| `wo/`      | Watchout feedback    | `wo/state`, `wo/showEnded`                            |
-| `ma/`      | MA lighting feedback | `ma/status`                                           |
-| `qsys/`    | Q-Sys feedback       | `qsys/status`                                         |
-| `sched/`   | Scheduler (future)   | `sched/startShow`, `sched/setAmbience`                |
+| Action | Required params | Typical target | Notes |
+|---|---|---|---|
+| `show.go` | `key` | optional (usually global) | Blocked during prayer/event |
+| `show.end` | `key` | optional | Returns to NORMAL |
+| `content.go` | `key` | optional (`"a1"`, `"a2"`, etc.) | Per-space ambience/special by target |
+| `content.stop` | `key` | optional | Stops content route |
+| `show.cue` | `key`, `cueName` | optional | Cue-based phase trigger (e.g. `all_opaque`) |
 
-### 3.2 `spaces` Field in Special Content Messages
+### 3.2 Target Field
 
-For `ui/specialOnTopOn` and `ui/specialFullscreenOn`, the field that identifies which spaces to target is called **`spaces`** (an array of space IDs).
+`target` identifies where the command applies (zone, item, filter object, or array), using the same resolution rules as `docs/item-registry.md`.
 
-> **Backward compatibility:** The Decision Maker also accepts the legacy name `targets` for this field during a transition period. Prefer `spaces` for all new button configurations.
-
-### 3.3 All UI Topics
-
-| Topic                    | Required payload fields            | Notes                                  |
-|--------------------------|------------------------------------|----------------------------------------|
-| `ui/startShow`           | `showId`                           | Blocked during prayer / event          |
-| `ui/abortShow`           | —                                  | Transitions back to NORMAL             |
-| `ui/setAmbience`         | `space`, `contentId`               | Per-space background                   |
-| `ui/clearAmbience`       | `space`                            | Clears background contentId            |
-| `ui/startEventSimple`    | `presetId`, `scope`                | Disables scheduler                     |
-| `ui/startEventComplex`   | `presetId`, `scope`                | Disables scheduler, live operator      |
-| `ui/endEvent`            | —                                  | Re-enables scheduler if prayer inactive|
-| `ui/specialOnTopOn`      | `spaces`, `contentId`, `audioMode` | Partial overlay on listed spaces       |
-| `ui/specialOnTopOff`     | `spaces`                           | Removes on-top overlay                 |
-| `ui/specialFullscreenOn` | `spaces`, `contentId`, `audioMode` | Full takeover on listed spaces         |
-| `ui/specialFullscreenOff`| `spaces`                           | Removes fullscreen, reveals background |
+When omitted, actionMap/default policy decides global vs scoped behavior.
 
 ---
 
@@ -161,10 +150,10 @@ For `ui/specialOnTopOn` and `ui/specialFullscreenOn`, the field that identifies 
 
 ```json
 {
-  "topic": "ui/startShow",
-  "payload": {
-    "showId": "show1"
-  }
+  "v": 1,
+  "source": "ui",
+  "action": "show.go",
+  "params": { "key": "show_1" }
 }
 ```
 
@@ -172,12 +161,10 @@ For `ui/specialOnTopOn` and `ui/specialFullscreenOn`, the field that identifies 
 
 ```json
 {
-  "topic": "ui/startShow",
-  "payload": {
-    "showId": "show1",
-    "requestedBy": "plb-xyz",
-    "requestedAt": "2026-03-24T00:00:00Z"
-  }
+  "v": 1,
+  "source": "scheduler",
+  "action": "show.go",
+  "params": { "key": "show_1" }
 }
 ```
 
@@ -185,13 +172,11 @@ For `ui/specialOnTopOn` and `ui/specialFullscreenOn`, the field that identifies 
 
 ```json
 {
-  "topic": "ui/setAmbience",
-  "payload": {
-    "space": "a1",
-    "contentId": "ambience_scene_2",
-    "requestedBy": "plb-xyz",
-    "requestedAt": "2026-03-24T00:00:00Z"
-  }
+  "v": 1,
+  "source": "ui",
+  "target": "a1",
+  "action": "content.go",
+  "params": { "key": "ambience_scene_2" }
 }
 ```
 
@@ -199,18 +184,17 @@ For `ui/specialOnTopOn` and `ui/specialFullscreenOn`, the field that identifies 
 
 ```json
 {
-  "topic": "ui/specialOnTopOn",
-  "payload": {
-    "spaces": ["a1"],
-    "contentId": "promo_overlay_16x9",
-    "audioMode": "duckBG",
-    "requestedBy": "plb-xyz",
-    "requestedAt": "2026-03-24T00:00:00Z"
+  "v": 1,
+  "source": "ui",
+  "target": ["a1"],
+  "action": "content.go",
+  "params": {
+    "key": "promo_overlay_16x9",
+    "mode": "onTop",
+    "audioMode": "duckBG"
   }
 }
 ```
-
-> Note: `spaces` replaces the earlier field name `targets`. The Decision Maker accepts both during transition.
 
 ---
 
@@ -251,27 +235,21 @@ Use `flow.get`/`flow.set` (not `global`) so state is scoped to the show-control 
 
 ```js
 const state = flow.get('state') || require('./initialState');
-const topic = msg.topic;
 const payload = msg.payload;
+const action = String(payload?.action || '').toLowerCase();
 
-// Normalise legacy field name
-if (payload && payload.targets && !payload.spaces) {
-    payload.spaces = payload.targets;
-}
-
-switch (topic) {
-    case 'sys/ready':
+switch (action) {
+  case 'sys.ready':
         state.context.mode = 'NORMAL';
         state.context.schedulerEnabled = true;
         break;
 
-    case 'ui/startShow': {
+  case 'show.go': {
         if (state.context.prayer.active) {
             // Block + store as pendingShow
             state.context.prayer.pendingShow = {
-                showId: payload.showId,
-                requestedBy: payload.requestedBy || null,
-                requestedAt: payload.requestedAt || null,
+        key: payload.params?.key,
+        source: payload.source || null,
                 scheduledFor: new Date(state.context.prayer.endsAt).getTime() + 60000
             };
             break;
@@ -280,21 +258,21 @@ switch (topic) {
         state.context.mode = 'SHOW';
         state.context.show = {
             active: true,
-            showId: payload.showId,
-            requestedBy: payload.requestedBy || null,
-            requestedAt: payload.requestedAt || null
+      showId: payload.params?.key,
+      requestedBy: payload.source || null,
+      requestedAt: new Date().toISOString()
         };
         // Output 1: send Watchout start-show command
-        node.send([{ topic: 'wo/startShow', payload: { showId: payload.showId } }, null, null, null]);
+    node.send([{ topic: 'wo/startShow', payload: { key: payload.params?.key } }, null, null, null]);
         return; // early return after send
 
-    case 'ui/abortShow':
+  case 'show.end':
         state.context.mode = 'NORMAL';
         state.context.show = { active: false, showId: null, requestedBy: null, requestedAt: null };
         node.send([{ topic: 'wo/abortShow', payload: {} }, null, null, null]);
         return;
 
-    case 'prayer/active':
+  case 'prayer.active':
         if (state.context.mode === 'SHOW') {
             // Abort mid-show
             state.context.mode = 'NORMAL';
@@ -308,7 +286,7 @@ switch (topic) {
         node.send([null, { topic: 'qsys/applyGlobalTrim', payload: { db: state.context.prayer.volumeDeltaDb } }, null, null]);
         return;
 
-    case 'prayer/inactive':
+      case 'prayer.inactive':
         state.context.prayer.active = false;
         state.context.schedulerEnabled =
             state.context.mode === 'NORMAL' && !state.context.event.active;
@@ -321,15 +299,19 @@ switch (topic) {
         state.context.prayer.pendingShow = null;
         return;
 
-    case 'ui/setAmbience':
+      case 'content.go': {
+        const target = payload.target;
+        const key = payload.params?.key;
+        if (typeof target !== 'string') break; // simplified example
         // Skip Watchout video for LS
-        if (state.context.spaces[payload.space]?.capabilities?.hasVideo) {
-            node.send([{ topic: 'wo/setAmbience', payload }, null, null, null]);
+        if (state.context.spaces[target]?.capabilities?.hasVideo) {
+          node.send([{ topic: 'wo/setAmbience', payload: { target, key } }, null, null, null]);
         }
-        state.context.spaces[payload.space].background.contentId = payload.contentId;
+        state.context.spaces[target].background.contentId = key;
         break;
+      }
 
-    // ...add remaining topics...
+      // ...add remaining actions...
 
     default:
         break;
@@ -356,8 +338,7 @@ Add a Function node **between** your Dashboard buttons and the Decision Maker to
 
 ```js
 msg.payload = msg.payload || {};
-msg.payload.requestedBy = msg.payload.requestedBy || 'operator';
-msg.payload.requestedAt = new Date().toISOString();
+msg.payload.source = msg.payload.source || 'operator';
 return msg;
 ```
 
@@ -370,7 +351,7 @@ This keeps the button configurations minimal (Examples A / C) while the Decision
 | Concept            | Correct spelling / name | Avoid              |
 |--------------------|-------------------------|--------------------|
 | Background content | **Ambience**            | ~~Ambiance~~       |
-| Space list in payload | **`spaces`**         | ~~`targets`~~ (legacy, still accepted) |
+| Spatial selector in payload | **`target`**   | ~~`spaces`~~ / ~~`targets`~~ for command envelope |
 | Space identifiers  | `a1`, `a2`, `a3`, `ls`  | —                  |
 | Landscape space    | `ls` — audio + lighting only | —             |
 

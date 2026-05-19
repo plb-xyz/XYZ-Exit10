@@ -34,11 +34,21 @@ The registry is a single JSON tree rooted at `"all"`. Each node is either a **zo
 all
 ├── in  (Indoors)
 │   ├── a1  (Atrium 1)
-│   │   ├── a1.ribbonLed        ← item
-│   │   ├── a1.sphereLed        ← item
-│   │   ├── a1.audio            ← item
-│   │   ├── a1.movingLights     ← item
-│   │   ├── a1.hublessWheel.ring ← item
+│   │   ├── a1.video
+│   │     ├── a1.ribbonLed          ← item
+│   │     ├── a1.columnLed          ← item
+│   │     ├── a1.sphereLed          ← item
+│   │   ├── a1.audio               ← item
+│   │   ├── a1.lighting
+│   │     ├── a1.movingLights         ← item
+│   │     ├── a1.wisk ← item
+│   │     ├── a1.arch                         ← item
+│   │     ├── a1.hublessWheel.movingLights    ← item
+│   │     ├── a1.hublessWheel.ring            ← item
+│   │     ├── a1.hublessWheel.gondolas        ← item
+│   │     ├── a1.hublessWheel.gondolaBenches  ← item
+│   │     ├── a1.multiverseStrips     ← item
+│   │     ├── a1.handrailStrips       ← item
 │   │   └── ...
 │   ├── a2  (Atrium 2)
 │   ├── a3  (Atrium 3)
@@ -82,7 +92,7 @@ all
 |---|---|
 | `all` | All (root) |
 | `in` | Indoors |
-| `ou` | Outdoors |
+| `out` | Outdoors |
 | `a1` | Atrium 1 |
 | `a2` | Atrium 2 |
 | `a3` | Atrium 3 |
@@ -113,7 +123,7 @@ Tags classify items by media type, function, location, scope, and sub-group. Mul
 | `lx` | Lighting (shorthand, used alongside `lighting`) | Same as `lighting` items |
 | `moving` | Moving lights specifically | `a1.movingLights`, `a2.movingLights` |
 | `strips` | LED strip fixtures | `a1.multiverseStrips`, `a1.handrailStrips`, `a2.ceilingStrips` |
-| `practical` | Physical/mechanical effects | `wf.1`–`wf.4`, `et.smoke` |
+| `physical` | Physical/mechanical effects | `wf.1`–`wf.4`, `et.smoke` |
 | `xyz` | Client-facing / client-controlled scope | Most a1–a3 items, `we.led`, `kl.led` |
 | `hublessWheel` | A1 Hubless Wheel sub-group | `a1.hublessWheel.*` |
 
@@ -216,7 +226,9 @@ The item registry is consumed via the **unified internal command envelope**. The
 | `source` | yes | Who sent this command. Used for logging and ownership tracking. |
 | `target` | yes | What to address. See all forms below. |
 | `action` | yes | What to do. Domain-namespaced verb. See Action Vocabulary. |
-| `params` | yes | Parameters for the action. Can be `{}` if none needed. |
+| `params` | yes | Parameters for the action. For `content.go`, `show.go`, `show.cue`, `show.end`, this must include lowercase `key` (for example `{"key":"show_1"}`). |
+
+Strict mode note: orchestration accepts only this envelope format. Legacy fields like `kind`, `playableId`, and `params.Key` are not supported.
 
 `msg.topic` is always `"cmd"` for commands, `"evt"` for events/status.
 
@@ -346,22 +358,113 @@ Actions are domain-namespaced verbs. The UI and scheduler use these — adapters
 ### Lighting
 | Action | Description | Key params |
 |---|---|---|
+| `lighting.go` | Trigger a lighting state | `Key` |
 | `lighting.goCue` | Trigger a lighting cue | `cueKey` |
 | `lighting.goScene` | Recall a scene | `sceneKey` |
 | `lighting.goMacro` | Run a macro | `macro` |
 | `lighting.setIntensity` | Set intensity level | `level` (0–100) |
 | `lighting.off` | Black out / turn off | — |
 
-### Practical
+### Physical
 | Action | Description | Key params |
 |---|---|---|
-| `practical.on` | Enable a practical effect | — |
-| `practical.off` | Disable a practical effect | — |
-| `practical.trigger` | One-shot trigger | `duration?` |
+| `physical.on` | Enable a practical effect | — |
+| `physical.off` | Disable a practical effect | — |
+| `physical.trigger` | One-shot trigger | `duration?` |
 
 ---
 
 ## Usage Examples
+
+### Example 1 — Start Ambience 1
+Start ambience on everything in Atrium 1 (video, audio, lighting all get the command; adapters filter what's relevant per system).
+
+```json
+{
+  "v": 1,
+  "source": "ui",
+  //"target": "a1, a2, a3, ls",
+  "action": "content.go",
+  "params": { "key": "ambience_2" }
+}
+```
+
+### Example 2 — Show start
+Start the show everywhere.
+
+```json
+{
+  "v": 1,
+  "source": "scheduler",
+  //"target": { "tags": ["xyz", "in", "out"] },
+  "action": "show.go",
+  "params": { "key": "show_1" }
+}
+```
+
+---
+
+### Example 2 — Show start (only in some areas)
+Start the show only in a specific area. in that case it is a fullscreen content? or new category?
+I think it's still A SHOW, the logic will resolve what to do with the target.
+//
+
+```json
+{
+  "v": 1,
+  "source": "scheduler",
+  "target": "a3", // don't need it because the show is programmed that way? but it shouldn't send cues to all the external things.
+  "action": "show.go",
+  "params": { "key": "show_transformer" }
+}
+```
+
+---
+
+### Example 1 — Start special on top
+Start ambience on everything in Atrium 1 (video, audio, lighting all get the command; adapters filter what's relevant per system).
+
+```json
+{
+  "v": 1,
+  "source": "ui",
+  //"target": "a1, a2, a3, ls",
+  "action": "content.go",
+  "params": { "key": "special_ontop_3" }
+}
+```
+
+---
+
+### Example 3 — Target video in a zone
+Start video ambience in Atrium 1 // only video
+
+```json
+{
+  "v": 1,
+  "source": "ui",
+  "target": "a1",
+  "action": "video.play",
+  "params": { "timelineKey": "special_ontop_1" }
+}
+```
+
+---
+
+### Example 4 — Plays a special content
+Definition of what is included is done in a different place.
+
+```json
+{
+  "v": 1,
+  "source": "ui",
+  "target": "a1",
+  "action": "content.go",
+  "params": { "key": "special_fullscreen_2" }
+}
+```
+
+---
 
 ### Example 1 — Target one item
 Start a specific ambience on the A1 Ribbon LED only.
@@ -376,20 +479,6 @@ Start a specific ambience on the A1 Ribbon LED only.
 }
 ```
 
----
-
-### Example 2 — Target a zone
-Start ambience on everything in Atrium 1 (video, audio, lighting all get the command; adapters filter what's relevant per system).
-
-```json
-{
-  "v": 1,
-  "source": "ui",
-  "target": "a1",
-  "action": "video.play",
-  "params": { "timelineKey": "ambience_a1" }
-}
-```
 
 ---
 
@@ -405,23 +494,6 @@ Trigger the same ambience across A1, A2, and A3 simultaneously.
   "params": { "timelineKey": "ambience_1" }
 }
 ```
-
----
-
-### Example 4 — Global show start
-Start the show everywhere — all xyz-tagged items across the whole installation.
-
-```json
-{
-  "v": 1,
-  "source": "scheduler",
-  "target": { "tags": ["xyz"] },
-  "action": "video.play",
-  "params": { "timelineKey": "show_1" }
-}
-```
-
-> This matches what `PROJECT-SCOPE.md` defines as **Show = global, everything in sync**.
 
 ---
 

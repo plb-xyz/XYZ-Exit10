@@ -1,0 +1,1 @@
+msg._spaceId='a1'; msg._field='duckAmountDb'; return msg;
