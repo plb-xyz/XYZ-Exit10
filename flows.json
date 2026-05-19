@@ -6445,7 +6445,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 420,
+        "x": 430,
         "y": 220,
         "wires": [
             [
@@ -6461,7 +6461,7 @@
         "id": "ma-udp-primary",
         "type": "udp out",
         "z": "ma-tab",
-        "name": "udp out",
+        "name": "UDP to RPU 1",
         "addr": "10.154.10.103",
         "iface": "",
         "port": "8000",
@@ -6469,7 +6469,7 @@
         "outport": "",
         "base64": false,
         "multicast": "false",
-        "x": 900,
+        "x": 920,
         "y": 200,
         "wires": []
     },
@@ -6477,7 +6477,7 @@
         "id": "ma-udp-backup",
         "type": "udp out",
         "z": "ma-tab",
-        "name": "RPU",
+        "name": "UDP to RPU 2",
         "addr": "",
         "iface": "",
         "port": "8000",
@@ -6485,8 +6485,8 @@
         "outport": "",
         "base64": false,
         "multicast": "false",
-        "x": 850,
-        "y": 260,
+        "x": 920,
+        "y": 240,
         "wires": []
     },
     {
@@ -7361,8 +7361,8 @@
             "macm-write-map-fn"
         ],
         "uncaught": false,
-        "x": 2180,
-        "y": 200,
+        "x": 2190,
+        "y": 260,
         "wires": [
             [
                 "macm-write-err-dbg"
@@ -7383,7 +7383,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 2420,
-        "y": 200,
+        "y": 260,
         "wires": []
     },
     {
@@ -7620,7 +7620,7 @@
         "z": "orch-tab",
         "g": "orch-group",
         "name": "3-actionMap (recipes)",
-        "func": "// Build msg.actions (an array of action objects) from msg.intent.playableId.\n// This file is the source of truth for what each top-level playable contains\n// (video/audio/lighting/etc steps and ordering).\n//\n// Action style expected by adapters:\n//   { type: 'watchout', command: 'startTimeline', timelineKey: 'show_1' }\n//   { type: 'watchout', command: 'jumpToCue', timelineKey: 'show_1', cueKey: 'cue_special' }\n//   { type: 'ma', command: 'GoCue', space: 'a1', labelId: 'ambience_2' }\n//\n// Notes:\n// - The Director executes actions in order.\n// - Use waitMs to insert delays.\n// - Use waitFor to pause until a status message arrives on the status bus.\n\nconst intent = msg.intent;\nconst id = intent.playableId;\n\nconst recipes = {\n  show_1: [\n    // Start Watchout timeline\n    { type: 'watchout', command: 'start', timelineKey: 'show_1' },\n\n    // Wait a little, then jump to a cue (example)\n    { type: 'watchout', command: 'jumpToCue', timelineKey: 'show_1', cueKey: 'intro', waitMs: 300 },\n\n    // Lighting examples (stubs)\n    { type: 'ma', command: 'GoCue', cue: 'SHOW_1_START' },\n    { type: 'ma', command: 'RunMacro', macro: 'SHOW_1_INIT' },\n\n    // Q-Sys examples (stubs)\n    { type: 'qsys', command: 'RecallScene', scene: 'Show1' },\n    { type: 'qsys', command: 'SetBgmMute', value: 1 },\n\n    // Pharos examples (multiple systems)\n    { type: 'pharos', system: 'pharos_main', command: 'Trigger', triggerId: 'show1_start' },\n    { type: 'pharos', system: 'pharos_fountain', command: 'Trigger', triggerId: 'show1_water' }\n  ],\n\n  ambience_1: [\n    { type: 'watchout', command: 'start', timelineKey: 'ambience_1_a1' },\n    { type: 'watchout', command: 'start', timelineKey: 'ambience_1_a2' },\n    { type: 'watchout', command: 'start', timelineKey: 'ambience_1_a3' },\n    { type: 'ma', command: 'GoCue', space: 'a1', labelId: 'ambience_1' },\n    { type: 'ma', command: 'GoCue', space: 'a2', labelId: 'ambience_1' },\n    { type: 'ma', command: 'GoCue', space: 'a3', labelId: 'ambience_1' },\n    { type: 'ma', command: 'GoCue', space: 'ls', labelId: 'ambience_1' },\n    { type: 'watchout', command: 'start', timelineKey: 'bg_music_1' },\n    { type: 'qsys', command: 'RecallScene', scene: 'Ambience1' },\n    { type: 'qsys', command: 'SetBgmMute', value: 0 }\n  ],\n\n  ambience_2: [\n    // Video (Watchout): start ambience timelines in each atrium\n    { type: 'watchout', command: 'startTimeline', timelineKey: 'ambience_2_a1' },\n    { type: 'watchout', command: 'startTimeline', timelineKey: 'ambience_2_a2' },\n    { type: 'watchout', command: 'startTimeline', timelineKey: 'ambience_2_a3' },\n\n    // Lighting (MA via cue mapper): resolve per-space ambience_2 labels\n    { type: 'ma', command: 'GoCue', space: 'a1', labelId: 'ambience_2' },\n    { type: 'ma', command: 'GoCue', space: 'a2', labelId: 'ambience_2' },\n    { type: 'ma', command: 'GoCue', space: 'a3', labelId: 'ambience_2' },\n    { type: 'ma', command: 'GoCue', space: 'ls', labelId: 'ambience_2' },\n\n    // Audio\n    { type: 'watchout', command: 'startTimeline', timelineKey: 'bg_music_2' },\n    { type: 'qsys', command: 'RecallScene', scene: 'Ambience2' },\n    { type: 'qsys', command: 'SetBgmMute', value: 0 }\n  ]\n};\n\nconst actions = recipes[id];\nif (!actions) {\n  msg.payload = { error: 'No recipe for playableId: ' + id, intent };\n  return [null, msg];\n}\n\nmsg.actions = actions;\nmsg.topic = 'orchestration/actions';\nreturn [msg, null];",
+        "func": "// Build msg.actions (an array of action objects) from msg.intent.playableId.\n// This file is the source of truth for what each top-level playable contains\n// (video/audio/lighting/etc steps and ordering).\n//\n// Action style expected by adapters:\n//   { type: 'watchout', command: 'startTimeline', timelineKey: 'show_1' }\n//   { type: 'watchout', command: 'jumpToCue', timelineKey: 'show_1', cueKey: 'cue_special' }\n//   { type: 'ma', command: 'GoCue', space: 'a1', labelId: 'ambience_2' }\n//\n// Notes:\n// - The Director executes actions in order.\n// - Use waitMs to insert delays.\n// - Use waitFor to pause until a status message arrives on the status bus.\n\nconst intent = msg.intent;\nconst id = intent.playableId;\n\nconst recipes = {\n  show_1: [\n    // Start Watchout timeline\n    { type: 'watchout', command: 'start', timelineKey: 'show_1' },\n\n    // Wait a little, then jump to a cue (example)\n    { type: 'watchout', command: 'jumpToCue', timelineKey: 'show_1', cueKey: 'intro', waitMs: 300 },\n\n    // Lighting examples (stubs)\n    { type: 'ma', command: 'GoCue', cue: 'SHOW_1_START' },\n    { type: 'ma', command: 'RunMacro', macro: 'SHOW_1_INIT' },\n\n    // Q-Sys examples (stubs)\n    { type: 'qsys', command: 'RecallScene', scene: 'Show1' },\n    { type: 'qsys', command: 'SetBgmMute', value: 1 },\n\n    // Pharos examples (multiple systems)\n    { type: 'pharos', system: 'pharos_main', command: 'Trigger', triggerId: 'show1_start' },\n    { type: 'pharos', system: 'pharos_fountain', command: 'Trigger', triggerId: 'show1_water' }\n  ],\n\n  ambience_1: [\n    { type: 'watchout', command: 'start', timelineKey: 'ambience_1_a1' },\n    { type: 'watchout', command: 'start', timelineKey: 'ambience_1_a2' },\n    { type: 'watchout', command: 'start', timelineKey: 'ambience_1_a3' },\n    { type: 'ma', command: 'GoCue', space: 'a1', labelId: 'ambience_1' },\n    { type: 'ma', command: 'GoCue', space: 'a2', labelId: 'ambience_1' },\n    { type: 'ma', command: 'GoCue', space: 'a3', labelId: 'ambience_1' },\n    { type: 'ma', command: 'GoCue', space: 'ls', labelId: 'ambience_1' },\n    { type: 'watchout', command: 'start', timelineKey: 'bg_music_1' },\n    { type: 'qsys', command: 'RecallScene', scene: 'Ambience1' },\n    { type: 'qsys', command: 'SetBgmMute', value: 0 }\n  ],\n\n  ambience_2: [\n    // Video (Watchout): start ambience timelines in each atrium\n    { type: 'watchout', command: 'start', timelineKey: 'ambience_2_a1' },\n    { type: 'watchout', command: 'start', timelineKey: 'ambience_2_a2' },\n    { type: 'watchout', command: 'start', timelineKey: 'ambience_2_a3' },\n\n    // Lighting (MA via cue mapper): resolve per-space ambience_2 labels\n    { type: 'ma', command: 'GoCue', space: 'a1', labelId: 'ambience_2' },\n    { type: 'ma', command: 'GoCue', space: 'a2', labelId: 'ambience_2' },\n    { type: 'ma', command: 'GoCue', space: 'a3', labelId: 'ambience_2' },\n    { type: 'ma', command: 'GoCue', space: 'ls', labelId: 'ambience_2' },\n\n    // Audio\n    { type: 'watchout', command: 'start', timelineKey: 'bg_music_2' },\n    { type: 'qsys', command: 'RecallScene', scene: 'Ambience2' },\n    { type: 'qsys', command: 'SetBgmMute', value: 0 }\n  ]\n};\n\nconst actions = recipes[id];\nif (!actions) {\n  msg.payload = { error: 'No recipe for playableId: ' + id, intent };\n  return [null, msg];\n}\n\nmsg.actions = actions;\nmsg.topic = 'orchestration/actions';\nreturn [msg, null];",
         "outputs": 2,
         "timeout": 0,
         "noerr": 0,
@@ -8296,6 +8296,60 @@
             [
                 "c8a1dcfa11a8b34f"
             ]
+        ]
+    },
+    {
+        "id": "d338fdce36797359",
+        "type": "function",
+        "z": "orch-tab",
+        "name": "item-registry",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ee0043395789e8e6",
+        "type": "function",
+        "z": "orch-tab",
+        "name": "content-registry",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "37386ea89481c68d",
+        "type": "function",
+        "z": "orch-tab",
+        "name": "watchout-content-mapping",
+        "func": "// decide if what timelines or cues or cuesets are being used per show, ambiences, special etc.\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 740,
+        "wires": [
+            []
         ]
     },
     {

@@ -1143,6 +1143,45 @@
     "finalize": null,
     "info": null
   },
+  "d338fdce36797359": {
+    "folderName": "Orchestration",
+    "name": "item-registry",
+    "sanitizedName": "item-registry",
+    "fileName": "item-registry",
+    "isVue": false,
+    "isFun": true,
+    "isSql": false,
+    "code": null,
+    "initialize": null,
+    "finalize": null,
+    "info": null
+  },
+  "ee0043395789e8e6": {
+    "folderName": "Orchestration",
+    "name": "content-registry",
+    "sanitizedName": "content-registry",
+    "fileName": "content-registry",
+    "isVue": false,
+    "isFun": true,
+    "isSql": false,
+    "code": null,
+    "initialize": null,
+    "finalize": null,
+    "info": null
+  },
+  "37386ea89481c68d": {
+    "folderName": "Orchestration",
+    "name": "watchout-content-mapping",
+    "sanitizedName": "watchout-content-mapping",
+    "fileName": "watchout-content-mapping",
+    "isVue": false,
+    "isFun": true,
+    "isSql": false,
+    "code": null,
+    "initialize": null,
+    "finalize": null,
+    "info": null
+  },
   "f2d5dd8f3c2f4f6c": {
     "folderName": "UI — Audio (semantic intents)",
     "name": "Aggregate domain intents (inside/landscape)",

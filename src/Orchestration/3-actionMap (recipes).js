@@ -51,9 +51,9 @@ const recipes = {
 
   ambience_2: [
     // Video (Watchout): start ambience timelines in each atrium
-    { type: 'watchout', command: 'startTimeline', timelineKey: 'ambience_2_a1' },
-    { type: 'watchout', command: 'startTimeline', timelineKey: 'ambience_2_a2' },
-    { type: 'watchout', command: 'startTimeline', timelineKey: 'ambience_2_a3' },
+    { type: 'watchout', command: 'start', timelineKey: 'ambience_2_a1' },
+    { type: 'watchout', command: 'start', timelineKey: 'ambience_2_a2' },
+    { type: 'watchout', command: 'start', timelineKey: 'ambience_2_a3' },
 
     // Lighting (MA via cue mapper): resolve per-space ambience_2 labels
     { type: 'ma', command: 'GoCue', space: 'a1', labelId: 'ambience_2' },
@@ -62,7 +62,7 @@ const recipes = {
     { type: 'ma', command: 'GoCue', space: 'ls', labelId: 'ambience_2' },
 
     // Audio
-    { type: 'watchout', command: 'startTimeline', timelineKey: 'bg_music_2' },
+    { type: 'watchout', command: 'start', timelineKey: 'bg_music_2' },
     { type: 'qsys', command: 'RecallScene', scene: 'Ambience2' },
     { type: 'qsys', command: 'SetBgmMute', value: 0 }
   ]
