@@ -110,6 +110,13 @@
         "env": []
     },
     {
+        "id": "f1a2b3c4d5e6f701",
+        "type": "tab",
+        "label": "WATCHOUT getStatus",
+        "disabled": false,
+        "info": ""
+    },
+    {
         "id": "22f501abaf7e8db6",
         "type": "subflow",
         "name": "Atrium Selection Switch",
@@ -194,15 +201,11 @@
         ],
         "out": [
             {
-                "x": 700,
-                "y": 220,
+                "x": 1140,
+                "y": 140,
                 "wires": [
                     {
-                        "id": "a9f0dea58ed206d3",
-                        "port": 0
-                    },
-                    {
-                        "id": "4d79fba2cf808ca8",
+                        "id": "wo6-parse-status",
                         "port": 0
                     }
                 ]
@@ -270,8 +273,54 @@
         "color": "#C0C0C0",
         "icon": "font-awesome/fa-film",
         "status": {
-            "wires": []
+            "x": 680,
+            "y": 340,
+            "wires": [
+                {
+                    "id": "31f1cc4e8cb7f977",
+                    "port": 0
+                }
+            ]
         }
+    },
+    {
+        "id": "0ead1f3c40600e17",
+        "type": "subflow",
+        "name": "Delta ",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 540,
+                "y": 400,
+                "wires": [
+                    {
+                        "id": "e03c8fa9461a4bef"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 940,
+                "y": 400,
+                "wires": [
+                    {
+                        "id": "afe86e79cafec5ab",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "ip",
+                "type": "str",
+                "value": ""
+            }
+        ],
+        "meta": {},
+        "color": "#DDAA99"
     },
     {
         "id": "025439f9501b7114",
@@ -388,6 +437,64 @@
         "y": 79,
         "w": 2012,
         "h": 362
+    },
+    {
+        "id": "6f675544eade19db",
+        "type": "group",
+        "z": "1f04ca82ca07a995",
+        "g": "da732462b7cd5946",
+        "name": "Test ",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "de69769685a62e3f",
+            "b44d9339170bcc46"
+        ],
+        "x": 154,
+        "y": 259,
+        "w": 372,
+        "h": 82
+    },
+    {
+        "id": "da732462b7cd5946",
+        "type": "group",
+        "z": "1f04ca82ca07a995",
+        "name": "Watchout",
+        "style": {
+            "stroke": "#b797cf",
+            "label": true
+        },
+        "nodes": [
+            "177f9aad4ec695a7",
+            "0829ca41d4ba9327",
+            "55f926e03662f466",
+            "f5672eac805a5c69",
+            "e0e53daa383c0f79",
+            "ca96377a0e4f8b4f",
+            "6f675544eade19db"
+        ],
+        "x": 114,
+        "y": 119,
+        "w": 952,
+        "h": 248
+    },
+    {
+        "id": "95d130c2b58ec6b5",
+        "type": "group",
+        "z": "wo6-subflow-001",
+        "name": "Status",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "d942e99a313dae82",
+            "d2214324c1a749e9"
+        ],
+        "x": 14,
+        "y": 179,
+        "w": 352,
+        "h": 82
     },
     {
         "id": "adc1e6a87a00ee98",
@@ -1161,6 +1268,7 @@
     {
         "id": "3a03880402504607",
         "type": "isaac-connection",
+        "d": true,
         "ipAddress": "http://10.154.10.112",
         "subsystemExternalId": "qsys",
         "accessToken": ""
@@ -1168,6 +1276,7 @@
     {
         "id": "1763323c89c37655",
         "type": "isaac-connection",
+        "d": true,
         "ipAddress": "http://10.154.10.112",
         "subsystemExternalId": "node-red",
         "accessToken": ""
@@ -1513,55 +1622,19 @@
         "type": "function",
         "z": "wo6-subflow-001",
         "name": "Build WO6 Command",
-        "func": "\n// ── WATCHOUT v6 Command Builder ──────────────────────────────────────────────\n// msg.action  : command name  e.g. \"run\", \"halt\", \"gotoControlCue\"\n// msg.payload : params object e.g. { cue: \"MyScene\", reverse: false }\n//               OR a raw string to append after the command\n//               OR null/undefined for zero-param commands\n//\n// Subflow env: ip, deviceid, name\n//\n// Output:\n//   msg.payload  = \"command param1 param2\\r\\n\"  (TCP-ready string)\n//   msg.wo6      = { ip, deviceid, name, command }\n// ─────────────────────────────────────────────────────────────────────────────\n\nconst action  = msg.action;\nconst params  = msg.payload;\nconst ip      = env.get(\"ip\");\nconst devId   = env.get(\"deviceid\");\nconst devName = env.get(\"name\");\n\nif (!action) {\n    node.warn(\"[WO6 \" + devName + \"] msg.action is required\");\n    return null;\n}\n\n// Quote a string value per WATCHOUT protocol (UTF-8, backslash-escaped)\nfunction q(s) {\n    return '\"' + String(s).replace(/\\\\/g, '\\\\\\\\').replace(/\"/g, '\\\\\"') + '\"';\n}\n\n// Build parameter string from payload \nfunction buildParams(cmd, p) {\n    if (p === null || p === undefined) return \"\";\n    if (typeof p !== \"object\") return String(p);\n\n    const actions = {\n        \"load\"           : [\"path\", \"showName\", \"conditionFlags\", \"goOnline\", \"managedLoad\", \"master\"],\n        \"gotoTime\"       : [\"time\", \"timeline\"],\n        \"gotoControlCue\" : [\"cue\", \"reverse\", \"timeline\"],\n        \"standBy\"        : [\"enable\", \"fadeRate\"],\n        \"setInput\"       : [\"name\", \"value\", \"rate\"],\n        \"online\"         : [\"enable\"],\n        \"run\"            : [\"timeline\"],\n        \"halt\"           : [\"timeline\"],\n        \"kill\"           : [\"timeline\"],\n        \"enableLayerCond\": [\"flags\"],\n        \"hitTest\"        : [\"x\", \"y\"],\n        \"timecodeMode\"   : [\"mode\", \"offset\"],\n        \"serialPort\"     : [\"open\", \"port\", \"protocol\", \"baud\", \"dataBits\", \"stopBits\", \"parity\"]\n    };\n\n    const parts = [];\n\n    // setInputs: rate then repeated name/value pairs from p.inputs array\n    if (cmd === \"setInputs\") {\n        parts.push(p.rate !== undefined ? p.rate : 0);\n        if (Array.isArray(p.inputs)) {\n            p.inputs.forEach(pair => { parts.push(q(pair.name)); parts.push(pair.value); });\n        }\n        return parts.join(\" \");\n    }\n\n    const action = actions[cmd];\n    const keys  = action || Object.keys(p);\n    keys.forEach(key => {\n        if (p[key] === undefined) return;\n        const v = p[key];\n        if      (typeof v === \"string\")  parts.push(q(v));\n        else if (typeof v === \"boolean\") parts.push(v ? \"true\" : \"false\");\n        else                             parts.push(v);\n    });\n\n    return parts.join(\" \");\n}\n\nconst paramStr = buildParams(action, params);\nconst command  = paramStr ? (action + \" \" + paramStr) : action;\n\nmsg.payload = command + \"\\r\\n\";\nmsg.wo6 = { ip: ip, deviceid: devId, name: devName, command: command };\n\nreturn msg;\n",
+        "func": "\n// ── WATCHOUT v6 Command Builder ──────────────────────────────────────────────\n// msg.action  : command name  e.g. \"run\", \"halt\", \"gotoControlCue\"\n// msg.payload : params object e.g. { cue: \"MyScene\", reverse: false }\n//               OR a raw string to append after the command\n//               OR null/undefined for zero-param commands\n//\n// Subflow env: ip, deviceid, name\n//\n// Output:\n//   msg.payload  = \"command param1 param2\\r\\n\"  (TCP-ready string)\n//   msg.wo6      = { ip, deviceid, name, command }\n// ─────────────────────────────────────────────────────────────────────────────\n\nconst action  = msg.action;\nconst params  = msg.payload;\nconst ip      = env.get(\"ip\");\nconst devId   = env.get(\"deviceid\");\nconst devName = env.get(\"name\");\n\nif (!action) {\n    node.warn(\"[WO6 \" + devName + \"] msg.action is required\");\n    return null;\n}\n\n// Quote a string value per WATCHOUT protocol (UTF-8, backslash-escaped)\nfunction q(s) {\n    return '\"' + String(s).replace(/\\\\/g, '\\\\\\\\').replace(/\"/g, '\\\\\"') + '\"';\n}\n\n// Build parameter string from payload \nfunction buildParams(cmd, p) {\n    if (p === null || p === undefined) return \"\";\n    if (typeof p !== \"object\") return String(p);\n\n    const actions = {\n        \"load\"           : [\"path\", \"showName\", \"conditionFlags\", \"goOnline\", \"managedLoad\", \"master\"],\n        \"gotoTime\"       : [\"time\", \"timeline\"],\n        \"gotoControlCue\" : [\"cue\", \"reverse\", \"timeline\"],\n        \"standBy\"        : [\"enable\", \"fadeRate\"],\n        \"setInput\"       : [\"name\", \"value\", \"rate\"],\n        \"online\"         : [\"enable\"],\n        \"run\"            : [\"timeline\"],\n        \"halt\"           : [\"timeline\"],\n        \"kill\"           : [\"timeline\"],\n        \"enableLayerCond\": [\"flags\"],\n        \"hitTest\"        : [\"x\", \"y\"],\n        \"timecodeMode\"   : [\"mode\", \"offset\"],\n        \"serialPort\"     : [\"open\", \"port\", \"protocol\", \"baud\", \"dataBits\", \"stopBits\", \"parity\"],\n        \"getStatus\": []\n    };\n\n    const parts = [];\n\n    // setInputs: rate then repeated name/value pairs from p.inputs array\n    if (cmd === \"setInputs\") {\n        parts.push(p.rate !== undefined ? p.rate : 0);\n        if (Array.isArray(p.inputs)) {\n            p.inputs.forEach(pair => { parts.push(q(pair.name)); parts.push(pair.value); });\n        }\n        return parts.join(\" \");\n    }\n\n    const action = actions[cmd];\n    const keys  = action || Object.keys(p);\n    keys.forEach(key => {\n        if (p[key] === undefined) return;\n        const v = p[key];\n        if      (typeof v === \"string\")  parts.push(q(v));\n        else if (typeof v === \"boolean\") parts.push(v ? \"true\" : \"false\");\n        else                             parts.push(v);\n    });\n\n    return parts.join(\" \");\n}\n\nconst paramStr = buildParams(action, params);\nconst command  = paramStr ? (action + \" \" + paramStr) : action;\n\nmsg.payload = command + \"\\r\\n\";\nmsg.wo6 = { ip: ip, deviceid: devId, name: devName, command: command };\n\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 320,
+        "x": 500,
         "y": 100,
         "wires": [
             [
                 "4d79fba2cf808ca8"
             ]
-        ]
-    },
-    {
-        "id": "e0e53daa383c0f79",
-        "type": "tcp out",
-        "z": "wo6-subflow-001",
-        "name": "TCP To Watchout v6",
-        "host": "${ip}",
-        "port": "3040",
-        "beserver": "client",
-        "base64": false,
-        "end": false,
-        "tls": "",
-        "x": 680,
-        "y": 100,
-        "wires": []
-    },
-    {
-        "id": "a9f0dea58ed206d3",
-        "type": "tcp in",
-        "z": "wo6-subflow-001",
-        "name": "WO6 Feedback",
-        "server": "server",
-        "host": "",
-        "port": "3041",
-        "datamode": "stream",
-        "datatype": "buffer",
-        "newline": "",
-        "topic": "",
-        "trim": false,
-        "base64": false,
-        "tls": "",
-        "x": 80,
-        "y": 220,
-        "wires": [
-            []
         ]
     },
     {
@@ -1571,60 +1644,187 @@
         "name": "wo6 subflow 1",
         "server": "${ip}",
         "port": "3040",
-        "out": "time",
+        "out": "sit",
         "ret": "string",
-        "splitc": "0",
+        "splitc": " ",
         "newline": "",
         "trim": false,
         "tls": "",
+        "x": 720,
+        "y": 120,
+        "wires": [
+            [
+                "wo6-parse-status"
+            ]
+        ]
+    },
+    {
+        "id": "31f1cc4e8cb7f977",
+        "type": "status",
+        "z": "wo6-subflow-001",
+        "name": "",
+        "scope": [
+            "4d79fba2cf808ca8"
+        ],
         "x": 540,
-        "y": 160,
+        "y": 340,
         "wires": [
             []
         ]
     },
     {
-        "id": "wo6-inject-poll",
-        "type": "inject",
-        "z": "wo6-subflow-001",
-        "name": "Poll 5s",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "5",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 90,
-        "y": 340,
-        "wires": [
-            [
-                "wo6-setmsg-poll"
-            ]
-        ]
-    },
-    {
-        "id": "wo6-setmsg-poll",
+        "id": "wo6-parse-status",
         "type": "function",
         "z": "wo6-subflow-001",
-        "name": "getStatus",
-        "func": "msg.action = \"getStatus\";\nmsg.payload = null;\nreturn msg;",
+        "name": "Parse getStatus → flow ctx",
+        "func": "\n// Parses WATCHOUT getStatus Reply and stores structured object in flow context.\n// Reply format:\n//   Reply \"<showName>\" <busy> <health> <displayOpen> <showActive> <programmerOnline>\n//         <currentTimeMs> <playing> <timelineRate> <standby> [<durationMs>]\n\nconst raw = msg.payload;\nif (!raw || !raw.startsWith(\"Reply\")) return msg;\n\n// Tokenize: handle quoted strings and bare tokens\nconst tokens = [];\nlet i = 0;\nconst s = raw.trim();\nwhile (i < s.length) {\n    if (s[i] === '\"') {\n        let j = i + 1;\n        let str = \"\";\n        while (j < s.length) {\n            if (s[j] === '\\\\' && j + 1 < s.length) { str += s[j+1]; j += 2; }\n            else if (s[j] === '\"') { j++; break; }\n            else { str += s[j++]; }\n        }\n        tokens.push(str);\n        i = j;\n    } else if (s[i] === ' ') {\n        i++;\n    } else {\n        let j = i;\n        while (j < s.length && s[j] !== ' ') j++;\n        tokens.push(s.substring(i, j));\n        i = j;\n    }\n}\n\n// tokens[0] = \"Reply\"\nconst healthMap = { \"0\": \"OK\", \"1\": \"Suboptimal\", \"2\": \"Problems\", \"3\": \"Dead\" };\n\nconst devId   = env.get(\"deviceid\");\nconst devName = env.get(\"name\");\nconst ip      = env.get(\"ip\");\n\nconst status = {\n    ip:               ip,\n    deviceid:         devId,\n    name:             devName,\n    showName:         tokens[1]  || \"\",\n    busy:             tokens[2]  === \"true\",\n    health:           parseInt(tokens[3] || \"0\"),\n    healthLabel:      healthMap[tokens[3]] || \"Unknown\",\n    displayOpen:      tokens[4]  === \"true\",\n    showActive:       tokens[5]  === \"true\",\n    programmerOnline: tokens[6]  === \"true\",\n    currentTimeMs:    parseInt(tokens[7]  || \"0\"),\n    playing:          tokens[8]  === \"true\",\n    timelineRate:     parseFloat(tokens[9]  || \"1\"),\n    standby:          tokens[10] === \"true\",\n    durationMs:       tokens[11] !== undefined ? parseInt(tokens[11]) : null,\n    updatedAt:        Date.now()\n};\n\n// Store in flow context keyed by deviceid (falls back to ip)\nconst key = \"wo6.\" + (devId || ip.replace(/\\./g, \"_\"));\nflow.set(key, status);\n\nmsg.wo6status = status;\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 260,
-        "y": 340,
+        "x": 960,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d942e99a313dae82",
+        "type": "inject",
+        "z": "wo6-subflow-001",
+        "g": "95d130c2b58ec6b5",
+        "name": "Poll 5s",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 220,
         "wires": [
             [
-                "4d79fba2cf808ca8"
+                "d2214324c1a749e9"
+            ]
+        ]
+    },
+    {
+        "id": "d2214324c1a749e9",
+        "type": "function",
+        "z": "wo6-subflow-001",
+        "g": "95d130c2b58ec6b5",
+        "name": "getStatus",
+        "func": "msg.action = \"getStatus\";\nmsg.payload = null\n// msg.ac = \"getStatus\\r\\n\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 220,
+        "wires": [
+            [
+                "0006a56c1fc14bbe"
+            ]
+        ]
+    },
+    {
+        "id": "afe86e79cafec5ab",
+        "type": "http request",
+        "z": "0ead1f3c40600e17",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "basic",
+        "senderr": false,
+        "headers": [],
+        "x": 810,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e03c8fa9461a4bef",
+        "type": "function",
+        "z": "0ead1f3c40600e17",
+        "name": "set url",
+        "func": "return commandByAction(msg.action, msg)\n\nfunction commandByAction(action, msg) {\n    switch (action) {\n        case 'getStatus':\n            msg.url = `http://${env.get('ip')}/api/delta/rpc/getStatus`;\n            return msg;\n\n        case 'getShortStatus':\n            msg.url = `http://${env.get('ip')}/api/delta/rpc/getShortStatus`;\n            return msg;\n\n        case 'getAudioLevel':\n            msg.url = `http://${env.get('ip')}/api/delta/rpc/getAudioLevel`;\n            return msg;\n\n        case 'getVideoLevel':\n            msg.url = `http://${env.get('ip')}/api/delta/rpc/getVideoLevel`;\n            return msg;\n\n        case 'setAudioLevel':\n            msg.url = `http://${env.get('ip')}/api/delta/rpc/setAudioLevel?value=${msg.payload}`;\n            return msg;\n\n        case 'setVideoLevel':\n            msg.url = `http://${env.get('ip')}/api/delta/rpc/setVideoLevel?value=${msg.payload}`;\n            return msg;\n\n        case 'getFrameRate':\n            msg.url = `http://${env.get('ip')}/api/delta/rpc/getFrameRate`;\n            return msg;\n\n        case 'startSequence':\n            msg.url = `http://${env.get('ip')}/api/delta/rpc/startSequence?sequenceName=${msg.payload}`;\n            return msg;\n\n        case 'pauseSequence':\n            msg.url = `http://${env.get('ip')}/api/delta/rpc/pauseSequence?sequenceName=${msg.payload}`;\n            return msg;\n\n        case 'resumeSequence':\n            msg.url = `http://${env.get('ip')}/api/delta/rpc/resumeSequence?sequenceName=${msg.payload}`;\n            return msg;\n\n        case 'cancelSequence':\n            msg.url = `http://${env.get('ip')}/api/delta/rpc/cancelSequence?sequenceName=${msg.payload}`;\n            return msg;\n\n        case 'play':\n            msg.url = `http://${env.get('ip')}/api/delta/rpc/play?tl=${msg.payload}`;\n            return msg;\n\n        case 'stop':\n            msg.url = `http://${env.get('ip')}/api/delta/rpc/stop?tl=${msg.payload}`;\n            return msg;\n\n        case 'rewind':\n            msg.url = `http://${env.get('ip')}/api/delta/rpc/rewind?tl=${msg.payload}`;\n            return msg;\n\n        case 'advance':\n            msg.url =\n                `http://${env.get('ip')}/api/delta/rpc/advance?tl=${msg.payload.tl}&noFrames=${msg.payload.noFrames}`;\n            return msg;\n\n        case 'stepback':\n            msg.url =\n                `http://${env.get('ip')}/api/delta/rpc/stepback?tl=${msg.payload.tl}&noFrames=${msg.payload.noFrames}`;\n            return msg;\n\n        case 'setGlobalVar':\n            msg.url =\n                `http://${env.get('ip')}/api/delta/rpc/setGlobalVar?key=${msg.payload.variable}&value=${msg.payload.value}`;\n            node.warn(`Setting global var ${msg.url}`);\n            return msg;\n\n        default:\n            node.warn(`Unknown command action: ${action}`);\n            return null;\n    }\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 400,
+        "wires": [
+            [
+                "afe86e79cafec5ab"
+            ]
+        ]
+    },
+    {
+        "id": "92a36222ecc1566c",
+        "type": "function",
+        "z": "0ead1f3c40600e17",
+        "name": "function 3",
+        "func": "msg.action = 'getStatus'\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 500,
+        "wires": [
+            [
+                "e03c8fa9461a4bef"
+            ]
+        ]
+    },
+    {
+        "id": "f0963af217e06d9b",
+        "type": "inject",
+        "z": "0ead1f3c40600e17",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "2",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 390,
+        "y": 500,
+        "wires": [
+            [
+                "92a36222ecc1566c"
             ]
         ]
     },
@@ -10588,6 +10788,7 @@
         "id": "177f9aad4ec695a7",
         "type": "link in",
         "z": "1f04ca82ca07a995",
+        "g": "da732462b7cd5946",
         "name": "ext_domeled_in",
         "links": [],
         "x": 155,
@@ -10638,6 +10839,7 @@
         "id": "0829ca41d4ba9327",
         "type": "function",
         "z": "1f04ca82ca07a995",
+        "g": "da732462b7cd5946",
         "name": "wo 7 input messages",
         "func": "// Expected input (msg.payload):\n//   Timelines:\n//     { command: \"start\"|\"stop\"|\"pause\", timelineKey: \"show_1\" }\n//     { command: \"playAll\" }\n//     { command: \"getState\" }\n//\n//   Jump to Time:\n//     { command: \"jumpToTime\", timelineKey: \"show_1\", milliseconds: 12345, state?: \"pause\"|\"play\" }\n//\n//   Jump to Cue:\n//     { command: \"jumpToCue\", timelineKey: \"show_1\", cueKey: \"shows\", state?: \"pause\"|\"play\" }\n//     Resolves timelineKey → watchoutTimelineId and cueKey → watchoutCueId from mapping.\n//\n//   Get Timeline Cues:\n//     { command: \"getCues\", timelineKey: \"show_1\" }\nreturn msg;",
         "outputs": 1,
@@ -10673,6 +10875,13 @@
         ]
     },
     {
+<<<<<<< HEAD
+        "id": "55f926e03662f466",
+        "type": "subflow:wo6-subflow-001",
+        "z": "1f04ca82ca07a995",
+        "g": "da732462b7cd5946",
+        "name": "",
+=======
         "id": "a65f0c24adbc6ff4",
         "type": "comment",
         "z": "1f04ca82ca07a995",
@@ -10687,11 +10896,13 @@
         "type": "subflow:wo6-subflow-001",
         "z": "1f04ca82ca07a995",
         "name": "subflow:wo6-subflow-001",
+>>>>>>> 4b62626cf108df2b695db33008120345c8ac2be0
         "x": 690,
-        "y": 320,
+        "y": 260,
         "wires": [
             [
-                "f5672eac805a5c69"
+                "f5672eac805a5c69",
+                "ca96377a0e4f8b4f"
             ]
         ]
     },
@@ -10699,16 +10910,257 @@
         "id": "f5672eac805a5c69",
         "type": "debug",
         "z": "1f04ca82ca07a995",
+        "g": "da732462b7cd5946",
         "name": "debug 13",
-        "active": true,
+        "active": false,
         "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "e0e53daa383c0f79",
+        "type": "tcp out",
+        "z": "1f04ca82ca07a995",
+        "d": true,
+        "g": "da732462b7cd5946",
+        "name": "TCP To Watchout v6",
+        "host": "172.24.16.209",
+        "port": "3040",
+        "beserver": "client",
+        "base64": false,
+        "end": false,
+        "tls": "",
+        "x": 720,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "de69769685a62e3f",
+        "type": "inject",
+        "z": "1f04ca82ca07a995",
+        "g": "6f675544eade19db",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 260,
+        "y": 300,
+        "wires": [
+            [
+                "b44d9339170bcc46"
+            ]
+        ]
+    },
+    {
+        "id": "b44d9339170bcc46",
+        "type": "function",
+        "z": "1f04ca82ca07a995",
+        "g": "6f675544eade19db",
+        "name": "function 4",
+        "func": "msg.action = \"halt\";\nmsg.payload = \"Testing\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 300,
+        "wires": [
+            [
+                "55f926e03662f466"
+            ]
+        ]
+    },
+    {
+        "id": "c198ed25472fdb7f",
+        "type": "subflow:0ead1f3c40600e17",
+        "z": "1f04ca82ca07a995",
+        "name": "",
+        "env": [
+            {
+                "name": "ip",
+                "value": "172.24.16.209",
+                "type": "str"
+            }
+        ],
+        "x": 450,
+        "y": 720,
+        "wires": [
+            [
+                "4dc1c3287aad6f30"
+            ]
+        ]
+    },
+    {
+        "id": "ca96377a0e4f8b4f",
+        "type": "function",
+        "z": "1f04ca82ca07a995",
+        "g": "da732462b7cd5946",
+        "name": "store context",
+        "func": "if (msg.action == 'getStatus') {\n    flow.set('watchoutv6_status', msg.wo6status)\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 970,
+        "y": 300,
+        "wires": [
+            [
+                "f5672eac805a5c69"
+            ]
+        ]
+    },
+    {
+<<<<<<< HEAD
+        "id": "4dc1c3287aad6f30",
+        "z": "1f04ca82ca07a995",
+        "name": "debug 15",
+=======
+        "id": "f5672eac805a5c69",
         "console": false,
         "tostatus": false,
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 990,
-        "y": 320,
+        "x": 650,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "a1b2c3d4e5f6a701",
+        "type": "inject",
+        "z": "f1a2b3c4d5e6f701",
+        "name": "Get WATCHOUT Status",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 100,
+        "wires": [
+            [
+                "b1c2d3e4f5a6b701"
+            ]
+        ]
+    },
+    {
+        "id": "b1c2d3e4f5a6b701",
+        "type": "function",
+        "z": "f1a2b3c4d5e6f701",
+        "name": "Build command",
+        "func": "msg.payload = 'authenticate 1\\r\\ngetStatus\\r\\n';\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 100,
+        "wires": [
+            [
+                "c1d2e3f4a5b6c701"
+            ]
+        ]
+    },
+    {
+        "id": "c1d2e3f4a5b6c701",
+        "type": "tcp request",
+        "z": "f1a2b3c4d5e6f701",
+        "name": "WATCHOUT TCP 3039",
+        "server": "172.24.16.209",
+        "port": "3040",
+        "out": "time",
+        "ret": "string",
+        "splitc": "0",
+        "newline": "",
+        "trim": false,
+        "tls": "",
+        "x": 620,
+        "y": 100,
+        "wires": [
+            [
+                "d1e2f3a4b5c6d701",
+                "e1f2a3b4c5d6e701"
+            ]
+        ]
+    },
+    {
+        "id": "d1e2f3a4b5c6d701",
+        "type": "debug",
+        "z": "f1a2b3c4d5e6f701",
+        "name": "Raw response",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "e1f2a3b4c5d6e701",
+        "type": "function",
+        "z": "f1a2b3c4d5e6f701",
+        "name": "Parse Reply",
+        "func": "const text = String(msg.payload || '');\nconst lines = text.split(/\\r?\\n/).map(s => s.trim()).filter(Boolean);\n\nlet replyLine = lines.find(line => line.startsWith('Reply '));\nif (!replyLine) {\n    msg.payload = {\n        ok: false,\n        raw: text,\n        lines: lines,\n        note: 'No Reply line found. You may only have received Ready or the timeout may be too short.'\n    };\n    return msg;\n}\n\nconst m = replyLine.match(/^Reply\\s+\"([^\"]*)\"\\s+(true|false)\\s+(\\d+)\\s+(true|false)\\s+(true|false)\\s+(true|false)(?:\\s+(\\d+))?(?:\\s+(true|false))?(?:\\s+([-+]?\\d*\\.?\\d+))?(?:\\s+(true|false))?$/);\n\nif (!m) {\n    msg.payload = {\n        ok: false,\n        raw: text,\n        replyLine: replyLine,\n        note: 'Reply line found but parser did not match expected format.'\n    };\n    return msg;\n}\n\nmsg.payload = {\n    ok: true,\n    showName: m[1],\n    busy: m[2] === 'true',\n    healthStatus: Number(m[3]),\n    displayOpen: m[4] === 'true',\n    showActive: m[5] === 'true',\n    programmerOnline: m[6] === 'true',\n    currentTimeMs: m[7] !== undefined ? Number(m[7]) : null,\n    showPlaying: m[8] !== undefined ? m[8] === 'true' : null,\n    timelineRate: m[9] !== undefined ? Number(m[9]) : null,\n    standbyMode: m[10] !== undefined ? m[10] === 'true' : null,\n    raw: text\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 140,
+        "wires": [
+            [
+                "f1a2b3c4d5e6f702"
+            ]
+        ]
+    },
+    {
+        "id": "f1a2b3c4d5e6f702",
+        "type": "debug",
+        "z": "f1a2b3c4d5e6f701",
+        "name": "Parsed status",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload.showName",
+        "statusType": "msg",
+        "x": 1040,
+        "y": 140,
         "wires": []
     }
 ]
