@@ -1,0 +1,31 @@
+{
+  "v": 1,
+  "source": "ui",
+  "target": { "zone": a1, a2, a3, ls, domescreen, cinemacolumn,  "devcie", "scope": "global" }, a1, a2, 
+
+
+  a1: ribbon led, columnled, sphere, 
+
+  wo7, ma, "qsc"
+  wo6
+  "7th"
+  "spacebridgeled"
+  "spacebridgepj"
+
+
+  "action": "watchout.timeline.start",
+  "args": { "timelineKey": "show_1" }
+}
+
+
+zone / discipline / devicetype / virtualDeviceID
+a1/lighting/ma/ma1
+a1/lighting/pharos/pharos1
+a1/video/wo/column
+a1/video/wo/sphere
+
+
+WO server
+msg.action = starttimeline
+params: "timelinename"
+

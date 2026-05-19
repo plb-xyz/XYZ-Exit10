@@ -1,0 +1,20 @@
+# Node-RED internal config
+.config.*.json
+.config.*.json.backup
+*.backup
+.flows.json.backup
+flows_cred.json
+
+# npm cache
+.npm/
+node_modules/
+
+# Mac junk
+.DS_Store
+
+# Backup files
+*.backup
+
+**/.DS_Store
+flows_cred.json
+.flows_cred.json.backup
