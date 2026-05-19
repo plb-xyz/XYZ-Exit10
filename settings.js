@@ -541,6 +541,7 @@ module.exports = {
      */
     functionGlobalContext: {
         // os:require('os'),
+        xstate: require('xstate')
     },
 
     /** The maximum number of messages nodes will buffer internally as part of their

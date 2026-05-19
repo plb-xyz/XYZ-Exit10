@@ -17,6 +17,7 @@
             "credentialsFile": "flows_cred.json"
         }
     },
-    "scripts": {"watch": "node '/Users/pietro/Dropbox/_PROJECTS1/XYZ Exit 10/NODE-RED/functions-templates-manager/functions-templates-watch.js' --flows-file '/Users/pietro/Dropbox/_PROJECTS1/XYZ Exit 10/GITHUB REPO/XYZ-Exit10/flows.json' --server-at http://127.0.0.1:1880"
-}
+    "scripts": {
+        "watch": "node '/Users/pietro/Dropbox/_PROJECTS1/XYZ Exit 10/NODE-RED/functions-templates-manager/functions-templates-watch.js' --flows-file '/Users/pietro/Dropbox/_PROJECTS1/XYZ Exit 10/GITHUB REPO/XYZ-Exit10/flows.json' --server-at http://127.0.0.1:1880"
+    }
 }

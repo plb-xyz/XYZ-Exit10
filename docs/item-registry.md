@@ -226,7 +226,9 @@ The item registry is consumed via the **unified internal command envelope**. The
 | `source` | yes | Who sent this command. Used for logging and ownership tracking. |
 | `target` | yes | What to address. See all forms below. |
 | `action` | yes | What to do. Domain-namespaced verb. See Action Vocabulary. |
-| `params` | yes | Parameters for the action. Can be `{}` if none needed. |
+| `params` | yes | Parameters for the action. For `content.go`, `show.go`, `show.cue`, `show.end`, this must include lowercase `key` (for example `{"key":"show_1"}`). |
+
+Strict mode note: orchestration accepts only this envelope format. Legacy fields like `kind`, `playableId`, and `params.Key` are not supported.
 
 `msg.topic` is always `"cmd"` for commands, `"evt"` for events/status.
 
@@ -383,64 +385,7 @@ Start ambience on everything in Atrium 1 (video, audio, lighting all get the com
   "source": "ui",
   //"target": "a1, a2, a3, ls",
   "action": "content.go",
-  "params": { "Key": "ambience_2" }
-}
-```
-
-```json
-{
-  "ambience_2": [
-    //{ "label": "Start A1 video ambience", "target": "a1.video", "action": "video.play", "params": { "Key": "ambience2" } },
-    //{ "label": "Start A2 video ambience", "target": "a2.video", "action": "video.play", "params": { "Key": "ambience2" } },
-    //{ "label": "Start A3 video ambience", "target": "a3.video", "action": "video.play", "params": { "Key": "ambience2" } },
-    { "label": "Start A1,2,3 video ambience", "target": "a1, a2, a3", "action": "video.play", "params": { "Key": "ambience2" } },
-    { "label": "MA - ambience 2 cue", "target": "a1, a2, a3, ls", "action": "lighting.go", "params": { "Key": "ambience2" } },
-    { "label": "QSC - bgm", "target": "a1, a2, a3, ls", "action": "audio.unmute", },
-  ]
-}
-```
-
-```json
-{
-  "video_ambience_2": [
-    // option 1
-    { "command": "start", "timelineKey": "ambience2_a1" }
-    { "command": "start", "timelineKey": "ambience2_a2" }
-    { "command": "start", "timelineKey": "ambience2_a3" }
-
-    // option 2
-    //{ "description": "description", "action": "what.todo", "params": {"groupId1": "variantId1", "groupId2": "variantId2"} },
-    { "command": "setCueGroupVariantsByName", "states": { "Atrium 1 Mode": "Show", "Atrium 2 Mode": "Ambient" } }
-    // or this way
-    { "command": "setCueGroupVariantByName", "groupId": "Ambiences A1", "variantId": "2" }
-    { "command": "setCueGroupVariantByName", "groupId": "Ambiences A2", "variantId": "2" }
-    { "command": "setCueGroupVariantByName", "groupId": "Ambiences A2", "variantId": "2" }
-    // then start the timelines
-    // wait 300-500 ms
-    { "command": "start", "timelineKey": "ambiences_a1" }
-    { "command": "start", "timelineKey": "ambiences_a2" }
-    { "command": "start", "timelineKey": "ambiences_a3" }
-
-
-  ]
-}
-```
-
-    { "config.externalRef": "show2", "config.displayName": "Show2" "config.command": "show.go (2)" }
-
-```json
-{
-  "lighting_ambience_2": [
-    { "payload": { "action": "fire", "space": "a1", "labelId": "ambience_2" } }
-    { "payload": { "action": "fire", "space": "a2", "labelId": "ambience_2" } }
-    { "payload": { "action": "fire", "space": "a3", "labelId": "ambience_2" } }
-    // lookup ma-cue-mapper to resolve as needed.
-    // + a cue to Pharos Main (for handrails & multiverses)
-    // option 1
-    { "action": "lighting.goCue", "params": { "cueKey": "ambience2" } },
-    { "action": "timeline.play", "params": { "timelineKey": "ambience2_a2" } },
-    { "action": "timeline.play", "params": { "timelineKey": "ambience2_a3" } },
-  ]
+  "params": { "key": "ambience_2" }
 }
 ```
 
@@ -453,7 +398,7 @@ Start the show everywhere.
   "source": "scheduler",
   //"target": { "tags": ["xyz", "in", "out"] },
   "action": "show.go",
-  "params": { "Key": "show_1" }
+  "params": { "key": "show_1" }
 }
 ```
 
@@ -468,9 +413,9 @@ I think it's still A SHOW, the logic will resolve what to do with the target.
 {
   "v": 1,
   "source": "scheduler",
-  "target": { "a3" }, // don't need it because the show is programmed that way? but it shouldn't send cues to all the external things.
+  "target": "a3", // don't need it because the show is programmed that way? but it shouldn't send cues to all the external things.
   "action": "show.go",
-  "params": { "Key": "show_transformer" }
+  "params": { "key": "show_transformer" }
 }
 ```
 
@@ -485,7 +430,7 @@ Start ambience on everything in Atrium 1 (video, audio, lighting all get the com
   "source": "ui",
   //"target": "a1, a2, a3, ls",
   "action": "content.go",
-  "params": { "Key": "special_ontop_3" }
+  "params": { "key": "special_ontop_3" }
 }
 ```
 
@@ -515,7 +460,7 @@ Definition of what is included is done in a different place.
   "source": "ui",
   "target": "a1",
   "action": "content.go",
-  "params": { "Key": "special_fullscreen_2" }
+  "params": { "key": "special_fullscreen_2" }
 }
 ```
 

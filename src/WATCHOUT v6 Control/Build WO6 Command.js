@@ -46,7 +46,8 @@ function buildParams(cmd, p) {
         "enableLayerCond": ["flags"],
         "hitTest"        : ["x", "y"],
         "timecodeMode"   : ["mode", "offset"],
-        "serialPort"     : ["open", "port", "protocol", "baud", "dataBits", "stopBits", "parity"]
+        "serialPort"     : ["open", "port", "protocol", "baud", "dataBits", "stopBits", "parity"],
+        "getStatus": []
     };
 
     const parts = [];

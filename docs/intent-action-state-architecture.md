@@ -20,7 +20,7 @@ The pipeline has the following stages:
 │  SOURCES                                                                       │
 │  UI / Scheduler / Prayer / System Events                                       │
 └──────────────────────────────┬────────────────────────────────────────────────┘
-                               │  raw msg (topic + payload)
+                               │  raw msg.payload (command envelope)
                                ▼
                    ┌─────────────────────┐
                    │  normalizeIntent    │  stamps metadata, normalises field
@@ -37,8 +37,8 @@ The pipeline has the following stages:
                               │  Transition { contextDelta, reconcile }
                               ▼
                    ┌─────────────────────┐
-                   │  Action Planner     │  looks up actionMap by playableId,
-                   │  (actionMap lookup) │  filters by scope (spaces), produces
+                   │  Action Planner     │  looks up actionMap by key,
+                   │  (actionMap lookup) │  filters by target, produces
                    │                     │  ActionPlan (ordered action list)
                    └──────────┬──────────┘
                               │  ActionPlan [ action, action, ... ]
@@ -91,29 +91,14 @@ subsystem to call or how — that is resolved later.
 
 | Field | Description |
 |-------|-------------|
-| `kind` | Verb: `start`, `stop`, `setAmbience`, `setSpecial`, `startShow`, … |
-| `playableId` | Content identifier: `ambience_1`, `show_2`, `promo_overlay` |
-| `scope` | Spatial constraint: `{ spaces: ['a2'] }` limits the action to Atrium 2 |
+| `action` | Requested operation: `content.go`, `show.go`, `show.cue`, `show.end` |
+| `key` | Content key: `ambience_1`, `show_2`, `promo_overlay` |
+| `target` | Spatial/asset selector from the command envelope (`"a2"`, array, or tag filter object) |
 | `source` | Who generated the intent: `ui`, `scheduler`, `prayer`, `sys` |
 | `requestedBy` / `requestedAt` | Audit metadata |
 
-**Examples:**
-
-```js
-// From the Node-RED Dashboard (UI button)
-{ kind: 'setAmbience', playableId: 'ambience_1', scope: { spaces: ['a2'] }, source: 'ui' }
-
-// From the scheduler
-{ kind: 'startShow', playableId: 'show_1', source: 'scheduler' }
-
-// From the prayer system
-{ kind: 'prayerActive', endsAt: '2026-04-04T17:30:00Z', source: 'prayer' }
-```
-
-> **Relationship to `msg.topic`:** The `normalizeIntent` function node accepts
-> both the legacy `msg.topic = 'ui/setAmbience'` format *and* the newer
-> `msg.payload.kind` format, normalising them into a consistent Intent object
-> before passing it downstream.
+> **Input contract:** `normalizeIntent` accepts only the command envelope in
+> `msg.payload`, with `action` and `params.key` required for content/show flows.
 
 ---
 
@@ -145,9 +130,9 @@ the state model and the action planning layer.
   },
   reconcile: {
     // What the Action Planner needs to know
-    kind: 'setAmbience',
-    playableId: 'ambience_1',
-    scope: { spaces: ['a2'] }
+    action: 'content.go',
+    key: 'ambience_1',
+    target: 'a2'
   }
 }
 ```
@@ -184,9 +169,9 @@ target adapter, plus adapter-specific fields:
 { type: 'qsys', command: 'SetBgmMute', value: 0 }
 ```
 
-The **actionMap** is the lookup table that maps a `playableId` to its full set of
-actions (across all spaces). The Action Planner reads from the actionMap and
-**filters** the resulting list to only the actions that match the requested scope.
+The **actionMap** is the lookup table that maps a `key` to its full set of
+actions. The Action Planner reads from the actionMap and **filters** the
+resulting list to only the actions that match the requested target.
 
 ---
 
@@ -214,9 +199,8 @@ Each adapter:
 
 ## 3. How a Transition Works (Step by Step)
 
-1. **Intent arrives** at `normalizeIntent`. Field names are normalised
-   (e.g. `targets` → `spaces`), `requestedAt` is stamped, and the intent is
-   validated.
+1. **Intent arrives** at `normalizeIntent`. The command envelope is validated,
+  `params.key` is extracted, and metadata is stamped.
 
 2. **policyGate / Decision Maker** reads `flow.state.context`, checks guards,
    and either:
@@ -225,8 +209,8 @@ Each adapter:
      Transition to the Action Planner.
 
 3. **Action Planner** receives the `reconcile` portion of the Transition,
-   looks up `actionMap[playableId]`, and **scopes** the result:
-   - For `scope: { spaces: ['a2'] }`, only actions whose `space === 'a2'` (or
+  looks up `actionMap[key]`, and **filters** the result by target:
+   - For `target: 'a2'`, only actions whose `space === 'a2'` (or
      actions with no space constraint, such as `qsys`) are kept.
    - The filtered list is the **ActionPlan**.
 
@@ -253,8 +237,8 @@ From [`PROJECT-SCOPE.md`](../PROJECT-SCOPE.md):
 
 | Project Rule | Where it is enforced |
 |---|---|
-| **Shows are global** — only one show active at a time, all spaces in sync | Decision Maker guard: `ui/startShow` sets `context.mode = 'SHOW'`; actionMap for shows contains actions for every space |
-| **Ambiences are per-space flexible** — different content per space simultaneously | Action Planner scoping: `scope.spaces` filters the actionMap result; `context.spaces.<space>.background.contentId` is updated per space |
+| **Shows are global** — only one show active at a time, all spaces in sync | Decision Maker guard: `show.go` sets `context.mode = 'SHOW'`; actionMap for shows contains actions for every space |
+| **Ambiences are per-space flexible** — different content per space simultaneously | Action Planner target filtering: command `target` constrains which per-space actions are executed; `context.spaces.<space>.background.contentId` is updated per space |
 | **Events override scheduler** — `schedulerEnabled` forced to `false` during event | Decision Maker: `context.schedulerEnabled` derived from mode + event + prayer state; `sched/*` topics gated on this flag |
 | **Special content = overlay or fullscreen, context-driven** | Separate layers in `context.spaces.<space>.special.onTop` / `.fullscreen`; fullscreen wins over on-top (policy in state model) |
 | **Lighting always via MA** | Every ActionPlan that affects a space includes an MA action; MA adapter resolves via `flow.ma_cue_mapping` |
@@ -300,12 +284,12 @@ Dashboard. The button sends:
 
 ```json
 {
-  "topic": "ui/setAmbience",
-  "payload": {
-    "space": "a2",
-    "contentId": "ambience_1",
-    "requestedBy": "operator",
-    "requestedAt": "2026-04-04T15:00:00Z"
+  "v": 1,
+  "source": "ui",
+  "target": "a2",
+  "action": "content.go",
+  "params": {
+    "key": "ambience_1"
   }
 }
 ```
@@ -314,12 +298,10 @@ Dashboard. The button sends:
 
 ```js
 {
-  kind: 'setAmbience',
-  playableId: 'ambience_1',
-  scope: { spaces: ['a2'] },
-  source: 'ui',
-  requestedBy: 'operator',
-  requestedAt: '2026-04-04T15:00:00Z'
+  action: 'content.go',
+  key: 'ambience_1',
+  target: 'a2',
+  source: 'ui'
 }
 ```
 
@@ -346,9 +328,9 @@ The Transition emitted to the Action Planner:
     spaces: { a2: { background: { type: 'AMBIENCE', contentId: 'ambience_1' } } }
   },
   reconcile: {
-    kind: 'setAmbience',
-    playableId: 'ambience_1',
-    scope: { spaces: ['a2'] }
+    action: 'content.go',
+    key: 'ambience_1',
+    target: 'a2'
   }
 }
 ```
@@ -376,7 +358,7 @@ actionMap['ambience_1'] = [
 ]
 ```
 
-Because `scope.spaces = ['a2']`, the Action Planner **filters** this list,
+Because `target = 'a2'`, the Action Planner **filters** this list,
 keeping only actions that:
 - have `space === 'a2'`, **or**
 - have no `space` field at all (i.e. they are global / not space-specific).
@@ -394,7 +376,7 @@ keeping only actions that:
 
 > The `bg_music_1` Watchout action (no space suffix → global) would also be
 > included or excluded depending on whether your background music follows per-space
-> scope rules or is always global. Adjust the scoping logic in the Action Planner
+> target rules or is always global. Adjust the target filtering logic in the Action Planner
 > accordingly.
 
 ### 6.4 Director — Step Sequencing
@@ -443,7 +425,7 @@ REST/OSC endpoint.
 |---|---|---|
 | `normalizeIntent` | Function node | Field normalisation, metadata stamping, validation |
 | `policyGate` / Decision Maker | Function node | Guard checks, context updates, Transition emission |
-| Action Planner | Function node (actionMap lookup) | Expand `playableId` → full action list; filter by `scope` |
+| Action Planner | Function node (actionMap lookup) | Expand `key` → full action list; filter by `target` |
 | Director / Sequencer | Function node | Add `runId/step/total`; optionally sequence with delays |
 | Dispatcher | Switch node | Route by `action.type` to correct adapter |
 | Watchout Adapter | Function node | `timelineKey` → Watchout REST payload |
