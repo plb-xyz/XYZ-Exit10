@@ -9915,6 +9915,52 @@
         ]
     },
     {
+        "id": "6fbd030a3be42d13",
+        "type": "isaac playable",
+        "z": "3e37539e100b4dee",
+        "isaacConnection": "1763323c89c37655",
+        "name": "",
+        "action": "upsert",
+        "externalRef": "ambience2",
+        "displayName": "Ambience 2 - Underwater",
+        "description": "",
+        "command": "ambience.go (2)",
+        "group": "",
+        "duration": 1000,
+        "durationType": "static",
+        "forceCached": false,
+        "x": 460,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0a2613e7e36b2dee",
+        "type": "inject",
+        "z": "3e37539e100b4dee",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"config.externalRef\":\"show2\",\"config.displayName\":\"Show2\",\"config.command\":\"show.go (2)\"}",
+        "payloadType": "json",
+        "x": 250,
+        "y": 520,
+        "wires": [
+            [
+                "6fbd030a3be42d13"
+            ]
+        ]
+    },
+    {
         "id": "fn_init_devices",
         "type": "function",
         "z": "tab_idrac_power",
@@ -11083,19 +11129,21 @@
         "x": 970,
         "y": 300,
         "wires": [
-            []
+            [
+                "f5672eac805a5c69"
+            ]
         ]
     },
     {
-        "id": "4dc1c3287aad6f30",
+<<<<<<< HEAD
+        "id": "f5672eac805a5c69",
         "type": "debug",
         "z": "1f04ca82ca07a995",
-        "name": "debug 15",
+        "name": "debug 13",
         "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
         "statusVal": "",
         "statusType": "auto",
         "x": 650,

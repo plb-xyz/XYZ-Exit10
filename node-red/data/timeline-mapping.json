@@ -34,15 +34,10 @@
   "special_overlay_1": {
     "displayName": "Special Overlay 1",
     "watchoutTimelineId": "2",
-    "cues": {
-      "yoo": {
-        "displayName": "yoo",
-        "watchoutCueId": "3"
-      }
-    }
+    "cues": {}
   },
-  "ambience_a1": {
-    "displayName": "Ambience A1",
+  "ambience1_a1": {
+    "displayName": "Ambience1_a1",
     "watchoutTimelineId": "3",
     "cues": {}
   },
@@ -123,6 +118,26 @@
   "transition_1_a3": {
     "displayName": "Transition 1 A3",
     "watchoutTimelineId": "14",
+    "cues": {}
+  },
+  "show1_a2_for_prog": {
+    "displayName": "Show1_a2 (for prog)",
+    "watchoutTimelineId": "15",
+    "cues": {}
+  },
+  "ambience1_a2": {
+    "displayName": "Ambience1_a2",
+    "watchoutTimelineId": "16",
+    "cues": {}
+  },
+  "ambience1_a3": {
+    "displayName": "Ambience1_a3",
+    "watchoutTimelineId": "17",
+    "cues": {}
+  },
+  "show1_a3_for_prog": {
+    "displayName": "Show1_a3 (for prog)",
+    "watchoutTimelineId": "18",
     "cues": {}
   }
 }
