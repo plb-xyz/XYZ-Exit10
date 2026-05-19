@@ -386,7 +386,7 @@
         ],
         "x": 14,
         "y": 79,
-        "w": 2002,
+        "w": 2012,
         "h": 362
     },
     {
@@ -7574,7 +7574,7 @@
         "type": "function",
         "z": "orch-tab",
         "g": "orch-group",
-        "name": "normalizeIntent",
+        "name": "1-normalizeIntent",
         "func": "// Normalize incoming triggers into a consistent intent shape.\n// Expected inputs:\n// - From your UI/scheduler: msg.payload can be an object or string.\n// Examples you can send in:\n//   msg.payload = { kind: 'start', playableId: 'show_1' }\n//   msg.payload = { playableId: 'ambience_1' }\n//   msg.payload = 'show_1'\n//\n// Output:\n//   msg.intent = { kind, playableId, scope, source }\n//\n// If you wire a ui-button directly, set its payload to e.g. {\"playableId\":\"show_1\"}\n\nconst now = new Date().toISOString();\nconst p = msg.payload;\n\nlet playableId = null;\nlet kind = 'start';\nlet scope = { spaces: ['A1','A2','A3','LAND'] }; // default global\n\nif (typeof p === 'string') {\n  playableId = p;\n} else if (p && typeof p === 'object') {\n  playableId = p.playableId || p.contentId || p.timelineId || p.id || null;\n  if (p.kind) kind = p.kind;\n  if (p.scope) scope = p.scope;\n}\n\n// Allow the link-in node name to imply playableId if payload was empty\nif (!playableId) {\n  if (msg._linkSourceName && msg._linkSourceName.includes('Show 1')) playableId = 'show_1';\n  if (msg._linkSourceName && msg._linkSourceName.includes('Ambience 1')) playableId = 'ambience_1';\n}\n\nif (!playableId) {\n  node.status({ fill: 'red', shape: 'ring', text: 'Missing playableId' });\n  return null;\n}\n\nmsg.intent = {\n  kind,\n  playableId,\n  scope,\n  source: msg.source || 'ui',\n  ts: now\n};\n\nmsg.topic = 'orchestration/intent';\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
@@ -7582,7 +7582,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 280,
+        "x": 290,
         "y": 240,
         "wires": [
             [
@@ -7595,7 +7595,7 @@
         "type": "function",
         "z": "orch-tab",
         "g": "orch-group",
-        "name": "policyGate (state machine stub)",
+        "name": "2-policyGate (state machine stub)",
         "func": "// Policy/state-machine gate.\n// Decides whether the intent is allowed, and (optionally) modifies intent.\n//\n// This is intentionally simple: it demonstrates the architectural split.\n// Replace with your real rules (prayer lockout, mode ownership, etc.) later.\n//\n// Inputs:\n//   msg.intent = { kind, playableId, scope, source, ts }\n// Outputs:\n//   output 1 (allowed): msg.intent (unchanged), continue\n//   output 2 (blocked): msg.payload = { error, intent }\n\nconst intent = msg.intent || {};\n\n// Example system state variables (you can set these from elsewhere)\nconst systemMode = flow.get('system_mode') || 'AUTO'; // AUTO|EVENT|MAINT\nconst prayerLockout = flow.get('prayer_lockout') || false;\n\n// Simple block rules\nif (systemMode === 'EVENT') {\n  msg.payload = { error: 'Blocked: system_mode=EVENT', intent };\n  return [null, msg];\n}\n\n// Example: block show starts during prayer\nif (prayerLockout && String(intent.playableId || '').startsWith('show_')) {\n  msg.payload = { error: 'Blocked: prayer_lockout=true (shows)', intent };\n  return [null, msg];\n}\n\n// Allowed\nreturn [msg, null];",
         "outputs": 2,
         "timeout": 0,
@@ -7603,7 +7603,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 530,
+        "x": 540,
         "y": 240,
         "wires": [
             [
@@ -7619,15 +7619,15 @@
         "type": "function",
         "z": "orch-tab",
         "g": "orch-group",
-        "name": "actionMap (recipes)",
-        "func": "// Build msg.actions (an array of action objects) from msg.intent.playableId.\n// Action style (as requested):\n//   { type: 'watchout', command: 'startTimeline', timelineKey: 'show_1' }\n//   { type: 'watchout', command: 'GotoCue', timelineKey: 'show_1', cueKey: 'cue_special' }\n//\n// Notes:\n// - The Director executes actions in order.\n// - Use waitMs to insert delays.\n// - Use waitFor to pause until a status message arrives on the status bus.\n\nconst intent = msg.intent;\nconst id = intent.playableId;\n\nconst recipes = {\n  show_1: [\n    // Start Watchout timeline\n    { type: 'watchout', command: 'start', timelineKey: 'show_1' },\n\n    // Wait a little, then jump to a cue (example)\n    { type: 'watchout', command: 'GotoCue', timelineKey: 'show_1', cueKey: 'intro', waitMs: 300 },\n\n    // Lighting examples (stubs)\n    { type: 'ma', command: 'GoCue', cue: 'SHOW_1_START' },\n    { type: 'ma', command: 'RunMacro', macro: 'SHOW_1_INIT' },\n\n    // Q-Sys examples (stubs)\n    { type: 'qsys', command: 'RecallScene', scene: 'Show1' },\n    { type: 'qsys', command: 'SetBgmMute', value: 1 },\n\n    // Pharos examples (multiple systems)\n    { type: 'pharos', system: 'pharos_main', command: 'Trigger', triggerId: 'show1_start' },\n    { type: 'pharos', system: 'pharos_fountain', command: 'Trigger', triggerId: 'show1_water' }\n  ],\n\n  ambience_1: [\n    { type: 'watchout', command: 'start', timelineKey: 'ambience_1_a1' },\n    { type: 'watchout', command: 'start', timelineKey: 'ambience_1_a2' },\n    { type: 'watchout', command: 'start', timelineKey: 'ambience_1_a3' },\n    { type: 'ma', command: 'GoCue', space: 'a1', labelId: 'ambience_1' },\n    { type: 'ma', command: 'GoCue', space: 'a2', labelId: 'ambience_1' },\n    { type: 'ma', command: 'GoCue', space: 'a3', labelId: 'ambience_1' },\n    { type: 'ma', command: 'GoCue', space: 'ls', labelId: 'ambience_1' },\n    { type: 'watchout', command: 'start', timelineKey: 'bg_music_1' },\n    { type: 'qsys', command: 'RecallScene', scene: 'Ambience1' },\n    { type: 'qsys', command: 'SetBgmMute', value: 0 }\n  ]\n};\n\nconst actions = recipes[id];\nif (!actions) {\n  msg.payload = { error: 'No recipe for playableId: ' + id, intent };\n  return [null, msg];\n}\n\nmsg.actions = actions;\nmsg.topic = 'orchestration/actions';\nreturn [msg, null];",
+        "name": "3-actionMap (recipes)",
+        "func": "// Build msg.actions (an array of action objects) from msg.intent.playableId.\n// This file is the source of truth for what each top-level playable contains\n// (video/audio/lighting/etc steps and ordering).\n//\n// Action style expected by adapters:\n//   { type: 'watchout', command: 'startTimeline', timelineKey: 'show_1' }\n//   { type: 'watchout', command: 'jumpToCue', timelineKey: 'show_1', cueKey: 'cue_special' }\n//   { type: 'ma', command: 'GoCue', space: 'a1', labelId: 'ambience_2' }\n//\n// Notes:\n// - The Director executes actions in order.\n// - Use waitMs to insert delays.\n// - Use waitFor to pause until a status message arrives on the status bus.\n\nconst intent = msg.intent;\nconst id = intent.playableId;\n\nconst recipes = {\n  show_1: [\n    // Start Watchout timeline\n    { type: 'watchout', command: 'start', timelineKey: 'show_1' },\n\n    // Wait a little, then jump to a cue (example)\n    { type: 'watchout', command: 'jumpToCue', timelineKey: 'show_1', cueKey: 'intro', waitMs: 300 },\n\n    // Lighting examples (stubs)\n    { type: 'ma', command: 'GoCue', cue: 'SHOW_1_START' },\n    { type: 'ma', command: 'RunMacro', macro: 'SHOW_1_INIT' },\n\n    // Q-Sys examples (stubs)\n    { type: 'qsys', command: 'RecallScene', scene: 'Show1' },\n    { type: 'qsys', command: 'SetBgmMute', value: 1 },\n\n    // Pharos examples (multiple systems)\n    { type: 'pharos', system: 'pharos_main', command: 'Trigger', triggerId: 'show1_start' },\n    { type: 'pharos', system: 'pharos_fountain', command: 'Trigger', triggerId: 'show1_water' }\n  ],\n\n  ambience_1: [\n    { type: 'watchout', command: 'start', timelineKey: 'ambience_1_a1' },\n    { type: 'watchout', command: 'start', timelineKey: 'ambience_1_a2' },\n    { type: 'watchout', command: 'start', timelineKey: 'ambience_1_a3' },\n    { type: 'ma', command: 'GoCue', space: 'a1', labelId: 'ambience_1' },\n    { type: 'ma', command: 'GoCue', space: 'a2', labelId: 'ambience_1' },\n    { type: 'ma', command: 'GoCue', space: 'a3', labelId: 'ambience_1' },\n    { type: 'ma', command: 'GoCue', space: 'ls', labelId: 'ambience_1' },\n    { type: 'watchout', command: 'start', timelineKey: 'bg_music_1' },\n    { type: 'qsys', command: 'RecallScene', scene: 'Ambience1' },\n    { type: 'qsys', command: 'SetBgmMute', value: 0 }\n  ],\n\n  ambience_2: [\n    // Video (Watchout): start ambience timelines in each atrium\n    { type: 'watchout', command: 'startTimeline', timelineKey: 'ambience_2_a1' },\n    { type: 'watchout', command: 'startTimeline', timelineKey: 'ambience_2_a2' },\n    { type: 'watchout', command: 'startTimeline', timelineKey: 'ambience_2_a3' },\n\n    // Lighting (MA via cue mapper): resolve per-space ambience_2 labels\n    { type: 'ma', command: 'GoCue', space: 'a1', labelId: 'ambience_2' },\n    { type: 'ma', command: 'GoCue', space: 'a2', labelId: 'ambience_2' },\n    { type: 'ma', command: 'GoCue', space: 'a3', labelId: 'ambience_2' },\n    { type: 'ma', command: 'GoCue', space: 'ls', labelId: 'ambience_2' },\n\n    // Audio\n    { type: 'watchout', command: 'startTimeline', timelineKey: 'bg_music_2' },\n    { type: 'qsys', command: 'RecallScene', scene: 'Ambience2' },\n    { type: 'qsys', command: 'SetBgmMute', value: 0 }\n  ]\n};\n\nconst actions = recipes[id];\nif (!actions) {\n  msg.payload = { error: 'No recipe for playableId: ' + id, intent };\n  return [null, msg];\n}\n\nmsg.actions = actions;\nmsg.topic = 'orchestration/actions';\nreturn [msg, null];",
         "outputs": 2,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 790,
+        "x": 800,
         "y": 240,
         "wires": [
             [
@@ -7643,7 +7643,7 @@
         "type": "function",
         "z": "orch-tab",
         "g": "orch-group",
-        "name": "director (sequencer)",
+        "name": "4-director (sequencer)",
         "func": "// Simple sequential director.\n// It emits ONE action at a time to the dispatcher.\n// After each dispatch, it waits either:\n// - action.waitMs (timer)\n// - action.waitFor (status bus event)\n// - or immediately continues.\n//\n// Implementation notes:\n// - Uses node context to store an in-progress run.\n// - Uses node.send() for async steps.\n// - Listens for status events via the 'director/status' link-in.\n\nfunction startRun(msg) {\n  const runId = (Date.now().toString(36) + Math.random().toString(36).slice(2, 8)).toUpperCase();\n  const actions = Array.isArray(msg.actions) ? msg.actions : [];\n\n  context.set('run', {\n    runId,\n    idx: 0,\n    actions,\n    intent: msg.intent,\n    startedAt: new Date().toISOString(),\n    waitingFor: null\n  });\n\n  node.status({ fill: 'blue', shape: 'dot', text: `Run ${runId}: start (${actions.length} actions)` });\n  emitNext();\n}\n\nfunction emitNext() {\n  const run = context.get('run');\n  if (!run) return;\n\n  if (run.idx >= run.actions.length) {\n    node.status({ fill: 'green', shape: 'dot', text: `Run ${run.runId}: done` });\n    node.send({\n      topic: 'orchestration/done',\n      payload: { success: true, runId: run.runId, intent: run.intent, finishedAt: new Date().toISOString() }\n    });\n    context.set('run', null);\n    return;\n  }\n\n  const action = run.actions[run.idx];\n  const step = run.idx + 1;\n\n  // Emit action to dispatcher\n  const out = {\n    topic: 'orchestration/dispatch',\n    payload: {\n      runId: run.runId,\n      step,\n      total: run.actions.length,\n      action\n    },\n    intent: run.intent\n  };\n\n  node.status({ fill: 'blue', shape: 'ring', text: `Run ${run.runId}: step ${step}/${run.actions.length} (${action.type}:${action.command})` });\n  node.send([out, null]);\n\n  // Determine wait behavior\n  if (action.waitFor) {\n    run.waitingFor = String(action.waitFor);\n    context.set('run', run);\n    return; // will resume on status message\n  }\n\n  const waitMs = Number(action.waitMs || 0);\n  if (waitMs > 0) {\n    setTimeout(() => {\n      const r = context.get('run');\n      if (!r) return;\n      r.idx++;\n      context.set('run', r);\n      emitNext();\n    }, waitMs);\n    return;\n  }\n\n  // Immediate\n  run.idx++;\n  context.set('run', run);\n  emitNext();\n}\n\nfunction handleStatus(msg) {\n  const run = context.get('run');\n  if (!run) return;\n\n  const status = msg.payload || {};\n  const key = status.key || status.topic || status.name;\n\n  if (!run.waitingFor) return;\n  if (String(key) !== String(run.waitingFor)) return;\n\n  // Resume\n  run.waitingFor = null;\n  run.idx++;\n  context.set('run', run);\n  emitNext();\n}\n\n// Two inputs into this node:\n// A) normal orchestration messages with msg.actions\n// B) status bus messages with msg.topic === 'director/status'\n\nif (msg && msg.topic === 'director/status') {\n  handleStatus(msg);\n  return null;\n}\n\n// Start a new run\nstartRun(msg);\nreturn null;",
         "outputs": 2,
         "timeout": 0,
@@ -7667,7 +7667,7 @@
         "type": "function",
         "z": "orch-tab",
         "g": "orch-group",
-        "name": "dispatcher (route by type)",
+        "name": "5-dispatcher (route by type)",
         "func": "// Routes each action to the proper subsystem.\n// Input:\n//   msg.payload = { runId, step, total, action }\n// Output 1: watchout\n// Output 2: ma\n// Output 3: qsys\n// Output 4: pharos\n// Output 5: status/debug\n\nconst p = msg.payload || {};\nconst action = (p.action || {});\n\nif (!action.type) {\n  msg.payload = { error: 'Action missing type', p };\n  return [null, null, null, null, msg];\n}\n\nconst t = String(action.type).toLowerCase();\n\n// Pass along run metadata for logging\nmsg.run = { runId: p.runId, step: p.step, total: p.total };\n\nif (t === 'watchout') return [msg, null, null, null, null];\nif (t === 'ma')       return [null, msg, null, null, null];\nif (t === 'qsys')     return [null, null, msg, null, null];\nif (t === 'pharos')   return [null, null, null, msg, null];\n\nmsg.payload = { error: 'Unknown action.type: ' + action.type, p };\nreturn [null, null, null, null, msg];",
         "outputs": 5,
         "timeout": 0,
@@ -7675,7 +7675,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1350,
+        "x": 1360,
         "y": 240,
         "wires": [
             [
@@ -7703,7 +7703,7 @@
         "z": "orch-tab",
         "g": "orch-group",
         "name": "watchout adapter → WO v2 schema",
-        "func": "// Convert orchestration action style into the Watchout v2 control message schema.\n// Input action examples:\n//   { type:'watchout', command:'startTimeline', timelineKey:'show_1' }\n//   { type:'watchout', command:'GotoCue', timelineKey:'show_1', cueId:'intro' }\n//\n// Output:\n//   msg.payload = { command: 'start'|'jumpToCue', timelineKey, cueId?, state? }\n\nconst p = msg.payload || {};\nconst action = p.action || {};\nconst cmd = String(action.command || '');\n\nlet out = null;\n\nif (cmd === 'startTimeline') {\n  out = { command: 'start', timelineKey: action.timelineKey };\n} else if (cmd === 'stopTimeline') {\n  out = { command: 'stop', timelineKey: action.timelineKey };\n} else if (cmd === 'pauseTimeline') {\n  out = { command: 'pause', timelineKey: action.timelineKey };\n} else if (cmd === 'jumpToCue') {\n  out = { command: 'jumpToCue', timelineKey: action.timelineKey, cueKey: action.cueKey, state: action.state || 'play' };\n} else {\n  // Unknown watchout command\n  msg.payload = { error: 'Unknown watchout.command: ' + cmd, action, run: msg.run };\n  return [null, msg];\n}\n\nmsg.payload = out;\nmsg.topic = 'watchout/control';\n\n// Output 1: link out to Watchout\n// Output 2: error/debug\nreturn [msg, null];",
+        "func": "// Convert orchestration action style into the Watchout v2 control message schema.\n// Input action examples:\n//   { type:'watchout', command:'startTimeline', timelineKey:'show_1' }\n//   { type:'watchout', command:'start', timelineKey:'show_1' }\n//   { type:'watchout', command:'jumpToCue', timelineKey:'show_1', cueKey:'intro' }\n//   { type:'watchout', command:'GotoCue', timelineKey:'show_1', cueKey:'intro' }\n//\n// Output:\n//   msg.payload = { command: 'start'|'jumpToCue', timelineKey, cueId?, state? }\n\nconst p = msg.payload || {};\nconst action = p.action || {};\nconst cmd = String(action.command || '').toLowerCase();\n\nlet out = null;\n\nif (cmd === 'starttimeline' || cmd === 'start') {\n  out = { command: 'start', timelineKey: action.timelineKey };\n} else if (cmd === 'stoptimeline' || cmd === 'stop') {\n  out = { command: 'stop', timelineKey: action.timelineKey };\n} else if (cmd === 'pausetimeline' || cmd === 'pause') {\n  out = { command: 'pause', timelineKey: action.timelineKey };\n} else if (cmd === 'jumptocue' || cmd === 'gotocue') {\n  out = { command: 'jumpToCue', timelineKey: action.timelineKey, cueKey: action.cueKey, state: action.state || 'play' };\n} else {\n  // Unknown watchout command\n  msg.payload = { error: 'Unknown watchout.command: ' + cmd, action, run: msg.run };\n  return [null, msg];\n}\n\nmsg.payload = out;\nmsg.topic = 'watchout/control';\n\n// Output 1: link out to Watchout\n// Output 2: error/debug\nreturn [msg, null];",
         "outputs": 2,
         "timeout": 0,
         "noerr": 0,

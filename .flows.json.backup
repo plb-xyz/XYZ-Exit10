@@ -6750,7 +6750,7 @@
         "group": "",
         "page": "d4724cfa86c7c770",
         "ui": "",
-        "name": "ui-template",
+        "name": "CSS style",
         "order": 1,
         "width": 0,
         "height": 0,
@@ -6761,7 +6761,7 @@
         "resendOnRefresh": true,
         "templateScope": "page:style",
         "className": "",
-        "x": 1020,
+        "x": 1010,
         "y": 340,
         "wires": [
             []
