@@ -12,6 +12,24 @@ const p = msg.payload || {};
 const action = p.action || {};
 const cmd = String(action.command || '');
 
+function targetToSpace(target) {
+    if (!target) return null;
+    if (typeof target === 'string') {
+        const s = target.trim().toLowerCase();
+        if (!s) return null;
+        if (s.includes('.')) return s.split('.')[0];
+        return s;
+    }
+    if (Array.isArray(target)) {
+        return targetToSpace(target[0]);
+    }
+    if (typeof target === 'object') {
+        if (typeof target.space === 'string') return targetToSpace(target.space);
+        return null;
+    }
+    return null;
+}
+
 function normalizeLabelId(s) {
     // match the labelId normalization rules from the MA mapper doc
     // (trim, lowercase, spaces->_, strip non [a-z0-9_], collapse _, trim _)
@@ -41,15 +59,15 @@ if (!mapping) {
 }
 
 // Resolve which mapping space + key to use
-let space = action.space;
+let space = targetToSpace(action.target);
 let key = null;
 
 if (cmd === 'GoCue') {
     space = space || 'cmd';           // convention: cue-like things in Commands space
-    key = action.labelId || action.cue;
+    key = action.key || action.labelId || action.cue;
 } else if (cmd === 'RunMacro') {
     space = space || 'mx';            // convention: macros in mx space
-    key = action.labelId || action.macro;
+    key = action.key || action.labelId || action.macro;
 } else {
     return fail('Unsupported MA command: ' + cmd);
 }

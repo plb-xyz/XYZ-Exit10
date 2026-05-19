@@ -5,7 +5,7 @@
 // Replace with your real rules (prayer lockout, mode ownership, etc.) later.
 //
 // Inputs:
-//   msg.intent = { kind, playableId, scope, source, ts }
+//   msg.intent = { action, key, target, cueName, source, ts }
 // Outputs:
 //   output 1 (allowed): msg.intent (unchanged), continue
 //   output 2 (blocked): msg.payload = { error, intent }
@@ -23,7 +23,7 @@ if (systemMode === 'EVENT') {
 }
 
 // Example: block show starts during prayer
-if (prayerLockout && String(intent.playableId || '').startsWith('show_')) {
+if (prayerLockout && String(intent.action || '').toLowerCase() === 'start' && String(intent.key || '').startsWith('show_')) {
   msg.payload = { error: 'Blocked: prayer_lockout=true (shows)', intent };
   return [null, msg];
 }

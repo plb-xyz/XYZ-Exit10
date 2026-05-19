@@ -1,27 +1,32 @@
-// ─── Pull functions out of the xstate module ───────────────────────────────
+// Verify XState runtime availability
+if (!xstate || typeof xstate.createMachine !== 'function' || typeof xstate.createActor !== 'function') {
+    node.status({ fill: 'red', shape: 'ring', text: 'xstate missing in runtime' });
+    node.error('XState runtime not available. Add xstate to settings.js functionGlobalContext and restart Node-RED.');
+    return;
+}
+
 const { createMachine, createActor } = xstate;
 
-// ─── Machine definition (your Stately.ai export) ───────────────────────────
 const machineDefinition = {
     "id": "Exit10",
     "initial": "INIT",
     "states": {
         "INIT": {
             "on": {
-                "Goto Idle": [{ "target": "IDLE" }]
+                "SYS_READY": [{ "target": "IDLE" }]
             }
         },
         "IDLE": {
             "on": {
-                "Trans to Normal": [{ "target": "NORMAL" }],
-                "Start Show": [{ "target": "SHOW", "guard": "Prayer" }]
+                "NORMAL_ENTER": [{ "target": "NORMAL" }],
+                "SHOW_GO": [{ "target": "SHOW", "guard": "canStartShow" }]
             }
         },
         "NORMAL": {
             "type": "parallel",
             "on": {
-                "Goto Idle": [{ "target": "IDLE" }],
-                "Start Show": [{ "target": "SHOW", "guard": "Prayer" }]
+                "GOTO_IDLE": [{ "target": "IDLE" }],
+                "SHOW_GO": [{ "target": "SHOW", "guard": "canStartShow" }]
             },
             "states": {
                 "A1 AUDIO": {
@@ -29,20 +34,20 @@ const machineDefinition = {
                     "states": {
                         "BGM": {
                             "on": {
-                                "A1.AUDIO.SPECIAL": [{ "target": "SPECIAL" }],
-                                "A1.AUDIO.NONE": [{ "target": "NONE" }]
+                                "A1_AUDIO_SPECIAL": [{ "target": "SPECIAL" }],
+                                "A1_AUDIO_NONE": [{ "target": "NONE" }]
                             }
                         },
                         "SPECIAL": {
                             "on": {
-                                "A1.AUDIO.NONE": [{ "target": "NONE" }],
-                                "A1.AUDIO.BGM": [{ "target": "BGM" }]
+                                "A1_AUDIO_NONE": [{ "target": "NONE" }],
+                                "A1_AUDIO_BGM": [{ "target": "BGM" }]
                             }
                         },
                         "NONE": {
                             "on": {
-                                "A1.AUDIO.BGM": [{ "target": "BGM" }],
-                                "A1.AUDIO.SPECIAL": [{ "target": "SPECIAL" }]
+                                "A1_AUDIO_BGM": [{ "target": "BGM" }],
+                                "A1_AUDIO_SPECIAL": [{ "target": "SPECIAL" }]
                             }
                         }
                     }
@@ -50,24 +55,24 @@ const machineDefinition = {
                 "A1 AMBIENCE": {
                     "initial": "AMBIENCE",
                     "on": {
-                        "Start A1 Event Simple": [{ "target": "#Exit10.NORMAL.A1 Events.SIMPLE" }],
-                        "Start A1 Event Complex": [{ "target": "#Exit10.NORMAL.A1 Events.COMPLEX" }]
+                        "A1_EVENT_SIMPLE_START": [{ "target": "#Exit10.NORMAL.A1 Events.SIMPLE" }],
+                        "A1_EVENT_COMPLEX_START": [{ "target": "#Exit10.NORMAL.A1 Events.COMPLEX" }]
                     },
                     "states": {
                         "AMBIENCE": {
                             "on": {
-                                "Start A1 OnTop": [{ "target": "ON TOP" }],
-                                "Start A1 FullScreen": [{ "target": "FULL SCREEN" }]
+                                "A1_ONTOP_START": [{ "target": "ON TOP" }],
+                                "A1_FULLSCREEN_START": [{ "target": "FULL SCREEN" }]
                             }
                         },
                         "ON TOP": {
                             "on": {
-                                "End A1 OnTop": [{ "target": "AMBIENCE" }]
+                                "A1_ONTOP_END": [{ "target": "AMBIENCE" }]
                             }
                         },
                         "FULL SCREEN": {
                             "on": {
-                                "End A1 FullScreen": [{ "target": "AMBIENCE" }]
+                                "A1_FULLSCREEN_END": [{ "target": "AMBIENCE" }]
                             }
                         }
                     }
@@ -78,12 +83,12 @@ const machineDefinition = {
                         "NONE": {},
                         "SIMPLE": {
                             "on": {
-                                "End A1 Event Simple": [{ "target": "NONE" }]
+                                "A1_EVENT_SIMPLE_END": [{ "target": "NONE" }]
                             }
                         },
                         "COMPLEX": {
                             "on": {
-                                "End A1 Event Complex": [{ "target": "NONE" }]
+                                "A1_EVENT_COMPLEX_END": [{ "target": "NONE" }]
                             }
                         }
                     }
@@ -91,24 +96,24 @@ const machineDefinition = {
                 "A2 AMBIENCE": {
                     "initial": "AMBIENCE",
                     "on": {
-                        "Start A2 Event Simple": [{ "target": "#Exit10.NORMAL.A2 Events.SIMPLE" }],
-                        "Start A2 Event Complex": [{ "target": "#Exit10.NORMAL.A2 Events.COMPLEX" }]
+                        "A2_EVENT_SIMPLE_START": [{ "target": "#Exit10.NORMAL.A2 Events.SIMPLE" }],
+                        "A2_EVENT_COMPLEX_START": [{ "target": "#Exit10.NORMAL.A2 Events.COMPLEX" }]
                     },
                     "states": {
                         "AMBIENCE": {
                             "on": {
-                                "Start A2 OnTop": [{ "target": "ON TOP" }],
-                                "Start A2 FullScreen": [{ "target": "FULL SCREEN" }]
+                                "A2_ONTOP_START": [{ "target": "ON TOP" }],
+                                "A2_FULLSCREEN_START": [{ "target": "FULL SCREEN" }]
                             }
                         },
                         "ON TOP": {
                             "on": {
-                                "End A2 OnTop": [{ "target": "AMBIENCE" }]
+                                "A2_ONTOP_END": [{ "target": "AMBIENCE" }]
                             }
                         },
                         "FULL SCREEN": {
                             "on": {
-                                "End A2 FullScreen": [{ "target": "AMBIENCE" }]
+                                "A2_FULLSCREEN_END": [{ "target": "AMBIENCE" }]
                             }
                         }
                     }
@@ -119,12 +124,12 @@ const machineDefinition = {
                         "NONE": {},
                         "SIMPLE": {
                             "on": {
-                                "End A2 Event Simple": [{ "target": "NONE" }]
+                                "A2_EVENT_SIMPLE_END": [{ "target": "NONE" }]
                             }
                         },
                         "COMPLEX": {
                             "on": {
-                                "End A2 Event Complex": [{ "target": "NONE" }]
+                                "A2_EVENT_COMPLEX_END": [{ "target": "NONE" }]
                             }
                         }
                     }
@@ -132,24 +137,24 @@ const machineDefinition = {
                 "A3 AMBIENCE": {
                     "initial": "AMBIENCE",
                     "on": {
-                        "Start A3 Event Simple": [{ "target": "#Exit10.NORMAL.A3 Events.SIMPLE" }],
-                        "Start A3 Event Complex": [{ "target": "#Exit10.NORMAL.A3 Events.COMPLEX" }]
+                        "A3_EVENT_SIMPLE_START": [{ "target": "#Exit10.NORMAL.A3 Events.SIMPLE" }],
+                        "A3_EVENT_COMPLEX_START": [{ "target": "#Exit10.NORMAL.A3 Events.COMPLEX" }]
                     },
                     "states": {
                         "AMBIENCE": {
                             "on": {
-                                "Start A3 On Top": [{ "target": "ON TOP" }],
-                                "Start A3 Full Screen": [{ "target": "FULL SCREEN" }]
+                                "A3_ONTOP_START": [{ "target": "ON TOP" }],
+                                "A3_FULLSCREEN_START": [{ "target": "FULL SCREEN" }]
                             }
                         },
                         "ON TOP": {
                             "on": {
-                                "End A3 On Top": [{ "target": "AMBIENCE" }]
+                                "A3_ONTOP_END": [{ "target": "AMBIENCE" }]
                             }
                         },
                         "FULL SCREEN": {
                             "on": {
-                                "End A3 Full Screen": [{ "target": "AMBIENCE" }]
+                                "A3_FULLSCREEN_END": [{ "target": "AMBIENCE" }]
                             }
                         }
                     }
@@ -160,12 +165,12 @@ const machineDefinition = {
                         "NONE": {},
                         "SIMPLE": {
                             "on": {
-                                "End A3 Event Simple": [{ "target": "NONE" }]
+                                "A3_EVENT_SIMPLE_END": [{ "target": "NONE" }]
                             }
                         },
                         "COMPLEX": {
                             "on": {
-                                "End A3 Event Complex": [{ "target": "NONE" }]
+                                "A3_EVENT_COMPLEX_END": [{ "target": "NONE" }]
                             }
                         }
                     }
@@ -184,20 +189,20 @@ const machineDefinition = {
                             "states": {
                                 "BGM": {
                                     "on": {
-                                        "LS.AUDIO.SPECIAL": [{ "target": "SPECIAL" }],
-                                        "LS.AUDIO.NONE": [{ "target": "NONE" }]
+                                        "LS_AUDIO_SPECIAL": [{ "target": "SPECIAL" }],
+                                        "LS_AUDIO_NONE": [{ "target": "NONE" }]
                                     }
                                 },
                                 "SPECIAL": {
                                     "on": {
-                                        "LS.AUDIO.NONE": [{ "target": "NONE" }],
-                                        "LS.AUDIO.BGM": [{ "target": "BGM" }]
+                                        "LS_AUDIO_NONE": [{ "target": "NONE" }],
+                                        "LS_AUDIO_BGM": [{ "target": "BGM" }]
                                     }
                                 },
                                 "NONE": {
                                     "on": {
-                                        "LS.AUDIO.BGM": [{ "target": "BGM" }],
-                                        "LS.AUDIO.SPECIAL": [{ "target": "SPECIAL" }]
+                                        "LS_AUDIO_BGM": [{ "target": "BGM" }],
+                                        "LS_AUDIO_SPECIAL": [{ "target": "SPECIAL" }]
                                     }
                                 }
                             }
@@ -207,111 +212,102 @@ const machineDefinition = {
             }
         },
         "SHOW": {
-            "entry": { "type": "startShowLogic" },
-            "exit": { "type": "pharosWater1Normal" },
+            "entry": { "type": "emitShowStarted" },
+            "exit": { "type": "emitShowEnded" },
             "on": {
-                "Goto Idle": [{ "target": "IDLE" }],
-                "Trans to Normal": [{ "target": "NORMAL" }]
+                "GOTO_IDLE": [{ "target": "IDLE" }],
+                "SHOW_END": [{ "target": "NORMAL" }]
             }
         }
     }
 };
 
-// ─── Guards ────────────────────────────────────────────────────────────────
-// "Prayer" guard: returns true if show is allowed to start.
-// For now always true — replace with real logic later
-// e.g. check time window, operator confirmation flag, etc.
 const guards = {
-    Prayer: () => {
-        return flow.get('prayerGuardAllowed') !== false; // default: allowed
+    canStartShow: () => {
+        return flow.get('prayerGuardAllowed') !== false;
     }
 };
 
-// ─── Actions ───────────────────────────────────────────────────────────────
-// Entry/exit actions emit command envelopes downstream (output 2)
 const actions = {
-    startShowLogic: () => {
+    emitShowStarted: () => {
+        const key = flow.get('xstate_active_show_key') || null;
         node.send([null, {
-            topic: "cmd",
+            topic: 'cmd',
             payload: {
                 v: 1,
-                source: "statemachine",
-                event: "entry",
-                state: "SHOW",
-                description: "Show started — trigger show logic"
+                source: 'statemachine',
+                action: 'show.go',
+                params: { key },
+                meta: { reason: 'entry', state: 'SHOW' }
             }
         }]);
     },
-    pharosWater1Normal: () => {
+    emitShowEnded: () => {
+        const key = flow.get('xstate_active_show_key') || null;
         node.send([null, {
-            topic: "cmd",
+            topic: 'cmd',
             payload: {
                 v: 1,
-                source: "statemachine",
-                event: "exit",
-                state: "SHOW",
-                description: "Show ended — set Pharos Water1 to Normal"
+                source: 'statemachine',
+                action: 'show.end',
+                params: { key },
+                meta: { reason: 'exit', state: 'SHOW' }
             }
         }]);
     }
 };
 
-// ─── Create machine ────────────────────────────────────────────────────────
 const machine = createMachine(machineDefinition, { guards, actions });
 
-// ─── Create and start actor ────────────────────────────────────────────────
+const previous = flow.get('xstate_actor');
+if (previous && typeof previous.stop === 'function') {
+    try { previous.stop(); } catch (e) { }
+}
+
 const actor = createActor(machine);
 
-// ─── Subscribe: fires on every state transition ────────────────────────────
 actor.subscribe(snapshot => {
     const stateValue = snapshot.value;
 
-    // Store snapshot in flow context (queryable by other nodes)
     flow.set('xstate_snapshot', snapshot);
     flow.set('xstate_state', stateValue);
 
-    // ── Node status display (visible under the node on the canvas) ──────────
-    let fill = "grey";
-    let text = "";
+    let fill = 'grey';
+    let text = '';
 
-    if (stateValue === "INIT") {
-        fill = "grey";
-        text = "INIT";
-    } else if (stateValue === "IDLE") {
-        fill = "blue";
-        text = "IDLE";
-    } else if (stateValue === "SHOW") {
-        fill = "yellow";
-        text = "● SHOW";
-    } else if (typeof stateValue === "object") {
-        // NORMAL is parallel — value is an object of sub-states
-        // Build a compact summary e.g. "NORMAL | A1:BGM | A2:AMBIENCE"
-        const a1audio = stateValue["A1 AUDIO"] || "?";
-        const a1ambience = stateValue["A1 AMBIENCE"] || "?";
-        const a1events = stateValue["A1 Events"] || "NONE";
-        fill = "green";
-        text = `NORMAL | A1aud:${a1audio} A1amb:${a1ambience}${a1events !== "NONE" ? " EVT:" + a1events : ""}`;
+    if (stateValue === 'INIT') {
+        fill = 'grey';
+        text = 'INIT';
+    } else if (stateValue === 'IDLE') {
+        fill = 'blue';
+        text = 'IDLE';
+    } else if (stateValue === 'SHOW') {
+        fill = 'yellow';
+        text = 'SHOW';
+    } else if (typeof stateValue === 'object') {
+        const a1audio = stateValue['A1 AUDIO'] || '?';
+        const a1ambience = stateValue['A1 AMBIENCE'] || '?';
+        const a1events = stateValue['A1 Events'] || 'NONE';
+        fill = 'green';
+        text = 'NORMAL | A1aud:' + a1audio + ' A1amb:' + a1ambience + (a1events !== 'NONE' ? ' EVT:' + a1events : '');
     }
 
-    node.status({ fill, shape: "dot", text });
+    node.status({ fill, shape: 'dot', text });
 
-    // ── Emit state change event downstream (output 1) ──────────────────────
     node.send([{
-        topic: "evt/statemachine/state",
+        topic: 'evt/statemachine/state',
         payload: {
             v: 1,
-            source: "statemachine",
+            source: 'statemachine',
             state: stateValue,
             snapshot: snapshot.value
         }
     }, null]);
 });
 
-// ─── Start the actor ───────────────────────────────────────────────────────
 actor.start();
 
-// ─── Store actor in flow context so On Message tab can reach it ───────────
 flow.set('xstate_actor', actor);
 
-node.status({ fill: "grey", shape: "dot", text: "INIT" });
-node.warn("Exit10 state machine started");
+node.status({ fill: 'grey', shape: 'dot', text: 'INIT' });
+node.warn('Exit10 state machine started (strict event schema)');
