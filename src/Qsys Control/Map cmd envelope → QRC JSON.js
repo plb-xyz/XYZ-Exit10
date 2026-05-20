@@ -26,28 +26,25 @@ const inputsPerSpace = {
 
 // ====== internal logic (no edits needed) ======
 
-const baseTopic = "ui/audio";
-const t = msg.topic;
-const p = msg.payload;
+if (msg.topic !== 'cmd') return null;
+
+const env = msg.payload || {};
+const action = env.action;
+const target = env.target;
+const params = env.params || {};
+
+if (!action || typeof action !== 'string' || !action.startsWith('audio.')) return null;
+
+// Extract space from target item id (e.g. "a1.audio" → "a1")
+const space = typeof target === 'string' ? target.split('.')[0] : null;
+if (!space) return null;
+
+const inputKey = params.inputKey;
+if (!inputKey) return null;
 
 function makeId() {
   return Date.now() % 1000000;
 }
-
-// Parse topic
-// Expected:
-// ui/audio/<space>/level/<inputKey>
-// ui/audio/<space>/<inputKey>Enabled
-// Accept both:
-// ui/audio/<space>/<inputKey>/enabled
-// ui/audio/<space>/<inputKey>Enabled
-const m = t.match(/^ui\/audio\/([^/]+)\/(level\/([^/]+)|([^/]+)\/enabled|([^/]+)Enabled)$/);
-if (!m) return null;
-
-const space = m[1];
-const inputKey = m[3] || m[4] || m[5];
-const isLevel = !!m[3];
-const isEnabled = !!(m[4] || m[5]);
 
 const mixerName = spaceToMixer[space];
 if (!mixerName) return null;
@@ -64,8 +61,8 @@ const inputSelector = Array.isArray(channels)
 
 let req = null;
 
-if (isLevel) {
-  let val = Number(p);
+if (action === 'audio.setLevel') {
+  let val = Number(params.db);
   if (Number.isNaN(val)) return null;
   val = Math.max(-60, Math.min(10, val));
   req = {
@@ -80,15 +77,14 @@ if (isLevel) {
   };
 }
 
-if (isEnabled) {
-  const enabled = !!p;
+if (action === 'audio.mute' || action === 'audio.unmute') {
   req = {
     jsonrpc: "2.0",
     method: "Mixer.SetInputMute",
     params: {
       Name: mixerName,
       Inputs: inputSelector,
-      Value: !enabled
+      Value: action === 'audio.mute'
     },
     id: makeId()
   };

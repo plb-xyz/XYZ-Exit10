@@ -1,1 +1,0 @@
-msg._spaceId = 'a1'; msg._field = 'mic1Enabled'; return msg;

@@ -1,13 +1,11 @@
-// Route levels through delay, mute bypasses
-const t = msg.topic || "";
+// Route audio commands: setLevel → output 1, mute/unmute → output 2
+const action = msg?.payload?.action;
 
-if (/^ui\/audio\/[^/]+\/level\/.+/.test(t)) {
-  // output 1 = level
+if (action === 'audio.setLevel') {
   return [msg, null];
 }
 
-if (/^ui\/audio\/[^/]+\/[^/]+\/(enabled|Enabled)$/.test(t)) {
-  // output 2 = mute
+if (action === 'audio.mute' || action === 'audio.unmute') {
   return [null, msg];
 }
 

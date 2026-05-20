@@ -15,7 +15,7 @@
             <div class="channel-label">Show</div>
             <div class="channel-level">{{ channels.show.value }} dB</div>
             <button class="mute-btn" @click="toggleMute('show')" :class="{ muted: mutedChannels.show }">
-              {{ mutedChannels.show ? 'ON' : 'MUTED' }}
+              {{ mutedChannels.show ? 'MUTED' : 'ON' }}
             </button>
           </div>
 
@@ -26,7 +26,7 @@
             <div class="channel-label">BGM</div>
             <div class="channel-level">{{ channels.bgm.value }} dB</div>
             <button class="mute-btn" @click="toggleMute('bgm')" :class="{ muted: mutedChannels.bgm }">
-              {{ mutedChannels.bgm ? 'ON' : 'MUTED' }}
+              {{ mutedChannels.bgm ? 'MUTED' : 'ON' }}
             </button>
           </div>
 
@@ -37,7 +37,7 @@
             <div class="channel-label">Special</div>
             <div class="channel-level">{{ channels.special.value }} dB</div>
             <button class="mute-btn" @click="toggleMute('special')" :class="{ muted: mutedChannels.special }">
-              {{ mutedChannels.special ? 'ON' : 'MUTED' }}
+              {{ mutedChannels.special ? 'MUTED' : 'ON' }}
             </button>
           </div>
         </div>
@@ -53,7 +53,7 @@
             <div class="channel-label">Mic 1</div>
             <div class="channel-level">{{ channels.mic1.value }} dB</div>
             <button class="mute-btn" @click="toggleMute('mic1')" :class="{ muted: mutedChannels.mic1 }">
-              {{ mutedChannels.mic1 ? 'ON' : 'MUTED' }}
+              {{ mutedChannels.mic1 ? 'MUTED' : 'ON' }}
             </button>
           </div>
 
@@ -64,7 +64,7 @@
             <div class="channel-label">Mic 2</div>
             <div class="channel-level">{{ channels.mic2.value }} dB</div>
             <button class="mute-btn" @click="toggleMute('mic2')" :class="{ muted: mutedChannels.mic2 }">
-              {{ mutedChannels.mic2 ? 'ON' : 'MUTED' }}
+              {{ mutedChannels.mic2 ? 'MUTED' : 'ON' }}
             </button>
           </div>
 
@@ -75,7 +75,7 @@
             <div class="channel-label">Mixer</div>
             <div class="channel-level">{{ channels.mixer.value }} dB</div>
             <button class="mute-btn" @click="toggleMute('mixer')" :class="{ muted: mutedChannels.mixer }">
-              {{ mutedChannels.mixer ? 'ON' : 'MUTED' }}
+              {{ mutedChannels.mixer ? 'MUTED' : 'ON' }}
             </button>
           </div>
         </div>
@@ -99,12 +99,12 @@ export default {
         mixer: { value: -10 }
       },
       mutedChannels: {
-        show: true,
-        bgm: true,
-        special: true,
-        mic1: false,
-        mic2: false,
-        mixer: false
+        show: false,
+        bgm: false,
+        special: false,
+        mic1: true,
+        mic2: true,
+        mixer: true
       },
       linkedChannels: {
         show: false,
@@ -138,7 +138,7 @@ export default {
     toggleLinkAll() {
       this.linkAll = !this.linkAll;
       Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = this.linkAll));
-      this.send({ topic: `ui/audio/linkAll`, payload: { space: this.space, linked: this.linkAll } });
+      this.send({ topic: 'audio.linkAll', payload: { space: this.space, linked: this.linkAll } });
     },
 
     updateLevel(channel) {
@@ -148,11 +148,11 @@ export default {
 
       this._lastValues[channel] = newValue;
 
-      this.send({ topic: `ui/audio/${this.space}/level/${channel}`, payload: newValue });
+      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action: 'audio.setLevel', params: { inputKey: channel, db: newValue } } });
 
       if (this.linkedChannels[channel]) {
         this.send({
-          topic: `ui/audio/linkedFader/${channel}`,
+          topic: 'audio.faderSync',
           payload: { sourceSpace: this.space, channel, delta }
         });
       }
@@ -162,16 +162,16 @@ export default {
       const newValue = Math.max(-60, Math.min(10, this.channels[channel].value + delta));
       this.channels[channel].value = newValue;
       this._lastValues[channel] = newValue;
-      this.send({ topic: `ui/audio/${this.space}/level/${channel}`, payload: newValue });
+      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action: 'audio.setLevel', params: { inputKey: channel, db: newValue } } });
     },
 
     toggleMute(channel) {
       this.mutedChannels[channel] = !this.mutedChannels[channel];
-      this.sendMuteTopic(channel);
+      this.sendMuteCmd(channel);
 
       if (this.linkedChannels[channel]) {
         this.send({
-          topic: `ui/audio/linkedMute/${channel}`,
+          topic: 'audio.muteSync',
           payload: { space: this.space, channel, muted: this.mutedChannels[channel] }
         });
       }
@@ -179,14 +179,12 @@ export default {
 
     applyLinkedMute(channel, muteState) {
       this.mutedChannels[channel] = muteState;
-      this.sendMuteTopic(channel);
+      this.sendMuteCmd(channel);
     },
 
-    sendMuteTopic(channel) {
-      this.send({
-        topic: `ui/audio/${this.space}/${channel}/enabled`,
-        payload: this.mutedChannels[channel]
-      });
+    sendMuteCmd(channel) {
+      const action = this.mutedChannels[channel] ? 'audio.mute' : 'audio.unmute';
+      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action, params: { inputKey: channel } } });
     }
   },
   mounted() {
@@ -208,8 +206,8 @@ export default {
 .vertical-fader{-webkit-appearance:slider-vertical;appearance:slider-vertical;width:100%;max-width:28px;height:100%;min-height:300px;background:linear-gradient(to right,#3a4050 0%,#4a5060 50%,#3a4050 100%);outline:none;cursor:pointer;border-radius:10px;}
 .channel-label{font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;text-align:center;min-height:20px;}
 .channel-level{font-size:12px;color:#7dd3fc;font-weight:500;text-align:center;min-height:18px;font-family:'Monaco','Courier New',monospace;}
-.mute-btn{width:100%;padding:8px 6px;background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 100%);color:#fecaca;border:2px solid #dc2626;border-radius:4px;font-weight:600;font-size:12px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;transition:all .2s ease;min-height:44px;display:flex;align-items:center;justify-content:center;min-width:80px;}
-.mute-btn.muted{background:linear-gradient(135deg,#365a40 0%,#15803d 100%);border-color:#22c55e;color:#86efac;}
+.mute-btn{width:100%;padding:8px 6px;background:linear-gradient(135deg,#365a40 0%,#15803d 100%);color:#86efac;border:2px solid #22c55e;border-radius:4px;font-weight:600;font-size:12px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;transition:all .2s ease;min-height:44px;display:flex;align-items:center;justify-content:center;min-width:80px;}
+.mute-btn.muted{background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 100%);border-color:#dc2626;color:#fecaca;}
 
 /* Optional but recommended */
 @media (max-width: 900px){
