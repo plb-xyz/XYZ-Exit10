@@ -10,6 +10,6 @@ const targets = allASpaces.filter(s => spaceStates[s] && s !== sourceSpace);
 if (targets.length === 0) return null;
 
 targets.forEach(targetSpace => {
-  node.send({ payload:{ targetSpace, channel, delta }, topic:`faderDelta/${targetSpace}/${channel}` });
+  node.send({ topic: 'audio.faderDelta', payload: { targetSpace, channel, delta } });
 });
 node.status({ fill:'green', shape:'dot', text:`${channel}: delta ${delta}` });

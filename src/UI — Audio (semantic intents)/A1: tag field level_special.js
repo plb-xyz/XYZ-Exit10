@@ -1,1 +1,0 @@
-msg._spaceId='a1'; msg._field='level_special'; return msg;

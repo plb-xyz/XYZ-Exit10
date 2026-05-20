@@ -11,7 +11,7 @@
           </div>
           <div class="channel-label">Show</div>
           <div class="channel-level">{{ channels.show.value }} dB</div>
-          <button class="mute-btn" @click="toggleMute('show')" :class="{ muted: mutedChannels.show }">Mute</button>
+          <button class="mute-btn" @click="toggleMute('show')" :class="{ muted: mutedChannels.show }">{{ mutedChannels.show ? 'MUTED' : 'ON' }}</button>
         </div>
 
         <!-- BGM Channel -->
@@ -21,7 +21,7 @@
           </div>
           <div class="channel-label">BGM</div>
           <div class="channel-level">{{ channels.bgm.value }} dB</div>
-          <button class="mute-btn" @click="toggleMute('bgm')" :class="{ muted: mutedChannels.bgm }">Mute</button>
+          <button class="mute-btn" @click="toggleMute('bgm')" :class="{ muted: mutedChannels.bgm }">{{ mutedChannels.bgm ? 'MUTED' : 'ON' }}</button>
         </div>
 
         <!-- Special Channel -->
@@ -31,7 +31,7 @@
           </div>
           <div class="channel-label">Special</div>
           <div class="channel-level">{{ channels.special.value }} dB</div>
-          <button class="mute-btn" @click="toggleMute('special')" :class="{ muted: mutedChannels.special }">Mute</button>
+          <button class="mute-btn" @click="toggleMute('special')" :class="{ muted: mutedChannels.special }">{{ mutedChannels.special ? 'MUTED' : 'ON' }}</button>
         </div>
       </div>
     </div>
@@ -47,7 +47,7 @@
           </div>
           <div class="channel-label">Mic 1</div>
           <div class="channel-level">{{ channels.mic1.value }} dB</div>
-          <button class="mute-btn" @click="toggleMute('mic1')" :class="{ muted: mutedChannels.mic1 }">Mute</button>
+          <button class="mute-btn" @click="toggleMute('mic1')" :class="{ muted: mutedChannels.mic1 }">{{ mutedChannels.mic1 ? 'MUTED' : 'ON' }}</button>
         </div>
 
         <!-- Mic2 Channel -->
@@ -57,7 +57,7 @@
           </div>
           <div class="channel-label">Mic 2</div>
           <div class="channel-level">{{ channels.mic2.value }} dB</div>
-          <button class="mute-btn" @click="toggleMute('mic2')" :class="{ muted: mutedChannels.mic2 }">Mute</button>
+          <button class="mute-btn" @click="toggleMute('mic2')" :class="{ muted: mutedChannels.mic2 }">{{ mutedChannels.mic2 ? 'MUTED' : 'ON' }}</button>
         </div>
 
         <!-- Mixer Channel -->
@@ -67,7 +67,7 @@
           </div>
           <div class="channel-label">Mixer</div>
           <div class="channel-level">{{ channels.mixer.value }} dB</div>
-          <button class="mute-btn" @click="toggleMute('mixer')" :class="{ muted: mutedChannels.mixer }">Mute</button>
+          <button class="mute-btn" @click="toggleMute('mixer')" :class="{ muted: mutedChannels.mixer }">{{ mutedChannels.mixer ? 'MUTED' : 'ON' }}</button>
         </div>
       </div>
     </div>
@@ -206,9 +206,9 @@
   .mute-btn {
     width: 100%;
     padding: 8px 6px;
-    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
-    color: #fecaca;
-    border: 2px solid #dc2626;
+    background: linear-gradient(135deg, #365a40 0%, #15803d 100%);
+    color: #86efac;
+    border: 2px solid #22c55e;
     border-radius: 4px;
     font-weight: 600;
     font-size: 12px;
@@ -224,8 +224,8 @@
   }
 
   .mute-btn:hover:not(.muted) {
-    background: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%);
-    border-color: #f87171;
+    background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);
+    border-color: #4ade80;
     box-shadow: 0 0 12px rgba(220, 38, 38, 0.3);
   }
 
@@ -234,13 +234,13 @@
   }
 
   .mute-btn.muted {
-    background: linear-gradient(135deg, #365a40 0%, #15803d 100%);
-    border-color: #22c55e;
-    color: #86efac;
+    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+    border-color: #dc2626;
+    color: #fecaca;
   }
 
   .mute-btn.muted:hover {
-    background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);
+    background: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%);
     box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
   }
 
@@ -307,35 +307,12 @@
       updateLevel(channel, event) {
         const value = parseInt(event.target.value);
         this.channels[channel].value = value;
-
-        let topic = '';
-        if (channel === 'show') topic = 'ui/audio/ls/level/show';
-        else if (channel === 'bgm') topic = 'ui/audio/ls/level/bgm';
-        else if (channel === 'special') topic = 'ui/audio/ls/level/special';
-        else if (channel === 'mic1') topic = 'ui/audio/ls/level/mic1';
-        else if (channel === 'mic2') topic = 'ui/audio/ls/level/mic2';
-        else if (channel === 'mixer') topic = 'ui/audio/ls/level/mixer';
-
-        this.send({
-          topic: topic,
-          payload: value
-        });
+        this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: 'ls.audio', action: 'audio.setLevel', params: { inputKey: channel, db: value } } });
       },
       toggleMute(channel) {
         this.mutedChannels[channel] = !this.mutedChannels[channel];
-        
-        let topic = '';
-        if (channel === 'show') topic = 'ui/audio/ls/show/enabled';
-        else if (channel === 'bgm') topic = 'ui/audio/ls/bgm/enabled';
-        else if (channel === 'special') topic = 'ui/audio/ls/special/enabled';
-        else if (channel === 'mic1') topic = 'ui/audio/ls/mic1/enabled';
-        else if (channel === 'mic2') topic = 'ui/audio/ls/mic2/enabled';
-        else if (channel === 'mixer') topic = 'ui/audio/ls/mixer/enabled';
-        
-        this.send({
-          topic: topic,
-          payload: !this.mutedChannels[channel]
-        });
+        const action = this.mutedChannels[channel] ? 'audio.mute' : 'audio.unmute';
+        this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: 'ls.audio', action, params: { inputKey: channel } } });
       }
     }
   };

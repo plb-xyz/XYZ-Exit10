@@ -4,7 +4,7 @@
 //
 // Expected input (msg.payload):
 //   Timelines:
-//     { command: "start"|"stop"|"pause", timelineKey: "show_1" }
+//     { command: "play"|"stop"|"pause", timelineKey: "show_1" }
 //     { command: "playAll" }
 //     { command: "getState" }
 //
@@ -89,7 +89,8 @@ switch (command) {
         return [msg, null];
     }
 
-    case 'start':
+    case 'play':
+    case 'start': // backward-compat alias for 'play'
     case 'stop':
     case 'pause': {
         const timelineKey = input.timelineKey;
