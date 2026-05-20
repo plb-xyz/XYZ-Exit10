@@ -31,13 +31,13 @@
       }
     }
   },
-  "special_overlay_1": {
-    "displayName": "Special Overlay 1",
+  "special_on_top_1": {
+    "displayName": "Special On Top 1",
     "watchoutTimelineId": "2",
     "cues": {}
   },
-  "ambience1_a1": {
-    "displayName": "Ambience1_a1",
+  "ambience_1_a1": {
+    "displayName": "Ambience 1 A1",
     "watchoutTimelineId": "3",
     "cues": {}
   },
@@ -56,8 +56,8 @@
       }
     }
   },
-  "special_overlay_2": {
-    "displayName": "Special Overlay 2",
+  "special_fullscreen_2": {
+    "displayName": "Special Fullscreen 2",
     "watchoutTimelineId": "6",
     "cues": {}
   },
@@ -110,8 +110,8 @@
       }
     }
   },
-  "spcial_3": {
-    "displayName": "Spcial 3",
+  "special_on_top_2": {
+    "displayName": "Special On Top 2",
     "watchoutTimelineId": "13",
     "cues": {}
   },
@@ -125,19 +125,24 @@
     "watchoutTimelineId": "15",
     "cues": {}
   },
-  "ambience1_a2": {
-    "displayName": "Ambience1_a2",
+  "ambience_1_a2": {
+    "displayName": "Ambience 1 A2",
     "watchoutTimelineId": "16",
     "cues": {}
   },
-  "ambience1_a3": {
-    "displayName": "Ambience1_a3",
+  "ambience_1_a3": {
+    "displayName": "Ambience 1 A3",
     "watchoutTimelineId": "17",
     "cues": {}
   },
   "show1_a3_for_prog": {
     "displayName": "Show1_a3 (for prog)",
     "watchoutTimelineId": "18",
+    "cues": {}
+  },
+  "timeline_1": {
+    "displayName": "Timeline 1",
+    "watchoutTimelineId": "19",
     "cues": {}
   }
 }

@@ -431,11 +431,12 @@
             "11640e038d97c965",
             "26a8ee30820da650",
             "e57e82ddaea146c1",
-            "93bbda1dc613d890"
+            "93bbda1dc613d890",
+            "3d57895629297c20"
         ],
         "x": 14,
         "y": 79,
-        "w": 2012,
+        "w": 2002,
         "h": 362
     },
     {
@@ -8196,10 +8197,10 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "{\"playableId\":\"show_1\",\"kind\":\"start\",\"source\":\"ui\"}",
+        "payload": "{\"v\":1,\"source\":\"ui\",\"action\":\"show.go\",\"params\":{\"key\":\"show_1\"}}",
         "payloadType": "json",
         "x": 110,
-        "y": 160,
+        "y": 120,
         "wires": [
             [
                 "orch-norm-intent"
@@ -8568,6 +8569,32 @@
         "y": 740,
         "wires": [
             []
+        ]
+    },
+    {
+        "id": "3d57895629297c20",
+        "type": "inject",
+        "z": "orch-tab",
+        "g": "orch-group",
+        "name": "Ambience 1",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"v\":1,\"source\":\"ui\",\"action\":\"content.go\",\"params\":{\"key\":\"ambience_1\"}}",
+        "payloadType": "json",
+        "x": 130,
+        "y": 160,
+        "wires": [
+            [
+                "orch-norm-intent"
+            ]
         ]
     },
     {
