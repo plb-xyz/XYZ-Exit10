@@ -423,7 +423,7 @@
         ],
         "x": 14,
         "y": 79,
-        "w": 2012,
+        "w": 2002,
         "h": 362
     },
     {
@@ -5444,7 +5444,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "{ \"command\": \"start\", \"timelineKey\": \"show_2\" }",
+        "payload": "{\"command\":\"play\",\"timelineKey\":\"show_2\"}",
         "payloadType": "json",
         "x": 170,
         "y": 780,

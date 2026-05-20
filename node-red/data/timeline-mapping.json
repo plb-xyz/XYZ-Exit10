@@ -46,8 +46,8 @@
     "watchoutTimelineId": "4",
     "cues": {}
   },
-  "transition_1_a2": {
-    "displayName": "Transition 1 A2",
+  "transition_a2": {
+    "displayName": "Transition A2",
     "watchoutTimelineId": "5",
     "cues": {
       "trans_start": {
@@ -96,8 +96,8 @@
     "watchoutTimelineId": "11",
     "cues": {}
   },
-  "transition_1_a1": {
-    "displayName": "Transition 1 A1",
+  "transition_a1": {
+    "displayName": "Transition A1",
     "watchoutTimelineId": "12",
     "cues": {
       "transition_full": {
@@ -115,8 +115,8 @@
     "watchoutTimelineId": "13",
     "cues": {}
   },
-  "transition_1_a3": {
-    "displayName": "Transition 1 A3",
+  "transition_a3": {
+    "displayName": "Transition A3",
     "watchoutTimelineId": "14",
     "cues": {}
   },
