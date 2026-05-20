@@ -159,7 +159,7 @@ target adapter, plus adapter-specific fields:
 
 ```js
 // Watchout action — uses key-based control (see docs/watchout-http-integration.md)
-{ type: 'watchout', command: 'start', timelineKey: 'ambience_1_a2' }
+{ type: 'watchout', command: 'play', timelineKey: 'ambience_1_a2' }
 
 // MA action — resolved via flow.ma_cue_mapping[space][labelId]
 { type: 'ma', command: 'GoCue', space: 'a2', labelId: 'ambience_1' }
@@ -345,10 +345,10 @@ Ambience 1 across all spaces):
 
 ```js
 actionMap['ambience_1'] = [
-  { type: 'watchout', command: 'start', timelineKey: 'ambience_1_a1' },
-  { type: 'watchout', command: 'start', timelineKey: 'ambience_1_a2' },
-  { type: 'watchout', command: 'start', timelineKey: 'ambience_1_a3' },
-  { type: 'watchout', command: 'start', timelineKey: 'bg_music_1' },
+  { type: 'watchout', command: 'play', timelineKey: 'ambience_1_a1' },
+  { type: 'watchout', command: 'play', timelineKey: 'ambience_1_a2' },
+  { type: 'watchout', command: 'play', timelineKey: 'ambience_1_a3' },
+  { type: 'watchout', command: 'play', timelineKey: 'bg_music_1' },
   { type: 'ma', command: 'GoCue', space: 'a1', labelId: 'ambience_1' },
   { type: 'ma', command: 'GoCue', space: 'a2', labelId: 'ambience_1' },
   { type: 'ma', command: 'GoCue', space: 'a3', labelId: 'ambience_1' },
@@ -367,7 +367,7 @@ keeping only actions that:
 
 ```js
 [
-  { type: 'watchout', command: 'start', timelineKey: 'ambience_1_a2' },
+  { type: 'watchout', command: 'play', timelineKey: 'ambience_1_a2' },
   { type: 'ma',       command: 'GoCue', space: 'a2', labelId: 'ambience_1' },
   { type: 'qsys',     command: 'RecallScene', scene: 'Ambience' },
   { type: 'qsys',     command: 'SetBgmMute', value: 0 }
@@ -386,7 +386,7 @@ The Director adds run metadata to each action:
 ```js
 // Step 1 of 4
 { runId: 'run_abc123', step: 1, total: 4,
-  action: { type: 'watchout', command: 'start', timelineKey: 'ambience_1_a2' } }
+  action: { type: 'watchout', command: 'play', timelineKey: 'ambience_1_a2' } }
 
 // Step 2 of 4
 { runId: 'run_abc123', step: 2, total: 4,

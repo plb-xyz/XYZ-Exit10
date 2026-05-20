@@ -285,6 +285,7 @@
   export default {
     data() {
       return {
+        space: 'ls',
         channels: {
           show: { value: 0 },
           bgm: { value: -20 },
@@ -304,6 +305,32 @@
       };
     },
     methods: {
+      applyMsg(msg) {
+        const p = msg?.payload;
+        if (!p) return;
+
+        // audio.init — seed display from Q-SYS state on connect, no echo back
+        if (msg.topic === 'audio.init') {
+          if (!p.space || p.space === this.space) this.applyInitialState(p);
+          return;
+        }
+      },
+
+      applyInitialState(state) {
+        if (state.channels) {
+          for (const [ch, val] of Object.entries(state.channels)) {
+            if (this.channels[ch] !== undefined)
+              this.channels[ch].value = Math.max(-60, Math.min(10, val));
+          }
+        }
+        if (state.mutes) {
+          for (const [ch, muted] of Object.entries(state.mutes)) {
+            if (this.mutedChannels[ch] !== undefined)
+              this.mutedChannels[ch] = muted;
+          }
+        }
+      },
+
       updateLevel(channel, event) {
         const value = parseInt(event.target.value);
         this.channels[channel].value = value;
@@ -314,6 +341,9 @@
         const action = this.mutedChannels[channel] ? 'audio.mute' : 'audio.unmute';
         this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: 'ls.audio', action, params: { inputKey: channel } } });
       }
+    },
+    mounted() {
+      this.$watch(() => this.msg, m => this.applyMsg(m), { deep: true, immediate: true });
     }
   };
 </script>

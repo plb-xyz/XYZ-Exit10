@@ -18,6 +18,10 @@
 //     { type: 'qsys', command: 'RecallScene', scene: 'preshow' }
 //     { type: 'qsys', command: 'SetBgmMute',  value: 0 }
 //
+//   Q-Sys — direct mixer fade (ramp in seconds, handled by QRC router):
+//     { type: 'qsys', command: 'audio.setLevel', target: 'a1.audio', params: { inputKey: 'bgm',  db: -60, ramp: 3 } }
+//     { type: 'qsys', command: 'audio.setLevel', target: 'a1.audio', params: { inputKey: 'show', db: 0,   ramp: 2 } }
+//
 // Optional: label (string) — shown in debug panel only, never executed.
 // Notes:
 // - The Director executes actions in order.
@@ -36,19 +40,34 @@ function buildShowRecipe(showKey) {
       { label: 'Start A3 video transition', type: 'watchout', command: 'play', timelineKey: 'transition_a3' },
       { label: 'MA — preshow cue',          type: 'ma',       command: 'GoCue',        target: 'mx', labelId: 'preshow' },
       { label: 'Q-Sys — preshow snapshot',  type: 'qsys',     command: 'RecallScene', scene: 'preshow' },
-      { label: 'Pharos — preshow cue',      type: 'pharos',   command: 'Trigger',      triggerId: 'preshow' }
+      { label: 'Pharos — preshow cue',      type: 'pharos',   command: 'Trigger',      triggerId: 'preshow' },
+      // Fade BGM out across all spaces ahead of show start (3s)
+      { label: 'Fade BGM out — A1', type: 'qsys', command: 'audio.setLevel', target: 'a1.audio', params: { inputKey: 'bgm',  db: -60, ramp: 3 } },
+      { label: 'Fade BGM out — A2', type: 'qsys', command: 'audio.setLevel', target: 'a2.audio', params: { inputKey: 'bgm',  db: -60, ramp: 3 } },
+      { label: 'Fade BGM out — A3', type: 'qsys', command: 'audio.setLevel', target: 'a3.audio', params: { inputKey: 'bgm',  db: -60, ramp: 3 } }
     ],
     onCue: {
       all_opaque: [
         { label: `Start Show ${showNum} unified timeline`, type: 'watchout', command: 'play', timelineKey: showKey },
         { label: `Show ${showNum} — MA show cue`,          type: 'ma',       command: 'GoCue',        target: 'mx', labelId: showKey },
-        { label: `Show ${showNum} — Q-Sys snapshot`,       type: 'qsys',     command: 'RecallScene', scene: showKey }
+        { label: `Show ${showNum} — Q-Sys snapshot`,       type: 'qsys',     command: 'RecallScene', scene: showKey },
+        // Fade show audio in (2s) once screen goes opaque
+        { label: `Fade show in — A1`, type: 'qsys', command: 'audio.setLevel', target: 'a1.audio', params: { inputKey: 'show', db: 0, ramp: 2 } },
+        { label: `Fade show in — A2`, type: 'qsys', command: 'audio.setLevel', target: 'a2.audio', params: { inputKey: 'show', db: 0, ramp: 2 } },
+        { label: `Fade show in — A3`, type: 'qsys', command: 'audio.setLevel', target: 'a3.audio', params: { inputKey: 'show', db: 0, ramp: 2 } }
       ]
     },
     onEnd: [
       { label: 'Stop show timeline',         type: 'watchout', command: 'stop',         timelineKey: showKey },
       { label: 'MA — post-show return',      type: 'ma',       command: 'GoCue',        target: 'cmd', labelId: 'post_show_return' },
-      { label: 'Q-Sys — return to ambience', type: 'qsys',     command: 'RecallScene', scene: 'ambience_bgm' }
+      { label: 'Q-Sys — return to ambience', type: 'qsys',     command: 'RecallScene', scene: 'ambience_bgm' },
+      // Fade show audio out, BGM back up
+      { label: 'Fade show out — A1', type: 'qsys', command: 'audio.setLevel', target: 'a1.audio', params: { inputKey: 'show', db: -60, ramp: 3 } },
+      { label: 'Fade show out — A2', type: 'qsys', command: 'audio.setLevel', target: 'a2.audio', params: { inputKey: 'show', db: -60, ramp: 3 } },
+      { label: 'Fade show out — A3', type: 'qsys', command: 'audio.setLevel', target: 'a3.audio', params: { inputKey: 'show', db: -60, ramp: 3 } },
+      { label: 'Fade BGM in — A1',   type: 'qsys', command: 'audio.setLevel', target: 'a1.audio', params: { inputKey: 'bgm',  db: -20, ramp: 4 } },
+      { label: 'Fade BGM in — A2',   type: 'qsys', command: 'audio.setLevel', target: 'a2.audio', params: { inputKey: 'bgm',  db: -20, ramp: 4 } },
+      { label: 'Fade BGM in — A3',   type: 'qsys', command: 'audio.setLevel', target: 'a3.audio', params: { inputKey: 'bgm',  db: -20, ramp: 4 } }
     ]
   };
 }

@@ -26,9 +26,23 @@ const inputsPerSpace = {
 
 // ====== internal logic (no edits needed) ======
 
-if (msg.topic !== 'cmd') return null;
+// Accept two shapes:
+//  A) UI cmd bus:  msg.topic === 'cmd', msg.payload = { action, target, params }
+//  B) Director:   msg.payload = { runId, step, total, action: { type:'qsys', command, target, params } }
+let env;
+if (msg.topic === 'cmd') {
+  env = msg.payload || {};
+} else {
+  // Director-originated: unwrap the action object into the same shape
+  const dirAction = (msg.payload || {}).action || {};
+  if (dirAction.type !== 'qsys') return null;
+  env = {
+    action: dirAction.command,
+    target: dirAction.target,
+    params: dirAction.params || {}
+  };
+}
 
-const env = msg.payload || {};
 const action = env.action;
 const target = env.target;
 const params = env.params || {};
@@ -65,14 +79,16 @@ if (action === 'audio.setLevel') {
   let val = Number(params.db);
   if (Number.isNaN(val)) return null;
   val = Math.max(-60, Math.min(10, val));
+  const qrcParams = {
+    Name: mixerName,
+    Inputs: inputSelector,
+    Value: val
+  };
+  if (params.ramp != null) qrcParams.Ramp = Number(params.ramp);
   req = {
     jsonrpc: "2.0",
     method: "Mixer.SetInputGain",
-    params: {
-      Name: mixerName,
-      Inputs: inputSelector,
-      Value: val
-    },
+    params: qrcParams,
     id: makeId()
   };
 }

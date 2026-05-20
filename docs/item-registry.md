@@ -390,13 +390,13 @@ Start ambience on everything in Atrium 1 (video, audio, lighting all get the com
 ```
 
 ### Example 2 — Show start
-Start the show everywhere.
+Start the show everywhere (all client-controlled items).
 
 ```json
 {
   "v": 1,
   "source": "scheduler",
-  //"target": { "tags": ["xyz", "in", "out"] },
+  "target": { "tags": ["xyz"] },
   "action": "show.go",
   "params": { "key": "show_1" }
 }
@@ -404,16 +404,14 @@ Start the show everywhere.
 
 ---
 
-### Example 2 — Show start (only in some areas)
-Start the show only in a specific area. in that case it is a fullscreen content? or new category?
-I think it's still A SHOW, the logic will resolve what to do with the target.
-//
+### Example 3 — Show start (specific zone)
+Start the show in a specific zone only. The logic still classifies this as a show; the target limits which items receive cues.
 
 ```json
 {
   "v": 1,
   "source": "scheduler",
-  "target": "a3", // don't need it because the show is programmed that way? but it shouldn't send cues to all the external things.
+  "target": "a3",
   "action": "show.go",
   "params": { "key": "show_transformer" }
 }
@@ -421,14 +419,14 @@ I think it's still A SHOW, the logic will resolve what to do with the target.
 
 ---
 
-### Example 1 — Start special on top
-Start ambience on everything in Atrium 1 (video, audio, lighting all get the command; adapters filter what's relevant per system).
+### Example 4 — Start special content across main spaces
+Start a special overlay across A1, A2, A3, and Landscape simultaneously.
 
 ```json
 {
   "v": 1,
   "source": "ui",
-  //"target": "a1, a2, a3, ls",
+  "target": ["a1", "a2", "a3", "ls"],
   "action": "content.go",
   "params": { "key": "special_ontop_3" }
 }
@@ -436,8 +434,8 @@ Start ambience on everything in Atrium 1 (video, audio, lighting all get the com
 
 ---
 
-### Example 3 — Target video in a zone
-Start video ambience in Atrium 1 // only video
+### Example 5 — Target video in a zone
+Start video ambience in Atrium 1 (video only — lighting and audio untouched).
 
 ```json
 {
@@ -451,7 +449,7 @@ Start video ambience in Atrium 1 // only video
 
 ---
 
-### Example 4 — Plays a special content
+### Example 6 — Plays a special content
 Definition of what is included is done in a different place.
 
 ```json
@@ -466,7 +464,7 @@ Definition of what is included is done in a different place.
 
 ---
 
-### Example 1 — Target one item
+### Example 7 — Target one item
 Start a specific ambience on the A1 Ribbon LED only.
 
 ```json
@@ -482,7 +480,7 @@ Start a specific ambience on the A1 Ribbon LED only.
 
 ---
 
-### Example 3 — Target all three atriums (array of zones)
+### Example 8 — Target all three atriums (array of zones)
 Trigger the same ambience across A1, A2, and A3 simultaneously.
 
 ```json
@@ -497,7 +495,7 @@ Trigger the same ambience across A1, A2, and A3 simultaneously.
 
 ---
 
-### Example 5 — Target only video in A1
+### Example 9 — Target only video in A1
 Play a special overlay on A1 video screens only, without touching lighting or audio.
 
 ```json
@@ -514,7 +512,7 @@ Resolves to: `[ a1.ribbonLed, a1.sphereLed, a1.columnLed ]`
 
 ---
 
-### Example 6 — Target only lighting in A1
+### Example 10 — Target only lighting in A1
 Trigger a lighting cue on all A1 lighting elements (MA-controlled) without affecting video.
 
 ```json
@@ -531,7 +529,7 @@ Resolves to: `[ a1.movingLights, a1.wisk, a1.arch, a1.hublessWheel.movingLights,
 
 ---
 
-### Example 7 — Target only moving lights across all atriums
+### Example 11 — Target only moving lights across all atriums
 A moving-lights-only cue across A1, A2, A3 simultaneously.
 
 ```json
@@ -548,7 +546,7 @@ Resolves to: `[ a1.movingLights, a2.movingLights, a3.movingLights, a1.hublessWhe
 
 ---
 
-### Example 8 — Target the Hubless Wheel as a group
+### Example 12 — Target the Hubless Wheel as a group
 Address all hubless wheel elements together using the `hublessWheel` sub-group tag.
 
 ```json
@@ -565,7 +563,7 @@ Resolves to: `[ a1.hublessWheel.movingLights, a1.hublessWheel.ring, a1.hublessWh
 
 ---
 
-### Example 9 — Target all audio indoors
+### Example 13 — Target all audio indoors
 Set BGM level for every indoor audio zone.
 
 ```json
@@ -582,7 +580,7 @@ Resolves to: `[ a1.audio, a2.audio, a3.audio, sb.transformerAudio, it.audio ]`
 
 ---
 
-### Example 10 — Simple event in A2 (reduce BGM)
+### Example 14 — Simple event in A2 (reduce BGM)
 Reduce background music in A2 only for a simple event, without touching other spaces.
 
 ```json
@@ -597,7 +595,7 @@ Reduce background music in A2 only for a simple event, without touching other sp
 
 ---
 
-### Example 11 — Explicit list (mixed zones and items)
+### Example 15 — Explicit list (mixed zones and items)
 A custom selection — all of A2, plus just the ribbon and audio from A1.
 
 ```json
@@ -612,7 +610,7 @@ A custom selection — all of A2, plus just the ribbon and audio from A1.
 
 ---
 
-### Example 12 — Water features + outdoor lighting together
+### Example 16 — Water features + outdoor lighting together
 Trigger water features and outdoor landscape lighting for a pre-show outdoor moment.
 
 ```json
@@ -627,7 +625,7 @@ Trigger water features and outdoor landscape lighting for a pre-show outdoor mom
 
 ---
 
-### Example 13 — Target all outdoors
+### Example 17 — Target all outdoors
 Stop everything outdoors at end of day.
 
 ```json
@@ -642,7 +640,7 @@ Stop everything outdoors at end of day.
 
 ---
 
-### Example 14 — Full global stop
+### Example 18 — Full global stop
 Stop everything, everywhere.
 
 ```json

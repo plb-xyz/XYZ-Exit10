@@ -114,13 +114,18 @@
         mic2: false,
         mixer: false
       },
-      _lastValues: {}
     };
   },
   methods: {
     applyMsg(msg) {
       const p = msg?.payload;
       if (!p) return;
+
+      // audio.init — seed display from Q-SYS state on connect, no echo back
+      if (msg.topic === 'audio.init') {
+        if (!p.space || p.space === this.space) this.applyInitialState(p);
+        return;
+      }
 
       const channel = p.channel;
       const targetSpace = p.space || p.targetSpace;
@@ -131,8 +136,23 @@
         Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = p.setLinkedAll));
       }
       if (p.setLinked !== undefined) this.linkedChannels[channel] = p.setLinked;
-      if (p.delta !== undefined) this.applyLinkedFaderDelta(channel, p.delta);
+      if (p.value !== undefined) this.applyLinkedFaderValue(channel, p.value);
       if (p.muted !== undefined) this.applyLinkedMute(channel, p.muted);
+    },
+
+    applyInitialState(state) {
+      if (state.channels) {
+        for (const [ch, val] of Object.entries(state.channels)) {
+          if (this.channels[ch] !== undefined)
+            this.channels[ch].value = Math.max(-60, Math.min(10, val));
+        }
+      }
+      if (state.mutes) {
+        for (const [ch, muted] of Object.entries(state.mutes)) {
+          if (this.mutedChannels[ch] !== undefined)
+            this.mutedChannels[ch] = muted;
+        }
+      }
     },
 
     toggleLinkAll() {
@@ -143,25 +163,20 @@
 
     updateLevel(channel) {
       const newValue = this.channels[channel].value;
-      const oldValue = this._lastValues[channel] ?? newValue;
-      const delta = newValue - oldValue;
-
-      this._lastValues[channel] = newValue;
 
       this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action: 'audio.setLevel', params: { inputKey: channel, db: newValue } } });
 
       if (this.linkedChannels[channel]) {
         this.send({
           topic: 'audio.faderSync',
-          payload: { sourceSpace: this.space, channel, delta }
+          payload: { sourceSpace: this.space, channel, value: newValue }
         });
       }
     },
 
-    applyLinkedFaderDelta(channel, delta) {
-      const newValue = Math.max(-60, Math.min(10, this.channels[channel].value + delta));
+    applyLinkedFaderValue(channel, value) {
+      const newValue = Math.max(-60, Math.min(10, value));
       this.channels[channel].value = newValue;
-      this._lastValues[channel] = newValue;
       this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action: 'audio.setLevel', params: { inputKey: channel, db: newValue } } });
     },
 

@@ -3831,7 +3831,7 @@
         "name": "Atrium 1",
         "info": "",
         "x": 160,
-        "y": 620,
+        "y": 760,
         "wires": []
     },
     {
@@ -3841,7 +3841,7 @@
         "name": "Atrium 2",
         "info": "",
         "x": 160,
-        "y": 800,
+        "y": 900,
         "wires": []
     },
     {
@@ -3851,230 +3851,8 @@
         "name": "Atrium 3",
         "info": "",
         "x": 160,
-        "y": 980,
+        "y": 1080,
         "wires": []
-    },
-    {
-        "id": "3b885ccf15fd5485",
-        "type": "ui-button",
-        "z": "8ccf58caed82bbf6",
-        "group": "23200f99e87865d6",
-        "name": "Show Music",
-        "label": "Show Music (WO 5-64)",
-        "order": 1,
-        "width": "2",
-        "height": "1",
-        "emulateClick": false,
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "mdi mdi-video-vintage",
-        "iconPosition": "left",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "pointerdownPayload": "",
-        "pointerdownPayloadType": "str",
-        "enablePointerup": false,
-        "pointerupPayload": "",
-        "pointerupPayloadType": "str",
-        "x": 150,
-        "y": 160,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "e40c50ad25ff4955",
-        "type": "ui-button",
-        "z": "8ccf58caed82bbf6",
-        "group": "23200f99e87865d6",
-        "name": "BG Music",
-        "label": "BG Music (WO 3-4)",
-        "order": 2,
-        "width": "2",
-        "height": "1",
-        "emulateClick": false,
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "mdi mdi-music",
-        "iconPosition": "left",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "pointerdownPayload": "",
-        "pointerdownPayloadType": "str",
-        "enablePointerup": false,
-        "pointerupPayload": "",
-        "pointerupPayloadType": "str",
-        "x": 320,
-        "y": 160,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "d3057fe837f1915e",
-        "type": "ui-button",
-        "z": "8ccf58caed82bbf6",
-        "group": "23200f99e87865d6",
-        "name": "Special Content",
-        "label": "Special Content (WO 1-2)",
-        "order": 3,
-        "width": "2",
-        "height": "1",
-        "emulateClick": false,
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "mdi-star-four-points-box",
-        "iconPosition": "left",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "pointerdownPayload": "",
-        "pointerdownPayloadType": "str",
-        "enablePointerup": false,
-        "pointerupPayload": "",
-        "pointerupPayloadType": "str",
-        "x": 480,
-        "y": 160,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "560d7b9e5110fda9",
-        "type": "ui-button",
-        "z": "8ccf58caed82bbf6",
-        "group": "23200f99e87865d6",
-        "name": "Live Mixer",
-        "label": "Live Mixer",
-        "order": 4,
-        "width": "2",
-        "height": "1",
-        "emulateClick": false,
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "mdi-microphone-variant",
-        "iconPosition": "left",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "pointerdownPayload": "",
-        "pointerdownPayloadType": "str",
-        "enablePointerup": false,
-        "pointerupPayload": "",
-        "pointerupPayloadType": "str",
-        "x": 690,
-        "y": 160,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "7c4a394b89130aef",
-        "type": "ui-button",
-        "z": "8ccf58caed82bbf6",
-        "group": "23200f99e87865d6",
-        "name": "None (Mute)",
-        "label": "None (Mute)",
-        "order": 6,
-        "width": "2",
-        "height": "1",
-        "emulateClick": false,
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "mdi mdi-volume-off",
-        "iconPosition": "left",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "pointerdownPayload": "",
-        "pointerdownPayloadType": "str",
-        "enablePointerup": false,
-        "pointerupPayload": "",
-        "pointerupPayloadType": "str",
-        "x": 870,
-        "y": 160,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "02e884e848eaae2f",
-        "type": "ui-button",
-        "z": "8ccf58caed82bbf6",
-        "group": "23200f99e87865d6",
-        "name": "Live Microphones",
-        "label": "Live Microphones",
-        "order": 5,
-        "width": "2",
-        "height": "1",
-        "emulateClick": false,
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "mdi-microphone-variant",
-        "iconPosition": "left",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "buttonColor": "",
-        "textColor": "",
-        "iconColor": "",
-        "enableClick": true,
-        "enablePointerdown": false,
-        "pointerdownPayload": "",
-        "pointerdownPayloadType": "str",
-        "enablePointerup": false,
-        "pointerupPayload": "",
-        "pointerupPayloadType": "str",
-        "x": 710,
-        "y": 200,
-        "wires": [
-            []
-        ]
     },
     {
         "id": "f899a062eac0919f",
@@ -4104,7 +3882,7 @@
         "iconInnerPosition": "inside",
         "spinner": "default",
         "x": 150,
-        "y": 740,
+        "y": 840,
         "wires": [
             []
         ]
@@ -4137,7 +3915,7 @@
         "iconInnerPosition": "inside",
         "spinner": "default",
         "x": 310,
-        "y": 740,
+        "y": 840,
         "wires": [
             []
         ]
@@ -4174,7 +3952,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 520,
-        "y": 740,
+        "y": 840,
         "wires": [
             []
         ]
@@ -4207,7 +3985,7 @@
         "iconInnerPosition": "inside",
         "spinner": "default",
         "x": 150,
-        "y": 920,
+        "y": 1020,
         "wires": [
             []
         ]
@@ -4240,7 +4018,7 @@
         "iconInnerPosition": "inside",
         "spinner": "default",
         "x": 310,
-        "y": 920,
+        "y": 1020,
         "wires": [
             []
         ]
@@ -4277,7 +4055,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 520,
-        "y": 920,
+        "y": 1020,
         "wires": [
             []
         ]
@@ -4303,7 +4081,7 @@
         "value": "payload",
         "valueType": "msg",
         "x": 170,
-        "y": 700,
+        "y": 800,
         "wires": []
     },
     {
@@ -4327,7 +4105,7 @@
         "value": "payload",
         "valueType": "msg",
         "x": 170,
-        "y": 880,
+        "y": 980,
         "wires": []
     },
     {
@@ -4358,7 +4136,7 @@
         "iconInnerPosition": "inside",
         "spinner": "default",
         "x": 150,
-        "y": 1100,
+        "y": 1200,
         "wires": [
             []
         ]
@@ -4391,7 +4169,7 @@
         "iconInnerPosition": "inside",
         "spinner": "default",
         "x": 310,
-        "y": 1100,
+        "y": 1200,
         "wires": [
             []
         ]
@@ -4428,7 +4206,7 @@
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
         "x": 520,
-        "y": 1100,
+        "y": 1200,
         "wires": [
             []
         ]
@@ -4454,7 +4232,7 @@
         "value": "payload",
         "valueType": "msg",
         "x": 170,
-        "y": 1060,
+        "y": 1160,
         "wires": []
     },
     {
@@ -4463,8 +4241,8 @@
         "z": "8ccf58caed82bbf6",
         "name": "Landscape",
         "info": "",
-        "x": 960,
-        "y": 580,
+        "x": 160,
+        "y": 1260,
         "wires": []
     },
     {
@@ -4479,17 +4257,17 @@
         "width": "0",
         "height": "0",
         "head": "",
-        "format": "<div class=\"mixer-container\">\n  <div class=\"mixer-content\">\n    <!-- PLAYBACK GROUP -->\n    <div class=\"mixer-group\">\n      <div class=\"group-title\">Playback</div>\n      <div class=\"mixer-strips\">\n        <!-- Show Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"0\" class=\"vertical-fader\" @input=\"updateLevel('show', $event)\">\n          </div>\n          <div class=\"channel-label\">Show</div>\n          <div class=\"channel-level\">{{ channels.show.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('show')\" :class=\"{ muted: mutedChannels.show }\">{{ mutedChannels.show ? 'MUTED' : 'ON' }}</button>\n        </div>\n\n        <!-- BGM Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-20\" class=\"vertical-fader\" @input=\"updateLevel('bgm', $event)\">\n          </div>\n          <div class=\"channel-label\">BGM</div>\n          <div class=\"channel-level\">{{ channels.bgm.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('bgm')\" :class=\"{ muted: mutedChannels.bgm }\">{{ mutedChannels.bgm ? 'MUTED' : 'ON' }}</button>\n        </div>\n\n        <!-- Special Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-20\" class=\"vertical-fader\" @input=\"updateLevel('special', $event)\">\n          </div>\n          <div class=\"channel-label\">Special</div>\n          <div class=\"channel-level\">{{ channels.special.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('special')\" :class=\"{ muted: mutedChannels.special }\">{{ mutedChannels.special ? 'MUTED' : 'ON' }}</button>\n        </div>\n      </div>\n    </div>\n\n    <!-- LIVE GROUP -->\n    <div class=\"mixer-group\">\n      <div class=\"group-title\">Live</div>\n      <div class=\"mixer-strips\">\n        <!-- Mic1 Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mic1', $event)\">\n          </div>\n          <div class=\"channel-label\">Mic 1</div>\n          <div class=\"channel-level\">{{ channels.mic1.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('mic1')\" :class=\"{ muted: mutedChannels.mic1 }\">{{ mutedChannels.mic1 ? 'MUTED' : 'ON' }}</button>\n        </div>\n\n        <!-- Mic2 Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mic2', $event)\">\n          </div>\n          <div class=\"channel-label\">Mic 2</div>\n          <div class=\"channel-level\">{{ channels.mic2.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('mic2')\" :class=\"{ muted: mutedChannels.mic2 }\">{{ mutedChannels.mic2 ? 'MUTED' : 'ON' }}</button>\n        </div>\n\n        <!-- Mixer Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mixer', $event)\">\n          </div>\n          <div class=\"channel-label\">Mixer</div>\n          <div class=\"channel-level\">{{ channels.mixer.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('mixer')\" :class=\"{ muted: mutedChannels.mixer }\">{{ mutedChannels.mixer ? 'MUTED' : 'ON' }}</button>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n\n<style scoped>\n  .mixer-container {\n    display: flex;\n    flex-direction: column;\n    height: 100%;\n    background: linear-gradient(135deg, #1a1d2e 0%, #16192b 100%);\n    padding: 16px;\n    border-radius: 8px;\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;\n    color: #e0e0e0;\n  }\n\n  .mixer-content {\n    display: flex;\n    flex-direction: row;\n    gap: 40px;\n    flex: 1;\n    min-height: 0;\n  }\n\n  .mixer-group {\n    display: flex;\n    flex-direction: column;\n    gap: 12px;\n    flex: 1;\n    min-height: 0;\n  }\n\n  .group-title {\n    font-size: 13px;\n    font-weight: 700;\n    text-transform: uppercase;\n    letter-spacing: 1px;\n    color: #7dd3fc;\n    padding-bottom: 4px;\n    border-bottom: 2px solid #0891b2;\n  }\n\n  .mixer-strips {\n    display: flex;\n    gap: 30px;\n    flex: 1;\n    min-height: 0;\n    justify-content: flex-start;\n    align-items: flex-start;\n  }\n\n  .channel-strip {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    gap: 8px;\n    flex-shrink: 0;\n  }\n\n  .fader-wrapper {\n    flex: 1;\n    min-height: 300px;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n  }\n\n  .vertical-fader {\n    -webkit-appearance: slider-vertical;\n    appearance: slider-vertical;\n    width: 20px;\n    height: 100%;\n    min-height: 300px;\n    background: linear-gradient(to right, #3a4050 0%, #4a5060 50%, #3a4050 100%);\n    outline: none;\n    cursor: pointer;\n    border-radius: 10px;\n  }\n\n  .vertical-fader::-webkit-slider-thumb {\n    -webkit-appearance: slider-thumb;\n    appearance: slider-thumb;\n    width: 28px;\n    height: 28px;\n    background: radial-gradient(circle at 30% 30%, #7dd3fc, #06b6d4);\n    border: 2px solid #0891b2;\n    border-radius: 50%;\n    cursor: pointer;\n    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);\n  }\n\n  .vertical-fader::-webkit-slider-thumb:hover {\n    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);\n  }\n\n  .vertical-fader::-moz-range-thumb {\n    width: 28px;\n    height: 28px;\n    background: radial-gradient(circle at 30% 30%, #7dd3fc, #06b6d4);\n    border: 2px solid #0891b2;\n    border-radius: 50%;\n    cursor: pointer;\n    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);\n  }\n\n  .vertical-fader::-moz-range-thumb:hover {\n    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);\n  }\n\n  .vertical-fader::-moz-range-track {\n    background: transparent;\n    border: none;\n  }\n\n  .channel-label {\n    font-size: 14px;\n    font-weight: 600;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n    text-align: center;\n    min-height: 20px;\n  }\n\n  .channel-level {\n    font-size: 12px;\n    color: #7dd3fc;\n    font-weight: 500;\n    text-align: center;\n    min-height: 18px;\n    font-family: 'Monaco', 'Courier New', monospace;\n  }\n\n  .mute-btn {\n    width: 100%;\n    padding: 8px 6px;\n    background: linear-gradient(135deg, #365a40 0%, #15803d 100%);\n    color: #86efac;\n    border: 2px solid #22c55e;\n    border-radius: 4px;\n    font-weight: 600;\n    font-size: 12px;\n    cursor: pointer;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n    transition: all 0.2s ease;\n    min-height: 44px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    min-width: 80px;\n  }\n\n  .mute-btn:hover:not(.muted) {\n    background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);\n    border-color: #4ade80;\n    box-shadow: 0 0 12px rgba(220, 38, 38, 0.3);\n  }\n\n  .mute-btn:active:not(.muted) {\n    transform: scale(0.95);\n  }\n\n  .mute-btn.muted {\n    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);\n    border-color: #dc2626;\n    color: #fecaca;\n  }\n\n  .mute-btn.muted:hover {\n    background: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%);\n    box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);\n  }\n\n  @media (max-width: 768px) {\n    .mixer-content {\n      flex-direction: column;\n      gap: 20px;\n    }\n\n    .mixer-strips {\n      gap: 20px;\n    }\n\n    .fader-wrapper {\n      min-height: 240px;\n    }\n\n    .vertical-fader {\n      width: 18px;\n      min-height: 240px;\n    }\n\n    .vertical-fader::-webkit-slider-thumb {\n      width: 24px;\n      height: 24px;\n    }\n\n    .vertical-fader::-moz-range-thumb {\n      width: 24px;\n      height: 24px;\n    }\n\n    .mute-btn {\n      min-height: 40px;\n      font-size: 11px;\n      min-width: 70px;\n    }\n  }\n</style>\n\n<script>\n  export default {\n    data() {\n      return {\n        channels: {\n          show: { value: 0 },\n          bgm: { value: -20 },\n          special: { value: -20 },\n          mic1: { value: -10 },\n          mic2: { value: -10 },\n          mixer: { value: -10 }\n        },\n        mutedChannels: {\n          show: true,\n          bgm: true,\n          special: true,\n          mic1: false,\n          mic2: false,\n          mixer: false\n        }\n      };\n    },\n    methods: {\n      updateLevel(channel, event) {\n        const value = parseInt(event.target.value);\n        this.channels[channel].value = value;\n        this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: 'ls.audio', action: 'audio.setLevel', params: { inputKey: channel, db: value } } });\n      },\n      toggleMute(channel) {\n        this.mutedChannels[channel] = !this.mutedChannels[channel];\n        const action = this.mutedChannels[channel] ? 'audio.mute' : 'audio.unmute';\n        this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: 'ls.audio', action, params: { inputKey: channel } } });\n      }\n    }\n  };\n</script>",
+        "format": "<div class=\"mixer-container\">\n  <div class=\"mixer-content\">\n    <!-- PLAYBACK GROUP -->\n    <div class=\"mixer-group\">\n      <div class=\"group-title\">Playback</div>\n      <div class=\"mixer-strips\">\n        <!-- Show Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"0\" class=\"vertical-fader\" @input=\"updateLevel('show', $event)\">\n          </div>\n          <div class=\"channel-label\">Show</div>\n          <div class=\"channel-level\">{{ channels.show.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('show')\" :class=\"{ muted: mutedChannels.show }\">{{ mutedChannels.show ? 'MUTED' : 'ON' }}</button>\n        </div>\n\n        <!-- BGM Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-20\" class=\"vertical-fader\" @input=\"updateLevel('bgm', $event)\">\n          </div>\n          <div class=\"channel-label\">BGM</div>\n          <div class=\"channel-level\">{{ channels.bgm.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('bgm')\" :class=\"{ muted: mutedChannels.bgm }\">{{ mutedChannels.bgm ? 'MUTED' : 'ON' }}</button>\n        </div>\n\n        <!-- Special Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-20\" class=\"vertical-fader\" @input=\"updateLevel('special', $event)\">\n          </div>\n          <div class=\"channel-label\">Special</div>\n          <div class=\"channel-level\">{{ channels.special.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('special')\" :class=\"{ muted: mutedChannels.special }\">{{ mutedChannels.special ? 'MUTED' : 'ON' }}</button>\n        </div>\n      </div>\n    </div>\n\n    <!-- LIVE GROUP -->\n    <div class=\"mixer-group\">\n      <div class=\"group-title\">Live</div>\n      <div class=\"mixer-strips\">\n        <!-- Mic1 Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mic1', $event)\">\n          </div>\n          <div class=\"channel-label\">Mic 1</div>\n          <div class=\"channel-level\">{{ channels.mic1.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('mic1')\" :class=\"{ muted: mutedChannels.mic1 }\">{{ mutedChannels.mic1 ? 'MUTED' : 'ON' }}</button>\n        </div>\n\n        <!-- Mic2 Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mic2', $event)\">\n          </div>\n          <div class=\"channel-label\">Mic 2</div>\n          <div class=\"channel-level\">{{ channels.mic2.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('mic2')\" :class=\"{ muted: mutedChannels.mic2 }\">{{ mutedChannels.mic2 ? 'MUTED' : 'ON' }}</button>\n        </div>\n\n        <!-- Mixer Channel -->\n        <div class=\"channel-strip\">\n          <div class=\"fader-wrapper\">\n            <input type=\"range\" min=\"-60\" max=\"10\" value=\"-10\" class=\"vertical-fader\" @input=\"updateLevel('mixer', $event)\">\n          </div>\n          <div class=\"channel-label\">Mixer</div>\n          <div class=\"channel-level\">{{ channels.mixer.value }} dB</div>\n          <button class=\"mute-btn\" @click=\"toggleMute('mixer')\" :class=\"{ muted: mutedChannels.mixer }\">{{ mutedChannels.mixer ? 'MUTED' : 'ON' }}</button>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n\n<style scoped>\n  .mixer-container {\n    display: flex;\n    flex-direction: column;\n    height: 100%;\n    background: linear-gradient(135deg, #1a1d2e 0%, #16192b 100%);\n    padding: 16px;\n    border-radius: 8px;\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;\n    color: #e0e0e0;\n  }\n\n  .mixer-content {\n    display: flex;\n    flex-direction: row;\n    gap: 40px;\n    flex: 1;\n    min-height: 0;\n  }\n\n  .mixer-group {\n    display: flex;\n    flex-direction: column;\n    gap: 12px;\n    flex: 1;\n    min-height: 0;\n  }\n\n  .group-title {\n    font-size: 13px;\n    font-weight: 700;\n    text-transform: uppercase;\n    letter-spacing: 1px;\n    color: #7dd3fc;\n    padding-bottom: 4px;\n    border-bottom: 2px solid #0891b2;\n  }\n\n  .mixer-strips {\n    display: flex;\n    gap: 30px;\n    flex: 1;\n    min-height: 0;\n    justify-content: flex-start;\n    align-items: flex-start;\n  }\n\n  .channel-strip {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    gap: 8px;\n    flex-shrink: 0;\n  }\n\n  .fader-wrapper {\n    flex: 1;\n    min-height: 300px;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n  }\n\n  .vertical-fader {\n    -webkit-appearance: slider-vertical;\n    appearance: slider-vertical;\n    width: 20px;\n    height: 100%;\n    min-height: 300px;\n    background: linear-gradient(to right, #3a4050 0%, #4a5060 50%, #3a4050 100%);\n    outline: none;\n    cursor: pointer;\n    border-radius: 10px;\n  }\n\n  .vertical-fader::-webkit-slider-thumb {\n    -webkit-appearance: slider-thumb;\n    appearance: slider-thumb;\n    width: 28px;\n    height: 28px;\n    background: radial-gradient(circle at 30% 30%, #7dd3fc, #06b6d4);\n    border: 2px solid #0891b2;\n    border-radius: 50%;\n    cursor: pointer;\n    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);\n  }\n\n  .vertical-fader::-webkit-slider-thumb:hover {\n    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);\n  }\n\n  .vertical-fader::-moz-range-thumb {\n    width: 28px;\n    height: 28px;\n    background: radial-gradient(circle at 30% 30%, #7dd3fc, #06b6d4);\n    border: 2px solid #0891b2;\n    border-radius: 50%;\n    cursor: pointer;\n    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);\n  }\n\n  .vertical-fader::-moz-range-thumb:hover {\n    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);\n  }\n\n  .vertical-fader::-moz-range-track {\n    background: transparent;\n    border: none;\n  }\n\n  .channel-label {\n    font-size: 14px;\n    font-weight: 600;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n    text-align: center;\n    min-height: 20px;\n  }\n\n  .channel-level {\n    font-size: 12px;\n    color: #7dd3fc;\n    font-weight: 500;\n    text-align: center;\n    min-height: 18px;\n    font-family: 'Monaco', 'Courier New', monospace;\n  }\n\n  .mute-btn {\n    width: 100%;\n    padding: 8px 6px;\n    background: linear-gradient(135deg, #365a40 0%, #15803d 100%);\n    color: #86efac;\n    border: 2px solid #22c55e;\n    border-radius: 4px;\n    font-weight: 600;\n    font-size: 12px;\n    cursor: pointer;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n    transition: all 0.2s ease;\n    min-height: 44px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    min-width: 80px;\n  }\n\n  .mute-btn:hover:not(.muted) {\n    background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);\n    border-color: #4ade80;\n    box-shadow: 0 0 12px rgba(220, 38, 38, 0.3);\n  }\n\n  .mute-btn:active:not(.muted) {\n    transform: scale(0.95);\n  }\n\n  .mute-btn.muted {\n    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);\n    border-color: #dc2626;\n    color: #fecaca;\n  }\n\n  .mute-btn.muted:hover {\n    background: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%);\n    box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);\n  }\n\n  @media (max-width: 768px) {\n    .mixer-content {\n      flex-direction: column;\n      gap: 20px;\n    }\n\n    .mixer-strips {\n      gap: 20px;\n    }\n\n    .fader-wrapper {\n      min-height: 240px;\n    }\n\n    .vertical-fader {\n      width: 18px;\n      min-height: 240px;\n    }\n\n    .vertical-fader::-webkit-slider-thumb {\n      width: 24px;\n      height: 24px;\n    }\n\n    .vertical-fader::-moz-range-thumb {\n      width: 24px;\n      height: 24px;\n    }\n\n    .mute-btn {\n      min-height: 40px;\n      font-size: 11px;\n      min-width: 70px;\n    }\n  }\n</style>\n\n<script>\n  export default {\n    data() {\n      return {\n        space: 'ls',\n        channels: {\n          show: { value: 0 },\n          bgm: { value: -20 },\n          special: { value: -20 },\n          mic1: { value: -10 },\n          mic2: { value: -10 },\n          mixer: { value: -10 }\n        },\n        mutedChannels: {\n          show: true,\n          bgm: true,\n          special: true,\n          mic1: false,\n          mic2: false,\n          mixer: false\n        }\n      };\n    },\n    methods: {\n      applyMsg(msg) {\n        const p = msg?.payload;\n        if (!p) return;\n\n        // audio.init — seed display from Q-SYS state on connect, no echo back\n        if (msg.topic === 'audio.init') {\n          if (!p.space || p.space === this.space) this.applyInitialState(p);\n          return;\n        }\n      },\n\n      applyInitialState(state) {\n        if (state.channels) {\n          for (const [ch, val] of Object.entries(state.channels)) {\n            if (this.channels[ch] !== undefined)\n              this.channels[ch].value = Math.max(-60, Math.min(10, val));\n          }\n        }\n        if (state.mutes) {\n          for (const [ch, muted] of Object.entries(state.mutes)) {\n            if (this.mutedChannels[ch] !== undefined)\n              this.mutedChannels[ch] = muted;\n          }\n        }\n      },\n\n      updateLevel(channel, event) {\n        const value = parseInt(event.target.value);\n        this.channels[channel].value = value;\n        this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: 'ls.audio', action: 'audio.setLevel', params: { inputKey: channel, db: value } } });\n      },\n      toggleMute(channel) {\n        this.mutedChannels[channel] = !this.mutedChannels[channel];\n        const action = this.mutedChannels[channel] ? 'audio.mute' : 'audio.unmute';\n        this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: 'ls.audio', action, params: { inputKey: channel } } });\n      }\n    },\n    mounted() {\n      this.$watch(() => this.msg, m => this.applyMsg(m), { deep: true, immediate: true });\n    }\n  };\n</script>",
         "storeOutMessages": false,
         "passthru": false,
         "resendOnRefresh": true,
         "templateScope": "local",
         "className": "",
-        "x": 1010,
-        "y": 620,
+        "x": 230,
+        "y": 600,
         "wires": [
             [
-                "c93563fba9029ea1"
+                "d7e603b086d64b72"
             ]
         ]
     },
@@ -4520,8 +4298,8 @@
         "iconPosition": "left",
         "iconInnerPosition": "inside",
         "spinner": "default",
-        "x": 950,
-        "y": 700,
+        "x": 150,
+        "y": 1340,
         "wires": [
             []
         ]
@@ -4553,8 +4331,8 @@
         "iconPosition": "right",
         "iconInnerPosition": "inside",
         "spinner": "default",
-        "x": 1070,
-        "y": 700,
+        "x": 270,
+        "y": 1340,
         "wires": [
             []
         ]
@@ -4590,8 +4368,8 @@
         "enablePointerup": false,
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
-        "x": 1240,
-        "y": 700,
+        "x": 440,
+        "y": 1340,
         "wires": [
             []
         ]
@@ -4616,24 +4394,8 @@
         "className": "",
         "value": "payload",
         "valueType": "msg",
-        "x": 970,
-        "y": 660,
-        "wires": []
-    },
-    {
-        "id": "3429521ecf22a2b1",
-        "type": "debug",
-        "z": "8ccf58caed82bbf6",
-        "name": "debug 11",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 440,
-        "y": 660,
+        "x": 170,
+        "y": 1300,
         "wires": []
     },
     {
@@ -4669,7 +4431,7 @@
         "order": 1,
         "width": "0",
         "height": "0",
-        "format": "<template>\n  <div class=\"mixer-container\">\n    <button class=\"link-all-btn\" @click=\"toggleLinkAll\" :class=\"{ linked: linkAll }\">\n      🔗 LINK ATRIUMS\n    </button>\n\n    <div class=\"mixer-content\">\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Playback</div>\n        <div class=\"mixer-strips\">\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.show.value\" class=\"vertical-fader\" @input=\"updateLevel('show')\" />\n            </div>\n            <div class=\"channel-label\">Show</div>\n            <div class=\"channel-level\">{{ channels.show.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('show')\" :class=\"{ muted: mutedChannels.show }\">\n              {{ mutedChannels.show ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.bgm.value\" class=\"vertical-fader\" @input=\"updateLevel('bgm')\" />\n            </div>\n            <div class=\"channel-label\">BGM</div>\n            <div class=\"channel-level\">{{ channels.bgm.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('bgm')\" :class=\"{ muted: mutedChannels.bgm }\">\n              {{ mutedChannels.bgm ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.special.value\" class=\"vertical-fader\" @input=\"updateLevel('special')\" />\n            </div>\n            <div class=\"channel-label\">Special</div>\n            <div class=\"channel-level\">{{ channels.special.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('special')\" :class=\"{ muted: mutedChannels.special }\">\n              {{ mutedChannels.special ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Live</div>\n        <div class=\"mixer-strips\">\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mic1.value\" class=\"vertical-fader\" @input=\"updateLevel('mic1')\" />\n            </div>\n            <div class=\"channel-label\">Mic 1</div>\n            <div class=\"channel-level\">{{ channels.mic1.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic1')\" :class=\"{ muted: mutedChannels.mic1 }\">\n              {{ mutedChannels.mic1 ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mic2.value\" class=\"vertical-fader\" @input=\"updateLevel('mic2')\" />\n            </div>\n            <div class=\"channel-label\">Mic 2</div>\n            <div class=\"channel-level\">{{ channels.mic2.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic2')\" :class=\"{ muted: mutedChannels.mic2 }\">\n              {{ mutedChannels.mic2 ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mixer.value\" class=\"vertical-fader\" @input=\"updateLevel('mixer')\" />\n            </div>\n            <div class=\"channel-label\">Mixer</div>\n            <div class=\"channel-level\">{{ channels.mixer.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mixer')\" :class=\"{ muted: mutedChannels.mixer }\">\n              {{ mutedChannels.mixer ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script>\n  export default {\n  data() {\n    return {\n      space: 'a1',\n      linkAll: false,\n      channels: {\n        show: { value: 0 },\n        bgm: { value: -20 },\n        special: { value: -20 },\n        mic1: { value: -10 },\n        mic2: { value: -10 },\n        mixer: { value: -10 }\n      },\n      mutedChannels: {\n        show: false,\n        bgm: false,\n        special: false,\n        mic1: true,\n        mic2: true,\n        mixer: true\n      },\n      linkedChannels: {\n        show: false,\n        bgm: false,\n        special: false,\n        mic1: false,\n        mic2: false,\n        mixer: false\n      },\n      _lastValues: {}\n    };\n  },\n  methods: {\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p) return;\n\n      const channel = p.channel;\n      const targetSpace = p.space || p.targetSpace;\n      if (targetSpace && targetSpace !== this.space) return;\n\n      if (p.setLinkedAll !== undefined) {\n        this.linkAll = p.setLinkedAll;\n        Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = p.setLinkedAll));\n      }\n      if (p.setLinked !== undefined) this.linkedChannels[channel] = p.setLinked;\n      if (p.delta !== undefined) this.applyLinkedFaderDelta(channel, p.delta);\n      if (p.muted !== undefined) this.applyLinkedMute(channel, p.muted);\n    },\n\n    toggleLinkAll() {\n      this.linkAll = !this.linkAll;\n      Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = this.linkAll));\n      this.send({ topic: 'audio.linkAll', payload: { space: this.space, linked: this.linkAll } });\n    },\n\n    updateLevel(channel) {\n      const newValue = this.channels[channel].value;\n      const oldValue = this._lastValues[channel] ?? newValue;\n      const delta = newValue - oldValue;\n\n      this._lastValues[channel] = newValue;\n\n      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action: 'audio.setLevel', params: { inputKey: channel, db: newValue } } });\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: 'audio.faderSync',\n          payload: { sourceSpace: this.space, channel, delta }\n        });\n      }\n    },\n\n    applyLinkedFaderDelta(channel, delta) {\n      const newValue = Math.max(-60, Math.min(10, this.channels[channel].value + delta));\n      this.channels[channel].value = newValue;\n      this._lastValues[channel] = newValue;\n      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action: 'audio.setLevel', params: { inputKey: channel, db: newValue } } });\n    },\n\n    toggleMute(channel) {\n      this.mutedChannels[channel] = !this.mutedChannels[channel];\n      this.sendMuteCmd(channel);\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: 'audio.muteSync',\n          payload: { space: this.space, channel, muted: this.mutedChannels[channel] }\n        });\n      }\n    },\n\n    applyLinkedMute(channel, muteState) {\n      this.mutedChannels[channel] = muteState;\n      this.sendMuteCmd(channel);\n    },\n\n    sendMuteCmd(channel) {\n      const action = this.mutedChannels[channel] ? 'audio.mute' : 'audio.unmute';\n      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action, params: { inputKey: channel } } });\n    }\n  },\n  mounted() {\n    this.$watch(() => this.msg, m => this.applyMsg(m), { deep: true, immediate: true });\n  }\n};\n</script>\n\n<style scoped>\n  .link-all-btn {\n    width: 100%;\n    margin-bottom: 12px;\n    padding: 10px 12px;\n    font-weight: 700;\n    border-radius: 6px;\n    border: 2px solid #64748b;\n    background: #334155;\n    color: #cbd5e1;\n    cursor: pointer;\n  }\n\n  .link-all-btn.linked {\n    background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);\n    border-color: #0ea5e9;\n    color: #fff;\n  }\n\n  .mixer-container {\n    display: flex;\n    flex-direction: column;\n    height: 100%;\n    background: linear-gradient(135deg, #1a1d2e 0%, #16192b 100%);\n    padding: 16px;\n    border-radius: 8px;\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;\n    color: #e0e0e0;\n  }\n\n  .mixer-content {\n    display: flex;\n    flex-direction: row;\n    gap: 40px;\n    flex: 1;\n    min-height: 0;\n    justify-content: flex-start;\n  }\n\n  .mixer-group {\n    display: flex;\n    flex-direction: column;\n    gap: 12px;\n    flex: 1 1 0;\n    min-width: 0;\n  }\n\n  .group-title {\n    font-size: 13px;\n    font-weight: 700;\n    text-transform: uppercase;\n    letter-spacing: 1px;\n    color: #7dd3fc;\n    padding-bottom: 4px;\n    border-bottom: 2px solid #0891b2;\n    width: 100%;\n  }\n\n  .mixer-strips {\n    display: flex;\n    gap: 16px;\n    flex: 1;\n    min-height: 0;\n    justify-content: space-between;\n    align-items: stretch;\n  }\n\n  .channel-strip {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    gap: 6px;\n    flex: 1 1 0;\n    min-width: 0;\n  }\n\n  .fader-wrapper {\n    flex: 1;\n    min-height: 300px;\n    height: 100%;\n    width: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n  }\n\n  .vertical-fader {\n    -webkit-appearance: slider-vertical;\n    appearance: slider-vertical;\n    width: 100%;\n    max-width: 28px;\n    height: 100%;\n    min-height: 300px;\n    background: linear-gradient(to right, #3a4050 0%, #4a5060 50%, #3a4050 100%);\n    outline: none;\n    cursor: pointer;\n    border-radius: 10px;\n  }\n\n  .channel-label {\n    font-size: 14px;\n    font-weight: 600;\n    text-transform: uppercase;\n    letter-spacing: .5px;\n    text-align: center;\n    min-height: 20px;\n  }\n\n  .channel-level {\n    font-size: 12px;\n    color: #7dd3fc;\n    font-weight: 500;\n    text-align: center;\n    min-height: 18px;\n    font-family: 'Monaco', 'Courier New', monospace;\n  }\n\n  .mute-btn {\n    width: 100%;\n    padding: 8px 6px;\n    background: linear-gradient(135deg, #365a40 0%, #15803d 100%);\n    color: #86efac;\n    border: 2px solid #22c55e;\n    border-radius: 4px;\n    font-weight: 600;\n    font-size: 12px;\n    cursor: pointer;\n    text-transform: uppercase;\n    letter-spacing: .5px;\n    transition: all .2s ease;\n    min-height: 44px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    min-width: 80px;\n  }\n\n  .mute-btn.muted {\n    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);\n    border-color: #dc2626;\n    color: #fecaca;\n  }\n\n  /* Optional but recommended */\n  @media (max-width: 900px) {\n    .mixer-strips {\n      gap: 10px;\n    }\n\n    .vertical-fader {\n      max-width: 22px;\n    }\n\n    .mute-btn {\n      min-width: 70px;\n    }\n  }\n</style>",
+        "format": "<template>\n  <div class=\"mixer-container\">\n    <button class=\"link-all-btn\" @click=\"toggleLinkAll\" :class=\"{ linked: linkAll }\">\n      🔗 LINK ATRIUMS\n    </button>\n\n    <div class=\"mixer-content\">\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Playback</div>\n        <div class=\"mixer-strips\">\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.show.value\" class=\"vertical-fader\" @input=\"updateLevel('show')\" />\n            </div>\n            <div class=\"channel-label\">Show</div>\n            <div class=\"channel-level\">{{ channels.show.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('show')\" :class=\"{ muted: mutedChannels.show }\">\n              {{ mutedChannels.show ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.bgm.value\" class=\"vertical-fader\" @input=\"updateLevel('bgm')\" />\n            </div>\n            <div class=\"channel-label\">BGM</div>\n            <div class=\"channel-level\">{{ channels.bgm.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('bgm')\" :class=\"{ muted: mutedChannels.bgm }\">\n              {{ mutedChannels.bgm ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.special.value\" class=\"vertical-fader\" @input=\"updateLevel('special')\" />\n            </div>\n            <div class=\"channel-label\">Special</div>\n            <div class=\"channel-level\">{{ channels.special.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('special')\" :class=\"{ muted: mutedChannels.special }\">\n              {{ mutedChannels.special ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Live</div>\n        <div class=\"mixer-strips\">\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mic1.value\" class=\"vertical-fader\" @input=\"updateLevel('mic1')\" />\n            </div>\n            <div class=\"channel-label\">Mic 1</div>\n            <div class=\"channel-level\">{{ channels.mic1.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic1')\" :class=\"{ muted: mutedChannels.mic1 }\">\n              {{ mutedChannels.mic1 ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mic2.value\" class=\"vertical-fader\" @input=\"updateLevel('mic2')\" />\n            </div>\n            <div class=\"channel-label\">Mic 2</div>\n            <div class=\"channel-level\">{{ channels.mic2.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic2')\" :class=\"{ muted: mutedChannels.mic2 }\">\n              {{ mutedChannels.mic2 ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mixer.value\" class=\"vertical-fader\" @input=\"updateLevel('mixer')\" />\n            </div>\n            <div class=\"channel-label\">Mixer</div>\n            <div class=\"channel-level\">{{ channels.mixer.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mixer')\" :class=\"{ muted: mutedChannels.mixer }\">\n              {{ mutedChannels.mixer ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script>\n  export default {\n  data() {\n    return {\n      space: 'a1',\n      linkAll: false,\n      channels: {\n        show: { value: 0 },\n        bgm: { value: -20 },\n        special: { value: -20 },\n        mic1: { value: -10 },\n        mic2: { value: -10 },\n        mixer: { value: -10 }\n      },\n      mutedChannels: {\n        show: false,\n        bgm: false,\n        special: false,\n        mic1: true,\n        mic2: true,\n        mixer: true\n      },\n      linkedChannels: {\n        show: false,\n        bgm: false,\n        special: false,\n        mic1: false,\n        mic2: false,\n        mixer: false\n      },\n    };\n  },\n  methods: {\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p) return;\n\n      // audio.init — seed display from Q-SYS state on connect, no echo back\n      if (msg.topic === 'audio.init') {\n        if (!p.space || p.space === this.space) this.applyInitialState(p);\n        return;\n      }\n\n      const channel = p.channel;\n      const targetSpace = p.space || p.targetSpace;\n      if (targetSpace && targetSpace !== this.space) return;\n\n      if (p.setLinkedAll !== undefined) {\n        this.linkAll = p.setLinkedAll;\n        Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = p.setLinkedAll));\n      }\n      if (p.setLinked !== undefined) this.linkedChannels[channel] = p.setLinked;\n      if (p.value !== undefined) this.applyLinkedFaderValue(channel, p.value);\n      if (p.muted !== undefined) this.applyLinkedMute(channel, p.muted);\n    },\n\n    applyInitialState(state) {\n      if (state.channels) {\n        for (const [ch, val] of Object.entries(state.channels)) {\n          if (this.channels[ch] !== undefined)\n            this.channels[ch].value = Math.max(-60, Math.min(10, val));\n        }\n      }\n      if (state.mutes) {\n        for (const [ch, muted] of Object.entries(state.mutes)) {\n          if (this.mutedChannels[ch] !== undefined)\n            this.mutedChannels[ch] = muted;\n        }\n      }\n    },\n\n    toggleLinkAll() {\n      this.linkAll = !this.linkAll;\n      Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = this.linkAll));\n      this.send({ topic: 'audio.linkAll', payload: { space: this.space, linked: this.linkAll } });\n    },\n\n    updateLevel(channel) {\n      const newValue = this.channels[channel].value;\n\n      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action: 'audio.setLevel', params: { inputKey: channel, db: newValue } } });\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: 'audio.faderSync',\n          payload: { sourceSpace: this.space, channel, value: newValue }\n        });\n      }\n    },\n\n    applyLinkedFaderValue(channel, value) {\n      const newValue = Math.max(-60, Math.min(10, value));\n      this.channels[channel].value = newValue;\n      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action: 'audio.setLevel', params: { inputKey: channel, db: newValue } } });\n    },\n\n    toggleMute(channel) {\n      this.mutedChannels[channel] = !this.mutedChannels[channel];\n      this.sendMuteCmd(channel);\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: 'audio.muteSync',\n          payload: { space: this.space, channel, muted: this.mutedChannels[channel] }\n        });\n      }\n    },\n\n    applyLinkedMute(channel, muteState) {\n      this.mutedChannels[channel] = muteState;\n      this.sendMuteCmd(channel);\n    },\n\n    sendMuteCmd(channel) {\n      const action = this.mutedChannels[channel] ? 'audio.mute' : 'audio.unmute';\n      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action, params: { inputKey: channel } } });\n    }\n  },\n  mounted() {\n    this.$watch(() => this.msg, m => this.applyMsg(m), { deep: true, immediate: true });\n  }\n};\n</script>\n\n<style scoped>\n  .link-all-btn {\n    width: 100%;\n    margin-bottom: 12px;\n    padding: 10px 12px;\n    font-weight: 700;\n    border-radius: 6px;\n    border: 2px solid #64748b;\n    background: #334155;\n    color: #cbd5e1;\n    cursor: pointer;\n  }\n\n  .link-all-btn.linked {\n    background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);\n    border-color: #0ea5e9;\n    color: #fff;\n  }\n\n  .mixer-container {\n    display: flex;\n    flex-direction: column;\n    height: 100%;\n    background: linear-gradient(135deg, #1a1d2e 0%, #16192b 100%);\n    padding: 16px;\n    border-radius: 8px;\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;\n    color: #e0e0e0;\n  }\n\n  .mixer-content {\n    display: flex;\n    flex-direction: row;\n    gap: 40px;\n    flex: 1;\n    min-height: 0;\n    justify-content: flex-start;\n  }\n\n  .mixer-group {\n    display: flex;\n    flex-direction: column;\n    gap: 12px;\n    flex: 1 1 0;\n    min-width: 0;\n  }\n\n  .group-title {\n    font-size: 13px;\n    font-weight: 700;\n    text-transform: uppercase;\n    letter-spacing: 1px;\n    color: #7dd3fc;\n    padding-bottom: 4px;\n    border-bottom: 2px solid #0891b2;\n    width: 100%;\n  }\n\n  .mixer-strips {\n    display: flex;\n    gap: 16px;\n    flex: 1;\n    min-height: 0;\n    justify-content: space-between;\n    align-items: stretch;\n  }\n\n  .channel-strip {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    gap: 6px;\n    flex: 1 1 0;\n    min-width: 0;\n  }\n\n  .fader-wrapper {\n    flex: 1;\n    min-height: 300px;\n    height: 100%;\n    width: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n  }\n\n  .vertical-fader {\n    -webkit-appearance: slider-vertical;\n    appearance: slider-vertical;\n    width: 100%;\n    max-width: 28px;\n    height: 100%;\n    min-height: 300px;\n    background: linear-gradient(to right, #3a4050 0%, #4a5060 50%, #3a4050 100%);\n    outline: none;\n    cursor: pointer;\n    border-radius: 10px;\n  }\n\n  .channel-label {\n    font-size: 14px;\n    font-weight: 600;\n    text-transform: uppercase;\n    letter-spacing: .5px;\n    text-align: center;\n    min-height: 20px;\n  }\n\n  .channel-level {\n    font-size: 12px;\n    color: #7dd3fc;\n    font-weight: 500;\n    text-align: center;\n    min-height: 18px;\n    font-family: 'Monaco', 'Courier New', monospace;\n  }\n\n  .mute-btn {\n    width: 100%;\n    padding: 8px 6px;\n    background: linear-gradient(135deg, #365a40 0%, #15803d 100%);\n    color: #86efac;\n    border: 2px solid #22c55e;\n    border-radius: 4px;\n    font-weight: 600;\n    font-size: 12px;\n    cursor: pointer;\n    text-transform: uppercase;\n    letter-spacing: .5px;\n    transition: all .2s ease;\n    min-height: 44px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    min-width: 80px;\n  }\n\n  .mute-btn.muted {\n    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);\n    border-color: #dc2626;\n    color: #fecaca;\n  }\n\n  /* Optional but recommended */\n  @media (max-width: 900px) {\n    .mixer-strips {\n      gap: 10px;\n    }\n\n    .vertical-fader {\n      max-width: 22px;\n    }\n\n    .mute-btn {\n      min-width: 70px;\n    }\n  }\n</style>",
         "storeOutMessages": true,
         "passthru": false,
         "resendOnRefresh": true,
@@ -4695,7 +4457,7 @@
         "order": 1,
         "width": "0",
         "height": "0",
-        "format": "<template>\n  <div class=\"mixer-container\">\n    <button class=\"link-all-btn\" @click=\"toggleLinkAll\" :class=\"{ linked: linkAll }\">\n      🔗 LINK ATRIUMS\n    </button>\n\n    <div class=\"mixer-content\">\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Playback</div>\n        <div class=\"mixer-strips\">\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.show.value\" class=\"vertical-fader\" @input=\"updateLevel('show')\" />\n            </div>\n            <div class=\"channel-label\">Show</div>\n            <div class=\"channel-level\">{{ channels.show.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('show')\" :class=\"{ muted: mutedChannels.show }\">\n              {{ mutedChannels.show ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.bgm.value\" class=\"vertical-fader\" @input=\"updateLevel('bgm')\" />\n            </div>\n            <div class=\"channel-label\">BGM</div>\n            <div class=\"channel-level\">{{ channels.bgm.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('bgm')\" :class=\"{ muted: mutedChannels.bgm }\">\n              {{ mutedChannels.bgm ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.special.value\" class=\"vertical-fader\" @input=\"updateLevel('special')\" />\n            </div>\n            <div class=\"channel-label\">Special</div>\n            <div class=\"channel-level\">{{ channels.special.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('special')\" :class=\"{ muted: mutedChannels.special }\">\n              {{ mutedChannels.special ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Live</div>\n        <div class=\"mixer-strips\">\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mic1.value\" class=\"vertical-fader\" @input=\"updateLevel('mic1')\" />\n            </div>\n            <div class=\"channel-label\">Mic 1</div>\n            <div class=\"channel-level\">{{ channels.mic1.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic1')\" :class=\"{ muted: mutedChannels.mic1 }\">\n              {{ mutedChannels.mic1 ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mic2.value\" class=\"vertical-fader\" @input=\"updateLevel('mic2')\" />\n            </div>\n            <div class=\"channel-label\">Mic 2</div>\n            <div class=\"channel-level\">{{ channels.mic2.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic2')\" :class=\"{ muted: mutedChannels.mic2 }\">\n              {{ mutedChannels.mic2 ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mixer.value\" class=\"vertical-fader\" @input=\"updateLevel('mixer')\" />\n            </div>\n            <div class=\"channel-label\">Mixer</div>\n            <div class=\"channel-level\">{{ channels.mixer.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mixer')\" :class=\"{ muted: mutedChannels.mixer }\">\n              {{ mutedChannels.mixer ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      space: 'a2',\n      linkAll: false,\n      channels: {\n        show: { value: 0 },\n        bgm: { value: -20 },\n        special: { value: -20 },\n        mic1: { value: -10 },\n        mic2: { value: -10 },\n        mixer: { value: -10 }\n      },\n      mutedChannels: {\n        show: false,\n        bgm: false,\n        special: false,\n        mic1: true,\n        mic2: true,\n        mixer: true\n      },\n      linkedChannels: {\n        show: false,\n        bgm: false,\n        special: false,\n        mic1: false,\n        mic2: false,\n        mixer: false\n      },\n      _lastValues: {}\n    };\n  },\n  methods: {\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p) return;\n\n      const channel = p.channel;\n      const targetSpace = p.space || p.targetSpace;\n      if (targetSpace && targetSpace !== this.space) return;\n\n      if (p.setLinkedAll !== undefined) {\n        this.linkAll = p.setLinkedAll;\n        Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = p.setLinkedAll));\n      }\n      if (p.setLinked !== undefined) this.linkedChannels[channel] = p.setLinked;\n      if (p.delta !== undefined) this.applyLinkedFaderDelta(channel, p.delta);\n      if (p.muted !== undefined) this.applyLinkedMute(channel, p.muted);\n    },\n\n    toggleLinkAll() {\n      this.linkAll = !this.linkAll;\n      Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = this.linkAll));\n      this.send({ topic: 'audio.linkAll', payload: { space: this.space, linked: this.linkAll } });\n    },\n\n    updateLevel(channel) {\n      const newValue = this.channels[channel].value;\n      const oldValue = this._lastValues[channel] ?? newValue;\n      const delta = newValue - oldValue;\n\n      this._lastValues[channel] = newValue;\n\n      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action: 'audio.setLevel', params: { inputKey: channel, db: newValue } } });\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: 'audio.faderSync',\n          payload: { sourceSpace: this.space, channel, delta }\n        });\n      }\n    },\n\n    applyLinkedFaderDelta(channel, delta) {\n      const newValue = Math.max(-60, Math.min(10, this.channels[channel].value + delta));\n      this.channels[channel].value = newValue;\n      this._lastValues[channel] = newValue;\n      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action: 'audio.setLevel', params: { inputKey: channel, db: newValue } } });\n    },\n\n    toggleMute(channel) {\n      this.mutedChannels[channel] = !this.mutedChannels[channel];\n      this.sendMuteCmd(channel);\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: 'audio.muteSync',\n          payload: { space: this.space, channel, muted: this.mutedChannels[channel] }\n        });\n      }\n    },\n\n    applyLinkedMute(channel, muteState) {\n      this.mutedChannels[channel] = muteState;\n      this.sendMuteCmd(channel);\n    },\n\n    sendMuteCmd(channel) {\n      const action = this.mutedChannels[channel] ? 'audio.mute' : 'audio.unmute';\n      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action, params: { inputKey: channel } } });\n    }\n  },\n  mounted() {\n    this.$watch(() => this.msg, m => this.applyMsg(m), { deep: true, immediate: true });\n  }\n};\n</script>\n\n<style scoped>\n.link-all-btn{width:100%;margin-bottom:12px;padding:10px 12px;font-weight:700;border-radius:6px;border:2px solid #64748b;background:#334155;color:#cbd5e1;cursor:pointer;}\n.link-all-btn.linked{background:linear-gradient(135deg,#0891b2 0%,#06b6d4 100%);border-color:#0ea5e9;color:#fff;}\n.mixer-container{display:flex;flex-direction:column;height:100%;background:linear-gradient(135deg,#1a1d2e 0%,#16192b 100%);padding:16px;border-radius:8px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Roboto',sans-serif;color:#e0e0e0;}\n.mixer-content{display:flex;flex-direction:row;gap:40px;flex:1;min-height:0;justify-content:flex-start;}\n.mixer-group{display:flex;flex-direction:column;gap:12px;flex:1 1 0;min-width:0;}\n.group-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#7dd3fc;padding-bottom:4px;border-bottom:2px solid #0891b2;width:100%;}\n.mixer-strips{display:flex;gap:16px;flex:1;min-height:0;justify-content:space-between;align-items:stretch;}\n.channel-strip{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1 1 0;min-width:0;}\n.fader-wrapper{flex:1;min-height:300px;height:100%;width:100%;display:flex;align-items:center;justify-content:center;}\n.vertical-fader{-webkit-appearance:slider-vertical;appearance:slider-vertical;width:100%;max-width:28px;height:100%;min-height:300px;background:linear-gradient(to right,#3a4050 0%,#4a5060 50%,#3a4050 100%);outline:none;cursor:pointer;border-radius:10px;}\n.channel-label{font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;text-align:center;min-height:20px;}\n.channel-level{font-size:12px;color:#7dd3fc;font-weight:500;text-align:center;min-height:18px;font-family:'Monaco','Courier New',monospace;}\n.mute-btn{width:100%;padding:8px 6px;background:linear-gradient(135deg,#365a40 0%,#15803d 100%);color:#86efac;border:2px solid #22c55e;border-radius:4px;font-weight:600;font-size:12px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;transition:all .2s ease;min-height:44px;display:flex;align-items:center;justify-content:center;min-width:80px;}\n.mute-btn.muted{background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 100%);border-color:#dc2626;color:#fecaca;}\n\n/* Optional but recommended */\n@media (max-width: 900px){\n  .mixer-strips{ gap:10px; }\n  .vertical-fader{ max-width:22px; }\n  .mute-btn{ min-width:70px; }\n}\n</style>",
+        "format": "<template>\n  <div class=\"mixer-container\">\n    <button class=\"link-all-btn\" @click=\"toggleLinkAll\" :class=\"{ linked: linkAll }\">\n      🔗 LINK ATRIUMS\n    </button>\n\n    <div class=\"mixer-content\">\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Playback</div>\n        <div class=\"mixer-strips\">\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.show.value\" class=\"vertical-fader\" @input=\"updateLevel('show')\" />\n            </div>\n            <div class=\"channel-label\">Show</div>\n            <div class=\"channel-level\">{{ channels.show.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('show')\" :class=\"{ muted: mutedChannels.show }\">\n              {{ mutedChannels.show ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.bgm.value\" class=\"vertical-fader\" @input=\"updateLevel('bgm')\" />\n            </div>\n            <div class=\"channel-label\">BGM</div>\n            <div class=\"channel-level\">{{ channels.bgm.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('bgm')\" :class=\"{ muted: mutedChannels.bgm }\">\n              {{ mutedChannels.bgm ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.special.value\" class=\"vertical-fader\" @input=\"updateLevel('special')\" />\n            </div>\n            <div class=\"channel-label\">Special</div>\n            <div class=\"channel-level\">{{ channels.special.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('special')\" :class=\"{ muted: mutedChannels.special }\">\n              {{ mutedChannels.special ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Live</div>\n        <div class=\"mixer-strips\">\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mic1.value\" class=\"vertical-fader\" @input=\"updateLevel('mic1')\" />\n            </div>\n            <div class=\"channel-label\">Mic 1</div>\n            <div class=\"channel-level\">{{ channels.mic1.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic1')\" :class=\"{ muted: mutedChannels.mic1 }\">\n              {{ mutedChannels.mic1 ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mic2.value\" class=\"vertical-fader\" @input=\"updateLevel('mic2')\" />\n            </div>\n            <div class=\"channel-label\">Mic 2</div>\n            <div class=\"channel-level\">{{ channels.mic2.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic2')\" :class=\"{ muted: mutedChannels.mic2 }\">\n              {{ mutedChannels.mic2 ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mixer.value\" class=\"vertical-fader\" @input=\"updateLevel('mixer')\" />\n            </div>\n            <div class=\"channel-label\">Mixer</div>\n            <div class=\"channel-level\">{{ channels.mixer.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mixer')\" :class=\"{ muted: mutedChannels.mixer }\">\n              {{ mutedChannels.mixer ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      space: 'a2',\n      linkAll: false,\n      channels: {\n        show: { value: 0 },\n        bgm: { value: -20 },\n        special: { value: -20 },\n        mic1: { value: -10 },\n        mic2: { value: -10 },\n        mixer: { value: -10 }\n      },\n      mutedChannels: {\n        show: false,\n        bgm: false,\n        special: false,\n        mic1: true,\n        mic2: true,\n        mixer: true\n      },\n      linkedChannels: {\n        show: false,\n        bgm: false,\n        special: false,\n        mic1: false,\n        mic2: false,\n        mixer: false\n      },\n    };\n  },\n  methods: {\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p) return;\n\n      // audio.init — seed display from Q-SYS state on connect, no echo back\n      if (msg.topic === 'audio.init') {\n        if (!p.space || p.space === this.space) this.applyInitialState(p);\n        return;\n      }\n\n      const channel = p.channel;\n      const targetSpace = p.space || p.targetSpace;\n      if (targetSpace && targetSpace !== this.space) return;\n\n      if (p.setLinkedAll !== undefined) {\n        this.linkAll = p.setLinkedAll;\n        Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = p.setLinkedAll));\n      }\n      if (p.setLinked !== undefined) this.linkedChannels[channel] = p.setLinked;\n      if (p.value !== undefined) this.applyLinkedFaderValue(channel, p.value);\n      if (p.muted !== undefined) this.applyLinkedMute(channel, p.muted);\n    },\n\n    applyInitialState(state) {\n      if (state.channels) {\n        for (const [ch, val] of Object.entries(state.channels)) {\n          if (this.channels[ch] !== undefined)\n            this.channels[ch].value = Math.max(-60, Math.min(10, val));\n        }\n      }\n      if (state.mutes) {\n        for (const [ch, muted] of Object.entries(state.mutes)) {\n          if (this.mutedChannels[ch] !== undefined)\n            this.mutedChannels[ch] = muted;\n        }\n      }\n    },\n\n    toggleLinkAll() {\n      this.linkAll = !this.linkAll;\n      Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = this.linkAll));\n      this.send({ topic: 'audio.linkAll', payload: { space: this.space, linked: this.linkAll } });\n    },\n\n    updateLevel(channel) {\n      const newValue = this.channels[channel].value;\n\n      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action: 'audio.setLevel', params: { inputKey: channel, db: newValue } } });\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: 'audio.faderSync',\n          payload: { sourceSpace: this.space, channel, value: newValue }\n        });\n      }\n    },\n\n    applyLinkedFaderValue(channel, value) {\n      const newValue = Math.max(-60, Math.min(10, value));\n      this.channels[channel].value = newValue;\n      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action: 'audio.setLevel', params: { inputKey: channel, db: newValue } } });\n    },\n\n    toggleMute(channel) {\n      this.mutedChannels[channel] = !this.mutedChannels[channel];\n      this.sendMuteCmd(channel);\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: 'audio.muteSync',\n          payload: { space: this.space, channel, muted: this.mutedChannels[channel] }\n        });\n      }\n    },\n\n    applyLinkedMute(channel, muteState) {\n      this.mutedChannels[channel] = muteState;\n      this.sendMuteCmd(channel);\n    },\n\n    sendMuteCmd(channel) {\n      const action = this.mutedChannels[channel] ? 'audio.mute' : 'audio.unmute';\n      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action, params: { inputKey: channel } } });\n    }\n  },\n  mounted() {\n    this.$watch(() => this.msg, m => this.applyMsg(m), { deep: true, immediate: true });\n  }\n};\n</script>\n\n<style scoped>\n.link-all-btn{width:100%;margin-bottom:12px;padding:10px 12px;font-weight:700;border-radius:6px;border:2px solid #64748b;background:#334155;color:#cbd5e1;cursor:pointer;}\n.link-all-btn.linked{background:linear-gradient(135deg,#0891b2 0%,#06b6d4 100%);border-color:#0ea5e9;color:#fff;}\n.mixer-container{display:flex;flex-direction:column;height:100%;background:linear-gradient(135deg,#1a1d2e 0%,#16192b 100%);padding:16px;border-radius:8px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Roboto',sans-serif;color:#e0e0e0;}\n.mixer-content{display:flex;flex-direction:row;gap:40px;flex:1;min-height:0;justify-content:flex-start;}\n.mixer-group{display:flex;flex-direction:column;gap:12px;flex:1 1 0;min-width:0;}\n.group-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#7dd3fc;padding-bottom:4px;border-bottom:2px solid #0891b2;width:100%;}\n.mixer-strips{display:flex;gap:16px;flex:1;min-height:0;justify-content:space-between;align-items:stretch;}\n.channel-strip{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1 1 0;min-width:0;}\n.fader-wrapper{flex:1;min-height:300px;height:100%;width:100%;display:flex;align-items:center;justify-content:center;}\n.vertical-fader{-webkit-appearance:slider-vertical;appearance:slider-vertical;width:100%;max-width:28px;height:100%;min-height:300px;background:linear-gradient(to right,#3a4050 0%,#4a5060 50%,#3a4050 100%);outline:none;cursor:pointer;border-radius:10px;}\n.channel-label{font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;text-align:center;min-height:20px;}\n.channel-level{font-size:12px;color:#7dd3fc;font-weight:500;text-align:center;min-height:18px;font-family:'Monaco','Courier New',monospace;}\n.mute-btn{width:100%;padding:8px 6px;background:linear-gradient(135deg,#365a40 0%,#15803d 100%);color:#86efac;border:2px solid #22c55e;border-radius:4px;font-weight:600;font-size:12px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;transition:all .2s ease;min-height:44px;display:flex;align-items:center;justify-content:center;min-width:80px;}\n.mute-btn.muted{background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 100%);border-color:#dc2626;color:#fecaca;}\n\n/* Optional but recommended */\n@media (max-width: 900px){\n  .mixer-strips{ gap:10px; }\n  .vertical-fader{ max-width:22px; }\n  .mute-btn{ min-width:70px; }\n}\n</style>",
         "storeOutMessages": true,
         "passthru": false,
         "resendOnRefresh": true,
@@ -4721,7 +4483,7 @@
         "order": 1,
         "width": "0",
         "height": "0",
-        "format": "<template>\n  <div class=\"mixer-container\">\n    <button class=\"link-all-btn\" @click=\"toggleLinkAll\" :class=\"{ linked: linkAll }\">\n      🔗 LINK ATRIUMS\n    </button>\n\n    <div class=\"mixer-content\">\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Playback</div>\n        <div class=\"mixer-strips\">\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.show.value\" class=\"vertical-fader\" @input=\"updateLevel('show')\" />\n            </div>\n            <div class=\"channel-label\">Show</div>\n            <div class=\"channel-level\">{{ channels.show.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('show')\" :class=\"{ muted: mutedChannels.show }\">\n              {{ mutedChannels.show ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.bgm.value\" class=\"vertical-fader\" @input=\"updateLevel('bgm')\" />\n            </div>\n            <div class=\"channel-label\">BGM</div>\n            <div class=\"channel-level\">{{ channels.bgm.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('bgm')\" :class=\"{ muted: mutedChannels.bgm }\">\n              {{ mutedChannels.bgm ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.special.value\" class=\"vertical-fader\" @input=\"updateLevel('special')\" />\n            </div>\n            <div class=\"channel-label\">Special</div>\n            <div class=\"channel-level\">{{ channels.special.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('special')\" :class=\"{ muted: mutedChannels.special }\">\n              {{ mutedChannels.special ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Live</div>\n        <div class=\"mixer-strips\">\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mic1.value\" class=\"vertical-fader\" @input=\"updateLevel('mic1')\" />\n            </div>\n            <div class=\"channel-label\">Mic 1</div>\n            <div class=\"channel-level\">{{ channels.mic1.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic1')\" :class=\"{ muted: mutedChannels.mic1 }\">\n              {{ mutedChannels.mic1 ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mic2.value\" class=\"vertical-fader\" @input=\"updateLevel('mic2')\" />\n            </div>\n            <div class=\"channel-label\">Mic 2</div>\n            <div class=\"channel-level\">{{ channels.mic2.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic2')\" :class=\"{ muted: mutedChannels.mic2 }\">\n              {{ mutedChannels.mic2 ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mixer.value\" class=\"vertical-fader\" @input=\"updateLevel('mixer')\" />\n            </div>\n            <div class=\"channel-label\">Mixer</div>\n            <div class=\"channel-level\">{{ channels.mixer.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mixer')\" :class=\"{ muted: mutedChannels.mixer }\">\n              {{ mutedChannels.mixer ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      space: 'a3',\n      linkAll: false,\n      channels: {\n        show: { value: 0 },\n        bgm: { value: -20 },\n        special: { value: -20 },\n        mic1: { value: -10 },\n        mic2: { value: -10 },\n        mixer: { value: -10 }\n      },\n      mutedChannels: {\n        show: false,\n        bgm: false,\n        special: false,\n        mic1: true,\n        mic2: true,\n        mixer: true\n      },\n      linkedChannels: {\n        show: false,\n        bgm: false,\n        special: false,\n        mic1: false,\n        mic2: false,\n        mixer: false\n      },\n      _lastValues: {}\n    };\n  },\n  methods: {\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p) return;\n\n      const channel = p.channel;\n      const targetSpace = p.space || p.targetSpace;\n      if (targetSpace && targetSpace !== this.space) return;\n\n      if (p.setLinkedAll !== undefined) {\n        this.linkAll = p.setLinkedAll;\n        Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = p.setLinkedAll));\n      }\n      if (p.setLinked !== undefined) this.linkedChannels[channel] = p.setLinked;\n      if (p.delta !== undefined) this.applyLinkedFaderDelta(channel, p.delta);\n      if (p.muted !== undefined) this.applyLinkedMute(channel, p.muted);\n    },\n\n    toggleLinkAll() {\n      this.linkAll = !this.linkAll;\n      Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = this.linkAll));\n      this.send({ topic: 'audio.linkAll', payload: { space: this.space, linked: this.linkAll } });\n    },\n\n    updateLevel(channel) {\n      const newValue = this.channels[channel].value;\n      const oldValue = this._lastValues[channel] ?? newValue;\n      const delta = newValue - oldValue;\n\n      this._lastValues[channel] = newValue;\n\n      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action: 'audio.setLevel', params: { inputKey: channel, db: newValue } } });\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: 'audio.faderSync',\n          payload: { sourceSpace: this.space, channel, delta }\n        });\n      }\n    },\n\n    applyLinkedFaderDelta(channel, delta) {\n      const newValue = Math.max(-60, Math.min(10, this.channels[channel].value + delta));\n      this.channels[channel].value = newValue;\n      this._lastValues[channel] = newValue;\n      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action: 'audio.setLevel', params: { inputKey: channel, db: newValue } } });\n    },\n\n    toggleMute(channel) {\n      this.mutedChannels[channel] = !this.mutedChannels[channel];\n      this.sendMuteCmd(channel);\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: 'audio.muteSync',\n          payload: { space: this.space, channel, muted: this.mutedChannels[channel] }\n        });\n      }\n    },\n\n    applyLinkedMute(channel, muteState) {\n      this.mutedChannels[channel] = muteState;\n      this.sendMuteCmd(channel);\n    },\n\n    sendMuteCmd(channel) {\n      const action = this.mutedChannels[channel] ? 'audio.mute' : 'audio.unmute';\n      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action, params: { inputKey: channel } } });\n    }\n  },\n  mounted() {\n    this.$watch(() => this.msg, m => this.applyMsg(m), { deep: true, immediate: true });\n  }\n};\n</script>\n\n<style scoped>\n.link-all-btn{width:100%;margin-bottom:12px;padding:10px 12px;font-weight:700;border-radius:6px;border:2px solid #64748b;background:#334155;color:#cbd5e1;cursor:pointer;}\n.link-all-btn.linked{background:linear-gradient(135deg,#0891b2 0%,#06b6d4 100%);border-color:#0ea5e9;color:#fff;}\n.mixer-container{display:flex;flex-direction:column;height:100%;background:linear-gradient(135deg,#1a1d2e 0%,#16192b 100%);padding:16px;border-radius:8px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Roboto',sans-serif;color:#e0e0e0;}\n.mixer-content{display:flex;flex-direction:row;gap:40px;flex:1;min-height:0;justify-content:flex-start;}\n.mixer-group{display:flex;flex-direction:column;gap:12px;flex:1 1 0;min-width:0;}\n.group-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#7dd3fc;padding-bottom:4px;border-bottom:2px solid #0891b2;width:100%;}\n.mixer-strips{display:flex;gap:16px;flex:1;min-height:0;justify-content:space-between;align-items:stretch;}\n.channel-strip{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1 1 0;min-width:0;}\n.fader-wrapper{flex:1;min-height:300px;height:100%;width:100%;display:flex;align-items:center;justify-content:center;}\n.vertical-fader{-webkit-appearance:slider-vertical;appearance:slider-vertical;width:100%;max-width:28px;height:100%;min-height:300px;background:linear-gradient(to right,#3a4050 0%,#4a5060 50%,#3a4050 100%);outline:none;cursor:pointer;border-radius:10px;}\n.channel-label{font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;text-align:center;min-height:20px;}\n.channel-level{font-size:12px;color:#7dd3fc;font-weight:500;text-align:center;min-height:18px;font-family:'Monaco','Courier New',monospace;}\n.mute-btn{width:100%;padding:8px 6px;background:linear-gradient(135deg,#365a40 0%,#15803d 100%);color:#86efac;border:2px solid #22c55e;border-radius:4px;font-weight:600;font-size:12px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;transition:all .2s ease;min-height:44px;display:flex;align-items:center;justify-content:center;min-width:80px;}\n.mute-btn.muted{background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 100%);border-color:#dc2626;color:#fecaca;}\n\n/* Optional but recommended */\n@media (max-width: 900px){\n  .mixer-strips{ gap:10px; }\n  .vertical-fader{ max-width:22px; }\n  .mute-btn{ min-width:70px; }\n}\n</style>",
+        "format": "<template>\n  <div class=\"mixer-container\">\n    <button class=\"link-all-btn\" @click=\"toggleLinkAll\" :class=\"{ linked: linkAll }\">\n      🔗 LINK ATRIUMS\n    </button>\n\n    <div class=\"mixer-content\">\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Playback</div>\n        <div class=\"mixer-strips\">\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.show.value\" class=\"vertical-fader\" @input=\"updateLevel('show')\" />\n            </div>\n            <div class=\"channel-label\">Show</div>\n            <div class=\"channel-level\">{{ channels.show.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('show')\" :class=\"{ muted: mutedChannels.show }\">\n              {{ mutedChannels.show ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.bgm.value\" class=\"vertical-fader\" @input=\"updateLevel('bgm')\" />\n            </div>\n            <div class=\"channel-label\">BGM</div>\n            <div class=\"channel-level\">{{ channels.bgm.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('bgm')\" :class=\"{ muted: mutedChannels.bgm }\">\n              {{ mutedChannels.bgm ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.special.value\" class=\"vertical-fader\" @input=\"updateLevel('special')\" />\n            </div>\n            <div class=\"channel-label\">Special</div>\n            <div class=\"channel-level\">{{ channels.special.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('special')\" :class=\"{ muted: mutedChannels.special }\">\n              {{ mutedChannels.special ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"mixer-group\">\n        <div class=\"group-title\">Live</div>\n        <div class=\"mixer-strips\">\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mic1.value\" class=\"vertical-fader\" @input=\"updateLevel('mic1')\" />\n            </div>\n            <div class=\"channel-label\">Mic 1</div>\n            <div class=\"channel-level\">{{ channels.mic1.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic1')\" :class=\"{ muted: mutedChannels.mic1 }\">\n              {{ mutedChannels.mic1 ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mic2.value\" class=\"vertical-fader\" @input=\"updateLevel('mic2')\" />\n            </div>\n            <div class=\"channel-label\">Mic 2</div>\n            <div class=\"channel-level\">{{ channels.mic2.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mic2')\" :class=\"{ muted: mutedChannels.mic2 }\">\n              {{ mutedChannels.mic2 ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n\n          <div class=\"channel-strip\">\n            <div class=\"fader-wrapper\">\n              <input type=\"range\" min=\"-60\" max=\"10\" v-model.number=\"channels.mixer.value\" class=\"vertical-fader\" @input=\"updateLevel('mixer')\" />\n            </div>\n            <div class=\"channel-label\">Mixer</div>\n            <div class=\"channel-level\">{{ channels.mixer.value }} dB</div>\n            <button class=\"mute-btn\" @click=\"toggleMute('mixer')\" :class=\"{ muted: mutedChannels.mixer }\">\n              {{ mutedChannels.mixer ? 'MUTED' : 'ON' }}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      space: 'a3',\n      linkAll: false,\n      channels: {\n        show: { value: 0 },\n        bgm: { value: -20 },\n        special: { value: -20 },\n        mic1: { value: -10 },\n        mic2: { value: -10 },\n        mixer: { value: -10 }\n      },\n      mutedChannels: {\n        show: false,\n        bgm: false,\n        special: false,\n        mic1: true,\n        mic2: true,\n        mixer: true\n      },\n      linkedChannels: {\n        show: false,\n        bgm: false,\n        special: false,\n        mic1: false,\n        mic2: false,\n        mixer: false\n      },\n    };\n  },\n  methods: {\n    applyMsg(msg) {\n      const p = msg?.payload;\n      if (!p) return;\n\n      // audio.init — seed display from Q-SYS state on connect, no echo back\n      if (msg.topic === 'audio.init') {\n        if (!p.space || p.space === this.space) this.applyInitialState(p);\n        return;\n      }\n\n      const channel = p.channel;\n      const targetSpace = p.space || p.targetSpace;\n      if (targetSpace && targetSpace !== this.space) return;\n\n      if (p.setLinkedAll !== undefined) {\n        this.linkAll = p.setLinkedAll;\n        Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = p.setLinkedAll));\n      }\n      if (p.setLinked !== undefined) this.linkedChannels[channel] = p.setLinked;\n      if (p.value !== undefined) this.applyLinkedFaderValue(channel, p.value);\n      if (p.muted !== undefined) this.applyLinkedMute(channel, p.muted);\n    },\n\n    applyInitialState(state) {\n      if (state.channels) {\n        for (const [ch, val] of Object.entries(state.channels)) {\n          if (this.channels[ch] !== undefined)\n            this.channels[ch].value = Math.max(-60, Math.min(10, val));\n        }\n      }\n      if (state.mutes) {\n        for (const [ch, muted] of Object.entries(state.mutes)) {\n          if (this.mutedChannels[ch] !== undefined)\n            this.mutedChannels[ch] = muted;\n        }\n      }\n    },\n\n    toggleLinkAll() {\n      this.linkAll = !this.linkAll;\n      Object.keys(this.linkedChannels).forEach(ch => (this.linkedChannels[ch] = this.linkAll));\n      this.send({ topic: 'audio.linkAll', payload: { space: this.space, linked: this.linkAll } });\n    },\n\n    updateLevel(channel) {\n      const newValue = this.channels[channel].value;\n\n      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action: 'audio.setLevel', params: { inputKey: channel, db: newValue } } });\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: 'audio.faderSync',\n          payload: { sourceSpace: this.space, channel, value: newValue }\n        });\n      }\n    },\n\n    applyLinkedFaderValue(channel, value) {\n      const newValue = Math.max(-60, Math.min(10, value));\n      this.channels[channel].value = newValue;\n      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action: 'audio.setLevel', params: { inputKey: channel, db: newValue } } });\n    },\n\n    toggleMute(channel) {\n      this.mutedChannels[channel] = !this.mutedChannels[channel];\n      this.sendMuteCmd(channel);\n\n      if (this.linkedChannels[channel]) {\n        this.send({\n          topic: 'audio.muteSync',\n          payload: { space: this.space, channel, muted: this.mutedChannels[channel] }\n        });\n      }\n    },\n\n    applyLinkedMute(channel, muteState) {\n      this.mutedChannels[channel] = muteState;\n      this.sendMuteCmd(channel);\n    },\n\n    sendMuteCmd(channel) {\n      const action = this.mutedChannels[channel] ? 'audio.mute' : 'audio.unmute';\n      this.send({ topic: 'cmd', payload: { v: 1, source: 'ui', target: `${this.space}.audio`, action, params: { inputKey: channel } } });\n    }\n  },\n  mounted() {\n    this.$watch(() => this.msg, m => this.applyMsg(m), { deep: true, immediate: true });\n  }\n};\n</script>\n\n<style scoped>\n.link-all-btn{width:100%;margin-bottom:12px;padding:10px 12px;font-weight:700;border-radius:6px;border:2px solid #64748b;background:#334155;color:#cbd5e1;cursor:pointer;}\n.link-all-btn.linked{background:linear-gradient(135deg,#0891b2 0%,#06b6d4 100%);border-color:#0ea5e9;color:#fff;}\n.mixer-container{display:flex;flex-direction:column;height:100%;background:linear-gradient(135deg,#1a1d2e 0%,#16192b 100%);padding:16px;border-radius:8px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Roboto',sans-serif;color:#e0e0e0;}\n.mixer-content{display:flex;flex-direction:row;gap:40px;flex:1;min-height:0;justify-content:flex-start;}\n.mixer-group{display:flex;flex-direction:column;gap:12px;flex:1 1 0;min-width:0;}\n.group-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#7dd3fc;padding-bottom:4px;border-bottom:2px solid #0891b2;width:100%;}\n.mixer-strips{display:flex;gap:16px;flex:1;min-height:0;justify-content:space-between;align-items:stretch;}\n.channel-strip{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1 1 0;min-width:0;}\n.fader-wrapper{flex:1;min-height:300px;height:100%;width:100%;display:flex;align-items:center;justify-content:center;}\n.vertical-fader{-webkit-appearance:slider-vertical;appearance:slider-vertical;width:100%;max-width:28px;height:100%;min-height:300px;background:linear-gradient(to right,#3a4050 0%,#4a5060 50%,#3a4050 100%);outline:none;cursor:pointer;border-radius:10px;}\n.channel-label{font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;text-align:center;min-height:20px;}\n.channel-level{font-size:12px;color:#7dd3fc;font-weight:500;text-align:center;min-height:18px;font-family:'Monaco','Courier New',monospace;}\n.mute-btn{width:100%;padding:8px 6px;background:linear-gradient(135deg,#365a40 0%,#15803d 100%);color:#86efac;border:2px solid #22c55e;border-radius:4px;font-weight:600;font-size:12px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;transition:all .2s ease;min-height:44px;display:flex;align-items:center;justify-content:center;min-width:80px;}\n.mute-btn.muted{background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 100%);border-color:#dc2626;color:#fecaca;}\n\n/* Optional but recommended */\n@media (max-width: 900px){\n  .mixer-strips{ gap:10px; }\n  .vertical-fader{ max-width:22px; }\n  .mute-btn{ min-width:70px; }\n}\n</style>",
         "storeOutMessages": true,
         "passthru": false,
         "resendOnRefresh": true,
@@ -4761,7 +4523,7 @@
         "type": "function",
         "z": "8ccf58caed82bbf6",
         "name": "Route Fader Delta to Linked Spaces",
-        "func": "const sourceSpace = msg.payload.sourceSpace;\nconst channel = msg.payload.channel;\nconst delta = msg.payload.delta;\n\nlet linkedChannels = flow.get('linkedChannels') || {};\nconst spaceStates = linkedChannels[channel] || {};\nconst allASpaces = ['a1','a2','a3'];\n\nconst targets = allASpaces.filter(s => spaceStates[s] && s !== sourceSpace);\nif (targets.length === 0) return null;\n\ntargets.forEach(targetSpace => {\n  node.send({ topic: 'audio.faderDelta', payload: { targetSpace, channel, delta } });\n});\nnode.status({ fill:'green', shape:'dot', text:`${channel}: delta ${delta}` });",
+        "func": "const sourceSpace = msg.payload.sourceSpace;\nconst channel = msg.payload.channel;\nconst value = msg.payload.value;\n\nlet linkedChannels = flow.get('linkedChannels') || {};\nconst spaceStates = linkedChannels[channel] || {};\nconst allASpaces = ['a1','a2','a3'];\n\nconst targets = allASpaces.filter(s => spaceStates[s] && s !== sourceSpace);\nif (targets.length === 0) return null;\n\ntargets.forEach(targetSpace => {\n  node.send({ topic: 'audio.faderDelta', payload: { targetSpace, channel, value } });\n});\nnode.status({ fill:'green', shape:'dot', text:`${channel}: ${value} dB → ${targets.join(', ')}` });",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -4813,8 +4575,9 @@
         "id": "link-in-linkall",
         "type": "link in",
         "z": "8ccf58caed82bbf6",
-        "name": "From Functions",
+        "name": "Audio Mixers Inputs",
         "links": [
+            "421282d53396351d",
             "link-out-linkall"
         ],
         "x": 55,
@@ -4823,7 +4586,8 @@
             [
                 "tmpl-a1-linkall",
                 "tmpl-a2-linkall",
-                "tmpl-a3-linkall"
+                "tmpl-a3-linkall",
+                "e624fd2c4fa65a8c"
             ]
         ]
     },
@@ -4877,8 +4641,8 @@
         "links": [
             "link_in_qrc_cmd"
         ],
-        "x": 1315,
-        "y": 340,
+        "x": 875,
+        "y": 600,
         "wires": []
     },
     {
@@ -4893,8 +4657,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 490,
-        "y": 340,
+        "x": 510,
+        "y": 600,
         "wires": [
             [
                 "b721f129d37ea782"
@@ -4921,8 +4685,8 @@
         "drop": true,
         "allowrate": false,
         "outputs": 1,
-        "x": 700,
-        "y": 320,
+        "x": 710,
+        "y": 580,
         "wires": [
             [
                 "c93563fba9029ea1"
@@ -7844,7 +7608,7 @@
         "z": "orch-tab",
         "g": "orch-group",
         "name": "3-actionMap (recipes)",
-        "func": "// Build msg.actions (an array of action objects) from msg.intent.key.\n// This file is the source of truth for what each top-level playable contains\n// (video/audio/lighting/etc steps and ordering).\n//\n// Per-system action contract — one vocabulary per system, no translation layers:\n//\n//   Watchout — exact hardware commands + own params:\n//     { type: 'watchout', command: 'play',         timelineKey: 'show_1' }\n//     { type: 'watchout', command: 'stop',         timelineKey: 'show_1' }\n//     { type: 'watchout', command: 'jumpToCue',    timelineKey: 'show_1', cueKey: 'intro' }\n//     { type: 'watchout', command: 'changeCueSet', timelineKey: 'main',   cueSetKey: 'show_1' }\n//\n//   MA — semantic, resolved via MA cue mapper:\n//     { type: 'ma', command: 'GoCue',    target: 'a1', labelId: 'preshow' }\n//     { type: 'ma', command: 'RunMacro', target: 'mx', labelId: 'reset_all' }\n//\n//   Q-Sys — scene-level:\n//     { type: 'qsys', command: 'RecallScene', scene: 'preshow' }\n//     { type: 'qsys', command: 'SetBgmMute',  value: 0 }\n//\n// Optional: label (string) — shown in debug panel only, never executed.\n// Notes:\n// - The Director executes actions in order.\n// - Use waitMs to insert a delay before the next step.\n// - Use waitFor to pause until a named status message arrives on the status bus.\n\nconst intent = msg.intent;\nconst key = intent.key;\n\nfunction buildShowRecipe(showKey) {\n  const showNum = String(showKey).replace('show_', '');\n  return {\n    onStart: [\n      { label: 'Start A1 video transition', type: 'watchout', command: 'play', timelineKey: 'transition_a1' },\n      { label: 'Start A2 video transition', type: 'watchout', command: 'play', timelineKey: 'transition_a2' },\n      { label: 'Start A3 video transition', type: 'watchout', command: 'play', timelineKey: 'transition_a3' },\n      { label: 'MA — preshow cue',          type: 'ma',       command: 'GoCue',        target: 'mx', labelId: 'preshow' },\n      { label: 'Q-Sys — preshow snapshot',  type: 'qsys',     command: 'RecallScene', scene: 'preshow' },\n      { label: 'Pharos — preshow cue',      type: 'pharos',   command: 'Trigger',      triggerId: 'preshow' }\n    ],\n    onCue: {\n      all_opaque: [\n        { label: `Start Show ${showNum} unified timeline`, type: 'watchout', command: 'play', timelineKey: showKey },\n        { label: `Show ${showNum} — MA show cue`,          type: 'ma',       command: 'GoCue',        target: 'mx', labelId: showKey },\n        { label: `Show ${showNum} — Q-Sys snapshot`,       type: 'qsys',     command: 'RecallScene', scene: showKey }\n      ]\n    },\n    onEnd: [\n      { label: 'Stop show timeline',         type: 'watchout', command: 'stop',         timelineKey: showKey },\n      { label: 'MA — post-show return',      type: 'ma',       command: 'GoCue',        target: 'cmd', labelId: 'post_show_return' },\n      { label: 'Q-Sys — return to ambience', type: 'qsys',     command: 'RecallScene', scene: 'ambience_bgm' }\n    ]\n  };\n}\n\nconst recipes = {\n  show_1: buildShowRecipe('show_1'),\n  show_2: buildShowRecipe('show_2'),\n  show_3: buildShowRecipe('show_3'),\n  show_4: buildShowRecipe('show_4'),\n\n  ambience_1: [\n    // video\n    { type: 'watchout', command: 'play', timelineKey: 'ambience_1_a1' },\n    { type: 'watchout', command: 'play', timelineKey: 'ambience_1_a2' },\n    { type: 'watchout', command: 'play', timelineKey: 'ambience_1_a3' },\n    // lighting\n    { type: 'ma', command: 'GoCue', target: 'a1', labelId: 'ambience_1' },\n    { type: 'ma', command: 'GoCue', target: 'a2', labelId: 'ambience_1' },\n    { type: 'ma', command: 'GoCue', target: 'a3', labelId: 'ambience_1' },\n    { type: 'ma', command: 'GoCue', target: 'ls', labelId: 'ambience_1' },\n    // audio\n    { type: 'watchout', command: 'play', timelineKey: 'bg_music_1' },\n    { type: 'qsys', command: 'RecallScene', scene: 'Ambience1' },\n    { type: 'qsys', command: 'SetBgmMute', value: 0 }\n  ],\n\n  ambience_2: [\n    // video\n    { type: 'watchout', command: 'play', timelineKey: 'ambience_2_a1' },\n    { type: 'watchout', command: 'play', timelineKey: 'ambience_2_a2' },\n    { type: 'watchout', command: 'play', timelineKey: 'ambience_2_a3' },\n    // lighting\n    { type: 'ma',       command: 'GoCue', target: 'a1', labelId: 'ambience_2' },\n    { type: 'ma',       command: 'GoCue', target: 'a2', labelId: 'ambience_2' },\n    { type: 'ma',       command: 'GoCue', target: 'a3', labelId: 'ambience_2' },\n    { type: 'ma',       command: 'GoCue', target: 'ls', labelId: 'ambience_2' },\n    // audio\n    { type: 'watchout', command: 'play', timelineKey: 'bg_music_2' },\n    { type: 'qsys', command: 'RecallScene', scene: 'Ambience2' },\n    { type: 'qsys', command: 'SetBgmMute', value: 0 }\n  ]\n};\n\nfunction resolvePhase(actionName) {\n  const a = String(actionName || 'start').toLowerCase();\n  if (a === 'end' || a === 'stop') return 'onEnd';\n  if (a === 'cue' || a === 'jump') return 'onCue';\n  return 'onStart';\n}\n\nfunction resolveActions(recipe, currentIntent) {\n  if (Array.isArray(recipe)) {\n    return { actions: recipe, mode: 'flat' };\n  }\n\n  if (!recipe || typeof recipe !== 'object') {\n    return { error: 'Recipe is not an array/object' };\n  }\n\n  const phase = resolvePhase(currentIntent.action);\n  if (phase === 'onCue') {\n    const cueName = currentIntent.cueName || null;\n    const cueMap = recipe.onCue;\n\n    if (Array.isArray(cueMap)) {\n      return { actions: cueMap, mode: 'phased', phase };\n    }\n    if (cueMap && typeof cueMap === 'object') {\n      if (cueName && Array.isArray(cueMap[cueName])) {\n        return { actions: cueMap[cueName], mode: 'phased', phase, cueName };\n      }\n      if (Array.isArray(cueMap.default)) {\n        return { actions: cueMap.default, mode: 'phased', phase, cueName: cueName || 'default' };\n      }\n    }\n    return { error: 'No onCue recipe for cueName', phase, cueName };\n  }\n\n  const actions = recipe[phase];\n  if (!Array.isArray(actions)) {\n    return { error: `No ${phase} recipe`, phase };\n  }\n\n  return { actions, mode: 'phased', phase };\n}\n\nconst recipe = recipes[key];\nif (!recipe) {\n  msg.payload = { error: 'No recipe for key: ' + key, intent };\n  return [null, msg];\n}\n\nconst resolved = resolveActions(recipe, intent);\nif (resolved.error) {\n  msg.payload = {\n    error: resolved.error,\n    intent,\n    key,\n    phase: resolved.phase,\n    cueName: resolved.cueName\n  };\n  return [null, msg];\n}\n\nmsg.actions = resolved.actions;\nmsg.recipeMeta = {\n  key,\n  mode: resolved.mode,\n  phase: resolved.phase || null,\n  cueName: resolved.cueName || null\n};\nmsg.topic = 'orchestration/actions';\nreturn [msg, null];",
+        "func": "// Build msg.actions (an array of action objects) from msg.intent.key.\n// This file is the source of truth for what each top-level playable contains\n// (video/audio/lighting/etc steps and ordering).\n//\n// Per-system action contract — one vocabulary per system, no translation layers:\n//\n//   Watchout — exact hardware commands + own params:\n//     { type: 'watchout', command: 'play',         timelineKey: 'show_1' }\n//     { type: 'watchout', command: 'stop',         timelineKey: 'show_1' }\n//     { type: 'watchout', command: 'jumpToCue',    timelineKey: 'show_1', cueKey: 'intro' }\n//     { type: 'watchout', command: 'changeCueSet', timelineKey: 'main',   cueSetKey: 'show_1' }\n//\n//   MA — semantic, resolved via MA cue mapper:\n//     { type: 'ma', command: 'GoCue',    target: 'a1', labelId: 'preshow' }\n//     { type: 'ma', command: 'RunMacro', target: 'mx', labelId: 'reset_all' }\n//\n//   Q-Sys — scene-level:\n//     { type: 'qsys', command: 'RecallScene', scene: 'preshow' }\n//     { type: 'qsys', command: 'SetBgmMute',  value: 0 }\n//\n//   Q-Sys — direct mixer fade (ramp in seconds, handled by QRC router):\n//     { type: 'qsys', command: 'audio.setLevel', target: 'a1.audio', params: { inputKey: 'bgm',  db: -60, ramp: 3 } }\n//     { type: 'qsys', command: 'audio.setLevel', target: 'a1.audio', params: { inputKey: 'show', db: 0,   ramp: 2 } }\n//\n// Optional: label (string) — shown in debug panel only, never executed.\n// Notes:\n// - The Director executes actions in order.\n// - Use waitMs to insert a delay before the next step.\n// - Use waitFor to pause until a named status message arrives on the status bus.\n\nconst intent = msg.intent;\nconst key = intent.key;\n\nfunction buildShowRecipe(showKey) {\n  const showNum = String(showKey).replace('show_', '');\n  return {\n    onStart: [\n      { label: 'Start A1 video transition', type: 'watchout', command: 'play', timelineKey: 'transition_a1' },\n      { label: 'Start A2 video transition', type: 'watchout', command: 'play', timelineKey: 'transition_a2' },\n      { label: 'Start A3 video transition', type: 'watchout', command: 'play', timelineKey: 'transition_a3' },\n      { label: 'MA — preshow cue',          type: 'ma',       command: 'GoCue',        target: 'mx', labelId: 'preshow' },\n      { label: 'Q-Sys — preshow snapshot',  type: 'qsys',     command: 'RecallScene', scene: 'preshow' },\n      { label: 'Pharos — preshow cue',      type: 'pharos',   command: 'Trigger',      triggerId: 'preshow' },\n      // Fade BGM out across all spaces ahead of show start (3s)\n      { label: 'Fade BGM out — A1', type: 'qsys', command: 'audio.setLevel', target: 'a1.audio', params: { inputKey: 'bgm',  db: -60, ramp: 3 } },\n      { label: 'Fade BGM out — A2', type: 'qsys', command: 'audio.setLevel', target: 'a2.audio', params: { inputKey: 'bgm',  db: -60, ramp: 3 } },\n      { label: 'Fade BGM out — A3', type: 'qsys', command: 'audio.setLevel', target: 'a3.audio', params: { inputKey: 'bgm',  db: -60, ramp: 3 } }\n    ],\n    onCue: {\n      all_opaque: [\n        { label: `Start Show ${showNum} unified timeline`, type: 'watchout', command: 'play', timelineKey: showKey },\n        { label: `Show ${showNum} — MA show cue`,          type: 'ma',       command: 'GoCue',        target: 'mx', labelId: showKey },\n        { label: `Show ${showNum} — Q-Sys snapshot`,       type: 'qsys',     command: 'RecallScene', scene: showKey },\n        // Fade show audio in (2s) once screen goes opaque\n        { label: `Fade show in — A1`, type: 'qsys', command: 'audio.setLevel', target: 'a1.audio', params: { inputKey: 'show', db: 0, ramp: 2 } },\n        { label: `Fade show in — A2`, type: 'qsys', command: 'audio.setLevel', target: 'a2.audio', params: { inputKey: 'show', db: 0, ramp: 2 } },\n        { label: `Fade show in — A3`, type: 'qsys', command: 'audio.setLevel', target: 'a3.audio', params: { inputKey: 'show', db: 0, ramp: 2 } }\n      ]\n    },\n    onEnd: [\n      { label: 'Stop show timeline',         type: 'watchout', command: 'stop',         timelineKey: showKey },\n      { label: 'MA — post-show return',      type: 'ma',       command: 'GoCue',        target: 'cmd', labelId: 'post_show_return' },\n      { label: 'Q-Sys — return to ambience', type: 'qsys',     command: 'RecallScene', scene: 'ambience_bgm' },\n      // Fade show audio out, BGM back up\n      { label: 'Fade show out — A1', type: 'qsys', command: 'audio.setLevel', target: 'a1.audio', params: { inputKey: 'show', db: -60, ramp: 3 } },\n      { label: 'Fade show out — A2', type: 'qsys', command: 'audio.setLevel', target: 'a2.audio', params: { inputKey: 'show', db: -60, ramp: 3 } },\n      { label: 'Fade show out — A3', type: 'qsys', command: 'audio.setLevel', target: 'a3.audio', params: { inputKey: 'show', db: -60, ramp: 3 } },\n      { label: 'Fade BGM in — A1',   type: 'qsys', command: 'audio.setLevel', target: 'a1.audio', params: { inputKey: 'bgm',  db: -20, ramp: 4 } },\n      { label: 'Fade BGM in — A2',   type: 'qsys', command: 'audio.setLevel', target: 'a2.audio', params: { inputKey: 'bgm',  db: -20, ramp: 4 } },\n      { label: 'Fade BGM in — A3',   type: 'qsys', command: 'audio.setLevel', target: 'a3.audio', params: { inputKey: 'bgm',  db: -20, ramp: 4 } }\n    ]\n  };\n}\n\nconst recipes = {\n  show_1: buildShowRecipe('show_1'),\n  show_2: buildShowRecipe('show_2'),\n  show_3: buildShowRecipe('show_3'),\n  show_4: buildShowRecipe('show_4'),\n\n  ambience_1: [\n    // video\n    { type: 'watchout', command: 'play', timelineKey: 'ambience_1_a1' },\n    { type: 'watchout', command: 'play', timelineKey: 'ambience_1_a2' },\n    { type: 'watchout', command: 'play', timelineKey: 'ambience_1_a3' },\n    // lighting\n    { type: 'ma', command: 'GoCue', target: 'a1', labelId: 'ambience_1' },\n    { type: 'ma', command: 'GoCue', target: 'a2', labelId: 'ambience_1' },\n    { type: 'ma', command: 'GoCue', target: 'a3', labelId: 'ambience_1' },\n    { type: 'ma', command: 'GoCue', target: 'ls', labelId: 'ambience_1' },\n    // audio\n    { type: 'watchout', command: 'play', timelineKey: 'bg_music_1' },\n    { type: 'qsys', command: 'RecallScene', scene: 'Ambience1' },\n    { type: 'qsys', command: 'SetBgmMute', value: 0 }\n  ],\n\n  ambience_2: [\n    // video\n    { type: 'watchout', command: 'play', timelineKey: 'ambience_2_a1' },\n    { type: 'watchout', command: 'play', timelineKey: 'ambience_2_a2' },\n    { type: 'watchout', command: 'play', timelineKey: 'ambience_2_a3' },\n    // lighting\n    { type: 'ma',       command: 'GoCue', target: 'a1', labelId: 'ambience_2' },\n    { type: 'ma',       command: 'GoCue', target: 'a2', labelId: 'ambience_2' },\n    { type: 'ma',       command: 'GoCue', target: 'a3', labelId: 'ambience_2' },\n    { type: 'ma',       command: 'GoCue', target: 'ls', labelId: 'ambience_2' },\n    // audio\n    { type: 'watchout', command: 'play', timelineKey: 'bg_music_2' },\n    { type: 'qsys', command: 'RecallScene', scene: 'Ambience2' },\n    { type: 'qsys', command: 'SetBgmMute', value: 0 }\n  ]\n};\n\nfunction resolvePhase(actionName) {\n  const a = String(actionName || 'start').toLowerCase();\n  if (a === 'end' || a === 'stop') return 'onEnd';\n  if (a === 'cue' || a === 'jump') return 'onCue';\n  return 'onStart';\n}\n\nfunction resolveActions(recipe, currentIntent) {\n  if (Array.isArray(recipe)) {\n    return { actions: recipe, mode: 'flat' };\n  }\n\n  if (!recipe || typeof recipe !== 'object') {\n    return { error: 'Recipe is not an array/object' };\n  }\n\n  const phase = resolvePhase(currentIntent.action);\n  if (phase === 'onCue') {\n    const cueName = currentIntent.cueName || null;\n    const cueMap = recipe.onCue;\n\n    if (Array.isArray(cueMap)) {\n      return { actions: cueMap, mode: 'phased', phase };\n    }\n    if (cueMap && typeof cueMap === 'object') {\n      if (cueName && Array.isArray(cueMap[cueName])) {\n        return { actions: cueMap[cueName], mode: 'phased', phase, cueName };\n      }\n      if (Array.isArray(cueMap.default)) {\n        return { actions: cueMap.default, mode: 'phased', phase, cueName: cueName || 'default' };\n      }\n    }\n    return { error: 'No onCue recipe for cueName', phase, cueName };\n  }\n\n  const actions = recipe[phase];\n  if (!Array.isArray(actions)) {\n    return { error: `No ${phase} recipe`, phase };\n  }\n\n  return { actions, mode: 'phased', phase };\n}\n\nconst recipe = recipes[key];\nif (!recipe) {\n  msg.payload = { error: 'No recipe for key: ' + key, intent };\n  return [null, msg];\n}\n\nconst resolved = resolveActions(recipe, intent);\nif (resolved.error) {\n  msg.payload = {\n    error: resolved.error,\n    intent,\n    key,\n    phase: resolved.phase,\n    cueName: resolved.cueName\n  };\n  return [null, msg];\n}\n\nmsg.actions = resolved.actions;\nmsg.recipeMeta = {\n  key,\n  mode: resolved.mode,\n  phase: resolved.phase || null,\n  cueName: resolved.cueName || null\n};\nmsg.topic = 'orchestration/actions';\nreturn [msg, null];",
         "outputs": 2,
         "timeout": 0,
         "noerr": 0,
@@ -8610,8 +8374,8 @@
         "links": [
             "c93563fba9029ea1"
         ],
-        "x": 305,
-        "y": 180,
+        "x": 245,
+        "y": 140,
         "wires": [
             [
                 "fn_qrc_router",
@@ -8624,15 +8388,15 @@
         "type": "function",
         "z": "tab_qsys_control",
         "name": "Map cmd envelope → QRC JSON",
-        "func": "// QRC Mixer Mapping — edit only the sections below\n// ===============================================\n\n// 1) Space → Mixer mapping\nconst spaceToMixer = {\n  a1: \"a1\",\n  a2: \"a2\",\n  a3: \"a3\",\n  ls: \"ls\"\n};\n\n// 2) Input mapping (shared across all spaces by default)\nconst inputsShared = {\n  special: [1, 2],\n  bgm: [3, 4],\n  show: [5, 6, 7, 8],     // stereo\n  mic1: [9],\n  mic2: [10], // example: 4ch (expand as needed)\n  mixer: [11, 12],\n};\n\n// 3) Optional per-space overrides (only if a space differs)\nconst inputsPerSpace = {\n  // a2: { bgm: [7, 8] }, // example override\n};\n\n// ====== internal logic (no edits needed) ======\n\nif (msg.topic !== 'cmd') return null;\n\nconst env = msg.payload || {};\nconst action = env.action;\nconst target = env.target;\nconst params = env.params || {};\n\nif (!action || typeof action !== 'string' || !action.startsWith('audio.')) return null;\n\n// Extract space from target item id (e.g. \"a1.audio\" → \"a1\")\nconst space = typeof target === 'string' ? target.split('.')[0] : null;\nif (!space) return null;\n\nconst inputKey = params.inputKey;\nif (!inputKey) return null;\n\nfunction makeId() {\n  return Date.now() % 1000000;\n}\n\nconst mixerName = spaceToMixer[space];\nif (!mixerName) return null;\n\n// Resolve input channels (shared + overrides)\nconst perSpace = inputsPerSpace[space] || {};\nconst channels = perSpace[inputKey] || inputsShared[inputKey];\nif (!channels || !channels.length) return null;\n\n// Build Q-SYS mixer selector string: \"1\", \"5,6\", \"1-60\"\nconst inputSelector = Array.isArray(channels)\n  ? (channels.length === 1 ? `${channels[0]}` : channels.join(\",\"))\n  : `${channels}`;\n\nlet req = null;\n\nif (action === 'audio.setLevel') {\n  let val = Number(params.db);\n  if (Number.isNaN(val)) return null;\n  val = Math.max(-60, Math.min(10, val));\n  req = {\n    jsonrpc: \"2.0\",\n    method: \"Mixer.SetInputGain\",\n    params: {\n      Name: mixerName,\n      Inputs: inputSelector,\n      Value: val\n    },\n    id: makeId()\n  };\n}\n\nif (action === 'audio.mute' || action === 'audio.unmute') {\n  req = {\n    jsonrpc: \"2.0\",\n    method: \"Mixer.SetInputMute\",\n    params: {\n      Name: mixerName,\n      Inputs: inputSelector,\n      Value: action === 'audio.mute'\n    },\n    id: makeId()\n  };\n}\n\nif (!req) return null;\n\nmsg.qrc = req;\nmsg.payload = JSON.stringify(req) + \"\\u0000\";\nreturn msg;",
+        "func": "// QRC Mixer Mapping — edit only the sections below\n// ===============================================\n\n// 1) Space → Mixer mapping\nconst spaceToMixer = {\n  a1: \"a1\",\n  a2: \"a2\",\n  a3: \"a3\",\n  ls: \"ls\"\n};\n\n// 2) Input mapping (shared across all spaces by default)\nconst inputsShared = {\n  special: [1, 2],\n  bgm: [3, 4],\n  show: [5, 6, 7, 8],     // stereo\n  mic1: [9],\n  mic2: [10], // example: 4ch (expand as needed)\n  mixer: [11, 12],\n};\n\n// 3) Optional per-space overrides (only if a space differs)\nconst inputsPerSpace = {\n  // a2: { bgm: [7, 8] }, // example override\n};\n\n// ====== internal logic (no edits needed) ======\n\n// Accept two shapes:\n//  A) UI cmd bus:  msg.topic === 'cmd', msg.payload = { action, target, params }\n//  B) Director:   msg.payload = { runId, step, total, action: { type:'qsys', command, target, params } }\nlet env;\nif (msg.topic === 'cmd') {\n  env = msg.payload || {};\n} else {\n  // Director-originated: unwrap the action object into the same shape\n  const dirAction = (msg.payload || {}).action || {};\n  if (dirAction.type !== 'qsys') return null;\n  env = {\n    action: dirAction.command,\n    target: dirAction.target,\n    params: dirAction.params || {}\n  };\n}\n\nconst action = env.action;\nconst target = env.target;\nconst params = env.params || {};\n\nif (!action || typeof action !== 'string' || !action.startsWith('audio.')) return null;\n\n// Extract space from target item id (e.g. \"a1.audio\" → \"a1\")\nconst space = typeof target === 'string' ? target.split('.')[0] : null;\nif (!space) return null;\n\nconst inputKey = params.inputKey;\nif (!inputKey) return null;\n\nfunction makeId() {\n  return Date.now() % 1000000;\n}\n\nconst mixerName = spaceToMixer[space];\nif (!mixerName) return null;\n\n// Resolve input channels (shared + overrides)\nconst perSpace = inputsPerSpace[space] || {};\nconst channels = perSpace[inputKey] || inputsShared[inputKey];\nif (!channels || !channels.length) return null;\n\n// Build Q-SYS mixer selector string: \"1\", \"5,6\", \"1-60\"\nconst inputSelector = Array.isArray(channels)\n  ? (channels.length === 1 ? `${channels[0]}` : channels.join(\",\"))\n  : `${channels}`;\n\nlet req = null;\n\nif (action === 'audio.setLevel') {\n  let val = Number(params.db);\n  if (Number.isNaN(val)) return null;\n  val = Math.max(-60, Math.min(10, val));\n  const qrcParams = {\n    Name: mixerName,\n    Inputs: inputSelector,\n    Value: val\n  };\n  if (params.ramp != null) qrcParams.Ramp = Number(params.ramp);\n  req = {\n    jsonrpc: \"2.0\",\n    method: \"Mixer.SetInputGain\",\n    params: qrcParams,\n    id: makeId()\n  };\n}\n\nif (action === 'audio.mute' || action === 'audio.unmute') {\n  req = {\n    jsonrpc: \"2.0\",\n    method: \"Mixer.SetInputMute\",\n    params: {\n      Name: mixerName,\n      Inputs: inputSelector,\n      Value: action === 'audio.mute'\n    },\n    id: makeId()\n  };\n}\n\nif (!req) return null;\n\nmsg.qrc = req;\nmsg.payload = JSON.stringify(req) + \"\\u0000\";\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 500,
-        "y": 180,
+        "x": 520,
+        "y": 120,
         "wires": [
             [
                 "tcp_out_qrc",
@@ -8651,8 +8415,8 @@
         "base64": false,
         "end": false,
         "tls": "",
-        "x": 810,
-        "y": 160,
+        "x": 1120,
+        "y": 100,
         "wires": []
     },
     {
@@ -8670,8 +8434,8 @@
         "trim": false,
         "base64": false,
         "tls": "",
-        "x": 220,
-        "y": 340,
+        "x": 170,
+        "y": 280,
         "wires": [
             [
                 "4b5b244a2524671c",
@@ -8688,8 +8452,8 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 670,
-        "y": 340,
+        "x": 970,
+        "y": 480,
         "wires": [
             [
                 "debug_qrc_in"
@@ -8707,8 +8471,8 @@
         "tostatus": false,
         "complete": "payload",
         "targetType": "msg",
-        "x": 840,
-        "y": 340,
+        "x": 1140,
+        "y": 480,
         "wires": []
     },
     {
@@ -8716,14 +8480,14 @@
         "type": "debug",
         "z": "tab_qsys_control",
         "name": "QRC OUT",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "qrc",
         "targetType": "msg",
-        "x": 750,
-        "y": 220,
+        "x": 580,
+        "y": 180,
         "wires": []
     },
     {
@@ -8731,18 +8495,21 @@
         "type": "function",
         "z": "tab_qsys_control",
         "name": "Parse QRC Buffer",
-        "func": "// Split QRC stream payload into individual JSON strings\nlet s = msg.payload;\n\n// If payload is a Buffer, convert it\nif (Buffer.isBuffer(s)) s = s.toString(\"utf8\");\n\n// Split on null terminator and emit one message per JSON string\nconst parts = s.split(\"\\u0000\").filter(p => p.trim().length);\n\nreturn parts.map(p => ({\n  ...msg,\n  payload: p\n}));",
-        "outputs": 1,
+        "func": "// Split QRC stream payload into individual JSON strings\nlet s = msg.payload;\n\n// If payload is a Buffer, convert it\nif (Buffer.isBuffer(s)) s = s.toString(\"utf8\");\n\n// Split on null terminator and emit one message per JSON string\nconst parts = s.split(\"\\u0000\").filter(p => p.trim().length);\n\n// Detect EngineStatus notification — sent by Core when TCP connection is established\n// Output 2 emits a trigger message on connect so QRC Fetch Initial State can run\nlet connectTrigger = null;\n\nfor (const part of parts) {\n  try {\n    const obj = JSON.parse(part);\n    if (obj.method === 'EngineStatus') {\n      const state = obj.params?.State ?? 'Active';\n      const platform = obj.params?.Platform ?? '';\n      node.status({ fill: 'green', shape: 'dot', text: `${state} · ${platform}` });\n      if (state === 'Active') {\n        connectTrigger = { topic: 'qrc.connected', payload: obj.params };\n      }\n    } else if (obj.method === 'KeepAlive') {\n      node.status({ fill: 'green', shape: 'ring', text: `keepalive ok` });\n    }\n  } catch (e) { /* not JSON or incomplete frame */ }\n}\n\n// Output 1: all QRC messages | Output 2: connection trigger (null if no EngineStatus)\nreturn [\n  parts.map(p => ({ ...msg, payload: p })),\n  connectTrigger ? [connectTrigger] : null\n];",
+        "outputs": 2,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 470,
-        "y": 340,
+        "x": 450,
+        "y": 280,
         "wires": [
             [
-                "json_qrc_in"
+                "1968f347ca66022a"
+            ],
+            [
+                "9ed8373985e3d586"
             ]
         ]
     },
@@ -8751,15 +8518,15 @@
         "type": "debug",
         "z": "tab_qsys_control",
         "name": "debug 14",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 440,
-        "y": 420,
+        "x": 420,
+        "y": 400,
         "wires": []
     },
     {
@@ -8774,8 +8541,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 450,
-        "y": 380,
+        "x": 430,
+        "y": 340,
         "wires": [
             []
         ]
@@ -8789,8 +8556,106 @@
         "links": [
             "a7f1765fecbbfedf"
         ],
-        "x": 375,
-        "y": 240,
+        "x": 395,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "53298a2eb2fa6ce1",
+        "type": "function",
+        "z": "tab_qsys_control",
+        "name": "QRC KeepAlive",
+        "func": "// QRC KeepAlive\n// Wire an Inject node (repeat every 25s) → this node → tcp out (Q-SYS Core)\n// Prevents the Core from closing the TCP connection after 30s of silence.\n\nconst req = {\n  jsonrpc: \"2.0\",\n  method: \"KeepAlive\",\n  params: {},\n  id: Date.now() % 1000000\n};\n\nmsg.payload = JSON.stringify(req) + \"\\u0000\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 60,
+        "wires": [
+            [
+                "tcp_out_qrc"
+            ]
+        ]
+    },
+    {
+        "id": "60d6c766ddb5b0dc",
+        "type": "inject",
+        "z": "tab_qsys_control",
+        "name": "Keep Alive",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "25",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.5",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 390,
+        "y": 60,
+        "wires": [
+            [
+                "53298a2eb2fa6ce1"
+            ]
+        ]
+    },
+    {
+        "id": "1968f347ca66022a",
+        "type": "function",
+        "z": "tab_qsys_control",
+        "name": "Parse QRC State Response",
+        "func": "// Parse QRC State Response\n// Converts Component.GetControls responses from Q-SYS into audio.init messages\n// that the mixer UI components use to seed their display on connect.\n//\n// Wire: [Parse QRC Buffer output 1] → this node → [link out to mixer ui_template inputs]\n// Only Component.GetControls responses pass through; all others return null (dropped).\n\n// Input channel number → inputKey mapping\n// Must match the inputsShared table in \"Map cmd envelope → QRC JSON.js\"\nconst inputsShared = {\n  special: [1, 2],\n  bgm:     [3, 4],\n  show:    [5, 6, 7, 8],\n  mic1:    [9],\n  mic2:    [10],\n  mixer:   [11, 12]\n};\n\n// Build reverse map: channel number → inputKey\nconst channelToKey = {};\nfor (const [key, chs] of Object.entries(inputsShared)) {\n  for (const ch of chs) {\n    channelToKey[ch] = key;\n  }\n}\n\nlet resp;\ntry {\n  resp = JSON.parse(msg.payload);\n} catch (e) {\n  return null; // not valid JSON (shouldn't happen after Parse QRC Buffer, but be safe)\n}\n\n// Only handle Component.GetControls success responses\nif (!resp.result || !resp.result.Name || !Array.isArray(resp.result.Controls)) {\n  return null;\n}\n\nconst space = resp.result.Name;\nconst controls = resp.result.Controls;\nconst channels = {};\nconst mutes = {};\n\nfor (const ctrl of controls) {\n  // Q-SYS Mixer component control naming: \"input.gain.X\" and \"input.mute.X\"\n  const gainMatch = ctrl.Name.match(/^input\\.gain\\.(\\d+)$/);\n  const muteMatch = ctrl.Name.match(/^input\\.mute\\.(\\d+)$/);\n\n  if (gainMatch) {\n    const chNum = parseInt(gainMatch[1]);\n    const key = channelToKey[chNum];\n    if (key !== undefined && channels[key] === undefined) {\n      // Use first channel of each key; round to 1 decimal\n      channels[key] = Math.round(ctrl.Value * 10) / 10;\n    }\n  }\n\n  if (muteMatch) {\n    const chNum = parseInt(muteMatch[1]);\n    const key = channelToKey[chNum];\n    if (key !== undefined && mutes[key] === undefined) {\n      mutes[key] = Boolean(ctrl.Value);\n    }\n  }\n}\n\nif (Object.keys(channels).length === 0 && Object.keys(mutes).length === 0) {\n  return null; // no recognised controls in the response\n}\n\nnode.status({ fill: 'blue', shape: 'dot', text: `init ${space}: ${Object.keys(channels).length} ch` });\n\nreturn {\n  topic: 'audio.init',\n  payload: { space, channels, mutes }\n};\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 260,
+        "wires": [
+            [
+                "421282d53396351d"
+            ]
+        ]
+    },
+    {
+        "id": "9ed8373985e3d586",
+        "type": "function",
+        "z": "tab_qsys_control",
+        "name": "QRC Fetch Initial State",
+        "func": "// QRC Fetch Initial State\n// Triggered by Parse QRC Buffer output 2 (EngineStatus Active)\n// Sends Component.GetControls for each mixer space to read current values.\n// Wire: [Parse QRC Buffer output 2] → this node → [QRC TCP Out]\n//\n// The responses come back through tcp in → Parse QRC Buffer output 1\n// → Parse QRC State Response → audio.init messages to the UI.\n//\n// NOTE: Component.GetControls requires the mixer components to be Named Components\n// in the Q-SYS design. The Name must match the mixer names used in the cmd envelope\n// (a1, a2, a3, ls). If Component.GetControls returns an error, check the exact\n// component names in your Q-SYS design.\n\nconst spaces = ['a1', 'a2', 'a3', 'ls'];\nlet id = Date.now() % 1000000;\n\nreturn spaces.map(space => ({\n  topic: 'qrc.fetchState',\n  _fetchSpace: space,\n  payload: JSON.stringify({\n    jsonrpc: '2.0',\n    method: 'Component.GetControls',\n    params: { Name: space },\n    id: id++\n  }) + '\\u0000'\n}));\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 860,
+        "y": 300,
+        "wires": [
+            [
+                "tcp_out_qrc"
+            ]
+        ]
+    },
+    {
+        "id": "421282d53396351d",
+        "type": "link out",
+        "z": "tab_qsys_control",
+        "name": "QRC State Response",
+        "mode": "link",
+        "links": [
+            "link-in-linkall"
+        ],
+        "x": 905,
+        "y": 260,
         "wires": []
     },
     {
