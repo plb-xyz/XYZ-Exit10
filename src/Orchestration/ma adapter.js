@@ -53,9 +53,9 @@ if (String(action.type || '').toLowerCase() !== 'ma') {
     return fail('Not an MA action (wrong adapter wired?)');
 }
 
-const mapping = flow.get('ma_cue_mapping');
+const mapping = global.get('ma_cue_mapping');
 if (!mapping) {
-    return fail('flow.ma_cue_mapping is missing (MA cue mapper not initialized yet)');
+    return fail('global.ma_cue_mapping is missing (MA cue mapper not initialized yet)');
 }
 
 // Resolve which mapping space + key to use

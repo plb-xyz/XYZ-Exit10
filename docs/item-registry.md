@@ -383,7 +383,7 @@ Start ambience on everything in Atrium 1 (video, audio, lighting all get the com
 {
   "v": 1,
   "source": "ui",
-  //"target": "a1, a2, a3, ls",
+  "target": ["a1", "a2", "a3", "ls"],
   "action": "content.go",
   "params": { "key": "ambience_2" }
 }

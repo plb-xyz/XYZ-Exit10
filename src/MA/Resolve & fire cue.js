@@ -1,5 +1,5 @@
 'use strict';
-var mapping = flow.get('ma_cue_mapping') || { a1: {}, a2: {}, a3: {}, ls: {}, cmd: {}, mx: {} };
+var mapping = global.get('ma_cue_mapping') || { a1: {}, a2: {}, a3: {}, ls: {}, cmd: {}, mx: {} };
 var data    = msg.payload || {};
 var space   = data.space || msg.space;
 var labelId = data.labelId;

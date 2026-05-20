@@ -11,7 +11,7 @@ mapping.a3  = (mapping.a3  && typeof mapping.a3  === 'object' && !Array.isArray(
 mapping.ls  = (mapping.ls  && typeof mapping.ls  === 'object' && !Array.isArray(mapping.ls))  ? mapping.ls  : {};
 mapping.cmd = (mapping.cmd && typeof mapping.cmd === 'object' && !Array.isArray(mapping.cmd)) ? mapping.cmd : {};
 mapping.mx  = (mapping.mx  && typeof mapping.mx  === 'object' && !Array.isArray(mapping.mx))  ? mapping.mx  : {};
-flow.set('ma_cue_mapping', mapping);
+global.set('ma_cue_mapping', mapping);
 var count = Object.keys(mapping.a1).length + Object.keys(mapping.a2).length +
             Object.keys(mapping.a3).length + Object.keys(mapping.ls).length +
             Object.keys(mapping.cmd).length + Object.keys(mapping.mx).length;

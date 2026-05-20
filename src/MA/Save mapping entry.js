@@ -1,5 +1,5 @@
 'use strict';
-var mapping = flow.get('ma_cue_mapping') || { a1: {}, a2: {}, a3: {}, ls: {}, cmd: {}, mx: {} };
+var mapping = global.get('ma_cue_mapping') || { a1: {}, a2: {}, a3: {}, ls: {}, cmd: {}, mx: {} };
 var data    = msg.payload || {};
 var space   = data.space;
 var entry   = data.entry || {};
@@ -88,7 +88,7 @@ if (entry.type === 'sequenceCue') {
 }
 
 mapping[space][labelId] = record;
-flow.set('ma_cue_mapping', mapping);
+global.set('ma_cue_mapping', mapping);
 node.log('[MA Cue Mapper] Saved: ' + space + '/' + labelId);
 
 var cfg = flow.get('ma_cue_cfg') || {};
