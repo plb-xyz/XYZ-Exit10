@@ -55,7 +55,7 @@ if (String(action.type || '').toLowerCase() !== 'ma') {
 
 const mapping = global.get('ma_cue_mapping');
 if (!mapping) {
-x/    return fail('global.ma_cue_mapping is missing (MA cue mapper not initialized yet)');
+    return fail('global.ma_cue_mapping is missing (MA cue mapper not initialized yet)');
 }
 
 // Resolve which mapping space + key to use
