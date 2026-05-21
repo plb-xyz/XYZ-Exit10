@@ -1,3 +1,5 @@
+if (msg.topic !== 'audio.muteSync') return null;
+
 const sourceSpace = msg.payload.space;
 const channel = msg.payload.channel;
 const muteState = msg.payload.muted;

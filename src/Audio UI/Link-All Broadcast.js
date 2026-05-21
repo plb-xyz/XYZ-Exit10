@@ -1,4 +1,5 @@
 // Link-All Broadcast + populate flow.linkedChannels
+if (msg.topic !== 'audio.linkAll') return null;
 
 const linked = msg.payload.linked;
 const allASpaces = ['a1','a2','a3'];

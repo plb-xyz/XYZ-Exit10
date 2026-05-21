@@ -1,3 +1,5 @@
+if (msg.topic !== 'audio.faderSync') return null;
+
 const sourceSpace = msg.payload.sourceSpace;
 const channel = msg.payload.channel;
 const value = msg.payload.value;
