@@ -4263,7 +4263,7 @@
         "resendOnRefresh": true,
         "templateScope": "local",
         "className": "",
-        "x": 350,
+        "x": 340,
         "y": 600,
         "wires": [
             [
@@ -8328,7 +8328,7 @@
             "c93563fba9029ea1"
         ],
         "x": 245,
-        "y": 140,
+        "y": 180,
         "wires": [
             [
                 "fn_qrc_router",
@@ -8341,7 +8341,7 @@
         "type": "function",
         "z": "tab_qsys_control",
         "name": "Map cmd envelope → QRC JSON",
-        "func": "// QRC Mixer Mapping — edit only the sections below\n// ===============================================\n\n// 1) Space → Mixer mapping\nconst spaceToMixer = {\n  a1: \"a1\",\n  a2: \"a2\",\n  a3: \"a3\",\n  ls: \"ls\"\n};\n\n// 2) Input mapping (shared across all spaces by default)\nconst inputsShared = {\n  special: [1, 2],\n  bgm: [3, 4],\n  show: [5, 6, 7, 8],     // stereo\n  mic1: [9],\n  mic2: [10], // example: 4ch (expand as needed)\n  mixer: [11, 12],\n};\n\n// 3) Optional per-space overrides (only if a space differs)\nconst inputsPerSpace = {\n  // a2: { bgm: [7, 8] }, // example override\n};\n\n// ====== internal logic (no edits needed) ======\n\n// Accept two shapes:\n//  A) UI cmd bus:  msg.topic === 'cmd', msg.payload = { action, target, params }\n//  B) Director:   msg.payload = { runId, step, total, action: { type:'qsys', command, target, params } }\nlet env;\nif (msg.topic === 'cmd') {\n  env = msg.payload || {};\n} else {\n  // Director-originated: unwrap the action object into the same shape\n  const dirAction = (msg.payload || {}).action || {};\n  if (dirAction.type !== 'qsys') return null;\n  env = {\n    action: dirAction.command,\n    target: dirAction.target,\n    params: dirAction.params || {}\n  };\n}\n\nconst action = env.action;\nconst target = env.target;\nconst params = env.params || {};\n\nif (!action || typeof action !== 'string' || !action.startsWith('audio.')) return null;\n\n// Extract space from target item id (e.g. \"a1.audio\" → \"a1\")\nconst space = typeof target === 'string' ? target.split('.')[0] : null;\nif (!space) return null;\n\nconst inputKey = params.inputKey;\nif (!inputKey) return null;\n\nfunction makeId() {\n  return Date.now() % 1000000;\n}\n\nconst mixerName = spaceToMixer[space];\nif (!mixerName) return null;\n\n// Resolve input channels (shared + overrides)\nconst perSpace = inputsPerSpace[space] || {};\nconst channels = perSpace[inputKey] || inputsShared[inputKey];\nif (!channels || !channels.length) return null;\n\n// Build Q-SYS mixer selector string: \"1\", \"5,6\", \"1-60\"\nconst inputSelector = Array.isArray(channels)\n  ? (channels.length === 1 ? `${channels[0]}` : channels.join(\",\"))\n  : `${channels}`;\n\nlet req = null;\n\nif (action === 'audio.setLevel') {\n  let val = Number(params.db);\n  if (Number.isNaN(val)) return null;\n  val = Math.max(-60, Math.min(10, val));\n  const qrcParams = {\n    Name: mixerName,\n    Inputs: inputSelector,\n    Value: val\n  };\n  if (params.ramp != null) qrcParams.Ramp = Number(params.ramp);\n  req = {\n    jsonrpc: \"2.0\",\n    method: \"Mixer.SetInputGain\",\n    params: qrcParams,\n    id: makeId()\n  };\n}\n\nif (action === 'audio.mute' || action === 'audio.unmute') {\n  req = {\n    jsonrpc: \"2.0\",\n    method: \"Mixer.SetInputMute\",\n    params: {\n      Name: mixerName,\n      Inputs: inputSelector,\n      Value: action === 'audio.mute'\n    },\n    id: makeId()\n  };\n}\n\nif (!req) return null;\n\nmsg.qrc = req;\nmsg.payload = JSON.stringify(req) + \"\\u0000\";\nreturn msg;",
+        "func": "// QRC Mixer Mapping — edit only the sections below\n// ===============================================\n\n// ====== config (edit in QRC Config Init.js) ======\nconst qrcConfig = flow.get('qrcConfig');\nif (!qrcConfig) {\n  node.error('qrcConfig not initialised — trigger QRC Config Init first');\n  return null;\n}\nconst { spaceToMixer, inputsShared, inputsPerSpace } = qrcConfig;\n\n// ====== internal logic ======\n\n// Accept two shapes:\n//  A) UI cmd bus:  msg.topic === 'cmd', msg.payload = { action, target, params }\n//  B) Director:   msg.payload = { runId, step, total, action: { type:'qsys', command, target, params } }\nlet envelope;\nif (msg.topic === 'cmd') {\n  envelope = msg.payload || {};\n} else {\n  // Director-originated: unwrap the action object into the same shape\n  const dirAction = (msg.payload || {}).action || {};\n  if (dirAction.type !== 'qsys') {\n    node.warn(`[QRC] rejected: topic=\"${msg.topic}\", payload.action.type=\"${dirAction.type}\" — expected topic \"cmd\" or action.type \"qsys\"`);\n    return null;\n  }\n  envelope = {\n    action: dirAction.command,\n    target: dirAction.target,\n    params: dirAction.params || {}\n  };\n}\n\nconst action = envelope.action;\nconst target = envelope.target;\nconst params = envelope.params || {};\n\nif (!action || typeof action !== 'string' || !action.startsWith('audio.')) {\n  node.warn(`[QRC] rejected: action=\"${action}\" — must be a string starting with \"audio.\"`);\n  return null;\n}\n\n// Extract space from target item id (e.g. \"a1.audio\" → \"a1\")\nconst space = typeof target === 'string' ? target.split('.')[0] : null;\nif (!space) {\n  node.warn(`[QRC] rejected: target=\"${target}\" — could not extract space`);\n  return null;\n}\n\nconst inputKey = params.inputKey;\nif (!inputKey) {\n  node.warn(`[QRC] rejected: params.inputKey missing`);\n  return null;\n}\n\nfunction makeId() {\n  return Date.now() % 1000000;\n}\n\nconst mixerName = spaceToMixer[space];\nif (!mixerName) {\n  node.warn(`[QRC] rejected: space=\"${space}\" not in spaceToMixer`);\n  return null;\n}\n\n// Resolve input channels (shared + overrides)\nconst perSpace = inputsPerSpace[space] || {};\nconst channels = perSpace[inputKey] || inputsShared[inputKey];\nif (!channels || !channels.length) {\n  node.warn(`[QRC] rejected: inputKey=\"${inputKey}\" not found in channel map for space=\"${space}\"`);\n  return null;\n}\n\n// Build Q-SYS mixer selector string: \"1\", \"5,6\", \"1-60\"\nconst inputSelector = Array.isArray(channels)\n  ? (channels.length === 1 ? `${channels[0]}` : channels.join(\",\"))\n  : `${channels}`;\n\nlet req = null;\n\nif (action === 'audio.setLevel') {\n  let val = Number(params.db);\n  if (Number.isNaN(val)) return null;\n  val = Math.max(-60, Math.min(10, val));\n  const qrcParams = {\n    Name: mixerName,\n    Inputs: inputSelector,\n    Value: val\n  };\n  if (params.ramp != null) qrcParams.Ramp = Number(params.ramp);\n  req = {\n    jsonrpc: \"2.0\",\n    method: \"Mixer.SetInputGain\",\n    params: qrcParams,\n    id: makeId()\n  };\n}\n\nif (action === 'audio.mute' || action === 'audio.unmute') {\n  req = {\n    jsonrpc: \"2.0\",\n    method: \"Mixer.SetInputMute\",\n    params: {\n      Name: mixerName,\n      Inputs: inputSelector,\n      Value: action === 'audio.mute'\n    },\n    id: makeId()\n  };\n}\n\nif (!req) return null;\n\nmsg.qrc = req;\nmsg.payload = JSON.stringify(req) + \"\\u0000\";\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -8349,7 +8349,7 @@
         "finalize": "",
         "libs": [],
         "x": 520,
-        "y": 120,
+        "y": 160,
         "wires": [
             [
                 "debug_qrc_out",
@@ -8369,7 +8369,7 @@
         "complete": "qrc",
         "targetType": "msg",
         "x": 580,
-        "y": 180,
+        "y": 220,
         "wires": []
     },
     {
@@ -8385,7 +8385,7 @@
         "finalize": "",
         "libs": [],
         "x": 330,
-        "y": 340,
+        "y": 380,
         "wires": [
             [
                 "1968f347ca66022a",
@@ -8411,7 +8411,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 300,
-        "y": 460,
+        "y": 500,
         "wires": []
     },
     {
@@ -8427,7 +8427,7 @@
         "finalize": "",
         "libs": [],
         "x": 310,
-        "y": 400,
+        "y": 440,
         "wires": [
             []
         ]
@@ -8442,7 +8442,7 @@
             "a7f1765fecbbfedf"
         ],
         "x": 395,
-        "y": 180,
+        "y": 220,
         "wires": []
     },
     {
@@ -8458,7 +8458,7 @@
         "finalize": "",
         "libs": [],
         "x": 580,
-        "y": 60,
+        "y": 80,
         "wires": [
             [
                 "ede1c4fef3ed7695"
@@ -8483,7 +8483,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 390,
-        "y": 60,
+        "y": 80,
         "wires": [
             [
                 "53298a2eb2fa6ce1"
@@ -8495,7 +8495,7 @@
         "type": "function",
         "z": "tab_qsys_control",
         "name": "Parse QRC State Response",
-        "func": "// Parse QRC State Response\n// Converts Component.GetControls responses from Q-SYS into audio.init messages\n// that the mixer UI components use to seed their display on connect.\n//\n// Wire: [Parse QRC Buffer output 1] → this node → [link out to mixer ui_template inputs]\n// Only Component.GetControls responses pass through; all others return null (dropped).\n\n// Input channel number → inputKey mapping\n// Must match the inputsShared table in \"Map cmd envelope → QRC JSON.js\"\nconst inputsShared = {\n  special: [1, 2],\n  bgm: [3, 4],\n  show: [5, 6, 7, 8],\n  mic1: [9],\n  mic2: [10],\n  mixer: [11, 12]\n};\n\n// Build reverse map: channel number → inputKey\nconst channelToKey = {};\nfor (const [key, chs] of Object.entries(inputsShared)) {\n  for (const ch of chs) {\n    channelToKey[ch] = key;\n  }\n}\n\nlet resp;\ntry {\n  resp = JSON.parse(msg.payload);\n} catch (e) {\n  return null; // not valid JSON (shouldn't happen after Parse QRC Buffer, but be safe)\n}\n\n// Only handle Component.GetControls success responses\nif (!resp.result || !resp.result.Name || !Array.isArray(resp.result.Controls)) {\n  return null;\n}\n\nconst space = resp.result.Name;\nconst controls = resp.result.Controls;\nconst channels = {};\nconst mutes = {};\n\nfor (const ctrl of controls) {\n  // Q-SYS Matrix Mixer control naming: \"input.X.gain\" and \"input.X.mute\"\n  const gainMatch = ctrl.Name.match(/^input\\.(\\d+)\\.gain$/);\n  const muteMatch = ctrl.Name.match(/^input\\.(\\d+)\\.mute$/);\n\n  if (gainMatch) {\n    const chNum = parseInt(gainMatch[1]);\n    const key = channelToKey[chNum];\n    if (key !== undefined && channels[key] === undefined) {\n      // Use first channel of each key; round to 1 decimal\n      channels[key] = Math.round(ctrl.Value * 10) / 10;\n    }\n  }\n\n  if (muteMatch) {\n    const chNum = parseInt(muteMatch[1]);\n    const key = channelToKey[chNum];\n    if (key !== undefined && mutes[key] === undefined) {\n      mutes[key] = Boolean(ctrl.Value);\n    }\n  }\n}\n\nif (Object.keys(channels).length === 0 && Object.keys(mutes).length === 0) {\n  return null; // no recognised controls in the response\n}\n\nnode.status({ fill: 'blue', shape: 'dot', text: `init ${space}: ${Object.keys(channels).length} ch` });\n\n// Trigger next space in the fetch queue (sequential — one request at a time)\nconst queue = flow.get('fetchStateQueue') || [];\nlet nextReq = null;\nif (queue.length > 0) {\n  const nextSpace = queue.shift();\n  flow.set('fetchStateQueue', queue);\n  nextReq = {\n    topic: 'qrc.fetchState',\n    _fetchSpace: nextSpace,\n    payload: JSON.stringify({\n      jsonrpc: '2.0',\n      method: 'Component.GetControls',\n      params: { Name: nextSpace },\n      id: Date.now() % 1000000\n    }) + '\\u0000'\n  };\n}\n\n// Output 1: audio.init to UI | Output 2: next fetch request to tcp request node\nreturn [\n  { topic: 'audio.init', payload: { space, channels, mutes } },\n  nextReq\n];\n",
+        "func": "// Parse QRC State Response\n// Converts Component.GetControls responses from Q-SYS into audio.init messages\n// that the mixer UI components use to seed their display on connect.\n//\n// Wire: [Parse QRC Buffer output 1] → this node → [link out to mixer ui_template inputs]\n// Only Component.GetControls responses pass through; all others return null (dropped).\n\n// Input channel map from flow context (set by QRC Config Init)\nconst qrcConfig = flow.get('qrcConfig');\nif (!qrcConfig) {\n  node.error('qrcConfig not initialised — trigger QRC Config Init first');\n  return null;\n}\nconst { inputsShared } = qrcConfig;\n\n// Build reverse map: channel number → inputKey\nconst channelToKey = {};\nfor (const [key, chs] of Object.entries(inputsShared)) {\n  for (const ch of chs) channelToKey[ch] = key;\n}\n\nlet resp;\ntry {\n  resp = JSON.parse(msg.payload);\n} catch (e) {\n  return null; // not valid JSON (shouldn't happen after Parse QRC Buffer, but be safe)\n}\n\n// Only handle Component.GetControls success responses\nif (!resp.result || !resp.result.Name || !Array.isArray(resp.result.Controls)) {\n  return null;\n}\n\nconst space = resp.result.Name;\nconst controls = resp.result.Controls;\nconst channels = {};\nconst mutes = {};\n\nfor (const ctrl of controls) {\n  // Q-SYS Matrix Mixer control naming: \"input.X.gain\" and \"input.X.mute\"\n  const gainMatch = ctrl.Name.match(/^input\\.(\\d+)\\.gain$/);\n  const muteMatch = ctrl.Name.match(/^input\\.(\\d+)\\.mute$/);\n\n  if (gainMatch) {\n    const chNum = parseInt(gainMatch[1]);\n    const key = channelToKey[chNum];\n    if (key !== undefined && channels[key] === undefined) {\n      // Use first channel of each key; round to 1 decimal\n      channels[key] = Math.round(ctrl.Value * 10) / 10;\n    }\n  }\n\n  if (muteMatch) {\n    const chNum = parseInt(muteMatch[1]);\n    const key = channelToKey[chNum];\n    if (key !== undefined && mutes[key] === undefined) {\n      mutes[key] = Boolean(ctrl.Value);\n    }\n  }\n}\n\nif (Object.keys(channels).length === 0 && Object.keys(mutes).length === 0) {\n  return null; // no recognised controls in the response\n}\n\nnode.status({ fill: 'blue', shape: 'dot', text: `init ${space}: ${Object.keys(channels).length} ch` });\n\n// Trigger next space in the fetch queue (sequential — one request at a time)\nconst queue = flow.get('fetchStateQueue') || [];\nlet nextReq = null;\nif (queue.length > 0) {\n  const nextSpace = queue.shift();\n  flow.set('fetchStateQueue', queue);\n  nextReq = {\n    topic: 'qrc.fetchState',\n    _fetchSpace: nextSpace,\n    payload: JSON.stringify({\n      jsonrpc: '2.0',\n      method: 'Component.GetControls',\n      params: { Name: nextSpace },\n      id: Date.now() % 1000000\n    }) + '\\u0000'\n  };\n}\n\n// Output 1: audio.init to UI | Output 2: next fetch request to tcp request node\nreturn [\n  { topic: 'audio.init', payload: { space, channels, mutes } },\n  nextReq\n];\n",
         "outputs": 2,
         "timeout": 0,
         "noerr": 0,
@@ -8503,7 +8503,7 @@
         "finalize": "",
         "libs": [],
         "x": 680,
-        "y": 320,
+        "y": 360,
         "wires": [
             [
                 "421282d53396351d"
@@ -8518,7 +8518,7 @@
         "type": "function",
         "z": "tab_qsys_control",
         "name": "QRC Fetch Initial State",
-        "func": "// QRC Fetch Initial State\n// Triggered by Parse QRC Buffer output 2 (EngineStatus Active)\n// Sends Component.GetControls for each mixer space to read current values.\n// Wire: [Parse QRC Buffer output 2] → this node → [QRC TCP Out]\n//\n// The responses come back through tcp in → Parse QRC Buffer output 1\n// → Parse QRC State Response → audio.init messages to the UI.\n//\n// NOTE: Component.GetControls requires the mixer components to be Named Components\n// in the Q-SYS design. The Name must match the mixer names used in the cmd envelope\n// (a1, a2, a3, ls). If Component.GetControls returns an error, check the exact\n// component names in your Q-SYS design.\n\nconst spaces = ['a1', 'a2', 'a3', 'ls'];\n\n// Store remaining spaces in queue; Parse QRC State Response will chain through them\nflow.set('fetchStateQueue', spaces.slice(1)); // ['a2', 'a3', 'ls']\n\n// Send only the first request — responses trigger the next via output 2\nmsg.topic = 'qrc.fetchState';\nmsg._fetchSpace = spaces[0];\nmsg.payload = JSON.stringify({\n  jsonrpc: '2.0',\n  method: 'Component.GetControls',\n  params: { Name: spaces[0] },\n  id: Date.now() % 1000000\n}) + '\\u0000';\n\nreturn msg;\n",
+        "func": "// QRC Fetch Initial State\n// Triggered by Parse QRC Buffer output 2 (EngineStatus Active)\n// Sends Component.GetControls for each mixer space to read current values.\n// Wire: [Parse QRC Buffer output 2] → this node → [QRC TCP Out]\n//\n// The responses come back through tcp in → Parse QRC Buffer output 1\n// → Parse QRC State Response → audio.init messages to the UI.\n//\n// NOTE: Component.GetControls requires the mixer components to be Named Components\n// in the Q-SYS design. The Name must match the mixer names used in the cmd envelope\n// (a1, a2, a3, ls). If Component.GetControls returns an error, check the exact\n// component names in your Q-SYS design.\n\nconst qrcConfig = flow.get('qrcConfig');\nif (!qrcConfig) {\n  node.error('qrcConfig not initialised — trigger QRC Config Init first');\n  return null;\n}\nconst spaces = Object.keys(qrcConfig.spaceToMixer);\n\n// Store remaining spaces in queue; Parse QRC State Response will chain through them\nflow.set('fetchStateQueue', spaces.slice(1)); // ['a2', 'a3', 'ls']\n\n// Send only the first request — responses trigger the next via output 2\nmsg.topic = 'qrc.fetchState';\nmsg._fetchSpace = spaces[0];\nmsg.payload = JSON.stringify({\n  jsonrpc: '2.0',\n  method: 'Component.GetControls',\n  params: { Name: spaces[0] },\n  id: Date.now() % 1000000\n}) + '\\u0000';\n\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -8526,7 +8526,7 @@
         "finalize": "",
         "libs": [],
         "x": 760,
-        "y": 400,
+        "y": 440,
         "wires": [
             [
                 "ede1c4fef3ed7695"
@@ -8543,7 +8543,7 @@
             "link-in-linkall"
         ],
         "x": 895,
-        "y": 260,
+        "y": 300,
         "wires": []
     },
     {
@@ -8564,7 +8564,7 @@
         "payload": "{\"jsonrpc\":\"2.0\",\"method\":\"Component.GetControls\",\"params\":{\"Name\":\"a1\"},\"id\":1}",
         "payloadType": "json",
         "x": 1250,
-        "y": 440,
+        "y": 480,
         "wires": [
             [
                 "0992f6ccbc96adf5"
@@ -8589,7 +8589,7 @@
         "payload": "{\"topic\":\"cmd\",\"payload\":{\"action\":\"audio.setLevel\",\"target\":\"a3.audio\",\"params\":{\"inputKey\":\"bgm\",\"db\":-60,\"ramp\":3}}}",
         "payloadType": "json",
         "x": 280,
-        "y": 100,
+        "y": 140,
         "wires": [
             [
                 "fn_qrc_router"
@@ -8609,7 +8609,7 @@
         "finalize": "",
         "libs": [],
         "x": 1390,
-        "y": 400,
+        "y": 440,
         "wires": [
             [
                 "ede1c4fef3ed7695"
@@ -8634,7 +8634,7 @@
         "payload": "{\"jsonrpc\":\"2.0\",\"method\":\"StatusGet\",\"id\":1234,\"params\":0}",
         "payloadType": "json",
         "x": 1240,
-        "y": 400,
+        "y": 440,
         "wires": [
             [
                 "0992f6ccbc96adf5"
@@ -8655,7 +8655,7 @@
         "trim": false,
         "tls": "",
         "x": 1260,
-        "y": 240,
+        "y": 260,
         "wires": [
             [
                 "977053b1b62b72fe",
@@ -8676,7 +8676,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1460,
-        "y": 240,
+        "y": 280,
         "wires": []
     },
     {
@@ -8689,7 +8689,7 @@
             "f46da979555aa1a4"
         ],
         "x": 1415,
-        "y": 280,
+        "y": 320,
         "wires": []
     },
     {
@@ -8701,7 +8701,7 @@
             "d4bacdccb7744a5c"
         ],
         "x": 145,
-        "y": 340,
+        "y": 380,
         "wires": [
             [
                 "4b5b244a2524671c",
@@ -8728,7 +8728,7 @@
         "payload": "{\"jsonrpc\":\"2.0\",\"method\":\"Component.GetControls\",\"params\":{\"Name\":\"a2\"},\"id\":1}",
         "payloadType": "json",
         "x": 1250,
-        "y": 480,
+        "y": 520,
         "wires": [
             [
                 "0992f6ccbc96adf5"
@@ -8753,7 +8753,7 @@
         "payload": "{\"jsonrpc\":\"2.0\",\"method\":\"Component.GetControls\",\"params\":{\"Name\":\"a3\"},\"id\":1}",
         "payloadType": "json",
         "x": 1250,
-        "y": 520,
+        "y": 560,
         "wires": [
             [
                 "0992f6ccbc96adf5"
@@ -8778,7 +8778,7 @@
         "payload": "{\"jsonrpc\":\"2.0\",\"method\":\"Component.GetControls\",\"params\":{\"Name\":\"ls\"},\"id\":1}",
         "payloadType": "json",
         "x": 1250,
-        "y": 560,
+        "y": 600,
         "wires": [
             [
                 "0992f6ccbc96adf5"
@@ -8789,8 +8789,8 @@
         "id": "331b61ecbd90b04c",
         "type": "function",
         "z": "tab_qsys_control",
-        "name": "Parse ChangeGroup Changes",
-        "func": "// Receives all raw QRC messages from Parse QRC Buffer output 1.\n// Filters for ChangeGroup AutoPoll responses and emits normalised\n// fader state updates onto the cmd bus so the Audio Mixer UIs\n// and any other subscribers stay in sync.\n//\n// Output 1: individual { topic: 'qrc.faderUpdate', payload: { space, inputKey, db, mute } }\n// Output 2: pass-through for any non-ChangeGroup QRC messages (for other handlers)\n\n// Must mirror inputsShared in Map cmd envelope → QRC JSON.js\nconst inputsShared = {\n  special: [1, 2],\n  bgm:     [3, 4],\n  show:    [5, 6, 7, 8],\n  mic1:    [9],\n  mic2:    [10],\n  mixer:   [11, 12],\n};\n\n// Build reverse lookup: inputNum → inputKey\nconst numToKey = {};\nfor (const [key, nums] of Object.entries(inputsShared)) {\n  for (const n of nums) {\n    numToKey[n] = key;\n  }\n}\n\nlet obj;\ntry {\n  obj = JSON.parse(msg.payload);\n} catch (e) {\n  return [null, msg]; // not JSON — pass through\n}\n\n// Only handle AutoPoll push responses (result with Changes array)\nif (!obj.result?.Changes) {\n  return [null, msg]; // not a change group response — pass through\n}\n\nconst changes = obj.result.Changes;\n\n// Accumulate state updates per (space, inputKey) — a single poll may\n// carry both gain and mute for the same channel, so we merge them.\nconst stateMap = {}; // key: \"space:inputKey\"\n\nfor (const change of changes) {\n  // Component-style return: { Component, Name, Value, String }\n  const space    = change.Component;\n  const ctrlName = change.Name;   // \"input.3.gain\" or \"input.3.mute\"\n  const value    = change.Value;\n\n  if (!space || !ctrlName) continue;\n\n  // Parse control name: input.<n>.<type>\n  const match = ctrlName.match(/^input\\.(\\d+)\\.(gain|mute)$/);\n  if (!match) continue;\n\n  const inputNum = Number(match[1]);\n  const ctrlType = match[2]; // \"gain\" or \"mute\"\n  const inputKey = numToKey[inputNum];\n  if (!inputKey) continue;\n\n  const mapKey = `${space}:${inputKey}`;\n  if (!stateMap[mapKey]) stateMap[mapKey] = { space, inputKey };\n\n  if (ctrlType === 'gain') stateMap[mapKey].db   = value;\n  if (ctrlType === 'mute') stateMap[mapKey].mute = Boolean(value);\n}\n\nconst updates = Object.values(stateMap);\nif (!updates.length) return [null, null];\n\n// Emit one msg per (space, inputKey) update on output 1\nconst outMsgs = updates.map(u => ({\n  topic: 'qrc.faderUpdate',\n  payload: u   // { space, inputKey, db?, mute? }\n}));\n\nreturn [outMsgs, null];\n",
+        "name": "Parse ChangeGroup Response",
+        "func": "// Parse ChangeGroup Response\n// Handles both unsolicited AutoPoll notifications AND solicited ChangeGroup.Poll responses.\n// Converts changed controls back to audio.init messages so the mixer UI\n// stays in sync with live Q-SYS state (e.g. changes from a touch panel).\n//\n// Supported formats:\n//   AutoPoll (unsolicited): { method: 'ChangeGroup.Poll', params: { Id, Changes } }\n//   Solicited poll:         { result: { Id, Changes }, id }\n//\n// Wire: [Parse QRC Buffer output 1] → this node → [link out to mixer ui_template inputs]\n\n// Input channel map from flow context (set by QRC Config Init)\nconst qrcConfig = flow.get('qrcConfig');\nif (!qrcConfig) {\n  node.error('qrcConfig not initialised — trigger QRC Config Init first');\n  return null;\n}\nconst { inputsShared } = qrcConfig;\n\n// Build reverse map: channel number → inputKey\nconst channelToKey = {};\nfor (const [key, chs] of Object.entries(inputsShared)) {\n  for (const ch of chs) channelToKey[ch] = key;\n}\n\nlet resp;\ntry {\n  resp = JSON.parse(msg.payload);\n} catch (e) {\n  return null;\n}\n\n// Accept both AutoPoll notifications (method) and solicited poll responses (result)\nlet changes;\nif (resp.method === 'ChangeGroup.Poll') {\n  // Unsolicited AutoPoll: { method, params: { Id, Changes } }\n  changes = resp.params?.Changes;\n} else if (resp.result?.Changes) {\n  // Solicited ChangeGroup.Poll response: { result: { Id, Changes }, id }\n  changes = resp.result.Changes;\n} else {\n  return null;\n}\n\nif (!Array.isArray(changes) || changes.length === 0) return null;\n\n// Group changes by space (Component name)\nconst spaceData = {};\nfor (const change of changes) {\n  const space = change.Component;\n  if (!spaceData[space]) spaceData[space] = { channels: {}, mutes: {} };\n\n  const gainMatch = change.Name.match(/^input\\.(\\d+)\\.gain$/);\n  const muteMatch = change.Name.match(/^input\\.(\\d+)\\.mute$/);\n\n  if (gainMatch) {\n    const key = channelToKey[parseInt(gainMatch[1])];\n    if (key !== undefined && spaceData[space].channels[key] === undefined)\n      spaceData[space].channels[key] = Math.round(change.Value * 10) / 10;\n  }\n  if (muteMatch) {\n    const key = channelToKey[parseInt(muteMatch[1])];\n    if (key !== undefined && spaceData[space].mutes[key] === undefined)\n      spaceData[space].mutes[key] = Boolean(change.Value);\n  }\n}\n\nconst msgs = Object.entries(spaceData)\n  .filter(([, d]) => Object.keys(d.channels).length > 0 || Object.keys(d.mutes).length > 0)\n  .map(([space, d]) => ({\n    topic: 'audio.init',\n    payload: { space, channels: d.channels, mutes: d.mutes }\n  }));\n\nif (msgs.length === 0) return null;\n\nnode.status({ fill: 'green', shape: 'ring', text: `${changes.length} change${changes.length > 1 ? 's' : ''}` });\n\nreturn msgs;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -8798,7 +8798,7 @@
         "finalize": "",
         "libs": [],
         "x": 690,
-        "y": 280,
+        "y": 320,
         "wires": [
             [
                 "421282d53396351d"
@@ -8809,16 +8809,16 @@
         "id": "9e640450a1489eed",
         "type": "function",
         "z": "tab_qsys_control",
-        "name": "Setup ChangeGroup",
-        "func": "// Receives all raw QRC messages from Parse QRC Buffer output 1.\n// Filters for ChangeGroup AutoPoll responses and emits normalised\n// fader state updates onto the cmd bus so the Audio Mixer UIs\n// and any other subscribers stay in sync.\n//\n// Output 1: individual { topic: 'qrc.faderUpdate', payload: { space, inputKey, db, mute } }\n// Output 2: pass-through for any non-ChangeGroup QRC messages (for other handlers)\n\n// Must mirror inputsShared in Map cmd envelope → QRC JSON.js\nconst inputsShared = {\n  special: [1, 2],\n  bgm:     [3, 4],\n  show:    [5, 6, 7, 8],\n  mic1:    [9],\n  mic2:    [10],\n  mixer:   [11, 12],\n};\n\n// Build reverse lookup: inputNum → inputKey\nconst numToKey = {};\nfor (const [key, nums] of Object.entries(inputsShared)) {\n  for (const n of nums) {\n    numToKey[n] = key;\n  }\n}\n\nlet obj;\ntry {\n  obj = JSON.parse(msg.payload);\n} catch (e) {\n  return [null, msg]; // not JSON — pass through\n}\n\n// Only handle AutoPoll push responses (result with Changes array)\nif (!obj.result?.Changes) {\n  return [null, msg]; // not a change group response — pass through\n}\n\nconst changes = obj.result.Changes;\n\n// Accumulate state updates per (space, inputKey) — a single poll may\n// carry both gain and mute for the same channel, so we merge them.\nconst stateMap = {}; // key: \"space:inputKey\"\n\nfor (const change of changes) {\n  // Component-style return: { Component, Name, Value, String }\n  const space    = change.Component;\n  const ctrlName = change.Name;   // \"input.3.gain\" or \"input.3.mute\"\n  const value    = change.Value;\n\n  if (!space || !ctrlName) continue;\n\n  // Parse control name: input.<n>.<type>\n  const match = ctrlName.match(/^input\\.(\\d+)\\.(gain|mute)$/);\n  if (!match) continue;\n\n  const inputNum = Number(match[1]);\n  const ctrlType = match[2]; // \"gain\" or \"mute\"\n  const inputKey = numToKey[inputNum];\n  if (!inputKey) continue;\n\n  const mapKey = `${space}:${inputKey}`;\n  if (!stateMap[mapKey]) stateMap[mapKey] = { space, inputKey };\n\n  if (ctrlType === 'gain') stateMap[mapKey].db   = value;\n  if (ctrlType === 'mute') stateMap[mapKey].mute = Boolean(value);\n}\n\nconst updates = Object.values(stateMap);\nif (!updates.length) return [null, null];\n\n// Emit one msg per (space, inputKey) update on output 1\nconst outMsgs = updates.map(u => ({\n  topic: 'qrc.faderUpdate',\n  payload: u   // { space, inputKey, db?, mute? }\n}));\n\nreturn [outMsgs, null];\n",
+        "name": "QRC Setup ChangeGroup",
+        "func": "// QRC Setup ChangeGroup\n// Triggered after EngineStatus (same trigger as QRC Fetch Initial State).\n// Subscribes all mixer input gain/mute controls to a ChangeGroup so Q-SYS\n// pushes live updates whenever a value changes.\n//\n// Wire: [Parse QRC Buffer output 2] → this node → [tcp request]\n//       [Parse QRC Buffer output 1] → [Parse ChangeGroup Response] → [link out: UI]\n\nconst GROUP_ID = 'mixers';\n\n// Config from flow context (set by QRC Config Init)\nconst qrcConfig = flow.get('qrcConfig');\nif (!qrcConfig) {\n  node.error('qrcConfig not initialised — trigger QRC Config Init first');\n  return null;\n}\nconst { inputsShared, spaceToMixer } = qrcConfig;\nconst spaces = Object.keys(spaceToMixer);\n\nlet id = Date.now() % 1000000;\n\n// Build control list from inputsShared (gain + mute per channel)\nconst controls = [];\nfor (const chs of Object.values(inputsShared)) {\n  for (const ch of chs) {\n    controls.push({ Name: `input.${ch}.gain` });\n    controls.push({ Name: `input.${ch}.mute` });\n  }\n}\n\nconst msgs = [];\n\n// Destroy any leftover group from a previous session (errors are ignored by Q-SYS)\nmsgs.push({ payload: JSON.stringify({ jsonrpc: '2.0', method: 'ChangeGroup.Destroy', params: { Id: GROUP_ID }, id: id++ }) + '\\u0000' });\n\n// Add all 4 mixer components to the group\nfor (const space of spaces) {\n  msgs.push({\n    payload: JSON.stringify({\n      jsonrpc: '2.0',\n      method: 'ChangeGroup.AddComponentControl',\n      params: { Id: GROUP_ID, Component: { Name: space, Controls: controls } },\n      id: id++\n    }) + '\\u0000'\n  });\n}\n\n// Start auto-polling at 200ms — Q-SYS pushes ChangeGroup.Poll notifications on changes\nmsgs.push({ payload: JSON.stringify({ jsonrpc: '2.0', method: 'ChangeGroup.AutoPoll', params: { Id: GROUP_ID, Rate: 0.2 }, id: id++ }) + '\\u0000' });\n\n// Wrap in array so Node-RED sends all messages to output 1 (not one per output)\nreturn [msgs];\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 740,
-        "y": 440,
+        "x": 760,
+        "y": 480,
         "wires": [
             [
                 "ede1c4fef3ed7695"
@@ -8847,7 +8847,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 520,
-        "y": 460,
+        "y": 500,
         "wires": [
             [
                 "9ed8373985e3d586"
@@ -8869,10 +8869,10 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "{\"jsonrpc\":\"2.0\",\"method\":\"Mixer.SetInputGain\",\"params\":{\"Name\":\"a3\",\"Inputs\":\"1-8\",\"Value\":-40,\"Ramp\":3},\"id\":1}",
+        "payload": "{\"jsonrpc\":\"2.0\",\"method\":\"Mixer.SetInputGain\",\"params\":{\"Name\":\"a1\",\"Inputs\":\"1-8\",\"Value\":0,\"Ramp\":3},\"id\":1}",
         "payloadType": "json",
         "x": 1280,
-        "y": 360,
+        "y": 400,
         "wires": [
             [
                 "0992f6ccbc96adf5"
@@ -8883,7 +8883,7 @@
         "id": "f536a174b5f9fff2",
         "type": "inject",
         "z": "tab_qsys_control",
-        "name": "Create Change group",
+        "name": "auto poll",
         "props": [
             {
                 "p": "payload"
@@ -8894,10 +8894,10 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"ChangeGroup.Create\",\"params\":{\"Id\":\"NodeRedGroup\"}}",
+        "payload": "{\"jsonrpc\":\"2.0\",\"id\":1234,\"method\":\"ChangeGroup.AutoPoll\",\"params\":{\"Id\":\"a1_group\",\"Rate\":1}}",
         "payloadType": "json",
-        "x": 1240,
-        "y": 640,
+        "x": 1200,
+        "y": 800,
         "wires": [
             [
                 "0992f6ccbc96adf5"
@@ -8919,10 +8919,10 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "{\"jsonrpc\":\"2.0\",\"id\":1234,\"method\":\"ChangeGroup.AddComponentControl\",\"params\":{\"Id\":\"a3 group\",\"Component\":{\"Name\":\"a3\",\"Controls\":[{\"Name\":\"input.1.gain\"},{\"Name\":\"input.1.mute\"}]}}}",
+        "payload": "{\"jsonrpc\":\"2.0\",\"id\":1234,\"method\":\"ChangeGroup.AddComponentControl\",\"params\":{\"Id\":\"a1_group\",\"Component\":{\"Name\":\"a1\",\"Controls\":[{\"Name\":\"input.1.gain\"},{\"Name\":\"input.1.mute\"}]}}}",
         "payloadType": "json",
         "x": 1210,
-        "y": 680,
+        "y": 720,
         "wires": [
             [
                 "0992f6ccbc96adf5"
@@ -8944,13 +8944,110 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "{\"jsonrpc\":\"2.0\",\"id\":1235,\"method\":\"ChangeGroup.Poll\",\"params\":{\"Id\":\"a3 group\"}}",
+        "payload": "{\"jsonrpc\":\"2.0\",\"id\":1235,\"method\":\"ChangeGroup.Poll\",\"params\":{\"Id\":\"a1_group\"}}",
         "payloadType": "json",
         "x": 1190,
-        "y": 740,
+        "y": 760,
         "wires": [
             [
                 "0992f6ccbc96adf5"
+            ]
+        ]
+    },
+    {
+        "id": "6bd2833617c8720b",
+        "type": "inject",
+        "z": "tab_qsys_control",
+        "name": "Destroy change group",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"jsonrpc\":\"2.0\",\"id\":12,\"method\":\"ChangeGroup.Destroy\",\"params\":{\"Id\":\"mixers\"}}",
+        "payloadType": "json",
+        "x": 1240,
+        "y": 840,
+        "wires": [
+            [
+                "0992f6ccbc96adf5"
+            ]
+        ]
+    },
+    {
+        "id": "af7c59414cabb1ef",
+        "type": "inject",
+        "z": "tab_qsys_control",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 520,
+        "y": 560,
+        "wires": [
+            [
+                "9e640450a1489eed"
+            ]
+        ]
+    },
+    {
+        "id": "ad9ef4d63fdf5757",
+        "type": "function",
+        "z": "tab_qsys_control",
+        "name": "QRC Config Init",
+        "func": "// QRC Config Init\n// Single source of truth for all QRC mixer configuration.\n// Stores config into flow context so every QRC function node reads from here\n// instead of each defining its own copy.\n//\n// Wire: [inject (inject once, on start)] → this node\n// In the inject node: set \"inject once after 0.1 seconds on start\" and \"repeat: never\"\n\nflow.set('qrcConfig', {\n\n  // Space name → Q-SYS mixer component name\n  spaceToMixer: {\n    a1: 'a1',\n    a2: 'a2',\n    a3: 'a3',\n    ls: 'ls'\n  },\n\n  // Input channel numbers per key (shared across all spaces by default)\n  inputsShared: {\n    special: [1, 2],\n    bgm:     [3, 4],\n    show:    [5, 6, 7, 8],\n    mic1:    [9],\n    mic2:    [10],\n    mixer:   [11, 12]\n  },\n\n  // Per-space overrides — only needed if a space uses different channel numbers\n  inputsPerSpace: {\n    // a2: { bgm: [7, 8] }\n  }\n\n});\n\nnode.status({ fill: 'green', shape: 'dot', text: 'qrcConfig stored' });\nreturn null;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 40,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b880f1c695b348e6",
+        "type": "inject",
+        "z": "tab_qsys_control",
+        "name": "On Startup",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 390,
+        "y": 40,
+        "wires": [
+            [
+                "ad9ef4d63fdf5757"
             ]
         ]
     },
