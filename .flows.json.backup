@@ -551,6 +551,30 @@
         ]
     },
     {
+        "id": "bd674766e0e2bbf1",
+        "type": "junction",
+        "z": "tab_qsys_control",
+        "x": 960,
+        "y": 420,
+        "wires": [
+            [
+                "ede1c4fef3ed7695"
+            ]
+        ]
+    },
+    {
+        "id": "59c664a5badf9dab",
+        "type": "junction",
+        "z": "tab_qsys_control",
+        "x": 900,
+        "y": 100,
+        "wires": [
+            [
+                "ede1c4fef3ed7695"
+            ]
+        ]
+    },
+    {
         "id": "f34314dbb36334ec",
         "type": "ui-base",
         "name": "My Dashboard",
@@ -4267,7 +4291,7 @@
         "y": 600,
         "wires": [
             [
-                "d7e603b086d64b72"
+                "bddaa7231e8e67ea"
             ]
         ]
     },
@@ -4419,8 +4443,7 @@
         "y": 360,
         "wires": [
             [
-                "bddaa7231e8e67ea",
-                "d7e603b086d64b72"
+                "bddaa7231e8e67ea"
             ]
         ]
     },
@@ -4445,8 +4468,7 @@
         "y": 440,
         "wires": [
             [
-                "bddaa7231e8e67ea",
-                "d7e603b086d64b72"
+                "bddaa7231e8e67ea"
             ]
         ]
     },
@@ -4471,8 +4493,7 @@
         "y": 520,
         "wires": [
             [
-                "bddaa7231e8e67ea",
-                "d7e603b086d64b72"
+                "bddaa7231e8e67ea"
             ]
         ]
     },
@@ -4481,7 +4502,7 @@
         "type": "function",
         "z": "8ccf58caed82bbf6",
         "name": "Link-All Broadcast",
-        "func": "// Link-All Broadcast + populate flow.linkedChannels\n\nconst linked = msg.payload.linked;\nconst allASpaces = ['a1','a2','a3'];\nconst allChannels = ['show','bgm','special','mic1','mic2','mixer'];\n\n// 1) Update flow.linkedChannels for all channels/spaces\nlet linkedChannels = flow.get('linkedChannels') || {};\nallChannels.forEach(channel => {\n  if (!linkedChannels[channel]) linkedChannels[channel] = {};\n  allASpaces.forEach(space => {\n    linkedChannels[channel][space] = linked;\n  });\n});\nflow.set('linkedChannels', linkedChannels);\n\n// 2) Broadcast to all templates so UI reflects Link-All state\nallASpaces.forEach(space => {\n  node.send({\n    payload: { space, setLinkedAll: linked }\n  });\n});\n\nnode.status({ fill:'blue', shape:'dot', text:`linkAll: ${linked}` });",
+        "func": "// Link-All Broadcast + populate flow.linkedChannels\nif (msg.topic !== 'audio.linkAll') return null;\n\nconst linked = msg.payload.linked;\nconst allASpaces = ['a1','a2','a3'];\nconst allChannels = ['show','bgm','special','mic1','mic2','mixer'];\n\n// 1) Update flow.linkedChannels for all channels/spaces\nlet linkedChannels = flow.get('linkedChannels') || {};\nallChannels.forEach(channel => {\n  if (!linkedChannels[channel]) linkedChannels[channel] = {};\n  allASpaces.forEach(space => {\n    linkedChannels[channel][space] = linked;\n  });\n});\nflow.set('linkedChannels', linkedChannels);\n\n// 2) Broadcast to all templates so UI reflects Link-All state\nallASpaces.forEach(space => {\n  node.send({\n    payload: { space, setLinkedAll: linked }\n  });\n});\n\nnode.status({ fill:'blue', shape:'dot', text:`linkAll: ${linked}` });",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -4492,7 +4513,8 @@
         "y": 400,
         "wires": [
             [
-                "link-out-linkall"
+                "link-out-linkall",
+                "f5345dc4dfc7dfec"
             ]
         ]
     },
@@ -4501,7 +4523,7 @@
         "type": "function",
         "z": "8ccf58caed82bbf6",
         "name": "Route Fader Delta to Linked Spaces",
-        "func": "const sourceSpace = msg.payload.sourceSpace;\nconst channel = msg.payload.channel;\nconst value = msg.payload.value;\n\nlet linkedChannels = flow.get('linkedChannels') || {};\nconst spaceStates = linkedChannels[channel] || {};\nconst allASpaces = ['a1','a2','a3'];\n\nconst targets = allASpaces.filter(s => spaceStates[s] && s !== sourceSpace);\nif (targets.length === 0) return null;\n\ntargets.forEach(targetSpace => {\n  node.send({ topic: 'audio.faderDelta', payload: { targetSpace, channel, value } });\n});\nnode.status({ fill:'green', shape:'dot', text:`${channel}: ${value} dB → ${targets.join(', ')}` });",
+        "func": "if (msg.topic !== 'audio.faderSync') return null;\n\nconst sourceSpace = msg.payload.sourceSpace;\nconst channel = msg.payload.channel;\nconst value = msg.payload.value;\n\nlet linkedChannels = flow.get('linkedChannels') || {};\nconst spaceStates = linkedChannels[channel] || {};\nconst allASpaces = ['a1','a2','a3'];\n\nconst targets = allASpaces.filter(s => spaceStates[s] && s !== sourceSpace);\nif (targets.length === 0) return null;\n\ntargets.forEach(targetSpace => {\n  node.send({ topic: 'audio.faderDelta', payload: { targetSpace, channel, value } });\n});\nnode.status({ fill:'green', shape:'dot', text:`${channel}: ${value} dB → ${targets.join(', ')}` });",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -4521,7 +4543,7 @@
         "type": "function",
         "z": "8ccf58caed82bbf6",
         "name": "Route Mute to Linked Spaces",
-        "func": "const sourceSpace = msg.payload.space;\nconst channel = msg.payload.channel;\nconst muteState = msg.payload.muted;\n\nlet linkedChannels = flow.get('linkedChannels') || {};\nconst spaceStates = linkedChannels[channel] || {};\nconst allASpaces = ['a1','a2','a3'];\n\nconst targets = allASpaces.filter(s => spaceStates[s] && s !== sourceSpace);\nif (targets.length === 0) return null;\n\ntargets.forEach(targetSpace => {\n  node.send({ topic: 'audio.muteDelta', payload: { targetSpace, channel, muted: muteState } });\n});\nnode.status({ fill:'green', shape:'dot', text:`${channel}: ${muteState ? 'muted' : 'unmuted'}` });",
+        "func": "if (msg.topic !== 'audio.muteSync') return null;\n\nconst sourceSpace = msg.payload.space;\nconst channel = msg.payload.channel;\nconst muteState = msg.payload.muted;\n\nlet linkedChannels = flow.get('linkedChannels') || {};\nconst spaceStates = linkedChannels[channel] || {};\nconst allASpaces = ['a1','a2','a3'];\n\nconst targets = allASpaces.filter(s => spaceStates[s] && s !== sourceSpace);\nif (targets.length === 0) return null;\n\ntargets.forEach(targetSpace => {\n  node.send({ topic: 'audio.muteDelta', payload: { targetSpace, channel, muted: muteState } });\n});\nnode.status({ fill:'green', shape:'dot', text:`${channel}: ${muteState ? 'muted' : 'unmuted'}` });",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -4555,6 +4577,7 @@
         "z": "8ccf58caed82bbf6",
         "name": "Audio Mixers Inputs",
         "links": [
+            "421282d53396351d",
             "link-out-linkall"
         ],
         "x": 175,
@@ -4564,7 +4587,8 @@
                 "tmpl-a1-linkall",
                 "tmpl-a2-linkall",
                 "tmpl-a3-linkall",
-                "e624fd2c4fa65a8c"
+                "e624fd2c4fa65a8c",
+                "0f6707424fc2cb46"
             ]
         ]
     },
@@ -4590,11 +4614,14 @@
                 "t": "eq",
                 "v": "audio.muteSync",
                 "vt": "str"
+            },
+            {
+                "t": "else"
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 3,
+        "outputs": 4,
         "x": 590,
         "y": 440,
         "wires": [
@@ -4606,6 +4633,9 @@
             ],
             [
                 "fn-mute"
+            ],
+            [
+                "d7e603b086d64b72"
             ]
         ]
     },
@@ -4634,16 +4664,44 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 630,
+        "x": 750,
         "y": 600,
         "wires": [
-            [
-                "c93563fba9029ea1"
-            ],
-            [
-                "c93563fba9029ea1"
-            ]
+            [],
+            []
         ]
+    },
+    {
+        "id": "f5345dc4dfc7dfec",
+        "type": "debug",
+        "z": "8ccf58caed82bbf6",
+        "name": "debug 16",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 950,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "0f6707424fc2cb46",
+        "type": "debug",
+        "z": "8ccf58caed82bbf6",
+        "name": "debug 18",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 190,
+        "y": 400,
+        "wires": []
     },
     {
         "id": "wo2-startup-inj",
@@ -8352,7 +8410,7 @@
         "wires": [
             [
                 "debug_qrc_out",
-                "ede1c4fef3ed7695"
+                "59c664a5badf9dab"
             ]
         ]
     },
@@ -8367,7 +8425,7 @@
         "tostatus": false,
         "complete": "qrc",
         "targetType": "msg",
-        "x": 580,
+        "x": 750,
         "y": 220,
         "wires": []
     },
@@ -8457,10 +8515,10 @@
         "finalize": "",
         "libs": [],
         "x": 580,
-        "y": 80,
+        "y": 100,
         "wires": [
             [
-                "ede1c4fef3ed7695"
+                "59c664a5badf9dab"
             ]
         ]
     },
@@ -8482,7 +8540,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 390,
-        "y": 80,
+        "y": 100,
         "wires": [
             [
                 "53298a2eb2fa6ce1"
@@ -8501,14 +8559,14 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 680,
+        "x": 600,
         "y": 360,
         "wires": [
             [
                 "421282d53396351d"
             ],
             [
-                "ede1c4fef3ed7695"
+                "bd674766e0e2bbf1"
             ]
         ]
     },
@@ -8528,7 +8586,7 @@
         "y": 440,
         "wires": [
             [
-                "ede1c4fef3ed7695"
+                "bd674766e0e2bbf1"
             ]
         ]
     },
@@ -8538,8 +8596,10 @@
         "z": "tab_qsys_control",
         "name": "QRC State Response",
         "mode": "link",
-        "links": [],
-        "x": 895,
+        "links": [
+            "link-in-linkall"
+        ],
+        "x": 805,
         "y": 300,
         "wires": []
     },
@@ -8560,7 +8620,7 @@
         "topic": "",
         "payload": "{\"jsonrpc\":\"2.0\",\"method\":\"Component.GetControls\",\"params\":{\"Name\":\"a1\"},\"id\":1}",
         "payloadType": "json",
-        "x": 1250,
+        "x": 1110,
         "y": 480,
         "wires": [
             [
@@ -8605,7 +8665,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1390,
+        "x": 1250,
         "y": 440,
         "wires": [
             [
@@ -8630,7 +8690,7 @@
         "topic": "",
         "payload": "{\"jsonrpc\":\"2.0\",\"method\":\"StatusGet\",\"id\":1234,\"params\":0}",
         "payloadType": "json",
-        "x": 1240,
+        "x": 1100,
         "y": 440,
         "wires": [
             [
@@ -8651,11 +8711,10 @@
         "newline": "",
         "trim": false,
         "tls": "",
-        "x": 1260,
+        "x": 1080,
         "y": 260,
         "wires": [
             [
-                "977053b1b62b72fe",
                 "d4bacdccb7744a5c"
             ]
         ]
@@ -8685,7 +8744,7 @@
         "links": [
             "f46da979555aa1a4"
         ],
-        "x": 1415,
+        "x": 1195,
         "y": 320,
         "wires": []
     },
@@ -8724,7 +8783,7 @@
         "topic": "",
         "payload": "{\"jsonrpc\":\"2.0\",\"method\":\"Component.GetControls\",\"params\":{\"Name\":\"a2\"},\"id\":1}",
         "payloadType": "json",
-        "x": 1250,
+        "x": 1110,
         "y": 520,
         "wires": [
             [
@@ -8749,7 +8808,7 @@
         "topic": "",
         "payload": "{\"jsonrpc\":\"2.0\",\"method\":\"Component.GetControls\",\"params\":{\"Name\":\"a3\"},\"id\":1}",
         "payloadType": "json",
-        "x": 1250,
+        "x": 1110,
         "y": 560,
         "wires": [
             [
@@ -8774,7 +8833,7 @@
         "topic": "",
         "payload": "{\"jsonrpc\":\"2.0\",\"method\":\"Component.GetControls\",\"params\":{\"Name\":\"ls\"},\"id\":1}",
         "payloadType": "json",
-        "x": 1250,
+        "x": 1110,
         "y": 600,
         "wires": [
             [
@@ -8786,6 +8845,7 @@
         "id": "331b61ecbd90b04c",
         "type": "function",
         "z": "tab_qsys_control",
+        "d": true,
         "name": "Parse ChangeGroup Response",
         "func": "// Parse ChangeGroup Response\n// Handles both unsolicited AutoPoll notifications AND solicited ChangeGroup.Poll responses.\n// Converts changed controls back to audio.init messages so the mixer UI\n// stays in sync with live Q-SYS state (e.g. changes from a touch panel).\n//\n// Supported formats:\n//   AutoPoll (unsolicited): { method: 'ChangeGroup.Poll', params: { Id, Changes } }\n//   Solicited poll:         { result: { Id, Changes }, id }\n//\n// Wire: [Parse QRC Buffer output 1] → this node → [link out to mixer ui_template inputs]\n\n// Input channel map from flow context (set by QRC Config Init)\nconst qrcConfig = flow.get('qrcConfig');\nif (!qrcConfig) {\n  node.error('qrcConfig not initialised — trigger QRC Config Init first');\n  return null;\n}\nconst { inputsShared } = qrcConfig;\n\n// Build reverse map: channel number → inputKey\nconst channelToKey = {};\nfor (const [key, chs] of Object.entries(inputsShared)) {\n  for (const ch of chs) channelToKey[ch] = key;\n}\n\nlet resp;\ntry {\n  resp = JSON.parse(msg.payload);\n} catch (e) {\n  return null;\n}\n\n// Accept both AutoPoll notifications (method) and solicited poll responses (result)\nlet changes;\nif (resp.method === 'ChangeGroup.Poll') {\n  // Unsolicited AutoPoll: { method, params: { Id, Changes } }\n  changes = resp.params?.Changes;\n} else if (resp.result?.Changes) {\n  // Solicited ChangeGroup.Poll response: { result: { Id, Changes }, id }\n  changes = resp.result.Changes;\n} else {\n  return null;\n}\n\nif (!Array.isArray(changes) || changes.length === 0) return null;\n\n// Group changes by space (Component name)\nconst spaceData = {};\nfor (const change of changes) {\n  const space = change.Component;\n  if (!spaceData[space]) spaceData[space] = { channels: {}, mutes: {} };\n\n  const gainMatch = change.Name.match(/^input\\.(\\d+)\\.gain$/);\n  const muteMatch = change.Name.match(/^input\\.(\\d+)\\.mute$/);\n\n  if (gainMatch) {\n    const key = channelToKey[parseInt(gainMatch[1])];\n    if (key !== undefined && spaceData[space].channels[key] === undefined)\n      spaceData[space].channels[key] = Math.round(change.Value * 10) / 10;\n  }\n  if (muteMatch) {\n    const key = channelToKey[parseInt(muteMatch[1])];\n    if (key !== undefined && spaceData[space].mutes[key] === undefined)\n      spaceData[space].mutes[key] = Boolean(change.Value);\n  }\n}\n\nconst msgs = Object.entries(spaceData)\n  .filter(([, d]) => Object.keys(d.channels).length > 0 || Object.keys(d.mutes).length > 0)\n  .map(([space, d]) => ({\n    topic: 'audio.init',\n    payload: { space, channels: d.channels, mutes: d.mutes }\n  }));\n\nif (msgs.length === 0) return null;\n\nnode.status({ fill: 'green', shape: 'ring', text: `${changes.length} change${changes.length > 1 ? 's' : ''}` });\n\nreturn msgs;\n",
         "outputs": 1,
@@ -8794,8 +8854,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 690,
-        "y": 320,
+        "x": 610,
+        "y": 300,
         "wires": [
             [
                 "421282d53396351d"
@@ -8818,7 +8878,7 @@
         "y": 480,
         "wires": [
             [
-                "ede1c4fef3ed7695"
+                "bd674766e0e2bbf1"
             ]
         ]
     },
@@ -8868,7 +8928,7 @@
         "topic": "",
         "payload": "{\"jsonrpc\":\"2.0\",\"method\":\"Mixer.SetInputGain\",\"params\":{\"Name\":\"a1\",\"Inputs\":\"1-8\",\"Value\":0,\"Ramp\":3},\"id\":1}",
         "payloadType": "json",
-        "x": 1280,
+        "x": 1140,
         "y": 400,
         "wires": [
             [
@@ -8893,7 +8953,7 @@
         "topic": "",
         "payload": "{\"jsonrpc\":\"2.0\",\"id\":1234,\"method\":\"ChangeGroup.AutoPoll\",\"params\":{\"Id\":\"a1_group\",\"Rate\":1}}",
         "payloadType": "json",
-        "x": 1200,
+        "x": 1060,
         "y": 800,
         "wires": [
             [
@@ -8918,7 +8978,7 @@
         "topic": "",
         "payload": "{\"jsonrpc\":\"2.0\",\"id\":1234,\"method\":\"ChangeGroup.AddComponentControl\",\"params\":{\"Id\":\"a1_group\",\"Component\":{\"Name\":\"a1\",\"Controls\":[{\"Name\":\"input.1.gain\"},{\"Name\":\"input.1.mute\"}]}}}",
         "payloadType": "json",
-        "x": 1210,
+        "x": 1070,
         "y": 720,
         "wires": [
             [
@@ -8943,7 +9003,7 @@
         "topic": "",
         "payload": "{\"jsonrpc\":\"2.0\",\"id\":1235,\"method\":\"ChangeGroup.Poll\",\"params\":{\"Id\":\"a1_group\"}}",
         "payloadType": "json",
-        "x": 1190,
+        "x": 1050,
         "y": 760,
         "wires": [
             [
@@ -8968,7 +9028,7 @@
         "topic": "",
         "payload": "{\"jsonrpc\":\"2.0\",\"id\":12,\"method\":\"ChangeGroup.Destroy\",\"params\":{\"Id\":\"mixers\"}}",
         "payloadType": "json",
-        "x": 1240,
+        "x": 1100,
         "y": 840,
         "wires": [
             [
